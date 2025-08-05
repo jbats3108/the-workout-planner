@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Models;
 
+use App\Enums\Difficulty;
 use App\Enums\MovementType;
 use App\Models\Exercise;
 use App\Models\MuscleGroup;
@@ -90,6 +91,19 @@ class ExerciseTest extends TestCase
 
         // Then
         $this->assertSame(MovementType::PULL, $exercise->movementType());
+
+    }
+
+    #[Test]
+    public function it_has_a_difficulty_rating(): void
+    {
+        // Given / When
+        $exercise = Exercise::factory()->create([
+            'difficulty' => Difficulty::ADVANCED
+        ]);
+
+        // Then
+        $this->assertSame(Difficulty::ADVANCED, $exercise->difficulty());
 
     }
 

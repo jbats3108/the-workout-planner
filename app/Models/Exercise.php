@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Difficulty;
 use App\Enums\MovementType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,17 +18,20 @@ class Exercise extends Model
         'slug',
         'primary_muscle_group_id',
         'secondary_muscle_group_id',
-        'movement_type'
+        'movement_type',
+        'difficulty'
     ];
 
     protected function casts(): array
     {
         return [
-            'movement_type' => MovementType::class
+            'movement_type' => MovementType::class,
+            'difficulty'    => Difficulty::class,
         ];
     }
 
     public function getName(): string
+
     {
         return $this->name;
     }
@@ -50,5 +54,10 @@ class Exercise extends Model
     public function movementType(): MovementType
     {
         return $this->movement_type;
+    }
+
+    public function difficulty(): Difficulty
+    {
+        return $this->difficulty;
     }
 }

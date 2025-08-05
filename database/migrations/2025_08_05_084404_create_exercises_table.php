@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Difficulty;
 use App\Enums\MovementType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -15,6 +16,7 @@ return new class extends Migration {
             $table->foreignId('primary_muscle_group_id')->constrained('muscle_groups');
             $table->foreignId('secondary_muscle_group_id')->nullable()->constrained('muscle_groups');
             $table->enum('movement_type', MovementType::values())->default('push');
+            $table->enum('difficulty', Difficulty::values())->default('beginner');
             $table->timestamps();
             $table->softDeletes();
         });
