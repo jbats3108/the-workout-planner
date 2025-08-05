@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\MovementType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,6 +14,7 @@ return new class extends Migration {
             $table->string('slug');
             $table->foreignId('primary_muscle_group_id')->constrained('muscle_groups');
             $table->foreignId('secondary_muscle_group_id')->nullable()->constrained('muscle_groups');
+            $table->enum('movement_type', MovementType::values())->default('push');
             $table->timestamps();
             $table->softDeletes();
         });

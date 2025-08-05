@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\MovementType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,7 +15,17 @@ class Exercise extends Model
     protected $fillable = [
         'name',
         'slug',
+        'primary_muscle_group_id',
+        'secondary_muscle_group_id',
+        'movement_type'
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'movement_type' => MovementType::class
+        ];
+    }
 
     public function getName(): string
     {
@@ -34,5 +45,10 @@ class Exercise extends Model
     public function secondaryMuscleGroup(): ?BelongsTo
     {
         return $this->belongsTo(MuscleGroup::class, 'secondary_muscle_group_id');
+    }
+
+    public function movementType(): MovementType
+    {
+        return $this->movement_type;
     }
 }

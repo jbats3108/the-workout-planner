@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Models;
 
+use App\Enums\MovementType;
 use App\Models\Exercise;
 use App\Models\MuscleGroup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -76,6 +77,19 @@ class ExerciseTest extends TestCase
 
         // Then
         $this->assertNull($exercise->secondaryMuscleGroup);
+
+    }
+
+    #[Test]
+    public function it_has_a_movement_type(): void
+    {
+        // Given / When
+        $exercise = Exercise::factory()->create([
+            'movement_type' => MovementType::PULL,
+        ]);
+
+        // Then
+        $this->assertSame(MovementType::PULL, $exercise->movementType());
 
     }
 
