@@ -19,7 +19,8 @@ class Exercise extends Model
         'primary_muscle_group_id',
         'secondary_muscle_group_id',
         'movement_type',
-        'difficulty'
+        'difficulty',
+        'equipment',
     ];
 
     protected function casts(): array
@@ -27,6 +28,7 @@ class Exercise extends Model
         return [
             'movement_type' => MovementType::class,
             'difficulty'    => Difficulty::class,
+            'equipment'     => 'array',
         ];
     }
 
@@ -54,10 +56,5 @@ class Exercise extends Model
     public function movementType(): MovementType
     {
         return $this->movement_type;
-    }
-
-    public function difficulty(): Difficulty
-    {
-        return $this->difficulty;
     }
 }

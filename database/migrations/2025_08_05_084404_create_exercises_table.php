@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->foreignId('secondary_muscle_group_id')->nullable()->constrained('muscle_groups');
             $table->enum('movement_type', MovementType::values())->default('push');
             $table->enum('difficulty', Difficulty::values())->default('beginner');
+            $table->json('equipment')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

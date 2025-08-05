@@ -103,7 +103,27 @@ class ExerciseTest extends TestCase
         ]);
 
         // Then
-        $this->assertSame(Difficulty::ADVANCED, $exercise->difficulty());
+        $this->assertSame(Difficulty::ADVANCED, $exercise->difficulty);
+
+    }
+
+    #[Test]
+    public function it_has_an_array_of_required_equipment(): void
+    {
+        // Given
+        $equipment = [
+            'barbell',
+            'bench'
+        ];
+
+        // When
+        $exercise = Exercise::factory()->create([
+                'equipment' => $equipment
+            ]
+        );
+
+        // Then
+        $this->assertSame($equipment, $exercise->equipment);
 
     }
 
