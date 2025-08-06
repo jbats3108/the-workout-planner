@@ -4,14 +4,17 @@ namespace App\Models;
 
 use App\Enums\Difficulty;
 use App\Enums\MovementType;
+use App\Traits\HasName;
+use App\Traits\HasSlug;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Exercise extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasName, HasSlug;
 
     protected $fillable = [
         'name',
@@ -32,17 +35,6 @@ class Exercise extends Model
         ];
     }
 
-    public function getName(): string
-
-    {
-        return $this->name;
-    }
-
-    public function getSlug(): string
-    {
-        return $this->slug;
-    }
-
     public function primaryMuscleGroup(): BelongsTo
     {
         return $this->belongsTo(MuscleGroup::class, 'primary_muscle_group_id');
@@ -56,5 +48,10 @@ class Exercise extends Model
     public function movementType(): MovementType
     {
         return $this->movement_type;
+    }
+
+    public function workouts(): BelongsToMany
+    {
+        return $this->belongsToMany(Workout::class, 'workout_exercise', 'exercise_id', 'workout_id');
     }
 }
