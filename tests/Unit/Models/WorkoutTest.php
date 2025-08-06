@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Models;
 
+use App\Models\Exercise;
 use App\Models\Workout;
 use App\Models\WorkoutType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -27,6 +28,23 @@ class WorkoutTest extends TestCase
 
         // Then
         $this->assertTrue($workout->workoutType->is($workoutType));
-        
+    }
+
+    #[Test]
+    public function it_can_be_linked_to_multiple_exercises(): void
+    {
+    	// Given
+        $exerciseOne = Exercise::factory()->create();
+        $exerciseTwo = Exercise::factory()->create();
+
+        $workout = Workout::factory()->create();
+
+        // When
+        $exerciseOne->workouts()->attach($workout);
+        $exerciseTwo->workouts()->attach($workout);
+
+        // Then
+        $this->assertCount(2, $workout->exercises);
+
     }
 }

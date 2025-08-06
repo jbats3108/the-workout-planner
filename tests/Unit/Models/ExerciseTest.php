@@ -6,6 +6,7 @@ use App\Enums\Difficulty;
 use App\Enums\MovementType;
 use App\Models\Exercise;
 use App\Models\MuscleGroup;
+use App\Models\Workout;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -124,6 +125,24 @@ class ExerciseTest extends TestCase
 
         // Then
         $this->assertSame($equipment, $exercise->equipment);
+
+    }
+
+    #[Test]
+    public function it_can_be_linked_to_multiple_workouts(): void
+    {
+        // Given
+        $exercise = Exercise::factory()->create();
+
+        $workoutOne = Workout::factory()->create();
+        $workoutTwo = Workout::factory()->create();
+
+        // When
+        $workoutOne->exercises()->attach($exercise);
+        $workoutTwo->exercises()->attach($exercise);
+
+        // Then
+        $this->assertCount(2, $exercise->workouts);
 
     }
 
