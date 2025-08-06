@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use App\Models\Workout;
 use App\Models\WorkoutType;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -17,6 +18,7 @@ class WorkoutFactory extends Factory
             'name'            => $this->faker->name(),
             'slug'            => $this->faker->slug(),
             'workout_type_id' => WorkoutType::factory(),
+            'owner_id'        => User::factory(),
             'created_at'      => Carbon::now(),
             'updated_at'      => Carbon::now(),
         ];

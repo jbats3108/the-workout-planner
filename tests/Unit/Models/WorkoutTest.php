@@ -3,6 +3,7 @@
 namespace Tests\Unit\Models;
 
 use App\Models\Exercise;
+use App\Models\User;
 use App\Models\Workout;
 use App\Models\WorkoutType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -16,7 +17,7 @@ class WorkoutTest extends TestCase
     #[Test]
     public function it_has_a_type(): void
     {
-    	// Given
+        // Given
         $workoutType = WorkoutType::factory()->create([
             'name' => 'Cardio',
         ]);
@@ -33,7 +34,7 @@ class WorkoutTest extends TestCase
     #[Test]
     public function it_can_be_linked_to_multiple_exercises(): void
     {
-    	// Given
+        // Given
         $exerciseOne = Exercise::factory()->create();
         $exerciseTwo = Exercise::factory()->create();
 
@@ -47,4 +48,21 @@ class WorkoutTest extends TestCase
         $this->assertCount(2, $workout->exercises);
 
     }
+
+    #[Test]
+    public function it_has_an_owner(): void
+    {
+        // Given
+        $user = User::factory()->create();
+
+        // When
+        $workout = Workout::factory()->create([
+            'owner_id' => $user->id,
+        ]);
+
+        // Then
+        $this->assertTrue($workout->owner->is($user));;
+
+    }
+
 }

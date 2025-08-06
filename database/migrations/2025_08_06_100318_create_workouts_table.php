@@ -11,7 +11,8 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('slug');
-            $table->foreignId('workout_type_id')->constrained('workout_types');;
+            $table->foreignId('workout_type_id')->constrained('workout_types');
+            $table->foreignId('owner_id')->constrained('users');
             $table->timestamps();
             $table->softDeletes();
         });

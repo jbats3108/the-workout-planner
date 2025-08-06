@@ -17,6 +17,7 @@ class Workout extends Model
     protected $fillable = [
         'name',
         'slug',
+        'owner_id',
         'workout_type_id',
     ];
 
@@ -28,5 +29,10 @@ class Workout extends Model
     public function workoutType(): BelongsTo
     {
         return $this->belongsTo(WorkoutType::class);
+    }
+
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'owner_id');
     }
 }
