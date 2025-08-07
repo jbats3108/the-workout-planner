@@ -22,7 +22,6 @@ class ExerciseFactory extends Factory
             'secondary_muscle_group_id' => null,
             'movement_type'             => MovementType::PULL,
             'difficulty'                => Difficulty::BEGINNER,
-
             'created_at'                => Carbon::now(),
             'updated_at'                => Carbon::now(),
         ];

@@ -6,6 +6,8 @@ use App\Enums\Difficulty;
 use App\Enums\MovementType;
 use App\Traits\HasName;
 use App\Traits\HasSlug;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -53,5 +55,25 @@ class Exercise extends Model
     public function workouts(): BelongsToMany
     {
         return $this->belongsToMany(Workout::class, 'workout_exercise', 'exercise_id', 'workout_id');
+    }
+
+    #[Scope]
+    protected function whereMuscleGroup(Builder $query, MuscleGroup $muscleGroup): Builder
+    {
+        return $query
+            ->where('primary_muscle_group_id', $muscleGroup->id)
+            ->orWhere('secondary_muscle_group_id', $muscleGroup->id);
+    }
+
+    #[Scope]
+    protected function whereDifficulty(Builder $query, Difficulty $difficulty): Builder
+    {
+        return $query->where('difficulty', $difficulty);
+    }
+
+    #[Scope]
+    protected function whereMovementType(Builder $query, MovementType $movementType): Builder
+    {
+        return $query->where(['movement_type' => $movementType]);
     }
 }

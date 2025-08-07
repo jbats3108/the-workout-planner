@@ -146,4 +146,110 @@ class ExerciseTest extends TestCase
 
     }
 
+    #[Test]
+    public function it_can_be_queried_by_muscle_group(): void
+    {
+        // Given
+        $chestGroup = MuscleGroup::factory()->create(['name' => 'Chest']);
+        $backGroup = MuscleGroup::factory()->create(['name' => 'Back']);
+
+        $chestExerciseOne = Exercise::factory()->create([
+            'primary_muscle_group_id' => $chestGroup->id, 'name' => 'Bench Press'
+        ]);
+        $chestExerciseTwo = Exercise::factory()->create([
+            'primary_muscle_group_id' => $chestGroup->id, 'name' => 'Push Up'
+        ]);
+
+        $backExercise = Exercise::factory()->create(['primary_muscle_group_id' => $backGroup->id, 'name' => 'Pull Up']);
+        $backExerciseTwo = Exercise::factory()->create([
+            'primary_muscle_group_id' => $backGroup->id, 'name' => 'Barbell Row'
+        ]);
+
+        // When
+        $chestExercises = Exercise::whereMuscleGroup($chestGroup)->get();
+        $backExercises = Exercise::whereMuscleGroup($backGroup)->get();
+
+        // Then
+        $this->assertCount(2, $chestExercises);
+        $this->assertCount(2, $backExercises);
+
+        $this->assertTrue($chestExercises->contains($chestExerciseOne));
+        $this->assertTrue($chestExercises->contains($chestExerciseTwo));
+
+        $this->assertTrue($backExercises->contains($backExercise));
+        $this->assertTrue($backExercises->contains($backExerciseTwo));
+
+    }
+
+    #[Test]
+    public function querying_by_muscle_group_also_searches_secondary_muscle_group(): void
+    {
+        // Given
+        $chestGroup = MuscleGroup::factory()->create(['name' => 'Chest']);
+        $tricepsGroup = MuscleGroup::factory()->create(['name' => 'Triceps']);
+
+        $exercise = Exercise::factory()->create([
+            'primary_muscle_group_id'   => $chestGroup->id,
+            'secondary_muscle_group_id' => $tricepsGroup->id,
+            'name'                      => 'Tricep Dip'
+        ]);
+
+        // When
+        $chestExercises = Exercise::whereMuscleGroup($tricepsGroup)->get();
+
+        // Then
+        $this->assertCount(1, $chestExercises);
+        $this->assertTrue($chestExercises->contains($exercise));
+
+    }
+
+    #[Test]
+    public function it_can_be_queried_by_movement_type(): void
+    {
+        // Given
+        $pushExercise = Exercise::factory()->create([
+            'movement_type' => MovementType::PUSH
+        ]);
+
+        $pullExercise = Exercise::factory()->create([
+            'movement_type' => MovementType::PULL
+        ]);
+
+        // When
+        $pushExercises = Exercise::whereMovementType(MovementType::PUSH)->get();
+        $pullExercises = Exercise::whereMovementType(MovementType::PULL)->get();
+
+        // Then
+        $this->assertCount(1, $pushExercises);
+        $this->assertTrue($pushExercises->contains($pushExercise));
+
+        $this->assertCount(1, $pullExercises);
+        $this->assertTrue($pullExercises->contains($pullExercise));
+
+    }
+
+    #[Test]
+    public function it_can_be_queried_by_difficulty(): void
+    {
+        // Given
+        $beginnerExercise = Exercise::factory()->create([
+            'difficulty' => Difficulty::BEGINNER
+        ]);
+
+        $advancedExercise = Exercise::factory()->create([
+            'difficulty' => Difficulty::ADVANCED
+        ]);
+
+        // When
+        $beginnerExercises = Exercise::whereDifficulty(Difficulty::BEGINNER)->get();
+        $advancedExercises = Exercise::whereDifficulty(Difficulty::ADVANCED)->get();
+
+        // Then
+        $this->assertCount(1, $beginnerExercises);
+        $this->assertTrue($beginnerExercises->contains($beginnerExercise));
+
+        $this->assertCount(1, $advancedExercises);
+        $this->assertTrue($advancedExercises->contains($advancedExercise));
+    }
+
 }
