@@ -28,6 +28,11 @@ class Exercise extends Model
         'equipment',
     ];
 
+    public static function lookup(string $slug): ?Exercise
+    {
+        return static::firstWhere('slug', $slug);
+    }
+
     protected function casts(): array
     {
         return [

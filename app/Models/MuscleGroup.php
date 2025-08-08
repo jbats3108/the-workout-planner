@@ -16,4 +16,9 @@ class MuscleGroup extends Model
         'name',
         'slug',
     ];
+
+    public static function lookup(string $slug): ?MuscleGroup
+    {
+        return static::firstWhere('slug', $slug);
+    }
 }
