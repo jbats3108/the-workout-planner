@@ -18,12 +18,11 @@ class HasNameMock
 
 class HasNameTest extends TestCase
 {
-
     #[Test]
     public function it_retrieves_the_name(): void
     {
         // Given
-        $class = new HasNameMock();
+        $class = new HasNameMock;
 
         $class->name = 'Test';
 

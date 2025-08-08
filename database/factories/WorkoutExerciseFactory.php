@@ -15,7 +15,7 @@ class WorkoutExerciseFactory extends Factory
     {
         return [
             'exercise_id' => Exercise::factory(),
-            'workout_id'  => Workout::factory(),
+            'workout_id' => Workout::factory(),
         ];
     }
 }

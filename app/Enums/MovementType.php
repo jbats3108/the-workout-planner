@@ -8,8 +8,8 @@ enum MovementType: string
 {
     use HasValues;
 
-    case PUSH  = 'push';
-    case PULL  = 'pull';
+    case PUSH = 'push';
+    case PULL = 'pull';
     case LOWER = 'lower';
 
 }

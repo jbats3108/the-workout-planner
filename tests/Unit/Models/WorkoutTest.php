@@ -61,8 +61,7 @@ class WorkoutTest extends TestCase
         ]);
 
         // Then
-        $this->assertTrue($workout->owner->is($user));;
+        $this->assertTrue($workout->owner->is($user));
 
     }
-
 }

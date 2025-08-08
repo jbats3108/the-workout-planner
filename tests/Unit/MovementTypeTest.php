@@ -19,7 +19,7 @@ class MovementTypeTest extends TestCase
         ];
 
         // Then
-        $this->assertSame($expectedValues,MovementType::values());
+        $this->assertSame($expectedValues, MovementType::values());
 
     }
 }

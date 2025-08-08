@@ -15,12 +15,12 @@ class WorkoutFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'            => $this->faker->name(),
-            'slug'            => $this->faker->slug(),
+            'name' => $this->faker->name(),
+            'slug' => $this->faker->slug(),
             'workout_type_id' => WorkoutType::factory(),
-            'owner_id'        => User::factory(),
-            'created_at'      => Carbon::now(),
-            'updated_at'      => Carbon::now(),
+            'owner_id' => User::factory(),
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ];
     }
 }

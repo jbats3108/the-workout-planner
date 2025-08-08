@@ -18,12 +18,11 @@ class HasSlugMock
 
 class HasSlugTest extends TestCase
 {
-
     #[Test]
     public function it_retrieves_the_slug(): void
     {
         // Given
-        $class = new HasSlugMock();
+        $class = new HasSlugMock;
 
         $class->slug = 'test';
 

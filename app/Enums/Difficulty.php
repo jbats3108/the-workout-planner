@@ -8,7 +8,7 @@ enum Difficulty: string
 {
     use HasValues;
 
-    case BEGINNER     = 'beginner';
+    case BEGINNER = 'beginner';
     case INTERMEDIATE = 'intermediate';
-    case ADVANCED     = 'advanced';
+    case ADVANCED = 'advanced';
 }

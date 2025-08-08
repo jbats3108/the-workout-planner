@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Exercise extends Model
 {
-    use HasFactory, SoftDeletes, HasName, HasSlug;
+    use HasFactory, HasName, HasSlug, SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -32,8 +32,8 @@ class Exercise extends Model
     {
         return [
             'movement_type' => MovementType::class,
-            'difficulty'    => Difficulty::class,
-            'equipment'     => 'array',
+            'difficulty' => Difficulty::class,
+            'equipment' => 'array',
         ];
     }
 

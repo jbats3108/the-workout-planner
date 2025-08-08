@@ -100,7 +100,7 @@ class ExerciseTest extends TestCase
     {
         // Given / When
         $exercise = Exercise::factory()->create([
-            'difficulty' => Difficulty::ADVANCED
+            'difficulty' => Difficulty::ADVANCED,
         ]);
 
         // Then
@@ -114,13 +114,13 @@ class ExerciseTest extends TestCase
         // Given
         $equipment = [
             'barbell',
-            'bench'
+            'bench',
         ];
 
         // When
         $exercise = Exercise::factory()->create([
-                'equipment' => $equipment
-            ]
+            'equipment' => $equipment,
+        ]
         );
 
         // Then
@@ -154,15 +154,15 @@ class ExerciseTest extends TestCase
         $backGroup = MuscleGroup::factory()->create(['name' => 'Back']);
 
         $chestExerciseOne = Exercise::factory()->create([
-            'primary_muscle_group_id' => $chestGroup->id, 'name' => 'Bench Press'
+            'primary_muscle_group_id' => $chestGroup->id, 'name' => 'Bench Press',
         ]);
         $chestExerciseTwo = Exercise::factory()->create([
-            'primary_muscle_group_id' => $chestGroup->id, 'name' => 'Push Up'
+            'primary_muscle_group_id' => $chestGroup->id, 'name' => 'Push Up',
         ]);
 
         $backExercise = Exercise::factory()->create(['primary_muscle_group_id' => $backGroup->id, 'name' => 'Pull Up']);
         $backExerciseTwo = Exercise::factory()->create([
-            'primary_muscle_group_id' => $backGroup->id, 'name' => 'Barbell Row'
+            'primary_muscle_group_id' => $backGroup->id, 'name' => 'Barbell Row',
         ]);
 
         // When
@@ -189,9 +189,9 @@ class ExerciseTest extends TestCase
         $tricepsGroup = MuscleGroup::factory()->create(['name' => 'Triceps']);
 
         $exercise = Exercise::factory()->create([
-            'primary_muscle_group_id'   => $chestGroup->id,
+            'primary_muscle_group_id' => $chestGroup->id,
             'secondary_muscle_group_id' => $tricepsGroup->id,
-            'name'                      => 'Tricep Dip'
+            'name' => 'Tricep Dip',
         ]);
 
         // When
@@ -208,11 +208,11 @@ class ExerciseTest extends TestCase
     {
         // Given
         $pushExercise = Exercise::factory()->create([
-            'movement_type' => MovementType::PUSH
+            'movement_type' => MovementType::PUSH,
         ]);
 
         $pullExercise = Exercise::factory()->create([
-            'movement_type' => MovementType::PULL
+            'movement_type' => MovementType::PULL,
         ]);
 
         // When
@@ -233,11 +233,11 @@ class ExerciseTest extends TestCase
     {
         // Given
         $beginnerExercise = Exercise::factory()->create([
-            'difficulty' => Difficulty::BEGINNER
+            'difficulty' => Difficulty::BEGINNER,
         ]);
 
         $advancedExercise = Exercise::factory()->create([
-            'difficulty' => Difficulty::ADVANCED
+            'difficulty' => Difficulty::ADVANCED,
         ]);
 
         // When
@@ -258,20 +258,20 @@ class ExerciseTest extends TestCase
         // Given
         $equipmentListOne = [
             'barbell',
-            'bench'
+            'bench',
         ];
 
         $equipmentListTwo = [
             'barbell',
-            'dumbbell'
+            'dumbbell',
         ];
 
         $exerciseOne = Exercise::factory()->create([
-            'equipment' => $equipmentListOne
+            'equipment' => $equipmentListOne,
         ]);
 
         $exerciseTwo = Exercise::factory()->create([
-            'equipment' => $equipmentListTwo
+            'equipment' => $equipmentListTwo,
         ]);
 
         // When
@@ -291,5 +291,4 @@ class ExerciseTest extends TestCase
         $this->assertTrue($benchExercises->contains($exerciseOne));
 
     }
-
 }

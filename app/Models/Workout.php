@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Workout extends Model
 {
-    use HasFactory, SoftDeletes, HasName, HasSlug;
+    use HasFactory, HasName, HasSlug, SoftDeletes;
 
     protected $fillable = [
         'name',

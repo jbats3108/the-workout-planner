@@ -13,8 +13,8 @@ class MuscleGroupFactory extends Factory
     public function definition()
     {
         return [
-            'name'       => $this->faker->name(),
-            'slug'       => $this->faker->slug(),
+            'name' => $this->faker->name(),
+            'slug' => $this->faker->slug(),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];
