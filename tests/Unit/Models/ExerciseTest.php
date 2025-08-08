@@ -252,4 +252,44 @@ class ExerciseTest extends TestCase
         $this->assertTrue($advancedExercises->contains($advancedExercise));
     }
 
+    #[Test]
+    public function it_can_be_queried_by_required_equipment(): void
+    {
+        // Given
+        $equipmentListOne = [
+            'barbell',
+            'bench'
+        ];
+
+        $equipmentListTwo = [
+            'barbell',
+            'dumbbell'
+        ];
+
+        $exerciseOne = Exercise::factory()->create([
+            'equipment' => $equipmentListOne
+        ]);
+
+        $exerciseTwo = Exercise::factory()->create([
+            'equipment' => $equipmentListTwo
+        ]);
+
+        // When
+        $barbellExercises = Exercise::whereEquipment('barbell')->get();
+        $dumbbellExercises = Exercise::whereEquipment('dumbbell')->get();
+        $benchExercises = Exercise::whereEquipment('bench')->get();
+
+        // Then
+        $this->assertCount(2, $barbellExercises);
+        $this->assertTrue($barbellExercises->contains($exerciseOne));
+        $this->assertTrue($barbellExercises->contains($exerciseTwo));
+
+        $this->assertCount(1, $dumbbellExercises);
+        $this->assertTrue($dumbbellExercises->contains($exerciseTwo));
+
+        $this->assertCount(1, $benchExercises);
+        $this->assertTrue($benchExercises->contains($exerciseOne));
+
+    }
+
 }

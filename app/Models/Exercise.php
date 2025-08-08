@@ -76,4 +76,10 @@ class Exercise extends Model
     {
         return $query->where(['movement_type' => $movementType]);
     }
+
+    #[Scope]
+    protected function whereEquipment(Builder $query, string $equipmentSearch): Builder
+    {
+        return $query->whereJsonContains('equipment', $equipmentSearch);
+    }
 }
