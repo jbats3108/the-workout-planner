@@ -10,4 +10,9 @@ trait HasSlug
     {
         return $this->slug;
     }
+
+    public static function lookup(string $slug): ?static
+    {
+        return static::firstWhere('slug', $slug);
+    }
 }
