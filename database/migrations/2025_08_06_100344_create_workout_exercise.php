@@ -11,6 +11,11 @@ return new class extends Migration
         Schema::create('workout_exercise', function (Blueprint $table) {
             $table->foreignId('exercise_id');
             $table->foreignId('workout_id');
+            $table->integer('sets');
+            $table->integer('reps');
+            $table->integer('weight');
+            $table->boolean('to_failure')->default(false);
+            $table->timestamps();
         });
     }
 

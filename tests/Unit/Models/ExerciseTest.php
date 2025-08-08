@@ -138,8 +138,16 @@ class ExerciseTest extends TestCase
         $workoutTwo = Workout::factory()->create();
 
         // When
-        $workoutOne->exercises()->attach($exercise);
-        $workoutTwo->exercises()->attach($exercise);
+        $workoutOne->exercises()->attach($exercise, [
+            'sets' => 3,
+            'reps' => 12,
+            'weight' => 10,
+        ]);
+        $workoutTwo->exercises()->attach($exercise, [
+            'sets' => 3,
+            'reps' => 12,
+            'weight' => 10,
+        ]);
 
         // Then
         $this->assertCount(2, $exercise->workouts);

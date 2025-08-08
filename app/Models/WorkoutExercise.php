@@ -17,7 +17,18 @@ class WorkoutExercise extends Model
     protected $fillable = [
         'exercise_id',
         'workout_id',
+        'sets',
+        'reps',
+        'weight',
+        'to_failure',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'to_failure' => 'boolean',
+        ];
+    }
 
     public function exercise(): BelongsTo
     {
