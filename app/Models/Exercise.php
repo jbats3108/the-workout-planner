@@ -61,8 +61,8 @@ class Exercise extends Model
     protected function whereMuscleGroup(Builder $query, MuscleGroup $muscleGroup): Builder
     {
         return $query
-            ->where('primary_muscle_group_id', $muscleGroup->id)
-            ->orWhere('secondary_muscle_group_id', $muscleGroup->id);
+            ->whereBelongsTo($muscleGroup, 'primaryMuscleGroup')
+            ->orWhereBelongsTo($muscleGroup, 'secondaryMuscleGroup');
     }
 
     #[Scope]
