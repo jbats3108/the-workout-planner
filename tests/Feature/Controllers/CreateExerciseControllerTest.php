@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Controllers;
 
+use App\Models\Exercise;
 use App\Models\MuscleGroup;
 use App\Models\User;
 use Database\Seeders\RoleSeeder;
@@ -65,7 +66,7 @@ class CreateExerciseControllerTest extends TestCase
     #[Test]
     public function it_requires_the_secondary_muscle_group_to_be_different_to_the_primary(): void
     {
-    	// Given
+        // Given
         $createExerciseRequest = [
             'name' => 'Test Exercise',
             'slug' => 'test-exercise',
@@ -126,6 +127,40 @@ class CreateExerciseControllerTest extends TestCase
         // Then
         $response->assertSessionHasErrors('difficulty');
 
+    }
+
+    #[Test]
+    public function it_creates_a_new_exercise_record(): void
+    {
+        // Given
+        $createExerciseRequest = [
+            'name' => 'Test Exercise',
+            'slug' => 'test-exercise',
+            'primary_muscle_group' => $this->validMuscleGroup->getSlug(),
+            'secondary_muscle_group' => null,
+            'equipment' => ['barbell'],
+            'difficulty' => 'beginner',
+            'movement_type' => 'pull',
+        ];
+
+        // When
+        $response = $this->makeRequest($createExerciseRequest);
+
+        // Then
+        $response->assertCreated();
+
+        $this->assertDatabaseHas(Exercise::class, [
+            'name' => 'Test Exercise',
+            'slug' => 'test-exercise',
+            'difficulty' => 'beginner',
+            'movement_type' => 'pull',
+        ]);
+
+        $createdExercise = Exercise::lookup('test-exercise');
+
+        $this->assertTrue($createdExercise->primaryMuscleGroup->is($this->validMuscleGroup));
+        $this->assertNull($createdExercise->secondaryMuscleGroup);
+        $this->assertSame(['barbell'], $createdExercise->equipment);
     }
 
     private function makeRequest(array $createExerciseRequest): TestResponse
