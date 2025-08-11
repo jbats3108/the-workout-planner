@@ -3,14 +3,14 @@
 namespace Tests\Unit\Models;
 
 use App\Models\Exercise;
+use App\Models\Routine;
+use App\Models\RoutineType;
 use App\Models\User;
-use App\Models\Workout;
-use App\Models\WorkoutType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-class WorkoutTest extends TestCase
+class RoutineTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -18,17 +18,17 @@ class WorkoutTest extends TestCase
     public function it_has_a_type(): void
     {
         // Given
-        $workoutType = WorkoutType::factory()->create([
+        $routineType = RoutineType::factory()->create([
             'name' => 'Cardio',
         ]);
 
         // When
-        $workout = Workout::factory()->create([
-            'workout_type_id' => $workoutType->id,
+        $routine = Routine::factory()->create([
+            'routine_type_id' => $routineType->id,
         ]);
 
         // Then
-        $this->assertTrue($workout->workoutType->is($workoutType));
+        $this->assertTrue($routine->routineType->is($routineType));
     }
 
     #[Test]
@@ -38,22 +38,22 @@ class WorkoutTest extends TestCase
         $exerciseOne = Exercise::factory()->create();
         $exerciseTwo = Exercise::factory()->create();
 
-        $workout = Workout::factory()->create();
+        $routine = Routine::factory()->create();
 
         // When
-        $exerciseOne->workouts()->attach($workout, [
+        $exerciseOne->routines()->attach($routine, [
             'sets' => 3,
             'reps' => 12,
             'weight' => 10,
         ]);
-        $exerciseTwo->workouts()->attach($workout, [
+        $exerciseTwo->routines()->attach($routine, [
             'sets' => 3,
             'reps' => 12,
             'weight' => 10,
         ]);
 
         // Then
-        $this->assertCount(2, $workout->exercises);
+        $this->assertCount(2, $routine->exercises);
 
     }
 
@@ -64,12 +64,12 @@ class WorkoutTest extends TestCase
         $user = User::factory()->create();
 
         // When
-        $workout = Workout::factory()->create([
+        $routine = Routine::factory()->create([
             'owner_id' => $user->id,
         ]);
 
         // Then
-        $this->assertTrue($workout->owner->is($user));
+        $this->assertTrue($routine->owner->is($user));
 
     }
 }

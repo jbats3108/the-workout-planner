@@ -6,7 +6,7 @@ use App\Enums\Difficulty;
 use App\Enums\MovementType;
 use App\Models\Exercise;
 use App\Models\MuscleGroup;
-use App\Models\Workout;
+use App\Models\Routine;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -129,28 +129,28 @@ class ExerciseTest extends TestCase
     }
 
     #[Test]
-    public function it_can_be_linked_to_multiple_workouts(): void
+    public function it_can_be_linked_to_multiple_routines(): void
     {
         // Given
         $exercise = Exercise::factory()->create();
 
-        $workoutOne = Workout::factory()->create();
-        $workoutTwo = Workout::factory()->create();
+        $routineOne = Routine::factory()->create();
+        $routineTwo = Routine::factory()->create();
 
         // When
-        $workoutOne->exercises()->attach($exercise, [
+        $routineOne->exercises()->attach($exercise, [
             'sets' => 3,
             'reps' => 12,
             'weight' => 10,
         ]);
-        $workoutTwo->exercises()->attach($exercise, [
+        $routineTwo->exercises()->attach($exercise, [
             'sets' => 3,
             'reps' => 12,
             'weight' => 10,
         ]);
 
         // Then
-        $this->assertCount(2, $exercise->workouts);
+        $this->assertCount(2, $exercise->routines);
 
     }
 

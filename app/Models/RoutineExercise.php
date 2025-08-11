@@ -6,17 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class WorkoutExercise extends Model
+class RoutineExercise extends Model
 {
     use HasFactory;
 
     public $timestamps = false;
 
-    protected $table = 'workout_exercise';
+    protected $table = 'routine_exercise';
 
     protected $fillable = [
         'exercise_id',
-        'workout_id',
+        'routine_id',
         'sets',
         'reps',
         'weight',
@@ -35,8 +35,8 @@ class WorkoutExercise extends Model
         return $this->belongsTo(Exercise::class);
     }
 
-    public function workout(): BelongsTo
+    public function routine(): BelongsTo
     {
-        return $this->belongsTo(Workout::class);
+        return $this->belongsTo(Routine::class);
     }
 }

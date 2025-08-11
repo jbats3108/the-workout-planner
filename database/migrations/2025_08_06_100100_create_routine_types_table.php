@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('workout_types', function (Blueprint $table) {
+        Schema::create('routine_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('slug');
@@ -19,6 +19,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('workout_types');
+        Schema::dropIfExists('routine_types');
     }
 };

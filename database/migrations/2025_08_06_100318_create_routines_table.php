@@ -8,11 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('workouts', function (Blueprint $table) {
+        Schema::create('routines', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('slug');
-            $table->foreignId('workout_type_id')->constrained('workout_types');
+            $table->foreignId('routine_type_id')->constrained('routine_types');
             $table->foreignId('owner_id')->constrained('users');
             $table->timestamps();
             $table->softDeletes();
@@ -21,6 +21,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('workouts');
+        Schema::dropIfExists('routines');
     }
 };

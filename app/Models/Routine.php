@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Workout extends Model
+class Routine extends Model
 {
     use HasFactory, HasName, HasSlug, SoftDeletes;
 
@@ -18,17 +18,17 @@ class Workout extends Model
         'name',
         'slug',
         'owner_id',
-        'workout_type_id',
+        'routine_type_id',
     ];
 
     public function exercises(): BelongsToMany
     {
-        return $this->belongsToMany(Exercise::class, 'workout_exercise', 'workout_id', 'exercise_id');
+        return $this->belongsToMany(Exercise::class, 'routine_exercise', 'routine_id', 'exercise_id');
     }
 
-    public function workoutType(): BelongsTo
+    public function routineType(): BelongsTo
     {
-        return $this->belongsTo(WorkoutType::class);
+        return $this->belongsTo(RoutineType::class);
     }
 
     public function owner(): BelongsTo

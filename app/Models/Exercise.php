@@ -52,9 +52,9 @@ class Exercise extends Model
         return $this->movement_type;
     }
 
-    public function workouts(): BelongsToMany
+    public function routines(): BelongsToMany
     {
-        return $this->belongsToMany(Workout::class, 'workout_exercise', 'exercise_id', 'workout_id');
+        return $this->belongsToMany(Routine::class, 'routine_exercise', 'exercise_id', 'routine_id');
     }
 
     #[Scope]

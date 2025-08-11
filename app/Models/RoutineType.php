@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class WorkoutType extends Model
+class RoutineType extends Model
 {
     use HasFactory, HasName, HasSlug, SoftDeletes;
 

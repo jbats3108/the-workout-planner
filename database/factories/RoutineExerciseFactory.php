@@ -3,19 +3,19 @@
 namespace Database\Factories;
 
 use App\Models\Exercise;
-use App\Models\Workout;
-use App\Models\WorkoutExercise;
+use App\Models\Routine;
+use App\Models\RoutineExercise;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class WorkoutExerciseFactory extends Factory
+class RoutineExerciseFactory extends Factory
 {
-    protected $model = WorkoutExercise::class;
+    protected $model = RoutineExercise::class;
 
     public function definition(): array
     {
         return [
             'exercise_id' => Exercise::factory(),
-            'workout_id' => Workout::factory(),
+            'routine_id' => Routine::factory(),
         ];
     }
 }
