@@ -1,8 +1,9 @@
 <?php
 
 use App\Http\Controllers\Exercises\CreateExerciseController;
-use App\Http\Controllers\Routines\CreateRoutineController;
 use App\Http\Controllers\Exercises\DeleteExerciseController;
+use App\Http\Controllers\IndexRoutineController;
+use App\Http\Controllers\Routines\CreateRoutineController;
 use App\Http\Controllers\Routines\DeleteRoutineController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -27,6 +28,9 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::group(['prefix' => 'routines'], function () {
+
+        Route::get('/', IndexRoutineController::class)
+            ->name('routines.index');
 
         Route::post('/create', CreateRoutineController::class)
             ->name('routines.create');

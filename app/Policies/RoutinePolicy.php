@@ -10,8 +10,17 @@ class RoutinePolicy
 {
     use HandlesAuthorization;
 
+    public function before(User $user): ?bool
+    {
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        return null;
+    }
+
     public function delete(User $user, Routine $routine): bool
     {
-        return $user->hasRole('admin') || $user->id === $routine->owner_id;
+        return $routine->owner->is($user);
     }
 }

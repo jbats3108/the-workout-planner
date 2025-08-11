@@ -81,7 +81,6 @@ class IndexRoutineControllerTest extends TestCase
             'owner_id' => $this->firstUser->id,
         ]);
 
-
         $secondUserRoutines = Routine::factory()->count(3)->create([
             'owner_id' => $this->secondUser->id,
         ]);
@@ -109,7 +108,6 @@ class IndexRoutineControllerTest extends TestCase
                 'owner_id' => $routine->owner_id,
             ]);
         });
-
 
     }
 }
