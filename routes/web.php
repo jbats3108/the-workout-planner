@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CreateExerciseController;
 use App\Http\Controllers\CreateRoutineController;
+use App\Http\Controllers\DeleteExerciseController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -19,6 +20,9 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/create', CreateExerciseController::class)
             ->name('exercises.create');
+
+        Route::delete('/{exercise}', DeleteExerciseController::class)
+            ->name('exercises.delete');
     });
 
     Route::group(['prefix' => 'routines'], function () {
