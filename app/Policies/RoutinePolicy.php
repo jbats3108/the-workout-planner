@@ -19,6 +19,11 @@ class RoutinePolicy
         return null;
     }
 
+    public function view(User $user, Routine $routine): bool
+    {
+        return $routine->owner->is($user);
+    }
+
     public function delete(User $user, Routine $routine): bool
     {
         return $routine->owner->is($user);

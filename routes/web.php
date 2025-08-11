@@ -5,6 +5,7 @@ use App\Http\Controllers\Exercises\DeleteExerciseController;
 use App\Http\Controllers\IndexRoutineController;
 use App\Http\Controllers\Routines\CreateRoutineController;
 use App\Http\Controllers\Routines\DeleteRoutineController;
+use App\Http\Controllers\Routines\ShowRoutineController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -34,6 +35,10 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/create', CreateRoutineController::class)
             ->name('routines.create');
+
+        Route::get('/{routine}', ShowRoutineController::class)
+            ->can('view', 'routine')
+            ->name('routines.show');
 
         Route::delete('/{routine}', DeleteRoutineController::class)
             ->can('delete', 'routine')
