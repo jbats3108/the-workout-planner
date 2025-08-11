@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CreateExerciseController;
+use App\Http\Controllers\CreateRoutineController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -14,9 +15,18 @@ Route::get('dashboard', function () {
 
 Route::middleware('auth')->group(function () {
 
-    Route::post('/exercises/create', CreateExerciseController::class)
-        ->middleware('role:admin')
-        ->name('exercises.create');
+    Route::group(['prefix' => 'exercises', 'middleware' => 'role:admin'], function () {
+
+        Route::post('/create', CreateExerciseController::class)
+            ->name('exercises.create');
+    });
+
+    Route::group(['prefix' => 'routines'], function () {
+
+        Route::post('/create', CreateRoutineController::class)
+            ->name('routines.create');
+
+    });
 });
 
 require __DIR__.'/settings.php';

@@ -19,12 +19,14 @@ class CreateExerciseData extends Data
     public function __construct(
         public readonly string $name,
         public readonly string $slug,
+
         #[Exists(MuscleGroup::class, 'slug')]
         #[WithCast(SlugToModelCast::class, MuscleGroup::class)]
         public readonly MuscleGroup $primaryMuscleGroup,
         public readonly MovementType $movementType,
         public readonly Difficulty $difficulty,
         public readonly array $equipment,
+
         #[Different('primaryMuscleGroup')]
         #[Exists(MuscleGroup::class, 'slug')]
         #[WithCast(SlugToModelCast::class, MuscleGroup::class)]
