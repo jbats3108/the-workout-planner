@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\CreateExerciseController;
-use App\Http\Controllers\CreateRoutineController;
-use App\Http\Controllers\DeleteExerciseController;
-use App\Http\Controllers\DeleteRoutineController;
+use App\Http\Controllers\Exercises\CreateExerciseController;
+use App\Http\Controllers\Routines\CreateRoutineController;
+use App\Http\Controllers\Exercises\DeleteExerciseController;
+use App\Http\Controllers\Routines\DeleteRoutineController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 

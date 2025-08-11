@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Exercises;
 
-use App\DataTransferObjects\CreateExerciseData;
+use App\DataTransferObjects\Exercises\CreateExerciseData;
+use App\Http\Controllers\Controller;
 use App\Models\Exercise;
 use Illuminate\Http\Response as HttpResponse;
 use Symfony\Component\HttpFoundation\Response;

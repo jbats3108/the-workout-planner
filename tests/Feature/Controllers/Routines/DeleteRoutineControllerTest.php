@@ -1,6 +1,6 @@
 <?php
 
-namespace Feature\Controllers;
+namespace Feature\Controllers\Routines;
 
 use App\Models\Routine;
 use App\Models\User;

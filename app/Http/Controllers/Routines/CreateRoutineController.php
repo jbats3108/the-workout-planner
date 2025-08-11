@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Routines;
 
-use App\DataTransferObjects\CreateRoutineData;
+use App\DataTransferObjects\Routines\CreateRoutineData;
+use App\Http\Controllers\Controller;
 use App\Models\Routine;
 use Illuminate\Http\Response as HttpResponse;
 use Symfony\Component\HttpFoundation\Response;

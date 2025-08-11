@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Controllers;
+namespace Feature\Controllers\Exercises;
 
 use App\Models\Exercise;
 use App\Models\User;

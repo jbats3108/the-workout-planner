@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Unit\DataTransferObjects;
+namespace Tests\Unit\DataTransferObjects\Exercises;
 
-use App\DataTransferObjects\CreateExerciseData;
+use App\DataTransferObjects\Exercises\CreateExerciseData;
 use App\Models\MuscleGroup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;

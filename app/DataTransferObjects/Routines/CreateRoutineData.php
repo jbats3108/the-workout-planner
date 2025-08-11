@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DataTransferObjects;
+namespace App\DataTransferObjects\Routines;
 
 use App\DataTransferObjects\Casts\SlugToModelCast;
 use App\Models\RoutineType;

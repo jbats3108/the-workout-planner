@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Unit\DataTransferObjects;
+namespace Tests\Unit\DataTransferObjects\Routines;
 
-use App\DataTransferObjects\CreateRoutineData;
+use App\DataTransferObjects\Routines\CreateRoutineData;
 use App\Models\RoutineType;
 use App\Models\User;
 use Database\Seeders\RoleSeeder;

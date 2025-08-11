@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DataTransferObjects;
+namespace App\DataTransferObjects\Exercises;
 
 use App\DataTransferObjects\Casts\SlugToModelCast;
 use App\Enums\Difficulty;
