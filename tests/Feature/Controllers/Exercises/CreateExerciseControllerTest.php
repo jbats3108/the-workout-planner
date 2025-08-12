@@ -23,8 +23,7 @@ class CreateExerciseControllerTest extends TestCase
     {
         parent::setUp();
         $this->seed(RoleSeeder::class);
-        $this->adminUser = User::factory()->create();
-        $this->adminUser->assignRole('admin');
+        $this->adminUser = User::factory()->withRole('admin')->create();
 
         $this->validMuscleGroup = MuscleGroup::factory()->create();
     }

@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\Exercises\CreateExerciseController;
 use App\Http\Controllers\Exercises\DeleteExerciseController;
+use App\Http\Controllers\IndexExerciseController;
 use App\Http\Controllers\IndexRoutineController;
 use App\Http\Controllers\Routines\CreateRoutineController;
 use App\Http\Controllers\Routines\DeleteRoutineController;
 use App\Http\Controllers\Routines\ShowRoutineController;
+use App\Models\Exercise;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -19,16 +21,21 @@ Route::get('dashboard', function () {
 
 Route::middleware('auth')->group(function () {
 
-    Route::group(['prefix' => 'exercises', 'middleware' => 'role:admin'], function () {
+    Route::prefix('exercises')->group(function () {
+
+        Route::get('/', IndexExerciseController::class)
+            ->name('exercises.index');
 
         Route::post('/create', CreateExerciseController::class)
+            ->can('create', Exercise::class)
             ->name('exercises.create');
 
         Route::delete('/{exercise}', DeleteExerciseController::class)
+            ->can('delete', 'exercise')
             ->name('exercises.delete');
     });
 
-    Route::group(['prefix' => 'routines'], function () {
+    Route::prefix('routines')->group(function () {
 
         Route::get('/', IndexRoutineController::class)
             ->name('routines.index');
