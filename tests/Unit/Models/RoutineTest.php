@@ -64,9 +64,7 @@ class RoutineTest extends TestCase
         $user = User::factory()->create();
 
         // When
-        $routine = Routine::factory()->create([
-            'owner_id' => $user->id,
-        ]);
+        $routine = Routine::factory()->withOwner($user)->create();
 
         // Then
         $this->assertTrue($routine->owner->is($user));

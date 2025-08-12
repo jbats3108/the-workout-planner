@@ -23,4 +23,9 @@ class RoutineFactory extends Factory
             'updated_at' => Carbon::now(),
         ];
     }
+
+    public function withOwner(User $user): RoutineFactory
+    {
+        return $this->state(fn (array $attributes) => ['owner_id' => $user->id]);
+    }
 }

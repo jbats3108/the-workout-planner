@@ -29,9 +29,7 @@ class DeleteRoutineControllerTest extends TestCase
     public function it_allows_admins_to_delete_all_routines(): void
     {
         // Given
-        $routine = Routine::factory()->create([
-            'owner_id' => $this->user->id,
-        ]);
+        $routine = Routine::factory()->withOwner($this->user)->create();
 
         // When
         $route = route('routines.delete', ['routine' => $routine->id]);
@@ -47,9 +45,7 @@ class DeleteRoutineControllerTest extends TestCase
     public function it_allows_users_to_delete_their_own_routines(): void
     {
         // Given
-        $routine = Routine::factory()->create([
-            'owner_id' => $this->user->id,
-        ]);
+        $routine = Routine::factory()->withOwner($this->user)->create();
 
         // When
         $response = $this->makeRequest($routine);
