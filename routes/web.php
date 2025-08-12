@@ -2,12 +2,12 @@
 
 use App\Http\Controllers\Exercises\CreateExerciseController;
 use App\Http\Controllers\Exercises\DeleteExerciseController;
-use App\Http\Controllers\IndexExerciseController;
-use App\Http\Controllers\IndexRoutineController;
+use App\Http\Controllers\Exercises\IndexExerciseController;
+use App\Http\Controllers\Exercises\ShowExerciseController;
 use App\Http\Controllers\Routines\CreateRoutineController;
 use App\Http\Controllers\Routines\DeleteRoutineController;
+use App\Http\Controllers\Routines\IndexRoutineController;
 use App\Http\Controllers\Routines\ShowRoutineController;
-use App\Http\Controllers\ShowExerciseController;
 use App\Models\Exercise;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;

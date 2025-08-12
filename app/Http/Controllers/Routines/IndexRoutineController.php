@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Routines;
 
 use App\DataTransferObjects\Routines\RoutineData;
+use App\Http\Controllers\Controller;
 use App\Models\Routine;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
