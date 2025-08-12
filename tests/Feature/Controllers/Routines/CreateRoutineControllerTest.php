@@ -1,6 +1,6 @@
 <?php
 
-namespace Feature\Controllers\Routines;
+namespace Tests\Feature\Controllers\Routines;
 
 use App\Models\RoutineType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
