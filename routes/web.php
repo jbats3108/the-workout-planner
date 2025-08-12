@@ -7,6 +7,7 @@ use App\Http\Controllers\IndexRoutineController;
 use App\Http\Controllers\Routines\CreateRoutineController;
 use App\Http\Controllers\Routines\DeleteRoutineController;
 use App\Http\Controllers\Routines\ShowRoutineController;
+use App\Http\Controllers\ShowExerciseController;
 use App\Models\Exercise;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -25,6 +26,9 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/', IndexExerciseController::class)
             ->name('exercises.index');
+
+        Route::get('/{exercise}', ShowExerciseController::class)
+            ->name('exercises.show');
 
         Route::post('/create', CreateExerciseController::class)
             ->can('create', Exercise::class)
