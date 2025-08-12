@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Controllers\Exercises;
 
+use App\DataTransferObjects\Exercises\ExerciseData;
 use App\Models\Exercise;
 use App\Models\User;
 use Database\Seeders\RoleSeeder;
@@ -35,16 +36,10 @@ class IndexExerciseControllerTest extends TestCase
         // Then
         $response->assertOk();
 
-        $exercises->each(fn (Exercise $exercise) => $response->assertJsonFragment([
-            'id' => $exercise->id,
-            'name' => $exercise->name,
-            'slug' => $exercise->slug,
-            'primary_muscle_group_id' => $exercise->primary_muscle_group_id,
-            'secondary_muscle_group_id' => $exercise->secondary_muscle_group_id,
-            'equipment' => $exercise->equipment,
-            'difficulty' => $exercise->difficulty,
-            'movement_type' => $exercise->movement_type,
-        ]));
+        $exercises->each(fn (Exercise $exercise) => $this->assertContains(
+            ExerciseData::fromExercise($exercise)->toArray(),
+            $response->json())
+        );
 
     }
 

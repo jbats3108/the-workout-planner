@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Controllers\Routines;
 
+use App\DataTransferObjects\Routines\RoutineData;
 use App\Models\Routine;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -53,23 +54,9 @@ class IndexRoutineControllerTest extends TestCase
         // Then
         $response->assertOk();
 
-        $firstUserRoutines->each(function ($routine) use ($response) {
-            $response->assertJsonFragment([
-                'id' => $routine->id,
-                'name' => $routine->name,
-                'slug' => $routine->slug,
-                'owner_id' => $routine->owner_id,
-            ]);
-        });
+        $firstUserRoutines->each(fn (Routine $routine) => $this->assertContains(RoutineData::fromRoutine($routine)->toArray(), $response->json()));
 
-        $secondUserRoutines->each(function ($routine) use ($response) {
-            $response->assertJsonFragment([
-                'id' => $routine->id,
-                'name' => $routine->name,
-                'slug' => $routine->slug,
-                'owner_id' => $routine->owner_id,
-            ]);
-        });
+        $secondUserRoutines->each(fn (Routine $routine) => $this->assertContains(RoutineData::fromRoutine($routine)->toArray(), $response->json()));
 
     }
 
@@ -91,23 +78,9 @@ class IndexRoutineControllerTest extends TestCase
         // Then
         $response->assertOk();
 
-        $firstUserRoutines->each(function ($routine) use ($response) {
-            $response->assertJsonFragment([
-                'id' => $routine->id,
-                'name' => $routine->name,
-                'slug' => $routine->slug,
-                'owner_id' => $routine->owner_id,
-            ]);
-        });
+        $firstUserRoutines->each(fn (Routine $routine) => $this->assertContains(RoutineData::fromRoutine($routine)->toArray(), $response->json()));
 
-        $secondUserRoutines->each(function ($routine) use ($response) {
-            $response->assertJsonMissing([
-                'id' => $routine->id,
-                'name' => $routine->name,
-                'slug' => $routine->slug,
-                'owner_id' => $routine->owner_id,
-            ]);
-        });
+        $secondUserRoutines->each(fn (Routine $routine) => $this->assertNotContains(RoutineData::fromRoutine($routine)->toArray(), $response->json()));
 
     }
 }

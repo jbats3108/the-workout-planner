@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Controllers\Routines;
 
+use App\DataTransferObjects\Routines\RoutineData;
 use App\Models\Routine;
 use App\Models\User;
 use Database\Seeders\RoleSeeder;
@@ -37,7 +38,7 @@ class ShowRoutineControllerTest extends TestCase
         // Then
         $response->assertOk();
 
-        $this->assertSame($routine->with('owner')->get()->first()->toArray(), $response->json());
+        $this->assertSame(RoutineData::fromRoutine($routine)->toArray(), $response->json());
     }
 
     #[Test]
@@ -54,7 +55,7 @@ class ShowRoutineControllerTest extends TestCase
         // Then
         $response->assertOk();
 
-        $this->assertSame($routine->refresh()->toArray(), $response->json());
+        $this->assertSame(RoutineData::fromRoutine($routine)->toArray(), $response->json());
     }
 
     #[Test]

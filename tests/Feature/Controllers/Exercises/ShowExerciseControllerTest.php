@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Controllers\Exercises;
 
+use App\DataTransferObjects\Exercises\ExerciseData;
 use App\Models\Exercise;
 use App\Models\User;
 use Database\Seeders\RoleSeeder;
@@ -31,7 +32,7 @@ class ShowExerciseControllerTest extends TestCase
         // Then
         $response->assertOk();
 
-        $this->assertSame($exercise->refresh()->toArray(), $response->json());
+        $this->assertSame(ExerciseData::fromExercise($exercise)->toArray(), $response->json());
 
     }
 
