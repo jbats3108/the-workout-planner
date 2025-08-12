@@ -4,23 +4,21 @@ namespace Tests\Unit\DataTransferObjects\Routines;
 
 use App\DataTransferObjects\Routines\CreateRoutineData;
 use App\Models\RoutineType;
-use App\Models\User;
-use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Helpers\UserHelper;
 use Tests\TestCase;
 
 class CreateRoutineDataTest extends TestCase
 {
     use RefreshDatabase;
+    use RefreshDatabase;
+    use UserHelper;
 
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->seed(RoleSeeder::class);
-        $this->user = User::Factory()->create();
-        $this->user->assignRole('user');
+        $this->seedUsers();
     }
 
     #[Test]

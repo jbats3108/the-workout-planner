@@ -4,21 +4,21 @@ namespace Tests\Feature\Controllers\Exercises;
 
 use App\DataTransferObjects\Exercises\ExerciseData;
 use App\Models\Exercise;
-use App\Models\User;
-use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Helpers\UserHelper;
 use Tests\TestCase;
 
 class IndexExerciseControllerTest extends TestCase
 {
     use RefreshDatabase;
+    use UserHelper;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(RoleSeeder::class);
+        $this->seedUsers();
     }
 
     #[Test]
@@ -26,12 +26,10 @@ class IndexExerciseControllerTest extends TestCase
     public function it_returns_all_exercises(string $userRole): void
     {
         // Given
-        $user = User::factory()->withRole($userRole)->create();
-
         $exercises = Exercise::factory()->count(3)->create();
 
         // When
-        $response = $this->actingAs($user)->get(route('exercises.index'));
+        $response = $this->actingAs($this->user)->get(route('exercises.index'));
 
         // Then
         $response->assertOk();

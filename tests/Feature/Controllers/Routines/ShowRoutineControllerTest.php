@@ -5,23 +5,20 @@ namespace Tests\Feature\Controllers\Routines;
 use App\DataTransferObjects\Routines\RoutineData;
 use App\Models\Routine;
 use App\Models\User;
-use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Helpers\UserHelper;
 use Tests\TestCase;
 
 class ShowRoutineControllerTest extends TestCase
 {
     use RefreshDatabase;
-
-    private User $user;
+    use UserHelper;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(RoleSeeder::class);
-        $this->user = User::factory()->withRole('user')->create();
-        $this->adminUser = User::factory()->withRole('admin')->create();
+        $this->seedUsers();
     }
 
     #[Test]

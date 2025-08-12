@@ -3,30 +3,32 @@
 namespace Feature\Controllers\Exercises;
 
 use App\Models\Exercise;
-use App\Models\User;
-use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Helpers\UserHelper;
 use Tests\TestCase;
 
 class DeleteExerciseControllerTest extends TestCase
 {
     use RefreshDatabase;
+    use UserHelper;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->seedUsers();
+    }
 
     #[Test]
     public function it_rejects_requests_from_non_admins(): void
     {
         // Given
-        $this->seed(RoleSeeder::class);
-        $user = User::factory()->create();
-        $user->assignRole('user');
-
         $exercise = Exercise::factory()->create();
 
         $route = route('exercises.delete', ['exercise' => $exercise->id]);
 
         // When
-        $response = $this->actingAs($user)->delete($route);
+        $response = $this->actingAs($this->user)->delete($route);
 
         // Then
         $response->assertForbidden();
@@ -37,16 +39,12 @@ class DeleteExerciseControllerTest extends TestCase
     public function it_deletes_an_exercise(): void
     {
         // Given
-        $this->seed(RoleSeeder::class);
-        $user = User::factory()->create();
-        $user->assignRole('admin');
-
         $exercise = Exercise::factory()->create();
 
         $route = route('exercises.delete', ['exercise' => $exercise->id]);
 
         // When
-        $response = $this->actingAs($user)->delete($route);
+        $response = $this->actingAs($this->adminUser)->delete($route);
 
         // Then
         $response->assertRedirect();

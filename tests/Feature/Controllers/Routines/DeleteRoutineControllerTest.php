@@ -4,25 +4,23 @@ namespace Feature\Controllers\Routines;
 
 use App\Models\Routine;
 use App\Models\User;
-use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Helpers\UserHelper;
 use Tests\TestCase;
 
 class DeleteRoutineControllerTest extends TestCase
 {
     use RefreshDatabase;
+    use UserHelper;
 
     private User $user;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(RoleSeeder::class);
-        $this->user = User::factory()->withRole('user')->create();
-        $this->adminUser = User::factory()->withRole('admin')->create();
-
+        $this->seedUsers();
     }
 
     #[Test]

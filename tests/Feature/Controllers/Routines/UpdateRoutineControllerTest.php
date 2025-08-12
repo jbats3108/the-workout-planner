@@ -3,27 +3,27 @@
 namespace Tests\Feature\Controllers\Routines;
 
 use App\Models\Routine;
-use App\Models\User;
-use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Helpers\UserHelper;
 use Tests\TestCase;
 
 class UpdateRoutineControllerTest extends TestCase
 {
     use RefreshDatabase;
+    use UserHelper;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->seedUsers();
+    }
 
     #[Test]
     public function admins_cannot_update_user_routines(): void
     {
         // Given
-        $this->seed(RoleSeeder::class);
-
-        $user = User::factory()->withRole('user')->create();
-
-        $admin = User::factory()->withRole('admin')->create();
-
-        $routine = Routine::factory()->withOwner($user)->create();
+        $routine = Routine::factory()->withOwner($this->user)->create();
 
         $updatePayload = [
             'name' => 'New Name',
@@ -31,7 +31,7 @@ class UpdateRoutineControllerTest extends TestCase
         ];
 
         // When
-        $response = $this->actingAs($admin)->put(route('routines.update', $routine), $updatePayload);
+        $response = $this->actingAs($this->adminUser)->put(route('routines.update', $routine), $updatePayload);
 
         // Then
         $response->assertForbidden();
@@ -42,19 +42,14 @@ class UpdateRoutineControllerTest extends TestCase
     public function users_can_only_update_their_own_routines(): void
     {
         // Given
-        $this->seed(RoleSeeder::class);
-
-        $user = User::factory()->withRole('user')->create();
-        $otherUser = User::factory()->withRole('user')->create();
-
-        $routine = Routine::factory()->withOwner($user)->create();
+        $routine = Routine::factory()->withOwner($this->user)->create();
 
         $updatePayload = [
             'name' => 'New Name',
         ];
 
         // When
-        $response = $this->actingAs($otherUser)->put(route('routines.update', $routine), $updatePayload);
+        $response = $this->actingAs($this->secondUser)->put(route('routines.update', $routine), $updatePayload);
 
         // Then
         $response->assertForbidden();
@@ -65,10 +60,7 @@ class UpdateRoutineControllerTest extends TestCase
     public function it_updates_the_routine_details(): void
     {
         // Given
-        $this->seed(RoleSeeder::class);
-        $user = User::factory()->withRole('user')->create();
-
-        $routine = Routine::factory()->withOwner($user)->create();
+        $routine = Routine::factory()->withOwner($this->user)->create();
 
         $updatePayload = [
             'name' => 'New Name',
@@ -76,7 +68,7 @@ class UpdateRoutineControllerTest extends TestCase
         ];
 
         // When
-        $response = $this->actingAs($user)->put(route('routines.update', $routine), $updatePayload);
+        $response = $this->actingAs($this->user)->put(route('routines.update', $routine), $updatePayload);
 
         // Then
         $response->assertRedirect(route('routines.show', $routine));
@@ -92,9 +84,7 @@ class UpdateRoutineControllerTest extends TestCase
     public function it_does_not_override_the_slug_field_if_this_is_not_provided(): void
     {
         // Given
-        $this->seed(RoleSeeder::class);
-        $user = User::factory()->withRole('user')->create();
-        $routine = Routine::factory()->withOwner($user)->create([
+        $routine = Routine::factory()->withOwner($this->user)->create([
             'name' => 'Name',
             'slug' => 'name',
         ]);
@@ -104,7 +94,7 @@ class UpdateRoutineControllerTest extends TestCase
         ];
 
         // When
-        $response = $this->actingAs($user)->put(route('routines.update', $routine), $updatePayload);
+        $response = $this->actingAs($this->user)->put(route('routines.update', $routine), $updatePayload);
 
         // Then
         $response->assertRedirect(route('routines.show', $routine));

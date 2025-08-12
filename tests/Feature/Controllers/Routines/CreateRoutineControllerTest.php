@@ -3,23 +3,20 @@
 namespace Feature\Controllers\Routines;
 
 use App\Models\RoutineType;
-use App\Models\User;
-use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Helpers\UserHelper;
 use Tests\TestCase;
 
 class CreateRoutineControllerTest extends TestCase
 {
     use RefreshDatabase;
+    use UserHelper;
 
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->seed(RoleSeeder::class);
-        $this->user = User::Factory()->create();
-        $this->user->assignRole('user');
+        $this->seedUsers();
     }
 
     #[Test]

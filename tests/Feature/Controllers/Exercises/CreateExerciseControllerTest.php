@@ -5,25 +5,23 @@ namespace Feature\Controllers\Exercises;
 use App\Models\Exercise;
 use App\Models\MuscleGroup;
 use App\Models\User;
-use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Helpers\UserHelper;
 use Tests\TestCase;
 
 class CreateExerciseControllerTest extends TestCase
 {
     use RefreshDatabase;
-
-    private User $adminUser;
+    use UserHelper;
 
     private MuscleGroup $validMuscleGroup;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(RoleSeeder::class);
-        $this->adminUser = User::factory()->withRole('admin')->create();
+        $this->seedUsers();
 
         $this->validMuscleGroup = MuscleGroup::factory()->create();
     }

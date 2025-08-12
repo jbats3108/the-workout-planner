@@ -4,44 +4,28 @@ namespace Tests\Feature\Controllers\Routines;
 
 use App\DataTransferObjects\Routines\RoutineData;
 use App\Models\Routine;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Helpers\UserHelper;
 use Tests\TestCase;
 
 class IndexRoutineControllerTest extends TestCase
 {
     use RefreshDatabase;
-
-    protected User $adminUser;
-
-    protected User $firstUser;
-
-    protected User $secondUser;
+    use UserHelper;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed();
-
-        $this->adminUser = User::whereHas('roles', function ($query) {
-            $query->where('name', 'admin');
-        })->first();
-
-        $users = User::whereHas('roles', function ($query) {
-            $query->where('name', 'user');
-        })->get();
-
-        $this->firstUser = $users->first();
-        $this->secondUser = $users->last();
+        $this->seedUsers();
     }
 
     #[Test]
     public function it_shows_an_admin_all_routines(): void
     {
         // Given
-        $firstUserRoutines = Routine::factory()->count(3)->create([
-            'owner_id' => $this->firstUser->id,
+        $userRoutines = Routine::factory()->count(3)->create([
+            'owner_id' => $this->user->id,
         ]);
 
         $secondUserRoutines = Routine::factory()->count(3)->create([
@@ -54,7 +38,7 @@ class IndexRoutineControllerTest extends TestCase
         // Then
         $response->assertOk();
 
-        $firstUserRoutines->each(fn (Routine $routine) => $this->assertContains(RoutineData::fromRoutine($routine)->toArray(), $response->json()));
+        $userRoutines->each(fn (Routine $routine) => $this->assertContains(RoutineData::fromRoutine($routine)->toArray(), $response->json()));
 
         $secondUserRoutines->each(fn (Routine $routine) => $this->assertContains(RoutineData::fromRoutine($routine)->toArray(), $response->json()));
 
@@ -64,8 +48,8 @@ class IndexRoutineControllerTest extends TestCase
     public function it_only_shows_a_user_their_routines(): void
     {
         // Given
-        $firstUserRoutines = Routine::factory()->count(3)->create([
-            'owner_id' => $this->firstUser->id,
+        $userRoutines = Routine::factory()->count(3)->create([
+            'owner_id' => $this->user->id,
         ]);
 
         $secondUserRoutines = Routine::factory()->count(3)->create([
@@ -73,12 +57,12 @@ class IndexRoutineControllerTest extends TestCase
         ]);
 
         // When
-        $response = $this->actingAs($this->firstUser)->get(route('routines.index'));
+        $response = $this->actingAs($this->user)->get(route('routines.index'));
 
         // Then
         $response->assertOk();
 
-        $firstUserRoutines->each(fn (Routine $routine) => $this->assertContains(RoutineData::fromRoutine($routine)->toArray(), $response->json()));
+        $userRoutines->each(fn (Routine $routine) => $this->assertContains(RoutineData::fromRoutine($routine)->toArray(), $response->json()));
 
         $secondUserRoutines->each(fn (Routine $routine) => $this->assertNotContains(RoutineData::fromRoutine($routine)->toArray(), $response->json()));
 
