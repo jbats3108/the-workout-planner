@@ -10,9 +10,9 @@ class RoutinePolicy
 {
     use HandlesAuthorization;
 
-    public function before(User $user): ?bool
+    public function before(User $user, string $ability): ?bool
     {
-        if ($user->isAdmin()) {
+        if ($user->isAdmin() && $ability !== 'update') {
             return true;
         }
 
@@ -25,6 +25,11 @@ class RoutinePolicy
     }
 
     public function delete(User $user, Routine $routine): bool
+    {
+        return $routine->owner->is($user);
+    }
+
+    public function update(User $user, Routine $routine): bool
     {
         return $routine->owner->is($user);
     }
