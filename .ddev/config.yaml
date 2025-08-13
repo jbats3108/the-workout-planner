@@ -243,7 +243,11 @@ webimage_extra_packages: [php-mbstring, php-bcmath]
 # The default time that DDEV waits for all containers to become ready can be increased from
 # the default 120. This helps in importing huge databases, for example.
 
-#web_extra_exposed_ports:
+web_extra_exposed_ports:
+  - name: node-vite
+    container_port: 5173
+    http_port: 5172
+    https_port: 5173
 #- name: nodejs
 #  container_port: 3000
 #  http_port: 2999
