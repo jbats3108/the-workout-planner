@@ -3,6 +3,10 @@ import laravel from 'laravel-vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 
+const ddevUrl = process.env.DDEV_PRIMARY_URL ?? null
+
+const origin = ddevUrl ? `${ddevUrl.replace(/:\d+$/, "")}:5173`: null
+
 export default defineConfig({
     plugins: [
         laravel({
@@ -30,14 +34,14 @@ export default defineConfig({
         // us the primary URL of the DDEV project, e.g. "https://test-vite.ddev.site". But since DDEV
         // can be configured to use another port (via `router_https_port`), the output can also be
         // "https://test-vite.ddev.site:1234". Therefore we need to strip a port number like ":1234"
-        // before adding Vites port to achieve the desired output of "https://test-vite.ddev.site:5173".
-        origin: `${process.env.DDEV_PRIMARY_URL.replace(/:\d+$/, "")}:5173`,
+        // before adding Vite's port to achieve the desired output of "https://test-vite.ddev.site:5173".
+        origin,
 
         // 👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇
         // Configure CORS securely for the Vite dev server to allow requests from *.ddev.site domains,
         // supports additional hostnames (via regex). If you use another `project_tld`, adjust this.
         cors: {
-            origin: /https?:\/\/([A-Za-z0-9\-\.]+)?(\.ddev\.site)(?::\d+)?$/,
+            origin: /https?:\/\/([A-Za-z0-9\-.]+)?(\.ddev\.site)(?::\d+)?$/,
         },
     },
 });
