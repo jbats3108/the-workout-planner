@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import DarkModeToggle from '@/components/DarkModeToggle.vue';
-import { Head, Link } from '@inertiajs/vue3';
 import HomepageFeatureCallout from '@/components/HomepageFeatureCallout.vue';
+import { Head, Link } from '@inertiajs/vue3';
 </script>
 
 <template>
@@ -65,7 +65,9 @@ import HomepageFeatureCallout from '@/components/HomepageFeatureCallout.vue';
             <div class="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
                 <h2 class="text-3xl font-bold">Time to start planning?</h2>
                 <p class="mt-4 text-lg opacity-90">Click here to sign up</p>
-                <button class="mt-8 rounded-md bg-primary px-8 py-3 text-primary-foreground transition-opacity hover:opacity-90">Get Planning!</button>
+                <button class="mt-8 rounded-md bg-primary px-8 py-3 text-primary-foreground transition-opacity hover:opacity-90">
+                    Get Planning!
+                </button>
             </div>
         </div>
 
