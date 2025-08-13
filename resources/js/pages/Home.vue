@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import DarkModeToggle from '@/components/DarkModeToggle.vue';
 import { Head, Link } from '@inertiajs/vue3';
+import HomepageFeatureCallout from '@/components/HomepageFeatureCallout.vue';
 </script>
 
 <template>
@@ -27,20 +28,10 @@ import { Head, Link } from '@inertiajs/vue3';
         <div class="relative overflow-hidden">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="relative z-10 py-8 sm:py-16 md:py-20 lg:max-w-2xl lg:py-28">
-                    <h2 class="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">Lorem Ipsum Dolor Sit Amet</h2>
+                    <h2 class="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">Ready to plan your workouts?</h2>
                     <p class="mt-6 text-xl text-muted-foreground">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                        The Workout Planner is the premier platform to create, plan and track your workouts online.
                     </p>
-                    <div class="mt-10 flex gap-4">
-                        <button class="rounded-md bg-primary px-6 py-3 text-primary-foreground transition-opacity hover:opacity-90">
-                            Lorem Ipsum
-                        </button>
-                        <button
-                            class="rounded-md border border-border px-6 py-3 text-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground"
-                        >
-                            Dolor Sit
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -49,22 +40,22 @@ import { Head, Link } from '@inertiajs/vue3';
         <div class="bg-card py-16">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="text-center">
-                    <h2 class="text-3xl font-bold text-card-foreground">Lorem Ipsum</h2>
-                    <p class="mt-4 text-muted-foreground">Lorem ipsum dolor sit amet consectetur adipiscing elit</p>
+                    <h2 class="text-3xl font-bold text-card-foreground">Features</h2>
+                    <p class="mt-4 text-muted-foreground">Explore The Workout Planner</p>
                 </div>
                 <div class="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                    <div class="rounded-lg border border-border p-6 transition-colors hover:border-primary">
-                        <h3 class="text-xl font-semibold text-card-foreground">Lorem Ipsum</h3>
-                        <p class="mt-2 text-muted-foreground">Sed do eiusmod tempor incididunt ut labore</p>
-                    </div>
-                    <div class="rounded-lg border border-border p-6 transition-colors hover:border-primary">
-                        <h3 class="text-xl font-semibold text-card-foreground">Dolor Sit</h3>
-                        <p class="mt-2 text-muted-foreground">Ut enim ad minim veniam quis nostrud</p>
-                    </div>
-                    <div class="rounded-lg border border-border p-6 transition-colors hover:border-primary">
-                        <h3 class="text-xl font-semibold text-card-foreground">Amet Consectetur</h3>
-                        <p class="mt-2 text-muted-foreground">Duis aute irure dolor in reprehenderit</p>
-                    </div>
+                    <HomepageFeatureCallout>
+                        <template v-slot:header>Custom Routine Creation</template>
+                        <div>Create Full Body routines, or customise your split</div>
+                    </HomepageFeatureCallout>
+                    <HomepageFeatureCallout>
+                        <template v-slot:header>Workout Tracking</template>
+                        <div>Log your workouts and track your progress</div>
+                    </HomepageFeatureCallout>
+                    <HomepageFeatureCallout>
+                        <template v-slot:header>Something else</template>
+                        <div>When I think of another feature, I'll put a blurb here</div>
+                    </HomepageFeatureCallout>
                 </div>
             </div>
         </div>
@@ -72,15 +63,15 @@ import { Head, Link } from '@inertiajs/vue3';
         <!-- CTA Section -->
         <div class="bg-accent py-16 text-accent-foreground">
             <div class="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-                <h2 class="text-3xl font-bold">Lorem Ipsum Dolor Sit?</h2>
-                <p class="mt-4 text-lg opacity-90">Consectetur adipiscing elit sed do eiusmod tempor</p>
-                <button class="mt-8 rounded-md bg-primary px-8 py-3 text-primary-foreground transition-opacity hover:opacity-90">Lorem Ipsum</button>
+                <h2 class="text-3xl font-bold">Time to start planning?</h2>
+                <p class="mt-4 text-lg opacity-90">Click here to sign up</p>
+                <button class="mt-8 rounded-md bg-primary px-8 py-3 text-primary-foreground transition-opacity hover:opacity-90">Get Planning!</button>
             </div>
         </div>
 
         <!-- Footer -->
         <footer class="border-t border-border">
-            <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+            <div v-show="false" class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-2 gap-8 md:grid-cols-4">
                     <div>
                         <h3 class="text-sm font-semibold text-foreground">Lorem</h3>
