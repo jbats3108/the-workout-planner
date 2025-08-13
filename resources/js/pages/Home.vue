@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import DarkModeToggle from '@/pages/DarkModeToggle.vue';
+import DarkModeToggle from '@/components/DarkModeToggle.vue';
 import { Head, Link } from '@inertiajs/vue3';
 </script>
 
