@@ -4,6 +4,7 @@ use App\Http\Controllers\Exercises\CreateExerciseController;
 use App\Http\Controllers\Exercises\DeleteExerciseController;
 use App\Http\Controllers\Exercises\IndexExerciseController;
 use App\Http\Controllers\Exercises\ShowExerciseController;
+use App\Http\Controllers\Routines\AddRoutineExerciseController;
 use App\Http\Controllers\Routines\CreateRoutineController;
 use App\Http\Controllers\Routines\DeleteRoutineController;
 use App\Http\Controllers\Routines\IndexRoutineController;
@@ -59,6 +60,10 @@ Route::middleware('auth')->group(function () {
         Route::put('/{routine}', UpdateRoutineController::class)
             ->can('update', 'routine')
             ->name('routines.update');
+
+        Route::post('/{routine}/add-exercise/{exercise}', AddRoutineExerciseController::class)
+            ->can('addExercise', 'routine')
+            ->name('routines.add-exercise');
 
     });
 });

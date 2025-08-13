@@ -12,7 +12,7 @@ class RoutinePolicy
 
     public function before(User $user, string $ability): ?bool
     {
-        if ($user->isAdmin() && $ability !== 'update') {
+        if ($user->isAdmin() && ! in_array($ability, ['update', 'addExercise'])) {
             return true;
         }
 
@@ -30,6 +30,11 @@ class RoutinePolicy
     }
 
     public function update(User $user, Routine $routine): bool
+    {
+        return $routine->owner->is($user);
+    }
+
+    public function addExercise(User $user, Routine $routine): bool
     {
         return $routine->owner->is($user);
     }
