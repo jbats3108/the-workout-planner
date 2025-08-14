@@ -9,7 +9,6 @@ class RoutineData extends Data
 {
     private function __construct(
         public readonly string $name,
-        public readonly string $slug,
         public readonly string $routineType,
         public string $ownerName,
     ) {}
@@ -18,7 +17,6 @@ class RoutineData extends Data
     {
         return new static(
             $routine->getName(),
-            $routine->getSlug(),
             $routine->routineType->getName(),
             $routine->owner->name,
         );

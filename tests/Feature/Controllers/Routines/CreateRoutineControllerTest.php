@@ -82,7 +82,6 @@ class CreateRoutineControllerTest extends TestCase
 
         $this->assertDatabaseHas('routines', [
             'name' => 'Test Routine',
-            'slug' => 'test-routine',
             'routine_type_id' => $routineType->id,
             'owner_id' => $this->user->id,
         ]);

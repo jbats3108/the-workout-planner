@@ -16,7 +16,6 @@ class RoutineFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-            'slug' => $this->faker->slug(),
             'routine_type_id' => RoutineType::factory(),
             'owner_id' => User::factory(),
             'created_at' => Carbon::now(),

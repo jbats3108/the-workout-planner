@@ -11,7 +11,6 @@ return new class extends Migration
         Schema::create('routines', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('slug');
             $table->foreignId('routine_type_id')->constrained('routine_types');
             $table->foreignId('owner_id')->constrained('users');
             $table->timestamps();

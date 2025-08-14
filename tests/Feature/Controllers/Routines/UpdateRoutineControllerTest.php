@@ -27,7 +27,6 @@ class UpdateRoutineControllerTest extends TestCase
 
         $updatePayload = [
             'name' => 'New Name',
-            'slug' => 'new-slug',
         ];
 
         // When
@@ -64,7 +63,6 @@ class UpdateRoutineControllerTest extends TestCase
 
         $updatePayload = [
             'name' => 'New Name',
-            'slug' => 'new-name',
         ];
 
         // When
@@ -76,33 +74,6 @@ class UpdateRoutineControllerTest extends TestCase
         $routine->refresh();
 
         $this->assertSame('New Name', $routine->name);
-        $this->assertSame('new-name', $routine->slug);
-
-    }
-
-    #[Test]
-    public function it_does_not_override_the_slug_field_if_this_is_not_provided(): void
-    {
-        // Given
-        $routine = Routine::factory()->withOwner($this->user)->create([
-            'name' => 'Name',
-            'slug' => 'name',
-        ]);
-
-        $updatePayload = [
-            'name' => 'New Name',
-        ];
-
-        // When
-        $response = $this->actingAs($this->user)->put(route('routines.update', $routine), $updatePayload);
-
-        // Then
-        $response->assertRedirect(route('routines.show', $routine));
-
-        $routine->refresh();
-
-        $this->assertSame('New Name', $routine->name);
-        $this->assertSame('name', $routine->slug);
 
     }
 }
