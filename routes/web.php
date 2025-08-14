@@ -19,11 +19,9 @@ Route::get('/', function () {
     return Inertia::render('Home');
 })->name('home');
 
-
-
 Route::middleware('auth')->group(function () {
 
-    Route::get('dashboard',ShowDashboardController::class)->name('dashboard');
+    Route::get('dashboard', ShowDashboardController::class)->name('dashboard');
 
     Route::prefix('exercises')->group(function () {
 

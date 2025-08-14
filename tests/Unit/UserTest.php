@@ -56,7 +56,7 @@ class UserTest extends TestCase
         $userRoutines = $user->routines;
 
         // Then
-        $this->assertEquals($routines->fresh(),$userRoutines);
+        $this->assertEquals($routines->fresh(), $userRoutines);
 
     }
 }

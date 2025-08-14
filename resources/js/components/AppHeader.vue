@@ -40,8 +40,7 @@ const mainNavItems: NavItem[] = [
     },
 ];
 
-const rightNavItems: NavItem[] = [
-];
+const rightNavItems: NavItem[] = [];
 </script>
 
 <template>
