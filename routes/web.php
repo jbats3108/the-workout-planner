@@ -9,6 +9,7 @@ use App\Http\Controllers\Routines\CreateRoutineController;
 use App\Http\Controllers\Routines\DeleteRoutineController;
 use App\Http\Controllers\Routines\IndexRoutineController;
 use App\Http\Controllers\Routines\ShowRoutineController;
+use App\Http\Controllers\Routines\StoreRoutineController;
 use App\Http\Controllers\Routines\UpdateRoutineController;
 use App\Http\Controllers\ShowDashboardController;
 use App\Models\Exercise;
@@ -45,7 +46,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/', IndexRoutineController::class)
             ->name('routines.index');
 
-        Route::post('/create', CreateRoutineController::class)
+        Route::post('/create', StoreRoutineController::class)
+            ->name('routines.create');
+
+        Route::get('/create', CreateRoutineController::class)
             ->name('routines.create');
 
         Route::get('/{routine}', ShowRoutineController::class)

@@ -2,21 +2,17 @@
 
 namespace App\Http\Controllers\Routines;
 
-use App\DataTransferObjects\Routines\CreateRoutineData;
+use App\DataTransferObjects\Routines\RoutineTypeData;
 use App\Http\Controllers\Controller;
-use App\Models\Routine;
-use Illuminate\Http\Response as HttpResponse;
-use Symfony\Component\HttpFoundation\Response;
+use App\Models\RoutineType;
+use Inertia\Inertia;
 
 class CreateRoutineController extends Controller
 {
-    public function __invoke(CreateRoutineData $request): HttpResponse
+    public function __invoke()
     {
-        $routine = new Routine($request->toArray());
-        $routine->owner()->associate($request->owner);
-        $routine->routineType()->associate($request->routineType);
-        $routine->save();
-
-        return response('Successfully created routine', Response::HTTP_CREATED);
+        return Inertia::render('Routines/Create', [
+            'routine_types' => RoutineTypeData::collect(RoutineType::all()),
+        ]);
     }
 }

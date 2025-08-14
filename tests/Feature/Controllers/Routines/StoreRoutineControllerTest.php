@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Tests\Helpers\UserHelper;
 use Tests\TestCase;
 
-class CreateRoutineControllerTest extends TestCase
+class StoreRoutineControllerTest extends TestCase
 {
     use RefreshDatabase;
     use UserHelper;

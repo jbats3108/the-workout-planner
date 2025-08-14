@@ -25,7 +25,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
             <h2 class="border-2 p-2 text-xl">My Routines</h2>
 
-            <Link href="/create-routine" class="mt-8 w-1/3 rounded-md bg-primary p-3 transition-opacity hover:opacity-90"> Create New </Link>
+            <Link href="/routines/create" class="mt-8 w-1/3 rounded-md bg-primary p-3 transition-opacity hover:opacity-90"> Create New </Link>
 
             <div class="grid auto-rows-min gap-4 md:grid-cols-3">
                 <div v-for="(routine, key) in props.data.routines" :key="key" class="border-2 p-3">
