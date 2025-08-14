@@ -19,6 +19,9 @@ class DashboardServiceTest extends TestCase
     {
         parent::setUp();
         $this->seedUsers();
+
+        // Drop seeded routines
+        Routine::truncate();
     }
 
     #[Test]
