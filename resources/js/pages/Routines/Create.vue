@@ -14,14 +14,11 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
 ];
-
 </script>
 
 <template>
-
     <Head title="Create a Routine" />
     <AppLayout :breadcrumbs="breadcrumbs">
-        <h1 class="text-xl border-2 p-2">Create a new Routine</h1>
-
+        <h1 class="border-2 p-2 text-xl">Create a new Routine</h1>
     </AppLayout>
 </template>
