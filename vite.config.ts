@@ -2,10 +2,16 @@ import vue from '@vitejs/plugin-vue';
 import laravel from 'laravel-vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
+import vueDevtools from 'vite-plugin-vue-devtools';
+
+// Enable Vue Devtools in development mode
+if (process.env.NODE_ENV === 'development') {
+    vueDevtools();
+}
 
 const ddevUrl = process.env.DDEV_PRIMARY_URL ?? null
 
-const origin = ddevUrl ? `${ddevUrl.replace(/:\d+$/, "")}:5173`: null
+const origin = ddevUrl ? `${ddevUrl.replace(/:\d+$/, "")}:5173` : null
 
 export default defineConfig({
     plugins: [
@@ -23,6 +29,7 @@ export default defineConfig({
                 },
             },
         }),
+        vueDevtools(),
     ],
     server: {
         // Respond to all network requests
