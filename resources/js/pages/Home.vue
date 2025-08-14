@@ -15,9 +15,9 @@ import { Head, Link } from '@inertiajs/vue3';
                         <h1 class="text-xl font-bold text-primary">The Workout Planner</h1>
                     </div>
                     <div class="hidden items-center space-x-8 sm:flex">
-                        <Link href="/login" class="rounded-md bg-accent px-4 py-2 text-accent-foreground transition-opacity hover:opacity-90"
-                            >Get Started</Link
-                        >
+                        <Link href="login" class="rounded-md bg-accent px-4 py-2 text-accent-foreground transition-opacity hover:opacity-90"
+                            >Get Started
+                        </Link>
                         <DarkModeToggle />
                     </div>
                 </div>
@@ -66,7 +66,7 @@ import { Head, Link } from '@inertiajs/vue3';
                 <h2 class="text-3xl font-bold">Time to start planning?</h2>
                 <p class="mt-4 text-lg opacity-90">Click here to sign up</p>
                 <button class="mt-8 rounded-md bg-primary px-8 py-3 text-primary-foreground transition-opacity hover:opacity-90">
-                    Get Planning!
+                    <Link href="login">Get Planning!</Link>
                 </button>
             </div>
         </div>
