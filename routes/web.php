@@ -10,6 +10,7 @@ use App\Http\Controllers\Routines\DeleteRoutineController;
 use App\Http\Controllers\Routines\IndexRoutineController;
 use App\Http\Controllers\Routines\ShowRoutineController;
 use App\Http\Controllers\Routines\UpdateRoutineController;
+use App\Http\Controllers\ShowDashboardController;
 use App\Models\Exercise;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -18,11 +19,11 @@ Route::get('/', function () {
     return Inertia::render('Home');
 })->name('home');
 
-Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth'])->name('dashboard');
+
 
 Route::middleware('auth')->group(function () {
+
+    Route::get('dashboard',ShowDashboardController::class)->name('dashboard');
 
     Route::prefix('exercises')->group(function () {
 
