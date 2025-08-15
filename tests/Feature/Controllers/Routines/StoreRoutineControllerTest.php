@@ -20,7 +20,7 @@ class StoreRoutineControllerTest extends TestCase
     }
 
     #[Test]
-    public function it_must_have_a_name_and_a_slug(): void
+    public function it_must_have_a_name(): void
     {
         // Given
         $routineType = RoutineType::factory()->create();
@@ -34,7 +34,6 @@ class StoreRoutineControllerTest extends TestCase
 
         // Then
         $response->assertSessionHasErrors('name');
-        $response->assertSessionHasErrors('slug');
 
         $response->assertSessionDoesntHaveErrors(['routine_type']);
 
@@ -48,7 +47,6 @@ class StoreRoutineControllerTest extends TestCase
 
         $createRoutineRequest = [
             'name' => 'Test Routine',
-            'slug' => 'test-routine',
             'routine_type' => $invalidRoutineSlug,
         ];
 
@@ -70,7 +68,6 @@ class StoreRoutineControllerTest extends TestCase
 
         $createRoutineRequest = [
             'name' => 'Test Routine',
-            'slug' => 'test-routine',
             'routine_type' => $routineType->getSlug(),
         ];
 

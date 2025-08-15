@@ -17,7 +17,6 @@ class CreateRoutineData extends Data
 {
     public function __construct(
         public readonly string $name,
-        public readonly string $slug,
 
         #[Exists(RoutineType::class, 'slug')]
         #[WithCast(SlugToModelCast::class, RoutineType::class)]

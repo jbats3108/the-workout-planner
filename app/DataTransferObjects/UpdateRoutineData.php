@@ -8,6 +8,5 @@ class UpdateRoutineData extends Data
 {
     public function __construct(
         public readonly string $name,
-        public readonly ?string $slug,
     ) {}
 }
