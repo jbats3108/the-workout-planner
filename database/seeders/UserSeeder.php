@@ -3,35 +3,25 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 
 class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        $admin = User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@admin.com',
+        User::factory(2)->withRole('admin')->sequence(fn (Sequence $sequence) => [
+            'name' => 'Admin '.$sequence->index + 1,
+            'email' => 'admin'.$sequence->index + 1 .'@test.com',
             'password' => bcrypt('password'),
+        ])->create();
 
-        ]);
-
-        $admin->assignRole(Role::findByName('admin'));
-
-        $user1 = User::factory()->create([
-            'name' => 'User 1',
-            'email' => 'user1@test.com',
-            'password' => bcrypt('password'),
-        ]);
-
-        $user2 = User::factory()->create([
-            'name' => 'User 2',
-            'email' => 'user2@test.com',
-            'password' => bcrypt('password'),
-        ]);
-
-        $user1->assignRole(Role::findByName('user'));
-        $user2->assignRole(Role::findByName('user'));
+        User::factory(3)->withRole('user')->sequence(
+            fn (Sequence $sequence) => [
+                'name' => 'User '.$sequence->index + 1,
+                'email' => 'user'.$sequence->index + 1 .'@test.com',
+                'password' => bcrypt('password'),
+            ]
+        )->create();
     }
 }

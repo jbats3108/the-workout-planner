@@ -13,7 +13,7 @@ class RoutineSeeder extends Seeder
     {
         $users = User::whereHas('roles', function ($query) {
             $query->where('name', 'user');
-        })->get();
+        })->get()->take(2);
 
         $routineTypeIds = RoutineType::all()->pluck('id');
 
