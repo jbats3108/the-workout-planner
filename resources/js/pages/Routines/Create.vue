@@ -2,7 +2,7 @@
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem } from '@/types';
 import { RoutineType } from '@/types/workouts';
-import { useForm, Head, router } from '@inertiajs/vue3';
+import { Head, router, useForm } from '@inertiajs/vue3';
 
 const props = defineProps<{
     routine_types: RoutineType[];
@@ -48,7 +48,7 @@ const submitForm = () => {
 
     router.post('/routines/create', payload);
 
-    form.reset()
+    form.reset();
 };
 </script>
 
