@@ -122,31 +122,31 @@
 }
 
 .dark {
-    --background: hsl(0 0% 12%); /* Changed from 3.9% to 12% for dark grey instead of black */
+    --background: hsl(0 0% 15%); /* Lighter dark grey background */
     --foreground: hsl(0 0% 98%); /* White */
-    --card: hsl(0 0% 12%); /* Match background */
+    --card: hsl(0 0% 15%); /* Match background */
     --card-foreground: hsl(0 0% 98%);
-    --popover: hsl(0 0% 12%); /* Match background */
+    --popover: hsl(0 0% 15%); /* Match background */
     --popover-foreground: hsl(0 0% 98%);
     --primary: hsl(350 40% 60%); /* Dusky pink */
     --primary-foreground: hsl(0 0% 98%);
     --secondary: hsl(0 0% 30%); /* Dark grey */
     --secondary-foreground: hsl(0 0% 98%);
-    --muted: hsl(0 0% 16.08%);
+    --muted: hsl(0 0% 20%);
     --muted-foreground: hsl(0 0% 63.9%);
     --accent: hsl(174 60% 35%); /* Teal */
     --accent-foreground: hsl(0 0% 98%);
     --destructive: hsl(0 84% 60%);
     --destructive-foreground: hsl(0 0% 98%);
     --border: hsl(350 20% 30%); /* Darker dusky pink */
-    --input: hsl(0 0% 14.9%);
+    --input: hsl(0 0% 18%);
     --ring: hsl(174 60% 35%); /* Teal */
     --chart-1: hsl(350 40% 60%); /* Dusky pink */
     --chart-2: hsl(174 60% 35%); /* Teal */
     --chart-3: hsl(0 0% 30%); /* Dark grey */
     --chart-4: hsl(350 30% 70%); /* Light dusky pink */
     --chart-5: hsl(174 40% 45%); /* Light teal */
-    --sidebar-background: hsl(0 0% 10%);
+    --sidebar-background: hsl(0 0% 13%);
     --sidebar-foreground: hsl(0 0% 95.9%);
     --sidebar-primary: hsl(350 40% 60%); /* Dusky pink */
     --sidebar-primary-foreground: hsl(0 0% 100%);
@@ -154,7 +154,7 @@
     --sidebar-accent-foreground: hsl(0 0% 98%);
     --sidebar-border: hsl(350 20% 30%); /* Darker dusky pink */
     --sidebar-ring: hsl(174 60% 35%); /* Teal */
-    --sidebar: hsl(0 0% 10%);
+    --sidebar: hsl(0 0% 13%);
 }
 
 @layer base {
