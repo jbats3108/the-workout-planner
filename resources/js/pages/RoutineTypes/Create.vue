@@ -24,15 +24,16 @@ const form = useForm({
 
 const submitForm = () => {
     const name = form.name.value.trim();
-    const slug = name.replace(/\s+/g, '-').toLowerCase()
+    const slug = name.replace(/\s+/g, '-').toLowerCase();
 
     const payload = {
-        name, slug
-    }
+        name,
+        slug,
+    };
 
-    router.post('/routine-types/create', payload)
+    router.post('/routine-types/create', payload);
 
-    form.reset()
+    form.reset();
 };
 </script>
 
