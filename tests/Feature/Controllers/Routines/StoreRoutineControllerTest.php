@@ -75,7 +75,7 @@ class StoreRoutineControllerTest extends TestCase
         $response = $this->actingAs($this->user)->post('/routines/create', $createRoutineRequest);
 
         // Then
-        $response->assertCreated();
+        $response->assertRedirect('/dashboard');
 
         $this->assertDatabaseHas('routines', [
             'name' => 'Test Routine',

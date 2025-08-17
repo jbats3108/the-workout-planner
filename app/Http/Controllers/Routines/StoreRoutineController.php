@@ -5,18 +5,19 @@ namespace App\Http\Controllers\Routines;
 use App\DataTransferObjects\Routines\CreateRoutineData;
 use App\Http\Controllers\Controller;
 use App\Models\Routine;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response as HttpResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class StoreRoutineController extends Controller
 {
-    public function __invoke(CreateRoutineData $request): HttpResponse
+    public function __invoke(CreateRoutineData $request): RedirectResponse
     {
         $routine = new Routine($request->toArray());
         $routine->owner()->associate($request->owner);
         $routine->routineType()->associate($request->routineType);
         $routine->save();
 
-        return response('Successfully created routine', Response::HTTP_CREATED);
+        return redirect(route('dashboard'))->with('success', 'Routine has been created.');
     }
 }
