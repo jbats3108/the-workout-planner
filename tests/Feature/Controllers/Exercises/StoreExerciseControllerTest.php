@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Tests\Helpers\UserHelper;
 use Tests\TestCase;
 
-class CreateExerciseControllerTest extends TestCase
+class StoreExerciseControllerTest extends TestCase
 {
     use RefreshDatabase;
     use UserHelper;

@@ -8,7 +8,7 @@ use App\Models\Exercise;
 use Illuminate\Http\Response as HttpResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class CreateExerciseController extends Controller
+class StoreExerciseController extends Controller
 {
     public function __invoke(CreateExerciseData $request): HttpResponse
     {

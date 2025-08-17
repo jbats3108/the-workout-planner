@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Exercises\CreateExerciseController;
+use App\Http\Controllers\Exercises\StoreExerciseController;
 use App\Http\Controllers\Exercises\DeleteExerciseController;
 use App\Http\Controllers\Exercises\IndexExerciseController;
 use App\Http\Controllers\Exercises\ShowExerciseController;
@@ -32,9 +32,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/{exercise}', ShowExerciseController::class)
             ->name('exercises.show');
 
-        Route::post('/create', CreateExerciseController::class)
+        Route::post('/create', StoreExerciseController::class)
             ->can('create', Exercise::class)
-            ->name('exercises.create');
+            ->name('exercises.store');
 
         Route::delete('/{exercise}', DeleteExerciseController::class)
             ->can('delete', 'exercise')
