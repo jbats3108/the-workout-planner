@@ -11,9 +11,11 @@ use App\Http\Controllers\Routines\IndexRoutineController;
 use App\Http\Controllers\Routines\ShowRoutineController;
 use App\Http\Controllers\Routines\StoreRoutineController;
 use App\Http\Controllers\Routines\UpdateRoutineController;
+use App\Http\Controllers\RoutineTypes\CreateRoutineTypeController;
 use App\Http\Controllers\RoutineTypes\StoreRoutineTypeController;
 use App\Http\Controllers\ShowDashboardController;
 use App\Models\Exercise;
+use App\Models\RoutineType;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -73,8 +75,12 @@ Route::middleware('auth')->group(function () {
     Route::prefix('/routine-types')->group(function () {
 
         Route::post('/create', StoreRoutineTypeController::class)
-            ->middleware('role:admin')
+            ->can('create', RoutineType::class)
             ->name('routine-types.store');
+
+        Route::get('/create', CreateRoutineTypeController::class)
+            ->can('create', RoutineType::class)
+            ->name('routine-types.create');
 
     });
 });

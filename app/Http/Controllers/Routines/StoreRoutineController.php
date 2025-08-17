@@ -6,8 +6,6 @@ use App\DataTransferObjects\Routines\CreateRoutineData;
 use App\Http\Controllers\Controller;
 use App\Models\Routine;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Response as HttpResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class StoreRoutineController extends Controller
 {
