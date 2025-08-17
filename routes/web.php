@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\Exercises\StoreExerciseController;
 use App\Http\Controllers\Exercises\DeleteExerciseController;
 use App\Http\Controllers\Exercises\IndexExerciseController;
 use App\Http\Controllers\Exercises\ShowExerciseController;
+use App\Http\Controllers\Exercises\StoreExerciseController;
 use App\Http\Controllers\Routines\AddRoutineExerciseController;
 use App\Http\Controllers\Routines\CreateRoutineController;
 use App\Http\Controllers\Routines\DeleteRoutineController;
