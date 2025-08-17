@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\Exercises\StoreExerciseController;
 use App\Http\Controllers\Exercises\DeleteExerciseController;
 use App\Http\Controllers\Exercises\IndexExerciseController;
 use App\Http\Controllers\Exercises\ShowExerciseController;
+use App\Http\Controllers\Exercises\StoreExerciseController;
 use App\Http\Controllers\Routines\AddRoutineExerciseController;
 use App\Http\Controllers\Routines\CreateRoutineController;
 use App\Http\Controllers\Routines\DeleteRoutineController;
@@ -11,6 +11,7 @@ use App\Http\Controllers\Routines\IndexRoutineController;
 use App\Http\Controllers\Routines\ShowRoutineController;
 use App\Http\Controllers\Routines\StoreRoutineController;
 use App\Http\Controllers\Routines\UpdateRoutineController;
+use App\Http\Controllers\RoutineTypes\StoreRoutineTypeController;
 use App\Http\Controllers\ShowDashboardController;
 use App\Models\Exercise;
 use Illuminate\Support\Facades\Route;
@@ -67,6 +68,13 @@ Route::middleware('auth')->group(function () {
         Route::post('/{routine}/add-exercise/{exercise}', AddRoutineExerciseController::class)
             ->can('addExercise', 'routine')
             ->name('routines.add-exercise');
+    });
+
+    Route::prefix('/routine-types')->group(function () {
+
+        Route::post('/create', StoreRoutineTypeController::class)
+            ->middleware('role:admin')
+            ->name('routine-types.store');
 
     });
 });
