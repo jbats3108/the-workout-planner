@@ -11,7 +11,7 @@ trait HasSlug
         return $this->slug;
     }
 
-    public static function lookup(string $slug): ?static
+    public static function lookup(string $slug): ?self
     {
         return static::firstWhere('slug', $slug);
     }

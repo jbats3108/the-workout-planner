@@ -9,7 +9,7 @@ use Request;
 
 class ShowExerciseController extends Controller
 {
-    public function __invoke(Request $request, Exercise $exercise)
+    public function __invoke(Request $request, Exercise $exercise): ExerciseData
     {
         return ExerciseData::from($exercise);
     }

@@ -7,16 +7,16 @@ use App\Models\User;
 use Illuminate\Support\Collection;
 use Spatie\LaravelData\Data;
 
-class DashboardData extends Data
+final class DashboardData extends Data
 {
     public function __construct(
         /** @var Collection<int, RoutineData> */
         public readonly Collection $routines
     ) {}
 
-    public static function fromUser(User $user): static
+    public static function fromUser(User $user): DashboardData
     {
-        return new static(
+        return new self(
             RoutineData::collect($user->routines)
         );
     }

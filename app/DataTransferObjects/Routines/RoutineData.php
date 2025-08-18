@@ -8,7 +8,7 @@ use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 
 #[MapName(SnakeCaseMapper::class)]
-class RoutineData extends Data
+final class RoutineData extends Data
 {
     private function __construct(
         public readonly string $name,
@@ -16,9 +16,9 @@ class RoutineData extends Data
         public string $ownerName,
     ) {}
 
-    public static function fromRoutine(Routine $routine): static
+    public static function fromRoutine(Routine $routine): RoutineData
     {
-        return new static(
+        return new self(
             $routine->getName(),
             $routine->routineType->getName(),
             $routine->owner->name,
