@@ -8,10 +8,12 @@ parameters:
         - app/
 
     # Level 10 is the highest level
-    level: 7
+    level: 8
 
-#    ignoreErrors:
+    ignoreErrors:
 #        - '#PHPDoc tag @var#'
+        - identifier: property.nonObject
+        - identifier: method.nonObject
 #
 #    excludePaths:
 #        - ./*/*/FileToBeExcluded.php
