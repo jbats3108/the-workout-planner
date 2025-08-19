@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpPluralMixedCanBeReplacedWithArrayInspection */
+<?php
+
+/** @noinspection PhpPluralMixedCanBeReplacedWithArrayInspection */
 
 namespace App\DataTransferObjects\Exercises;
 

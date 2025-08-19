@@ -2,7 +2,6 @@
 
 namespace App\DataTransferObjects\Casts;
 
-use App\DataTransferObjects\Exercises\ExerciseData;
 use App\Models\Exercise;
 use App\Models\Routine;
 use Illuminate\Database\Eloquent\Model;
