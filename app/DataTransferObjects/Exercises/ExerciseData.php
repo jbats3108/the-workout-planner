@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpPluralMixedCanBeReplacedWithArrayInspection */
 
 namespace App\DataTransferObjects\Exercises;
 
@@ -7,7 +7,7 @@ use Spatie\LaravelData\Data;
 
 final class ExerciseData extends Data
 {
-    /** @param array<int, string>| string $equipment */
+    /** @param array<string> | mixed[] $equipment */
     private function __construct(
         public readonly string $name,
         public readonly string $slug,
@@ -15,7 +15,7 @@ final class ExerciseData extends Data
         public readonly ?string $secondaryMuscleGroup,
         public readonly string $movementType,
         public readonly string $difficulty,
-        public readonly array|string $equipment,
+        public readonly array $equipment,
     ) {}
 
     public static function fromExercise(Exercise $exercise): ExerciseData

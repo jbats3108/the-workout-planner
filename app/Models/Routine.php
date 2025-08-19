@@ -38,4 +38,9 @@ class Routine extends Model
     {
         return $this->belongsTo(User::class, 'owner_id');
     }
+
+    public static function lookup(string $slug): ?Routine
+    {
+        return self::firstWhere('slug', $slug);
+    }
 }

@@ -2,6 +2,9 @@
 
 namespace App\DataTransferObjects\Casts;
 
+use App\DataTransferObjects\Exercises\ExerciseData;
+use App\Models\Exercise;
+use App\Models\Routine;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\LaravelData\Casts\Cast;
 use Spatie\LaravelData\Data;
@@ -20,6 +23,11 @@ class SlugToModelCast implements Cast
         $type = $property->type->type;
         $modelName = $type->name;
 
-        return $modelName::lookup($value);
+        /** @var string $value */
+        return match ($modelName) {
+            Exercise::class => Exercise::lookup($value),
+            Routine::class => Routine::lookup($value),
+            default => null,
+        };
     }
 }
