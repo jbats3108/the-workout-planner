@@ -24,6 +24,7 @@ final class ExerciseData extends Data
         return new self(
             $exercise->getName(),
             $exercise->getSlug(),
+
             $exercise->primaryMuscleGroup->getName(),
             $exercise->secondaryMuscleGroup?->getName(),
             $exercise->movementType()->name,

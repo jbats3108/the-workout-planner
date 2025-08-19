@@ -12,9 +12,10 @@ class IndexRoutineController extends Controller
 {
     public function __invoke(Request $request): JsonResponse
     {
-        $routines = $request->user()->hasPermissionTo('view all routines')
+        $user = $request->user();
+        $routines = $user->hasPermissionTo('view all routines')
             ? Routine::all()
-            : Routine::whereBelongsTo($request->user(), 'owner')->get();
+            : $user->routines;
 
         return response()->json(RoutineData::collect($routines));
     }

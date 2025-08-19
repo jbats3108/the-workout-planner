@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Services\DashboardService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -11,7 +12,9 @@ class ShowDashboardController extends Controller
 {
     public function __invoke(Request $request, DashboardService $service): Response
     {
-        $data = $service->getDashboardData($request->user());
+        /** @var User $user */
+        $user = $request->user();
+        $data = $service->getDashboardData($user);
 
         return Inertia::render('Dashboard', [
             'data' => $data,
