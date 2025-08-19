@@ -6,6 +6,7 @@ use App\Enums\Difficulty;
 use App\Enums\MovementType;
 use App\Traits\HasName;
 use App\Traits\HasSlug;
+use Database\Factories\ExerciseFactory;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Exercise extends Model
 {
+    /** @use HasFactory<ExerciseFactory> */
     use HasFactory, HasName, HasSlug, SoftDeletes;
 
     protected $fillable = [
@@ -37,11 +39,15 @@ class Exercise extends Model
         ];
     }
 
+    /** @return BelongsTo<MuscleGroup, $this> */
     public function primaryMuscleGroup(): BelongsTo
     {
         return $this->belongsTo(MuscleGroup::class, 'primary_muscle_group_id');
     }
 
+    /**
+     * @return BelongsTo<MuscleGroup, $this>|null
+     */
     public function secondaryMuscleGroup(): ?BelongsTo
     {
         return $this->belongsTo(MuscleGroup::class, 'secondary_muscle_group_id');
@@ -52,12 +58,14 @@ class Exercise extends Model
         return $this->movement_type;
     }
 
+    /** @return BelongsToMany<Routine, $this> */
     public function routines(): BelongsToMany
     {
         return $this->belongsToMany(Routine::class, 'routine_exercise', 'exercise_id', 'routine_id');
     }
 
     #[Scope]
+    /** @param Builder<Exercise> $query */
     protected function whereMuscleGroup(Builder $query, MuscleGroup $muscleGroup): Builder
     {
         return $query
@@ -72,12 +80,14 @@ class Exercise extends Model
     }
 
     #[Scope]
+    /** @param Builder<Exercise> $query */
     protected function whereMovementType(Builder $query, MovementType $movementType): Builder
     {
         return $query->where(['movement_type' => $movementType]);
     }
 
     #[Scope]
+    /** @param Builder<Exercise> $query */
     protected function whereEquipment(Builder $query, string $equipmentSearch): Builder
     {
         return $query->whereJsonContains('equipment', $equipmentSearch);

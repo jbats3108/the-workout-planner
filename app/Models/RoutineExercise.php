@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\RoutineExerciseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class RoutineExercise extends Model
 {
+    /** @use HasFactory<RoutineExerciseFactory> */
     use HasFactory;
 
     public $timestamps = false;
@@ -30,11 +32,13 @@ class RoutineExercise extends Model
         ];
     }
 
+    /** @return BelongsTo<Exercise, $this> */
     public function exercise(): BelongsTo
     {
         return $this->belongsTo(Exercise::class);
     }
 
+    /** @return BelongsTo<Routine, $this> */
     public function routine(): BelongsTo
     {
         return $this->belongsTo(Routine::class);

@@ -53,6 +53,9 @@ class User extends Authenticatable
         return $this->hasRole('admin');
     }
 
+    /**
+     * @return HasMany<Routine, $this>
+     */
     public function routines(): HasMany
     {
         return $this->hasMany(Routine::class, 'owner_id');
