@@ -15,6 +15,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property MuscleGroup | null $secondaryMuscleGroup
+ */
 class Exercise extends Model
 {
     /** @use HasFactory<ExerciseFactory> */
@@ -29,15 +32,6 @@ class Exercise extends Model
         'difficulty',
         'equipment',
     ];
-
-    protected function casts(): array
-    {
-        return [
-            'movement_type' => MovementType::class,
-            'difficulty' => Difficulty::class,
-            'equipment' => 'array',
-        ];
-    }
 
     /** @return BelongsTo<MuscleGroup, $this> */
     public function primaryMuscleGroup(): BelongsTo
@@ -64,8 +58,27 @@ class Exercise extends Model
         return $this->belongsToMany(Routine::class, 'routine_exercise', 'exercise_id', 'routine_id');
     }
 
+    /**
+     * @return array{
+     *    movement_type: 'App\\Enums\\MovementType',
+     *    difficulty: 'App\\Enums\\Difficulty',
+     *    equipment: 'array'
+     * }
+     */
+    protected function casts(): array
+    {
+        return [
+            'movement_type' => MovementType::class,
+            'difficulty' => Difficulty::class,
+            'equipment' => 'array',
+        ];
+    }
+
+    /**
+     * @param  Builder<Exercise>  $query
+     * @return Builder<Exercise>
+     */
     #[Scope]
-    /** @param Builder<Exercise> $query */
     protected function whereMuscleGroup(Builder $query, MuscleGroup $muscleGroup): Builder
     {
         return $query
@@ -73,21 +86,31 @@ class Exercise extends Model
             ->orWhereBelongsTo($muscleGroup, 'secondaryMuscleGroup');
     }
 
+    /**
+     * @param  Builder<Exercise>  $query
+     * @return Builder<Exercise>
+     */
     #[Scope]
     protected function whereDifficulty(Builder $query, Difficulty $difficulty): Builder
     {
         return $query->where('difficulty', $difficulty);
     }
 
+    /**
+     * @param  Builder<Exercise>  $query
+     * @return Builder<Exercise>
+     */
     #[Scope]
-    /** @param Builder<Exercise> $query */
     protected function whereMovementType(Builder $query, MovementType $movementType): Builder
     {
         return $query->where(['movement_type' => $movementType]);
     }
 
+    /**
+     * @param  Builder<Exercise>  $query
+     * @return Builder<Exercise>
+     */
     #[Scope]
-    /** @param Builder<Exercise> $query */
     protected function whereEquipment(Builder $query, string $equipmentSearch): Builder
     {
         return $query->whereJsonContains('equipment', $equipmentSearch);
