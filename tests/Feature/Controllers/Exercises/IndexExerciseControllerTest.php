@@ -28,8 +28,10 @@ class IndexExerciseControllerTest extends TestCase
         // Given
         $exercises = Exercise::factory()->count(3)->create();
 
+        $user = $this->createUser($userRole);
+
         // When
-        $response = $this->actingAs($this->user)->get(route('exercises.index'));
+        $response = $this->actingAs($user)->get(route('exercises.index'));
 
         // Then
         $response->assertOk();
