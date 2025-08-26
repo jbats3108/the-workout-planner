@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Routines;
+namespace App\Http\Controllers\RoutineExercise;
 
 use App\DataTransferObjects\Routines\AddRoutineExerciseData;
 use App\Http\Controllers\Controller;

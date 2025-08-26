@@ -8,7 +8,7 @@ use App\Http\Controllers\MuscleGroups\DeleteMuscleGroupController;
 use App\Http\Controllers\MuscleGroups\IndexMuscleGroupsController;
 use App\Http\Controllers\MuscleGroups\StoreMuscleGroupController;
 use App\Http\Controllers\MuscleGroups\UpdateMuscleGroupController;
-use App\Http\Controllers\Routines\AddRoutineExerciseController;
+use App\Http\Controllers\RoutineExercise\AddRoutineExerciseController;
 use App\Http\Controllers\Routines\CreateRoutineController;
 use App\Http\Controllers\Routines\DeleteRoutineController;
 use App\Http\Controllers\Routines\IndexRoutineController;
