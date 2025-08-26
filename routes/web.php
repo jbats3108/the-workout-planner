@@ -4,6 +4,7 @@ use App\Http\Controllers\Exercises\DeleteExerciseController;
 use App\Http\Controllers\Exercises\IndexExerciseController;
 use App\Http\Controllers\Exercises\ShowExerciseController;
 use App\Http\Controllers\Exercises\StoreExerciseController;
+use App\Http\Controllers\MuscleGroups\DeleteMuscleGroupController;
 use App\Http\Controllers\MuscleGroups\IndexMuscleGroupsController;
 use App\Http\Controllers\MuscleGroups\StoreMuscleGroupController;
 use App\Http\Controllers\Routines\AddRoutineExerciseController;
@@ -89,7 +90,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('/muscle-groups')->group(function () {
 
         Route::post('/create', StoreMuscleGroupController::class)
-            ->middleware('role:admin')
+            ->can('create', MuscleGroup::class)
             ->name('muscle-groups.store');
 
         Route::get('/', IndexMuscleGroupsController::class)
