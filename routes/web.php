@@ -7,6 +7,7 @@ use App\Http\Controllers\Exercises\StoreExerciseController;
 use App\Http\Controllers\MuscleGroups\DeleteMuscleGroupController;
 use App\Http\Controllers\MuscleGroups\IndexMuscleGroupsController;
 use App\Http\Controllers\MuscleGroups\StoreMuscleGroupController;
+use App\Http\Controllers\MuscleGroups\UpdateMuscleGroupController;
 use App\Http\Controllers\Routines\AddRoutineExerciseController;
 use App\Http\Controllers\Routines\CreateRoutineController;
 use App\Http\Controllers\Routines\DeleteRoutineController;
@@ -100,6 +101,10 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{muscleGroup}', DeleteMuscleGroupController::class)
             ->can('delete', MuscleGroup::class)
             ->name('muscle-groups.delete');
+
+        Route::put('/{muscleGroup}', UpdateMuscleGroupController::class)
+            ->can('update', MuscleGroup::class)
+            ->name('muscle-groups.update');
     });
 });
 

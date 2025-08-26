@@ -18,4 +18,9 @@ class MuscleGroupPolicy
     {
         return $user->isAdmin();
     }
+
+    public function update(User $user): bool
+    {
+        return $user->isAdmin();
+    }
 }
