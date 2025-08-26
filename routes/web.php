@@ -18,6 +18,7 @@ use App\Http\Controllers\RoutineTypes\CreateRoutineTypeController;
 use App\Http\Controllers\RoutineTypes\StoreRoutineTypeController;
 use App\Http\Controllers\ShowDashboardController;
 use App\Models\Exercise;
+use App\Models\MuscleGroup;
 use App\Models\RoutineType;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -95,6 +96,10 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/', IndexMuscleGroupsController::class)
             ->name('muscle-groups.index');
+
+        Route::delete('/{muscleGroup}', DeleteMuscleGroupController::class)
+            ->can('delete', MuscleGroup::class)
+            ->name('muscle-groups.delete');
     });
 });
 
