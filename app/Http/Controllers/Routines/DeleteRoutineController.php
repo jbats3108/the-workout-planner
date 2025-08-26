@@ -13,6 +13,6 @@ class DeleteRoutineController extends Controller
     {
         $routine->delete();
 
-        return redirect()->back();
+        return back();
     }
 }

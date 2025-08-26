@@ -13,6 +13,6 @@ class DeleteExerciseController extends Controller
     {
         $exercise->delete();
 
-        return redirect()->back();
+        return back();
     }
 }
