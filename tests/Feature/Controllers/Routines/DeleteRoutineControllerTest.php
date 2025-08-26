@@ -5,6 +5,7 @@ namespace Tests\Feature\Controllers\Routines;
 use App\Models\Routine;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Helpers\UserHelper;
@@ -14,8 +15,6 @@ class DeleteRoutineControllerTest extends TestCase
 {
     use RefreshDatabase;
     use UserHelper;
-
-    private User $user;
 
     protected function setUp(): void
     {
@@ -72,6 +71,9 @@ class DeleteRoutineControllerTest extends TestCase
 
     }
 
+    /**
+     * @return TestResponse<RedirectResponse>
+     */
     private function makeRequest(Routine $routine): TestResponse
     {
         $route = route('routines.delete', ['routine' => $routine->id]);

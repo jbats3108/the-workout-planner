@@ -8,6 +8,9 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 
+/**
+ * @extends Factory<Routine>
+ */
 class RoutineFactory extends Factory
 {
     protected $model = Routine::class;

@@ -22,7 +22,7 @@ class IndexExerciseControllerTest extends TestCase
     }
 
     #[Test]
-    #[DataProvider('userRoles')]
+    #[DataProvider('provideUserRoles')]
     public function it_returns_all_exercises(string $userRole): void
     {
         // Given
@@ -41,14 +41,5 @@ class IndexExerciseControllerTest extends TestCase
             $response->json())
         );
 
-    }
-
-    public static function userRoles(): array
-    {
-        return
-            [
-                'Admin' => ['admin'],
-                'User' => ['user'],
-            ];
     }
 }

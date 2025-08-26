@@ -9,6 +9,9 @@ use App\Models\MuscleGroup;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 
+/**
+ * @extends Factory<Exercise>
+ */
 class ExerciseFactory extends Factory
 {
     protected $model = Exercise::class;

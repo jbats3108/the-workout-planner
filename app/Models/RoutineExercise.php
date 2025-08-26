@@ -43,4 +43,9 @@ class RoutineExercise extends Model
     {
         return $this->belongsTo(Routine::class);
     }
+
+    protected static function newFactory(): RoutineExerciseFactory
+    {
+        return RoutineExerciseFactory::new();
+    }
 }

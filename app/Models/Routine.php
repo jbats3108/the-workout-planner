@@ -43,4 +43,9 @@ class Routine extends Model
     {
         return self::firstWhere('slug', $slug);
     }
+
+    protected static function newFactory(): RoutineFactory
+    {
+        return RoutineFactory::new();
+    }
 }

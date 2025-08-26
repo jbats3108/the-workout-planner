@@ -17,7 +17,7 @@ class IndexMuscleGroupsControllerTest extends TestCase
     use UserHelper;
 
     #[Test]
-    #[DataProvider('userRoles')]
+    #[DataProvider('provideUserRoles')]
     public function it_returns_all_muscle_groups(string $userRole): void
     {
         // Given
@@ -38,14 +38,5 @@ class IndexMuscleGroupsControllerTest extends TestCase
             $response->json())
         );
 
-    }
-
-    public static function userRoles(): array
-    {
-        return
-            [
-                'Admin' => ['admin'],
-                'User' => ['user'],
-            ];
     }
 }

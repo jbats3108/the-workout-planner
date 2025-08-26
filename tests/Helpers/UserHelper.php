@@ -35,4 +35,16 @@ trait UserHelper
     {
         return User::factory()->withRole($role)->create();
     }
+
+    /**
+     * @return array<string, string[]>
+     */
+    public static function provideUserRoles(): array
+    {
+        return
+            [
+                'Admin' => ['admin'],
+                'User' => ['user'],
+            ];
+    }
 }

@@ -13,11 +13,12 @@ class RoutineSeeder extends Seeder
     {
         $users = User::whereHas('roles', function ($query) {
             $query->where('name', 'user');
-        })->get()->take(2);
+        })->limit(2)->get();
 
-        $routineTypeIds = RoutineType::all()->pluck('id');
+        $routineTypeIds = RoutineType::pluck('id');
 
         $users->each(function (User $user) use ($routineTypeIds) {
+
             $routineNames = [
                 'Push Day',
                 'Pull Day',
@@ -33,6 +34,10 @@ class RoutineSeeder extends Seeder
             $idsToUse->each(function (int $routineTypeId) use (&$routineNames, $user) {
 
                 $index = array_rand($routineNames);
+
+                if (! isset($routineNames[$index])) {
+                    return;
+                }
 
                 $routineName = $routineNames[$index];
 

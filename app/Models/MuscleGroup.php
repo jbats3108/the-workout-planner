@@ -18,4 +18,9 @@ class MuscleGroup extends Model
         'name',
         'slug',
     ];
+
+    protected static function newFactory(): MuscleGroupFactory
+    {
+        return MuscleGroupFactory::new();
+    }
 }

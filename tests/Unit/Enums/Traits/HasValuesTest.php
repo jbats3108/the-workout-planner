@@ -30,8 +30,6 @@ class HasValuesTest extends TestCase
     public function it_returns_the_values_for_the_string_backed_enum(): void
     {
         // Given
-        /* DummyStringEnum */
-
         $expectedValues = [
             'foo',
             'bar',
@@ -46,8 +44,6 @@ class HasValuesTest extends TestCase
     public function it_returns_the_values_for_the_int_backed_enum(): void
     {
         // Given
-        /* DummyIntEnum */
-
         $expectedValues = [1, 2, 3];
 
         $this->assertSame($expectedValues, DummyIntEnum::values());

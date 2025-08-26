@@ -3,20 +3,9 @@
 namespace Tests\Unit\Traits;
 
 use App\Models\Exercise;
-use App\Traits\HasSlug;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
-
-/**
- * Mock class to test HasSlug trait
- */
-class HasSlugMock
-{
-    public string $slug;
-
-    use HasSlug;
-}
 
 class HasSlugTest extends TestCase
 {
@@ -26,9 +15,9 @@ class HasSlugTest extends TestCase
     public function it_retrieves_the_slug(): void
     {
         // Given
-        $class = new HasSlugMock;
-
-        $class->slug = 'test';
+        $class = Exercise::factory()->make([
+            'slug' => 'test',
+        ]);
 
         // When
         $returnedSlug = $class->getSlug();
@@ -57,7 +46,7 @@ class HasSlugTest extends TestCase
     public function it_returns_null_if_there_is_no_matching_model_for_the_slug(): void
     {
         // Given
-        $model = Exercise::factory()->create([
+        Exercise::factory()->create([
             'slug' => 'test',
         ]);
 

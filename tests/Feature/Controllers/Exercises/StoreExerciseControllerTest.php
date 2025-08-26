@@ -6,6 +6,7 @@ use App\Models\Exercise;
 use App\Models\MuscleGroup;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Response;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Helpers\UserHelper;
@@ -160,6 +161,18 @@ class StoreExerciseControllerTest extends TestCase
         $this->assertSame(['barbell'], $createdExercise->equipment);
     }
 
+    /**
+     * @param  array{
+     *     name: string,
+     *     slug: string,
+     *     primary_muscle_group: string,
+     *     secondary_muscle_group: string|null,
+     *     equipment: array<string>,
+     *     difficulty: string,
+     *     movement_type: string,
+     * } $createExerciseRequest
+     * @return TestResponse<Response>
+     */
     private function makeRequest(array $createExerciseRequest): TestResponse
     {
         return $this->actingAs($this->adminUser)->post('/exercises/create', $createExerciseRequest);

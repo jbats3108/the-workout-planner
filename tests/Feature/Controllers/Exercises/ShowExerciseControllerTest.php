@@ -22,7 +22,7 @@ class ShowExerciseControllerTest extends TestCase
     }
 
     #[Test]
-    #[DataProvider('userRoles')]
+    #[DataProvider('provideUserRoles')]
     public function it_returns_the_exercise(string $userRole): void
     {
         // Given
@@ -38,14 +38,5 @@ class ShowExerciseControllerTest extends TestCase
 
         $this->assertSame(ExerciseData::fromExercise($exercise)->toArray(), $response->json());
 
-    }
-
-    public static function userRoles(): array
-    {
-        return
-            [
-                'Admin' => ['admin'],
-                'User' => ['user'],
-            ];
     }
 }

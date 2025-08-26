@@ -7,6 +7,9 @@ use App\Models\Routine;
 use App\Models\RoutineExercise;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * @extends Factory<RoutineExercise>
+ */
 class RoutineExerciseFactory extends Factory
 {
     protected $model = RoutineExercise::class;

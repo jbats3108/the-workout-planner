@@ -60,4 +60,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Routine::class, 'owner_id');
     }
+
+    protected static function newFactory(): UserFactory
+    {
+        return UserFactory::new();
+    }
 }

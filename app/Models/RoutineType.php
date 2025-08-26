@@ -18,4 +18,9 @@ class RoutineType extends Model
         'name',
         'slug',
     ];
+
+    protected static function newFactory(): RoutineTypeFactory
+    {
+        return RoutineTypeFactory::new();
+    }
 }

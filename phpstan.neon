@@ -6,15 +6,14 @@ parameters:
 
     paths:
         - app/
+        - tests/
+        - database/
 
     # Level 10 is the highest level
-    level: 10
+    level: 7
 
-    ignoreErrors:
-#        - '#PHPDoc tag @var#'
-        - identifier: property.nonObject
-        - identifier: method.nonObject
-#
     excludePaths:
         - ./app/Http/Controllers/Auth/*
         - ./app/Http/Controllers/Settings/*
+        - ./tests/Feature/Settings/*
+        - ./tests/Feature/Auth/*

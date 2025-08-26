@@ -115,4 +115,9 @@ class Exercise extends Model
     {
         return $query->whereJsonContains('equipment', $equipmentSearch);
     }
+
+    protected static function newFactory(): ExerciseFactory
+    {
+        return ExerciseFactory::new();
+    }
 }
