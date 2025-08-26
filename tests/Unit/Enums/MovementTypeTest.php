@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Enums;
 
 use App\Enums\MovementType;
 use PHPUnit\Framework\Attributes\Test;
