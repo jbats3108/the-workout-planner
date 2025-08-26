@@ -11,14 +11,7 @@ class UpdateRoutineController extends Controller
 {
     public function __invoke(UpdateRoutineData $request, Routine $routine): RedirectResponse
     {
-        /** @var array<string,mixed> $updatePayload */
-        $updatePayload = array_filter(
-            array_merge(
-                $routine->toArray(),
-                $request->toArray()
-            )
-        );
-        $routine->update($updatePayload);
+        $routine->update($request->toArray());
 
         return redirect()->route('routines.show', $routine);
     }
