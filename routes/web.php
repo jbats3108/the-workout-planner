@@ -16,6 +16,7 @@ use App\Http\Controllers\Routines\ShowRoutineController;
 use App\Http\Controllers\Routines\StoreRoutineController;
 use App\Http\Controllers\Routines\UpdateRoutineController;
 use App\Http\Controllers\RoutineTypes\CreateRoutineTypeController;
+use App\Http\Controllers\RoutineTypes\DeleteRoutineTypeController;
 use App\Http\Controllers\RoutineTypes\IndexRoutineTypesController;
 use App\Http\Controllers\RoutineTypes\StoreRoutineTypeController;
 use App\Http\Controllers\ShowDashboardController;
@@ -90,6 +91,10 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/', IndexRoutineTypesController::class)
             ->name('routine-types.index');
+
+        Route::delete('/{routineType}', DeleteRoutineTypeController::class)
+            ->can('delete', RoutineType::class)
+            ->name('routine-types.delete');
 
     });
 
