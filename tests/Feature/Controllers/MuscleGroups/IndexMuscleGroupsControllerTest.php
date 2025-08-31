@@ -23,7 +23,7 @@ class IndexMuscleGroupsControllerTest extends TestCase
         // Given
         $this->seed(RoleSeeder::class);
 
-        $exercises = MuscleGroup::factory()->count(3)->create();
+        $muscleGroups = MuscleGroup::factory()->count(3)->create();
 
         $user = $this->createUser($userRole);
 
@@ -33,8 +33,8 @@ class IndexMuscleGroupsControllerTest extends TestCase
         // Then
         $response->assertOk();
 
-        $exercises->each(fn (MuscleGroup $exercise) => $this->assertContains(
-            MuscleGroupData::from($exercise)->toArray(),
+        $muscleGroups->each(fn (MuscleGroup $muscleGroup) => $this->assertContains(
+            MuscleGroupData::from($muscleGroup)->toArray(),
             $response->json())
         );
 

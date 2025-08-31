@@ -16,6 +16,7 @@ use App\Http\Controllers\Routines\ShowRoutineController;
 use App\Http\Controllers\Routines\StoreRoutineController;
 use App\Http\Controllers\Routines\UpdateRoutineController;
 use App\Http\Controllers\RoutineTypes\CreateRoutineTypeController;
+use App\Http\Controllers\RoutineTypes\IndexRoutineTypesController;
 use App\Http\Controllers\RoutineTypes\StoreRoutineTypeController;
 use App\Http\Controllers\ShowDashboardController;
 use App\Models\Exercise;
@@ -86,6 +87,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/create', CreateRoutineTypeController::class)
             ->can('create', RoutineType::class)
             ->name('routine-types.create');
+
+        Route::get('/', IndexRoutineTypesController::class)
+            ->name('routine-types.index');
 
     });
 
