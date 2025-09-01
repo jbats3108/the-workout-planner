@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Exercises;
 
-use App\DataTransferObjects\Exercises\CreateExerciseData;
+use App\DataTransferObjects\Exercises\StoreExerciseData;
 use App\Http\Controllers\Controller;
 use App\Models\Exercise;
 use Illuminate\Http\Response as HttpResponse;
@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class StoreExerciseController extends Controller
 {
-    public function __invoke(CreateExerciseData $request): HttpResponse
+    public function __invoke(StoreExerciseData $request): HttpResponse
     {
 
         $exercise = new Exercise($request->toArray());

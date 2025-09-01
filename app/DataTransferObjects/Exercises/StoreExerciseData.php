@@ -14,7 +14,7 @@ use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 
 #[MapName(SnakeCaseMapper::class)]
-class CreateExerciseData extends Data
+class StoreExerciseData extends Data
 {
     /** @param array<int, string> $equipment */
     public function __construct(

@@ -2,13 +2,13 @@
 
 namespace Tests\Unit\DataTransferObjects\Exercises;
 
-use App\DataTransferObjects\Exercises\CreateExerciseData;
+use App\DataTransferObjects\Exercises\StoreExerciseData;
 use App\Models\MuscleGroup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-class CreateExerciseDataTest extends TestCase
+class StoreExerciseDataTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -29,7 +29,7 @@ class CreateExerciseDataTest extends TestCase
         ];
 
         // When
-        $data = CreateExerciseData::from($createExerciseData);
+        $data = StoreExerciseData::from($createExerciseData);
 
         // Then
         $this->assertTrue($data->primaryMuscleGroup->is($muscleGroup));
@@ -53,7 +53,7 @@ class CreateExerciseDataTest extends TestCase
         ];
 
         // When
-        $data = CreateExerciseData::from($createExerciseData);
+        $data = StoreExerciseData::from($createExerciseData);
 
         // Then
         $this->assertTrue($data->secondaryMuscleGroup->is($secondaryMuscleGroup));

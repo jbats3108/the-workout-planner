@@ -2,14 +2,14 @@
 
 namespace Tests\Unit\DataTransferObjects\Routines;
 
-use App\DataTransferObjects\Routines\CreateRoutineData;
+use App\DataTransferObjects\Routines\StoreRoutineData;
 use App\Models\RoutineType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Helpers\UserHelper;
 use Tests\TestCase;
 
-class CreateRoutineDataTest extends TestCase
+class StoreRoutineDataTest extends TestCase
 {
     use RefreshDatabase;
     use RefreshDatabase;
@@ -36,7 +36,7 @@ class CreateRoutineDataTest extends TestCase
         $this->be($this->user);
 
         // When
-        $data = CreateRoutineData::from($createRoutineData);
+        $data = StoreRoutineData::from($createRoutineData);
 
         // Then
         $this->assertTrue($data->routineType->is($routineType));
