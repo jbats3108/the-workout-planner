@@ -61,11 +61,11 @@ import { Head, Link } from '@inertiajs/vue3';
         </div>
 
         <!-- CTA Section -->
-        <div class="bg-accent py-16 text-accent-foreground">
+        <div class="bg-primary py-16 text-primary-foreground">
             <div class="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
                 <h2 class="text-3xl font-bold">Time to start planning?</h2>
                 <p class="mt-4 text-lg opacity-90">Click here to sign up</p>
-                <button class="mt-8 rounded-md bg-primary px-8 py-3 text-primary-foreground transition-opacity hover:opacity-90">
+                <button class="mt-8 rounded-md bg-accent px-8 py-3 text-accent-foreground transition-opacity hover:opacity-90">
                     <Link href="login">Get Planning!</Link>
                 </button>
             </div>
