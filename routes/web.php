@@ -9,13 +9,11 @@ use App\Http\Controllers\MuscleGroups\IndexMuscleGroupsController;
 use App\Http\Controllers\MuscleGroups\StoreMuscleGroupController;
 use App\Http\Controllers\MuscleGroups\UpdateMuscleGroupController;
 use App\Http\Controllers\RoutineExercise\AddRoutineExerciseController;
-use App\Http\Controllers\Routines\CreateRoutineController;
 use App\Http\Controllers\Routines\DeleteRoutineController;
 use App\Http\Controllers\Routines\IndexRoutineController;
 use App\Http\Controllers\Routines\ShowRoutineController;
 use App\Http\Controllers\Routines\StoreRoutineController;
 use App\Http\Controllers\Routines\UpdateRoutineController;
-use App\Http\Controllers\RoutineTypes\CreateRoutineTypeController;
 use App\Http\Controllers\RoutineTypes\DeleteRoutineTypeController;
 use App\Http\Controllers\RoutineTypes\IndexRoutineTypesController;
 use App\Http\Controllers\RoutineTypes\StoreRoutineTypeController;
@@ -59,9 +57,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/create', StoreRoutineController::class)
             ->name('routines.create');
 
-        Route::get('/create', CreateRoutineController::class)
-            ->name('routines.create');
-
         Route::get('/{routine}', ShowRoutineController::class)
             ->can('view', 'routine')
             ->name('routines.show');
@@ -84,10 +79,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/create', StoreRoutineTypeController::class)
             ->can('create', RoutineType::class)
             ->name('routine-types.store');
-
-        Route::get('/create', CreateRoutineTypeController::class)
-            ->can('create', RoutineType::class)
-            ->name('routine-types.create');
 
         Route::get('/', IndexRoutineTypesController::class)
             ->name('routine-types.index');
