@@ -19,4 +19,5 @@ return RectorConfig::configure()
     ->withTypeCoverageLevel(53)
     ->withDeadCodeLevel(53)
     ->withCodeQualityLevel(53)
-    ->withCodingStyleLevel(25);
+    ->withCodingStyleLevel(25)
+    ->withImportNames();
