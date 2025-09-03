@@ -11,8 +11,8 @@ use Tests\TestCase;
 
 class AddRoutineExerciseControllerTest extends TestCase
 {
-    use RefreshDatabase, UserHelper;
-
+    use RefreshDatabase;
+    use UserHelper;
     protected function setUp(): void
     {
         parent::setUp();

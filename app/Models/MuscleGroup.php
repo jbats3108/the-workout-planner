@@ -11,9 +11,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MuscleGroup extends Model
 {
-    /** @use HasFactory<MuscleGroupFactory> */
-    use HasFactory, HasName, HasSlug, SoftDeletes;
-
+    use HasFactory;
+    use HasName;
+    use HasSlug;
+    use SoftDeletes;
     protected $fillable = [
         'name',
         'slug',

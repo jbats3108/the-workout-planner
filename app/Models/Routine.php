@@ -12,9 +12,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Routine extends Model
 {
-    /** @use HasFactory<RoutineFactory> */
-    use HasFactory, HasName, SoftDeletes;
-
+    use HasFactory;
+    use HasName;
+    use SoftDeletes;
     protected $fillable = [
         'name',
         'owner_id',

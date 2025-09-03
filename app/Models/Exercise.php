@@ -20,9 +20,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Exercise extends Model
 {
-    /** @use HasFactory<ExerciseFactory> */
-    use HasFactory, HasName, HasSlug, SoftDeletes;
-
+    use HasFactory;
+    use HasName;
+    use HasSlug;
+    use SoftDeletes;
     protected $fillable = [
         'name',
         'slug',
