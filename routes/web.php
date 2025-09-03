@@ -24,15 +24,13 @@ use App\Models\RoutineType;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Home');
-})->name('home');
+Route::get('/', fn() => Inertia::render('Home'))->name('home');
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(function (): void {
 
     Route::get('dashboard', ShowDashboardController::class)->name('dashboard');
 
-    Route::prefix('exercises')->group(function () {
+    Route::prefix('exercises')->group(function (): void {
 
         Route::get('/', IndexExerciseController::class)
             ->name('exercises.index');
@@ -49,7 +47,7 @@ Route::middleware('auth')->group(function () {
             ->name('exercises.delete');
     });
 
-    Route::prefix('routines')->group(function () {
+    Route::prefix('routines')->group(function (): void {
 
         Route::get('/', IndexRoutineController::class)
             ->name('routines.index');
@@ -74,7 +72,7 @@ Route::middleware('auth')->group(function () {
             ->name('routines.add-exercise');
     });
 
-    Route::prefix('/routine-types')->group(function () {
+    Route::prefix('/routine-types')->group(function (): void {
 
         Route::post('/create', StoreRoutineTypeController::class)
             ->can('create', RoutineType::class)
@@ -89,7 +87,7 @@ Route::middleware('auth')->group(function () {
 
     });
 
-    Route::prefix('/muscle-groups')->group(function () {
+    Route::prefix('/muscle-groups')->group(function (): void {
 
         Route::post('/create', StoreMuscleGroupController::class)
             ->can('create', MuscleGroup::class)

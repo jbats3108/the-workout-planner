@@ -18,11 +18,11 @@ trait UserHelper
     {
         $this->seed();
 
-        $this->adminUser = User::whereHas('roles', function ($query) {
+        $this->adminUser = User::whereHas('roles', function ($query): void {
             $query->where('name', 'admin');
         })->first();
 
-        $users = User::whereHas('roles', function ($query) {
+        $users = User::whereHas('roles', function ($query): void {
             $query->where('name', 'user');
         })->get();
 
