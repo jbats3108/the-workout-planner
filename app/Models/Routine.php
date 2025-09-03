@@ -15,6 +15,7 @@ class Routine extends Model
     use HasFactory;
     use HasName;
     use SoftDeletes;
+
     protected $fillable = [
         'name',
         'owner_id',

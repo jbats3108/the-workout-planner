@@ -14,6 +14,7 @@ class User extends Authenticatable
     use HasFactory;
     use HasRoles;
     use Notifiable;
+
     /**
      * The attributes that are mass assignable.
      *

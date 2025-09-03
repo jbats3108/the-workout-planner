@@ -15,6 +15,7 @@ class RoutineType extends Model
     use HasName;
     use HasSlug;
     use SoftDeletes;
+
     protected $fillable = [
         'name',
         'slug',
