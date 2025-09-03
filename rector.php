@@ -20,4 +20,5 @@ return RectorConfig::configure()
     ->withDeadCodeLevel(53)
     ->withCodeQualityLevel(53)
     ->withCodingStyleLevel(25)
-    ->withImportNames();
+    ->withImportNames()
+    ->withComposerBased(phpunit: true,laravel: true);

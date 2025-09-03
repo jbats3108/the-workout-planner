@@ -36,10 +36,10 @@ class StoreRoutineDataTest extends TestCase
         $this->be($this->user);
 
         // When
-        $data = StoreRoutineData::from($createRoutineData);
+        $storeRoutineData = StoreRoutineData::from($createRoutineData);
 
         // Then
-        $this->assertTrue($data->routineType->is($routineType));
+        $this->assertTrue($storeRoutineData->routineType->is($routineType));
 
     }
 }

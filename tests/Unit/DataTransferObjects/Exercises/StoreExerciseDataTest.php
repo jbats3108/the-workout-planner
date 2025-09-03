@@ -29,10 +29,10 @@ class StoreExerciseDataTest extends TestCase
         ];
 
         // When
-        $data = StoreExerciseData::from($createExerciseData);
+        $storeExerciseData = StoreExerciseData::from($createExerciseData);
 
         // Then
-        $this->assertTrue($data->primaryMuscleGroup->is($muscleGroup));
+        $this->assertTrue($storeExerciseData->primaryMuscleGroup->is($muscleGroup));
 
     }
 
@@ -53,10 +53,10 @@ class StoreExerciseDataTest extends TestCase
         ];
 
         // When
-        $data = StoreExerciseData::from($createExerciseData);
+        $storeExerciseData = StoreExerciseData::from($createExerciseData);
 
         // Then
-        $this->assertTrue($data->secondaryMuscleGroup->is($secondaryMuscleGroup));
+        $this->assertTrue($storeExerciseData->secondaryMuscleGroup->is($secondaryMuscleGroup));
 
     }
 }

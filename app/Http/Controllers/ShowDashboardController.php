@@ -10,14 +10,14 @@ use Inertia\Response;
 
 class ShowDashboardController extends Controller
 {
-    public function __invoke(Request $request, DashboardService $service): Response
+    public function __invoke(Request $request, DashboardService $dashboardService): Response
     {
         /** @var User $user */
         $user = $request->user();
-        $data = $service->getDashboardData($user);
+        $dashboardData = $dashboardService->getDashboardData($user);
 
         return Inertia::render('Dashboard', [
-            'data' => $data,
+            'data' => $dashboardData,
         ]);
     }
 }

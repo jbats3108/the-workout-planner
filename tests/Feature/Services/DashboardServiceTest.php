@@ -30,10 +30,10 @@ class DashboardServiceTest extends TestCase
         // Given
         $routines = Routine::factory(5)->withOwner($this->user)->create();
 
-        $service = new DashboardService;
+        $dashboardService = new DashboardService;
 
         // When
-        $dashboardData = $service->getDashboardData($this->user);
+        $dashboardData = $dashboardService->getDashboardData($this->user);
 
         // Then
         $dashboardRoutines = $dashboardData->routines;

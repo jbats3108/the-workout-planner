@@ -22,12 +22,12 @@ class HasNameTest extends TestCase
     public function it_retrieves_the_name(): void
     {
         // Given
-        $class = new HasNameMock;
+        $hasNameMock = new HasNameMock;
 
-        $class->name = 'Test';
+        $hasNameMock->name = 'Test';
 
         // When
-        $returnedName = $class->getName();
+        $returnedName = $hasNameMock->getName();
 
         // Then
         $this->assertSame('Test', $returnedName);
