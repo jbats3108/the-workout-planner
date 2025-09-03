@@ -16,12 +16,12 @@ use Spatie\LaravelData\Support\Types\NamedType;
 class SlugToModelCast implements Cast
 {
     /**
-     * @param  CreationContext<Data>  $creationContext
+     * @param  CreationContext<Data>  $context
      */
-    public function cast(DataProperty $dataProperty, mixed $value, array $properties, CreationContext $creationContext): ?Model
+    public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context): ?Model
     {
         /** @var NamedType $type */
-        $type = $dataProperty->type->type;
+        $type = $property->type->type;
         $modelName = $type->name;
 
         /** @var string $value */

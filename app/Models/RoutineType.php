@@ -11,7 +11,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RoutineType extends Model
 {
+    /** @use HasFactory<RoutineTypeFactory> */
     use HasFactory;
+
     use HasName;
     use HasSlug;
     use SoftDeletes;

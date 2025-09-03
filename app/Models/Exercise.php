@@ -20,7 +20,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Exercise extends Model
 {
+    /** @use HasFactory<ExerciseFactory> */
     use HasFactory;
+
     use HasName;
     use HasSlug;
     use SoftDeletes;

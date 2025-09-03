@@ -12,7 +12,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Routine extends Model
 {
+    /** @use HasFactory<RoutineFactory> */
     use HasFactory;
+
     use HasName;
     use SoftDeletes;
 

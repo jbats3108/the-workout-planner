@@ -11,7 +11,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MuscleGroup extends Model
 {
+    /** @use HasFactory<MuscleGroupFactory> */
     use HasFactory;
+
     use HasName;
     use HasSlug;
     use SoftDeletes;

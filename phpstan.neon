@@ -17,3 +17,6 @@ parameters:
         - ./app/Http/Controllers/Settings/*
         - ./tests/Feature/Settings/*
         - ./tests/Feature/Auth/*
+    ignoreErrors:
+        -
+            identifier: return.unusedType
