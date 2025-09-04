@@ -35,7 +35,10 @@ class WorkoutServiceTest extends TestCase
             // Then
             $this->assertSame('Unable to create a workout for a routine with no exercises', $workoutServiceException->getMessage());
 
+            return;
         }
+
+        $this->fail();
 
     }
 
