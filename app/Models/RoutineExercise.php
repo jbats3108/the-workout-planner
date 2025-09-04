@@ -21,15 +21,12 @@ class RoutineExercise extends Model
         'routine_id',
         'sets',
         'reps',
-        'weight',
         'to_failure',
     ];
 
-    protected function casts(): array
+    protected static function newFactory(): RoutineExerciseFactory
     {
-        return [
-            'to_failure' => 'boolean',
-        ];
+        return RoutineExerciseFactory::new();
     }
 
     /** @return BelongsTo<Exercise, $this> */
@@ -44,8 +41,10 @@ class RoutineExercise extends Model
         return $this->belongsTo(Routine::class);
     }
 
-    protected static function newFactory(): RoutineExerciseFactory
+    protected function casts(): array
     {
-        return RoutineExerciseFactory::new();
+        return [
+            'to_failure' => 'boolean',
+        ];
     }
 }

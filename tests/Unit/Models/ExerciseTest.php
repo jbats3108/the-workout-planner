@@ -138,16 +138,7 @@ class ExerciseTest extends TestCase
         $routineTwo = Routine::factory()->create();
 
         // When
-        $routineOne->exercises()->attach($exercise, [
-            'sets' => 3,
-            'reps' => 12,
-            'weight' => 10,
-        ]);
-        $routineTwo->exercises()->attach($exercise, [
-            'sets' => 3,
-            'reps' => 12,
-            'weight' => 10,
-        ]);
+        $exercise->routines()->sync([$routineOne, $routineTwo]);
 
         // Then
         $this->assertCount(2, $exercise->routines);

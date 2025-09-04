@@ -83,7 +83,6 @@ class AddRoutineExerciseControllerTest extends TestCase
         $this->assertDatabaseHas('routine_exercise', [
             'exercise_id' => $exercise->id,
             'routine_id' => $routine->id,
-            'weight' => 10,
             'to_failure' => false,
             'sets' => 3,
             'reps' => 6,
@@ -101,7 +100,6 @@ class AddRoutineExerciseControllerTest extends TestCase
         $request = [
             'reps' => 12,
             'sets' => 5,
-            'weight' => 11.45,
             'to_failure' => true,
         ];
 
@@ -114,7 +112,6 @@ class AddRoutineExerciseControllerTest extends TestCase
         $this->assertDatabaseHas('routine_exercise', [
             'exercise_id' => $exercise->id,
             'routine_id' => $routine->id,
-            'weight' => 11.45,
             'to_failure' => true,
             'sets' => 5,
             'reps' => 12,
