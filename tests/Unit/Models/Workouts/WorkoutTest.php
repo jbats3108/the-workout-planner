@@ -69,7 +69,7 @@ class WorkoutTest extends TestCase
         $workout = Workout::factory()->create();
 
         WorkoutExercise::factory(3)->create([
-            'workout_id' => $workout->id
+            'workout_id' => $workout->id,
         ]);
 
         // When / Then
