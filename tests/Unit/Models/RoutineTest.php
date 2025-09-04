@@ -41,19 +41,27 @@ class RoutineTest extends TestCase
         $routine = Routine::factory()->create();
 
         // When
-        $exerciseOne->routines()->attach($routine, [
-            'sets' => 3,
-            'reps' => 12,
-            'weight' => 10,
-        ]);
-        $exerciseTwo->routines()->attach($routine, [
-            'sets' => 3,
-            'reps' => 12,
-            'weight' => 10,
-        ]);
+        $exerciseOne->routines()->attach($routine);
+        $exerciseTwo->routines()->attach($routine);
 
         // Then
         $this->assertCount(2, $routine->exercises);
+
+    }
+
+    #[Test]
+    public function it_has_routine_exercises(): void
+    {
+        // Given
+        $exercise = Exercise::factory()->create();
+
+        $routine = Routine::factory()->create();
+
+        // When
+        $routine->exercises()->sync($exercise);
+
+        // Then
+        $this->assertCount(1, $routine->routineExercises);
 
     }
 

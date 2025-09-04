@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Routine extends Model
@@ -28,6 +29,14 @@ class Routine extends Model
     public function exercises(): BelongsToMany
     {
         return $this->belongsToMany(Exercise::class, 'routine_exercise', 'routine_id', 'exercise_id');
+    }
+
+    /**
+     * @return HasMany<RoutineExercise, $this>
+     */
+    public function routineExercises(): HasMany
+    {
+        return $this->hasMany(RoutineExercise::class);
     }
 
     /** @return BelongsTo<RoutineType, $this> */
