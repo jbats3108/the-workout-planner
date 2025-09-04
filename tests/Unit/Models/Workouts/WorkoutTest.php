@@ -4,6 +4,7 @@ namespace Tests\Unit\Models\Workouts;
 
 use App\Models\Routine;
 use App\Models\Workouts\Workout;
+use App\Models\Workouts\WorkoutExercise;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -59,5 +60,20 @@ class WorkoutTest extends TestCase
 
         // Then
         $this->assertSame($addedNote, $workout->getNotes());
+    }
+
+    #[Test]
+    public function it_has_exercises(): void
+    {
+        // Given
+        $workout = Workout::factory()->create();
+
+        WorkoutExercise::factory(3)->create([
+            'workout_id' => $workout->id
+        ]);
+
+        // When / Then
+        $this->assertCount(3, $workout->exercises);
+
     }
 }
