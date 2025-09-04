@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Workouts;
 
-use Database\Factories\WorkoutFactory;
+use App\Models\Routine;
+use Database\Factories\Workouts\WorkoutFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

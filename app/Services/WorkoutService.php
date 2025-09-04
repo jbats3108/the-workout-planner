@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Exceptions\WorkoutServiceException;
 use App\Models\Routine;
-use App\Models\Workout;
+use App\Models\Workouts\Workout;
 
 class WorkoutService
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\Unit\Models;
+namespace Tests\Unit\Models\Workouts;
 
 use App\Models\Exercise;
 use App\Models\Routine;
 use App\Models\RoutineExercise;
-use App\Models\Workout;
-use App\Models\WorkoutExercise;
+use App\Models\Workouts\Workout;
+use App\Models\Workouts\WorkoutExercise;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;

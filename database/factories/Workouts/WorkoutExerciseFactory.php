@@ -1,10 +1,10 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Workouts;
 
 use App\Models\RoutineExercise;
-use App\Models\Workout;
-use App\Models\WorkoutExercise;
+use App\Models\Workouts\Workout;
+use App\Models\Workouts\WorkoutExercise;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 

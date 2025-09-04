@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Unit\Models;
+namespace Tests\Unit\Models\Workouts;
 
 use App\Models\Routine;
-use App\Models\Workout;
+use App\Models\Workouts\Workout;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;

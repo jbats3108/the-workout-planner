@@ -1,8 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Workouts;
 
-use Database\Factories\WorkoutExerciseFactory;
+use App\Models\Exercise;
+use App\Models\MuscleGroup;
+use App\Models\RoutineExercise;
+use Database\Factories\Workouts\WorkoutExerciseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

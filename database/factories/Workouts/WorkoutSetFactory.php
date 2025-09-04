@@ -1,9 +1,9 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Workouts;
 
-use App\Models\WorkoutExercise;
-use App\Models\WorkoutSet;
+use App\Models\Workouts\WorkoutExercise;
+use App\Models\Workouts\WorkoutSet;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 

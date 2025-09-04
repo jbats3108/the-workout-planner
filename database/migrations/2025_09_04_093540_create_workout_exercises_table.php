@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\RoutineExercise;
-use App\Models\Workout;
+use App\Models\Workouts\Workout;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
