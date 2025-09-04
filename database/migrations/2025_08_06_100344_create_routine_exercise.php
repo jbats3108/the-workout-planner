@@ -11,9 +11,9 @@ return new class extends Migration
         Schema::create('routine_exercise', function (Blueprint $table) {
             $table->foreignId('exercise_id');
             $table->foreignId('routine_id');
-            $table->integer('sets');
-            $table->integer('reps');
-            $table->integer('weight');
+            $table->integer('sets')->default(3);
+            $table->integer('reps')->default(6);
+            $table->integer('weight')->nullable();
             $table->boolean('to_failure')->default(false);
             $table->timestamps();
         });
