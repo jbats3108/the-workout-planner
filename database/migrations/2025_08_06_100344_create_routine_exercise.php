@@ -9,6 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('routine_exercise', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('exercise_id');
             $table->foreignId('routine_id');
             $table->integer('sets')->default(3);
