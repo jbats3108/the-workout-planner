@@ -57,4 +57,23 @@ class WorkoutServiceTest extends TestCase
         // Then
         $this->assertTrue($workout->routine->is($routine));
     }
+
+    #[Test]
+    public function it_creates_a_workout_exercise_for_each_exercise_in_the_routine(): void
+    {
+        // Given
+        $exerciseOne = Exercise::factory()->create();
+        $exerciseTwo = Exercise::factory()->create();
+
+        $routine = Routine::factory()->create();
+
+        $routine->exercises()->sync([$exerciseOne->id, $exerciseTwo->id]);
+
+        // When
+        $workout = $this->workoutService->createWorkout($routine);
+
+        // Then
+        $this->assertCount(2, $workout->exercises);
+
+    }
 }
