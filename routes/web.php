@@ -18,9 +18,11 @@ use App\Http\Controllers\RoutineTypes\DeleteRoutineTypeController;
 use App\Http\Controllers\RoutineTypes\IndexRoutineTypesController;
 use App\Http\Controllers\RoutineTypes\StoreRoutineTypeController;
 use App\Http\Controllers\ShowDashboardController;
+use App\Http\Controllers\Workouts\StoreWorkoutController;
 use App\Models\Exercise;
 use App\Models\MuscleGroup;
 use App\Models\RoutineType;
+use App\Models\Workouts\Workout;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -103,6 +105,14 @@ Route::middleware('auth')->group(function (): void {
         Route::put('/{muscleGroup}', UpdateMuscleGroupController::class)
             ->can('update', MuscleGroup::class)
             ->name('muscle-groups.update');
+    });
+
+    Route::prefix('/workout')->group(function (): void {
+
+        Route::post('/create/{routine}', StoreWorkoutController::class)
+            ->can('create', 'routine')
+            ->name('workout.store');
+
     });
 });
 
