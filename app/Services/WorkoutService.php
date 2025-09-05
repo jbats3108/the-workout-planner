@@ -7,6 +7,7 @@ use App\Models\Routine;
 use App\Models\RoutineExercise;
 use App\Models\Workouts\Workout;
 use App\Models\Workouts\WorkoutExercise;
+use App\Models\Workouts\WorkoutSet;
 
 class WorkoutService
 {
@@ -30,6 +31,22 @@ class WorkoutService
             'workout_id' => $workout->id,
             'routine_exercise_id' => $exercise->id,
         ]));
+
+        $workout->exercises->each(function (WorkoutExercise $workoutExercise): void {
+
+            $routineExercise = $workoutExercise->routineExercise;
+            $sets = $routineExercise->sets;
+
+            for ($i = 0; $i < $sets; $i++) {
+                $setNumber = $i + 1;
+
+                WorkoutSet::create([
+                    'set' => $setNumber,
+                    'workout_exercise_id' => $workoutExercise->id,
+                ]);
+            }
+
+        });
 
         return $workout;
 
