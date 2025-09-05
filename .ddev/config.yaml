@@ -9,10 +9,16 @@ additional_fqdns: []
 database:
     type: mysql
     version: "8.4"
+webimage_extra_packages: [php-mbstring, php-bcmath]
 use_dns_when_possible: true
 composer_version: "2"
 web_environment: []
 corepack_enable: false
+web_extra_exposed_ports:
+    - name: node-vite
+      container_port: 5173
+      http_port: 5172
+      https_port: 5173
 
 # Key features of DDEV's config.yaml:
 
@@ -98,7 +104,7 @@ corepack_enable: false
 # Alternatively, an explicit Composer version may be specified, for example "2.2.18".
 # To reinstall Composer after the image was built, run "ddev debug rebuild".
 
-nodejs_version: "22"
+# nodejs_version: "22"
 # change from the default system Node.js version to any other version.
 # See https://ddev.readthedocs.io/en/stable/users/configuration/config/#nodejs_version for more information
 # and https://www.npmjs.com/package/n#specifying-nodejs-versions for the full documentation,
@@ -195,7 +201,7 @@ nodejs_version: "22"
 # The mailpit port is not normally bound on the host at all, instead being routed
 # through ddev-router, but it can be bound directly to localhost if specified here.
 
-webimage_extra_packages: [php-mbstring, php-bcmath]
+# webimage_extra_packages: [php7.4-tidy, php-bcmath]
 # Extra Debian packages that are needed in the webimage can be added here
 
 # dbimage_extra_packages: [telnet,netcat]
@@ -243,11 +249,7 @@ webimage_extra_packages: [php-mbstring, php-bcmath]
 # The default time that DDEV waits for all containers to become ready can be increased from
 # the default 120. This helps in importing huge databases, for example.
 
-web_extra_exposed_ports:
-  - name: node-vite
-    container_port: 5173
-    http_port: 5172
-    https_port: 5173
+#web_extra_exposed_ports:
 #- name: nodejs
 #  container_port: 3000
 #  http_port: 2999
