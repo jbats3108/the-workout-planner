@@ -7,6 +7,7 @@ use App\Models\Routine;
 use App\Models\RoutineExercise;
 use App\Models\Workouts\Workout;
 use App\Models\Workouts\WorkoutExercise;
+use App\Models\Workouts\WorkoutSet;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -70,5 +71,20 @@ class WorkoutExerciseTest extends TestCase
 
         // Then
         $this->assertTrue($workoutExercise->exercise()->is($exercise));
+    }
+
+    #[Test]
+    public function it_has_workout_sets(): void
+    {
+        // Given
+        $workoutExercise = WorkoutExercise::factory()->create();
+
+        WorkoutSet::factory(3)->create([
+            'workout_exercise_id' => $workoutExercise,
+        ]);
+
+        // When / Then
+        $this->assertCount(3, $workoutExercise->sets);
+
     }
 }
