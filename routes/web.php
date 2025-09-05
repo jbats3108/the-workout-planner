@@ -22,7 +22,6 @@ use App\Http\Controllers\Workouts\StoreWorkoutController;
 use App\Models\Exercise;
 use App\Models\MuscleGroup;
 use App\Models\RoutineType;
-use App\Models\Workouts\Workout;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
