@@ -22,6 +22,7 @@ use App\Http\Controllers\Workouts\StoreWorkoutController;
 use App\Models\Exercise;
 use App\Models\MuscleGroup;
 use App\Models\RoutineType;
+use App\Models\Workouts\Workout;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -109,7 +110,7 @@ Route::middleware('auth')->group(function (): void {
     Route::prefix('/workout')->group(function (): void {
 
         Route::post('/create/{routine}', StoreWorkoutController::class)
-            ->can('create', 'routine')
+            ->can('create', [Workout::class, 'routine'])
             ->name('workout.store');
 
     });
