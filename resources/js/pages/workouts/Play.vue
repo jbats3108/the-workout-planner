@@ -2,6 +2,7 @@
 /**
  * Workout player — chrome-minimal full-bleed stage.
  */
+import { defaultBarG, gramsToKg, nearestPlateLoad } from '@/lib/plateCalculator';
 import { Head, router, useForm } from '@inertiajs/vue3';
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
@@ -43,7 +44,16 @@ type WorkoutPayload = {
     blocks: PlayerBlock[];
 };
 
-const props = defineProps<{ workout: WorkoutPayload }>();
+type PlateProfile = {
+    name: string;
+    bars: Array<{ name: string; weight_g: number; is_default: boolean }>;
+    plates: Array<{ denomination_g: number; count: number; colour: string | null }>;
+};
+
+const props = defineProps<{
+    workout: WorkoutPayload;
+    plate_profile: PlateProfile;
+}>();
 
 type Focus =
     | { kind: 'set'; blockIndex: number; setId: number }
@@ -297,6 +307,29 @@ const removeWorkingSet = () => {
 };
 
 const groupLabel = (type: string) => (type === 'warm_up' ? 'Warm-up' : 'Working');
+
+const plateLoad = computed(() => {
+    const barG = defaultBarG(props.plate_profile.bars);
+    if (barG === null) return null;
+    const targetKg = setForm.weight_kg;
+    if (targetKg == null || Number.isNaN(targetKg)) return null;
+    return nearestPlateLoad(Math.round(targetKg * 1000), barG, props.plate_profile.plates);
+});
+
+const applyNearestLoad = () => {
+    if (!plateLoad.value) return;
+    setForm.weight_kg = gramsToKg(plateLoad.value.total_g);
+};
+
+const formatPlateStack = computed(() => {
+    const load = plateLoad.value;
+    if (!load) return null;
+    if (!load.per_side.length) {
+        return `${gramsToKg(load.bar_g)}${props.workout.weight_unit} bar only`;
+    }
+    const plates = load.per_side.map((s) => `${s.count}×${gramsToKg(s.denomination_g)}`).join(' + ');
+    return `${gramsToKg(load.bar_g)} bar + ${plates} / side`;
+});
 </script>
 
 <template>
@@ -376,6 +409,27 @@ const groupLabel = (type: string) => (type === 'warm_up' ? 'Warm-up' : 'Working'
                         required
                     />
                 </label>
+                <div
+                    v-if="plateLoad && formatPlateStack"
+                    class="rounded-xl border border-border bg-card/60 px-4 py-3 text-sm"
+                >
+                    <p class="text-xs uppercase tracking-wide text-muted-foreground">Plates</p>
+                    <p class="mt-1 font-mono text-foreground">{{ formatPlateStack }}</p>
+                    <p v-if="!plateLoad.exact" class="mt-1 text-xs text-muted-foreground">
+                        Nearest loadable:
+                        {{ gramsToKg(plateLoad.total_g) }}{{ workout.weight_unit }}
+                        <span v-if="plateLoad.delta_g > 0">(+{{ gramsToKg(plateLoad.delta_g) }})</span>
+                        <span v-else-if="plateLoad.delta_g < 0">({{ gramsToKg(plateLoad.delta_g) }})</span>
+                    </p>
+                    <button
+                        v-if="!plateLoad.exact"
+                        type="button"
+                        class="mt-2 text-xs font-medium text-primary hover:underline"
+                        @click="applyNearestLoad"
+                    >
+                        Apply nearest
+                    </button>
+                </div>
                 <label class="flex flex-col gap-1 text-sm text-muted-foreground">
                     Reps
                     <input

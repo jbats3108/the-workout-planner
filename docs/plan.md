@@ -26,7 +26,7 @@ Ordered for the core loop; reshuffle if product priority changes.
 8. **Dead code audit (v1 leftovers)** — ~~JSON catalog APIs, unused MG update, starter UI packages, unused permission seeders~~ done
 9. **Strip Laravel starter-kit UI** — ~~remove obvious Breeze/starter chrome and behaviours that still read as the stock kit~~ done (branded OVRLOAD home; dead search/footer/auth variants removed)
 10. **Rebrand to OVRLOAD** — ~~rename product surfaces to **OVRLOAD**; mark/icon and related chrome around **OVR** / **OVRLD**~~ done (`docs/branding.md`; logos, home, auth, `APP_NAME`)
-11. **Plate calculator UI** — plate profile + nearest loadable (schema exists; UI deferred)
+11. **Plate calculator UI** — ~~Settings for bars/plates; player shows nearest loadable stack~~ done
 12. **Flaky-network drafts** — best-effort offline/queue for player logging (later)
 
 ## Grill: app-like mobile behaviour

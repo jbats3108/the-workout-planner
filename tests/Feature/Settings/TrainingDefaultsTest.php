@@ -28,7 +28,8 @@ class TrainingDefaultsTest extends TestCase
         $response->assertInertia(fn ($page) => $page
             ->component('settings/Training')
             ->where('using_app_fallback', true)
-            ->has('warm_up_steps_default', 3));
+            ->has('warm_up_steps_default', 3)
+            ->has('plate_profile'));
     }
 
     #[Test]

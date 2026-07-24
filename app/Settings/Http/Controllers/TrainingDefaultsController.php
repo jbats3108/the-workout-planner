@@ -5,6 +5,7 @@ namespace App\Settings\Http\Controllers;
 use App\Shared\Http\Controllers\Controller;
 use App\Users\Data\UpdateTrainingDefaultsData;
 use App\Users\Models\User;
+use App\Users\Services\PlateProfileService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -12,7 +13,7 @@ use Inertia\Response;
 
 class TrainingDefaultsController extends Controller
 {
-    public function edit(Request $request): Response
+    public function edit(Request $request, PlateProfileService $profiles): Response
     {
         /** @var User $user */
         $user = $request->user();
@@ -20,6 +21,7 @@ class TrainingDefaultsController extends Controller
         return Inertia::render('settings/Training', [
             'warm_up_steps_default' => $user->resolvedWarmUpStepsDefault(),
             'using_app_fallback' => $user->warm_up_steps_default === null,
+            'plate_profile' => $profiles->profilePayloadFor($user),
         ]);
     }
 

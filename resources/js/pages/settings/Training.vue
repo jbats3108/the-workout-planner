@@ -7,10 +7,14 @@ import { Head, router, useForm, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
 type WarmUpStep = { percent: number; reps: number };
+type PlateBar = { name: string; weight_g: number; is_default: boolean };
+type PlateRow = { denomination_g: number; count: number; colour: string | null };
+type PlateProfile = { name: string; bars: PlateBar[]; plates: PlateRow[] };
 
 const props = defineProps<{
     warm_up_steps_default: WarmUpStep[];
     using_app_fallback: boolean;
+    plate_profile: PlateProfile;
 }>();
 
 const page = usePage();
@@ -25,6 +29,12 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
 const form = useForm({
     warm_up_steps_default: props.warm_up_steps_default.map((s) => ({ ...s })),
+});
+
+const plateForm = useForm({
+    name: props.plate_profile.name,
+    bars: props.plate_profile.bars.map((b) => ({ ...b })),
+    plates: props.plate_profile.plates.map((p) => ({ ...p })),
 });
 
 const addStep = () => {
@@ -42,18 +52,41 @@ const submit = () => {
 const resetToApp = () => {
     router.post(route('training.reset'));
 };
+
+const addBar = () => {
+    plateForm.bars.push({ name: 'Bar', weight_g: 20000, is_default: plateForm.bars.length === 0 });
+};
+
+const removeBar = (index: number) => {
+    plateForm.bars.splice(index, 1);
+};
+
+const setDefaultBar = (index: number) => {
+    plateForm.bars.forEach((bar, i) => {
+        bar.is_default = i === index;
+    });
+};
+
+const addPlate = () => {
+    plateForm.plates.push({ denomination_g: 10000, count: 2, colour: null });
+};
+
+const removePlate = (index: number) => {
+    plateForm.plates.splice(index, 1);
+};
+
+const savePlates = () => {
+    plateForm.put(route('training.plates.update'));
+};
+
+const gToKg = (g: number) => g / 1000;
 </script>
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbItems">
         <Head title="Training" />
 
-        <div class="mx-auto w-full max-w-xl space-y-6 px-4 py-6">
-            <HeadingSmall
-                title="Warm-up defaults"
-                description="Seeded into new routine blocks. Each step is a percent of working weight and its own reps."
-            />
-
+        <div class="mx-auto w-full max-w-xl space-y-10 px-4 py-6">
             <div
                 v-if="successMessage"
                 class="rounded-xl border border-primary/40 bg-primary/10 px-4 py-3 text-sm text-primary"
@@ -62,73 +95,208 @@ const resetToApp = () => {
                 {{ successMessage }}
             </div>
 
-            <p v-if="using_app_fallback" class="text-sm text-muted-foreground">
-                Using the app fallback ladder until you save your own.
-            </p>
+            <section class="space-y-6">
+                <HeadingSmall
+                    title="Warm-up defaults"
+                    description="Seeded into new routine blocks. Each step is a percent of working weight and its own reps."
+                />
 
-            <form class="space-y-4" @submit.prevent="submit">
-                <div
-                    v-for="(step, index) in form.warm_up_steps_default"
-                    :key="index"
-                    class="flex flex-wrap items-end gap-3"
-                >
+                <p v-if="using_app_fallback" class="text-sm text-muted-foreground">
+                    Using the app fallback ladder until you save your own.
+                </p>
+
+                <form class="space-y-4" @submit.prevent="submit">
+                    <div
+                        v-for="(step, index) in form.warm_up_steps_default"
+                        :key="index"
+                        class="flex flex-wrap items-end gap-3"
+                    >
+                        <label class="flex flex-col gap-1 text-sm text-muted-foreground">
+                            % of working
+                            <input
+                                v-model.number="step.percent"
+                                type="number"
+                                min="1"
+                                max="100"
+                                class="w-24 rounded border border-border bg-card px-3 py-2 font-mono text-foreground"
+                                required
+                            />
+                        </label>
+                        <label class="flex flex-col gap-1 text-sm text-muted-foreground">
+                            Reps
+                            <input
+                                v-model.number="step.reps"
+                                type="number"
+                                min="1"
+                                max="100"
+                                class="w-24 rounded border border-border bg-card px-3 py-2 font-mono text-foreground"
+                                required
+                            />
+                        </label>
+                        <button
+                            type="button"
+                            class="rounded border border-border px-3 py-2 text-sm text-muted-foreground hover:text-destructive"
+                            @click="removeStep(index)"
+                        >
+                            Remove
+                        </button>
+                    </div>
+
+                    <InputError :message="form.errors.warm_up_steps_default" />
+
+                    <div class="flex flex-wrap gap-3 pt-2">
+                        <button
+                            type="button"
+                            class="rounded-full border border-border px-4 py-2 text-sm text-muted-foreground hover:text-foreground"
+                            @click="addStep"
+                        >
+                            + Step
+                        </button>
+                        <button
+                            type="submit"
+                            class="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-50"
+                            :disabled="form.processing"
+                        >
+                            Save warm-ups
+                        </button>
+                        <button
+                            type="button"
+                            class="rounded-full border border-border px-4 py-2 text-sm text-muted-foreground hover:text-foreground"
+                            @click="resetToApp"
+                        >
+                            Reset warm-ups
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="space-y-6 border-t border-border pt-10">
+                <HeadingSmall
+                    title="Plate profile"
+                    description="Bars and plates for the calculator. Counts are total plates (both sides)."
+                />
+
+                <form class="space-y-6" @submit.prevent="savePlates">
                     <label class="flex flex-col gap-1 text-sm text-muted-foreground">
-                        % of working
+                        Profile name
                         <input
-                            v-model.number="step.percent"
-                            type="number"
-                            min="1"
-                            max="100"
-                            class="w-24 rounded border border-border bg-card px-3 py-2 font-mono text-foreground"
+                            v-model="plateForm.name"
+                            class="rounded border border-border bg-card px-3 py-2 text-foreground"
                             required
                         />
+                        <InputError :message="plateForm.errors.name" />
                     </label>
-                    <label class="flex flex-col gap-1 text-sm text-muted-foreground">
-                        Reps
-                        <input
-                            v-model.number="step.reps"
-                            type="number"
-                            min="1"
-                            max="100"
-                            class="w-24 rounded border border-border bg-card px-3 py-2 font-mono text-foreground"
-                            required
-                        />
-                    </label>
-                    <button
-                        type="button"
-                        class="rounded border border-border px-3 py-2 text-sm text-muted-foreground hover:text-destructive"
-                        @click="removeStep(index)"
-                    >
-                        Remove
-                    </button>
-                </div>
 
-                <InputError :message="form.errors.warm_up_steps_default" />
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <p class="text-sm font-medium">Bars</p>
+                            <button type="button" class="text-xs text-primary" @click="addBar">+ Bar</button>
+                        </div>
+                        <div
+                            v-for="(bar, index) in plateForm.bars"
+                            :key="index"
+                            class="flex flex-wrap items-end gap-2"
+                        >
+                            <label class="flex flex-col gap-1 text-xs text-muted-foreground">
+                                Name
+                                <input
+                                    v-model="bar.name"
+                                    class="w-28 rounded border border-border bg-card px-2 py-1.5 text-sm"
+                                    required
+                                />
+                            </label>
+                            <label class="flex flex-col gap-1 text-xs text-muted-foreground">
+                                kg
+                                <input
+                                    :value="gToKg(bar.weight_g)"
+                                    type="number"
+                                    step="0.5"
+                                    min="0"
+                                    class="w-20 rounded border border-border bg-card px-2 py-1.5 font-mono text-sm"
+                                    required
+                                    @input="bar.weight_g = Math.round(Number(($event.target as HTMLInputElement).value) * 1000)"
+                                />
+                            </label>
+                            <label class="flex items-center gap-1 pb-2 text-xs">
+                                <input type="radio" name="default_bar" :checked="bar.is_default" @change="setDefaultBar(index)" />
+                                Default
+                            </label>
+                            <button
+                                type="button"
+                                class="pb-2 text-xs text-muted-foreground hover:text-destructive"
+                                @click="removeBar(index)"
+                            >
+                                Remove
+                            </button>
+                        </div>
+                        <InputError :message="plateForm.errors.bars" />
+                    </div>
 
-                <div class="flex flex-wrap gap-3 pt-2">
-                    <button
-                        type="button"
-                        class="rounded-full border border-border px-4 py-2 text-sm text-muted-foreground hover:text-foreground"
-                        @click="addStep"
-                    >
-                        + Step
-                    </button>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <p class="text-sm font-medium">Plates</p>
+                            <button type="button" class="text-xs text-primary" @click="addPlate">+ Plate</button>
+                        </div>
+                        <div
+                            v-for="(plate, index) in plateForm.plates"
+                            :key="index"
+                            class="flex flex-wrap items-end gap-2"
+                        >
+                            <label class="flex flex-col gap-1 text-xs text-muted-foreground">
+                                kg
+                                <input
+                                    :value="gToKg(plate.denomination_g)"
+                                    type="number"
+                                    step="0.25"
+                                    min="0.25"
+                                    class="w-20 rounded border border-border bg-card px-2 py-1.5 font-mono text-sm"
+                                    required
+                                    @input="
+                                        plate.denomination_g = Math.round(
+                                            Number(($event.target as HTMLInputElement).value) * 1000,
+                                        )
+                                    "
+                                />
+                            </label>
+                            <label class="flex flex-col gap-1 text-xs text-muted-foreground">
+                                Count
+                                <input
+                                    v-model.number="plate.count"
+                                    type="number"
+                                    min="0"
+                                    max="100"
+                                    class="w-16 rounded border border-border bg-card px-2 py-1.5 font-mono text-sm"
+                                    required
+                                />
+                            </label>
+                            <label class="flex flex-col gap-1 text-xs text-muted-foreground">
+                                Colour
+                                <input
+                                    v-model="plate.colour"
+                                    class="w-24 rounded border border-border bg-card px-2 py-1.5 text-sm"
+                                    placeholder="optional"
+                                />
+                            </label>
+                            <button
+                                type="button"
+                                class="pb-2 text-xs text-muted-foreground hover:text-destructive"
+                                @click="removePlate(index)"
+                            >
+                                Remove
+                            </button>
+                        </div>
+                        <InputError :message="plateForm.errors.plates" />
+                    </div>
+
                     <button
                         type="submit"
                         class="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-50"
-                        :disabled="form.processing"
+                        :disabled="plateForm.processing"
                     >
-                        Save
+                        Save plates
                     </button>
-                    <button
-                        type="button"
-                        class="rounded-full border border-border px-4 py-2 text-sm text-muted-foreground hover:text-foreground"
-                        @click="resetToApp"
-                    >
-                        Reset to app default
-                    </button>
-                </div>
-            </form>
+                </form>
+            </section>
         </div>
     </AppLayout>
 </template>

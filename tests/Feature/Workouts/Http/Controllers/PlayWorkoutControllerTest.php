@@ -41,6 +41,8 @@ class PlayWorkoutControllerTest extends TestCase
                 ->where('workout.id', $workout->id)
                 ->where('workout.routine_name', $workout->routine->getName())
                 ->has('workout.blocks', 1)
+                ->has('plate_profile.bars')
+                ->has('plate_profile.plates')
             );
     }
 
