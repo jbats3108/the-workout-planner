@@ -3,22 +3,24 @@
 namespace App\Exercises\Http\Controllers;
 
 use App\Exercises\Data\StoreExerciseData;
-use App\Shared\Http\Controllers\Controller;
 use App\Exercises\Models\Exercise;
-use Illuminate\Http\Response as HttpResponse;
-use Symfony\Component\HttpFoundation\Response;
+use App\Shared\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 
 class StoreExerciseController extends Controller
 {
-    public function __invoke(StoreExerciseData $request): HttpResponse
+    public function __invoke(StoreExerciseData $request): RedirectResponse
     {
-
-        $exercise = new Exercise($request->toArray());
+        $exercise = new Exercise([
+            'name' => $request->name,
+            'slug' => $request->slug,
+        ]);
         $exercise->primaryMuscleGroup()->associate($request->primaryMuscleGroup);
         $exercise->secondaryMuscleGroup()->associate($request->secondaryMuscleGroup);
-
         $exercise->save();
 
-        return response('Successfully created exercise', Response::HTTP_CREATED);
+        return redirect()
+            ->route('admin.exercises')
+            ->with('success', 'Exercise created.');
     }
 }

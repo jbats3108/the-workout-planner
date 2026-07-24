@@ -1,5 +1,9 @@
 <?php
 
+use App\Admin\Http\Controllers\IndexAdminExercisesController;
+use App\Admin\Http\Controllers\IndexAdminMuscleGroupsController;
+use App\Admin\Http\Controllers\IndexAdminUsersController;
+use App\Admin\Http\Controllers\ShowAdminController;
 use App\Dashboard\Http\Controllers\ShowDashboardController;
 use App\Exercises\Http\Controllers\DeleteExerciseController;
 use App\Exercises\Http\Controllers\IndexExerciseController;
@@ -136,6 +140,13 @@ Route::middleware('auth')->group(function (): void {
         Route::post('/{workout}/progression/skip', SkipProgressionController::class)
             ->can('applyProgression', 'workout')
             ->name('workouts.progression.skip');
+    });
+
+    Route::prefix('admin')->middleware('role:admin')->group(function (): void {
+        Route::get('/', ShowAdminController::class)->name('admin.index');
+        Route::get('/exercises', IndexAdminExercisesController::class)->name('admin.exercises');
+        Route::get('/muscle-groups', IndexAdminMuscleGroupsController::class)->name('admin.muscle-groups');
+        Route::get('/users', IndexAdminUsersController::class)->name('admin.users');
     });
 });
 

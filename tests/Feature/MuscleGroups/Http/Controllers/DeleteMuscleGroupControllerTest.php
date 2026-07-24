@@ -43,7 +43,7 @@ class DeleteMuscleGroupControllerTest extends TestCase
         $response = $this->actingAs($this->adminUser)->delete(route('muscle-groups.delete', ['muscleGroup' => $muscleGroup->id]));
 
         // Then
-        $response->assertRedirect();
+        $response->assertRedirect(route('admin.muscle-groups'));
         $this->assertSoftDeleted(MuscleGroup::class, ['id' => $muscleGroup->id]);
 
     }

@@ -47,7 +47,7 @@ class DeleteExerciseControllerTest extends TestCase
         $response = $this->actingAs($this->adminUser)->delete($route);
 
         // Then
-        $response->assertRedirect();
+        $response->assertRedirect(route('admin.exercises'));
         $this->assertSoftDeleted(Exercise::class, ['id' => $exercise->id]);
 
     }

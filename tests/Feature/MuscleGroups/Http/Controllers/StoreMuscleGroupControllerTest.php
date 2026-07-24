@@ -99,7 +99,7 @@ class StoreMuscleGroupControllerTest extends TestCase
         $response = $this->actingAs($this->adminUser)->post(route('muscle-groups.store'), $request);
 
         // Then
-        $response->assertRedirect(route('dashboard'));
+        $response->assertRedirect(route('admin.muscle-groups'));
 
         $this->assertDatabaseHas(MuscleGroup::class, [
             'name' => 'Name',

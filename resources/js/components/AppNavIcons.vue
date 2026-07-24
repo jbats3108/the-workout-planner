@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link, router, usePage } from '@inertiajs/vue3';
-import { LayoutGrid, LogOut, Settings } from 'lucide-vue-next';
+import { LayoutGrid, LogOut, Settings, Shield } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 const emit = defineEmits<{
@@ -9,6 +9,7 @@ const emit = defineEmits<{
 
 const page = usePage();
 const path = computed(() => page.url.split('?')[0]);
+const isAdmin = computed(() => Boolean(page.props.auth.user?.is_admin));
 
 const isActive = (href: string) => path.value === href || path.value.startsWith(`${href}/`);
 
@@ -45,6 +46,17 @@ const logout = () => {
             @click="onNavigate"
         >
             <LayoutGrid class="size-4" />
+        </Link>
+
+        <Link
+            v-if="isAdmin"
+            :href="route('admin.index')"
+            class="flex size-9 items-center justify-center rounded-md transition-colors"
+            :class="iconClass(isActive('/admin'))"
+            aria-label="Admin"
+            @click="onNavigate"
+        >
+            <Shield class="size-4" />
         </Link>
     </nav>
 

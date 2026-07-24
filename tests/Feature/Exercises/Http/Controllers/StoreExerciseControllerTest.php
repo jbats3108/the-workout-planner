@@ -91,7 +91,8 @@ class StoreExerciseControllerTest extends TestCase
         $response = $this->makeRequest($createExerciseRequest);
 
         // Then
-        $response->assertCreated();
+        $response->assertRedirect(route('admin.exercises'));
+        $response->assertSessionHas('success', 'Exercise created.');
 
         $this->assertDatabaseHas(Exercise::class, [
             'name' => 'Test Exercise',

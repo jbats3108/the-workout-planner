@@ -39,6 +39,11 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    /** @var list<string> */
+    protected $appends = [
+        'is_admin',
+    ];
+
     /** @return array<string, string> */
     protected function casts(): array
     {
@@ -89,6 +94,11 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->hasRole('admin');
+    }
+
+    public function getIsAdminAttribute(): bool
+    {
+        return $this->isAdmin();
     }
 
     /** @return HasMany<Routine, $this> */

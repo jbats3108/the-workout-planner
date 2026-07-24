@@ -2,8 +2,8 @@
 
 namespace App\Exercises\Http\Controllers;
 
-use App\Shared\Http\Controllers\Controller;
 use App\Exercises\Models\Exercise;
+use App\Shared\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -13,6 +13,8 @@ class DeleteExerciseController extends Controller
     {
         $exercise->delete();
 
-        return back();
+        return redirect()
+            ->route('admin.exercises')
+            ->with('success', 'Exercise deleted.');
     }
 }

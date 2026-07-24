@@ -83,7 +83,7 @@ class UpdateMuscleGroupControllerTest extends TestCase
         );
 
         // Then
-        $response->assertRedirect(route('dashboard'));
+        $response->assertRedirect(route('admin.muscle-groups'));
 
         $muscleGroup->refresh();
 

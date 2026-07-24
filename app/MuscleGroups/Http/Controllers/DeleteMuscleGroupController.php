@@ -2,8 +2,8 @@
 
 namespace App\MuscleGroups\Http\Controllers;
 
-use App\Shared\Http\Controllers\Controller;
 use App\MuscleGroups\Models\MuscleGroup;
+use App\Shared\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -13,6 +13,8 @@ class DeleteMuscleGroupController extends Controller
     {
         $muscleGroup->delete();
 
-        return back();
+        return redirect()
+            ->route('admin.muscle-groups')
+            ->with('success', 'Muscle group deleted.');
     }
 }

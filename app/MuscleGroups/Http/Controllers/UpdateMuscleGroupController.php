@@ -3,8 +3,8 @@
 namespace App\MuscleGroups\Http\Controllers;
 
 use App\MuscleGroups\Data\UpdateMuscleGroupData;
-use App\Shared\Http\Controllers\Controller;
 use App\MuscleGroups\Models\MuscleGroup;
+use App\Shared\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 
 class UpdateMuscleGroupController extends Controller
@@ -13,6 +13,8 @@ class UpdateMuscleGroupController extends Controller
     {
         $muscleGroup->update($request->toArray());
 
-        return redirect(route('dashboard'));
+        return redirect()
+            ->route('admin.muscle-groups')
+            ->with('success', 'Muscle group updated.');
     }
 }
