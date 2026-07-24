@@ -1,112 +1,92 @@
 <script setup lang="ts">
 import DarkModeToggle from '@/components/DarkModeToggle.vue';
-import HomepageFeatureCallout from '@/components/HomepageFeatureCallout.vue';
 import { Head, Link } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <Head title="Home" />
-    <div class="min-h-screen bg-background">
-        <!-- Navigation -->
-        <nav class="border-b border-border">
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="flex h-16 items-center justify-between">
-                    <div class="flex items-center">
-                        <h1 class="text-xl font-bold tracking-wide">
-                            <span class="text-primary">OVR</span><span class="text-foreground">LOAD</span>
-                        </h1>
-                    </div>
-                    <div class="hidden items-center space-x-8 sm:flex">
-                        <Link href="login" class="rounded-md bg-primary px-4 py-2 text-primary-foreground transition-opacity hover:opacity-90"
-                            >Get Started
-                        </Link>
-                        <DarkModeToggle />
-                    </div>
-                </div>
-            </div>
-        </nav>
+    <Head title="OVRLOAD" />
 
-        <!-- Hero Section -->
-        <div class="relative overflow-hidden">
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="relative z-10 py-8 sm:py-16 md:py-20 lg:max-w-2xl lg:py-28">
-                    <h2 class="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">Progressive strength, tracked.</h2>
-                    <p class="mt-6 text-xl text-muted-foreground">
-                        OVRLOAD is built for serious lifters: plan routines, log heavy sessions, and drive progressive overload.
-                    </p>
-                </div>
-            </div>
-        </div>
+    <div class="home relative flex min-h-dvh flex-col overflow-hidden bg-background text-foreground">
+        <div class="home-atmosphere pointer-events-none absolute inset-0" aria-hidden="true" />
 
-        <!-- Features Section -->
-        <div class="bg-card py-16">
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="text-center">
-                    <h2 class="text-3xl font-bold text-card-foreground">Features</h2>
-                    <p class="mt-4 text-muted-foreground">Explore OVRLOAD</p>
-                </div>
-                <div class="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                    <HomepageFeatureCallout>
-                        <template v-slot:header>Custom Routine Creation</template>
-                        <div>Create Full Body routines, or customise your split</div>
-                    </HomepageFeatureCallout>
-                    <HomepageFeatureCallout>
-                        <template v-slot:header>Workout Tracking</template>
-                        <div>Log your workouts and track your progress</div>
-                    </HomepageFeatureCallout>
-                    <HomepageFeatureCallout>
-                        <template v-slot:header>Something else</template>
-                        <div>When I think of another feature, I'll put a blurb here</div>
-                    </HomepageFeatureCallout>
-                </div>
-            </div>
-        </div>
+        <header class="relative z-10 flex items-center justify-end px-6 py-5 sm:px-10">
+            <DarkModeToggle />
+        </header>
 
-        <!-- CTA Section -->
-        <div class="bg-primary py-16 text-primary-foreground">
-            <div class="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-                <h2 class="text-3xl font-bold">Time to start planning?</h2>
-                <p class="mt-4 text-lg opacity-90">Click here to sign up</p>
-                <button class="mt-8 rounded-md bg-background px-8 py-3 text-foreground transition-opacity hover:opacity-90">
-                    <Link href="login">Get Planning!</Link>
-                </button>
-            </div>
-        </div>
+        <main class="relative z-10 flex flex-1 flex-col items-center justify-center px-6 pb-16 text-center sm:px-10">
+            <h1 class="home-brand text-6xl font-bold tracking-wide sm:text-7xl md:text-8xl lg:text-9xl">
+                <span class="text-primary">OVR</span><span>LOAD</span>
+            </h1>
 
-        <!-- Footer -->
-        <footer class="border-t border-border">
-            <div v-show="false" class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-2 gap-8 md:grid-cols-4">
-                    <div>
-                        <h3 class="text-sm font-semibold text-foreground">Lorem</h3>
-                        <ul class="mt-4 space-y-2">
-                            <li><a href="#" class="text-muted-foreground hover:text-primary">Ipsum</a></li>
-                            <li><a href="#" class="text-muted-foreground hover:text-primary">Dolor</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-semibold text-foreground">Sit</h3>
-                        <ul class="mt-4 space-y-2">
-                            <li><a href="#" class="text-muted-foreground hover:text-primary">Amet</a></li>
-                            <li><a href="#" class="text-muted-foreground hover:text-primary">Consectetur</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-semibold text-foreground">Adipiscing</h3>
-                        <ul class="mt-4 space-y-2">
-                            <li><a href="#" class="text-muted-foreground hover:text-primary">Elit</a></li>
-                            <li><a href="#" class="text-muted-foreground hover:text-primary">Sed</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-semibold text-foreground">Eiusmod</h3>
-                        <ul class="mt-4 space-y-2">
-                            <li><a href="#" class="text-muted-foreground hover:text-primary">Tempor</a></li>
-                            <li><a href="#" class="text-muted-foreground hover:text-primary">Incididunt</a></li>
-                        </ul>
-                    </div>
-                </div>
+            <p class="home-line mt-6 max-w-md text-base text-muted-foreground sm:text-lg">
+                Progressive strength. Planned, logged, overloaded.
+            </p>
+
+            <div class="home-cta mt-10 flex w-full max-w-sm flex-col gap-3 sm:max-w-none sm:flex-row sm:justify-center">
+                <Link
+                    :href="route('register')"
+                    class="rounded-md bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+                >
+                    Create account
+                </Link>
+                <Link
+                    :href="route('login')"
+                    class="rounded-md px-8 py-3 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                >
+                    Log in
+                </Link>
             </div>
-        </footer>
+        </main>
     </div>
 </template>
+
+<style scoped>
+.home-atmosphere {
+    background:
+        radial-gradient(ellipse 80% 55% at 50% -10%, color-mix(in oklab, var(--primary) 28%, transparent), transparent 70%),
+        radial-gradient(ellipse 50% 40% at 85% 80%, color-mix(in oklab, var(--accent) 14%, transparent), transparent 65%),
+        radial-gradient(ellipse 45% 35% at 10% 70%, color-mix(in oklab, var(--primary) 8%, transparent), transparent 60%);
+    animation: home-atmosphere-drift 18s ease-in-out infinite alternate;
+}
+
+.home-brand {
+    animation: home-rise 0.7s ease-out both;
+}
+
+.home-line {
+    animation: home-rise 0.7s ease-out 0.12s both;
+}
+
+.home-cta {
+    animation: home-rise 0.7s ease-out 0.24s both;
+}
+
+@keyframes home-rise {
+    from {
+        opacity: 0;
+        transform: translateY(0.75rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes home-atmosphere-drift {
+    from {
+        transform: scale(1) translate(0, 0);
+    }
+    to {
+        transform: scale(1.06) translate(-1.5%, 1%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home-atmosphere,
+    .home-brand,
+    .home-line,
+    .home-cta {
+        animation: none;
+    }
+}
+</style>
