@@ -17,12 +17,14 @@ type BlockExercise = {
     progression_target: number | null;
 };
 
+type WarmUpStep = { percent: number; reps: number };
+
 type Block = {
     is_superset: boolean;
     has_setup_after: boolean;
     exercises: BlockExercise[];
     working: { set_count: number; rest_seconds: number };
-    warm_up: { set_count: number; rest_seconds: number; percents: number[] };
+    warm_up: { set_count: number; rest_seconds: number; steps: WarmUpStep[] };
 };
 
 type RoutinePayload = {
@@ -37,6 +39,7 @@ const props = defineProps<{
     routine: RoutinePayload;
     exercises: ExerciseOption[];
     weight_unit: string;
+    warm_up_defaults: WarmUpStep[];
 }>();
 
 const emptyExercise = (): BlockExercise => ({
@@ -47,13 +50,37 @@ const emptyExercise = (): BlockExercise => ({
     progression_target: null,
 });
 
-const emptyBlock = (superset = false): Block => ({
-    is_superset: superset,
-    has_setup_after: false,
-    exercises: superset ? [emptyExercise(), emptyExercise()] : [emptyExercise()],
-    working: { set_count: 3, rest_seconds: 120 },
-    warm_up: { set_count: 0, rest_seconds: 60, percents: [] },
-});
+const defaultWarmUpSteps = (): WarmUpStep[] =>
+    (props.warm_up_defaults?.length ? props.warm_up_defaults : []).map((s) => ({
+        percent: s.percent,
+        reps: s.reps,
+    }));
+
+const emptyBlock = (superset = false): Block => {
+    const steps = defaultWarmUpSteps();
+    return {
+        is_superset: superset,
+        has_setup_after: false,
+        exercises: superset ? [emptyExercise(), emptyExercise()] : [emptyExercise()],
+        working: { set_count: 3, rest_seconds: 120 },
+        warm_up: { set_count: steps.length, rest_seconds: 60, steps },
+    };
+};
+
+const normalizeBlock = (raw: Block): Block => {
+    const steps = (raw.warm_up?.steps ?? []).map((s) => ({
+        percent: Number(s.percent),
+        reps: Number(s.reps ?? 5),
+    }));
+    return {
+        ...raw,
+        warm_up: {
+            set_count: raw.warm_up?.set_count ?? steps.length,
+            rest_seconds: raw.warm_up?.rest_seconds ?? 60,
+            steps,
+        },
+    };
+};
 
 const form = useForm({
     name: props.routine.name,
@@ -61,7 +88,7 @@ const form = useForm({
     deload_reps_factor: props.routine.deload_reps_factor,
     // Inertia props are nested reactive proxies — structuredClone cannot clone them
     blocks: props.routine.blocks.length
-        ? (JSON.parse(JSON.stringify(props.routine.blocks)) as Block[])
+        ? (JSON.parse(JSON.stringify(props.routine.blocks)) as Block[]).map(normalizeBlock)
         : ([] as Block[]),
 });
 
@@ -77,13 +104,38 @@ watch(
 
 const activeBlock = computed(() => form.blocks[active.value] ?? null);
 
-const warmUpText = (block: Block) => block.warm_up.percents.join(', ');
+/** Compact editor string: `40x5, 60x3, 80x1` (also accepts legacy `40, 60, 80`). */
+const warmUpText = (block: Block) =>
+    block.warm_up.steps.map((s) => `${s.percent}x${s.reps}`).join(', ');
+
 const setWarmUpText = (block: Block, value: string) => {
-    block.warm_up.percents = value
-        .split(/[,\s]+/)
-        .map((p) => parseInt(p, 10))
-        .filter((n) => !Number.isNaN(n) && n > 0);
-    block.warm_up.set_count = block.warm_up.percents.length;
+    block.warm_up.steps = value
+        .split(',')
+        .map((part) => part.trim())
+        .filter(Boolean)
+        .map((part) => {
+            const withReps = part.match(/^(\d+)\s*[x×]\s*(\d+)$/i);
+            if (withReps) {
+                return { percent: parseInt(withReps[1], 10), reps: parseInt(withReps[2], 10) };
+            }
+            const percentOnly = parseInt(part, 10);
+            if (!Number.isNaN(percentOnly) && percentOnly > 0) {
+                return { percent: percentOnly, reps: 5 };
+            }
+            return null;
+        })
+        .filter((s): s is WarmUpStep => s !== null && s.percent > 0 && s.reps > 0);
+    block.warm_up.set_count = block.warm_up.steps.length;
+};
+
+const addWarmUpStep = (block: Block) => {
+    block.warm_up.steps.push({ percent: 50, reps: 5 });
+    block.warm_up.set_count = block.warm_up.steps.length;
+};
+
+const removeWarmUpStep = (block: Block, index: number) => {
+    block.warm_up.steps.splice(index, 1);
+    block.warm_up.set_count = block.warm_up.steps.length;
 };
 
 const formatRest = (seconds: number) => {
@@ -208,7 +260,7 @@ const errorList = computed(() => Object.values(form.errors));
                                 <th class="px-2 py-2">Reps</th>
                                 <th class="px-2 py-2">Sets</th>
                                 <th class="px-2 py-2">Rest</th>
-                                <th class="px-2 py-2">Warm-up %</th>
+                                <th class="px-2 py-2">Warm-up %×reps</th>
                                 <th class="px-2 py-2">Flags</th>
                                 <th class="px-2 py-2" />
                             </tr>
@@ -273,7 +325,7 @@ const errorList = computed(() => Object.values(form.errors));
                                             v-if="ei === 0"
                                             :value="warmUpText(block)"
                                             class="w-32 rounded border border-border bg-card px-2 py-1 font-mono text-primary/90"
-                                            placeholder="40, 60, 80"
+                                            placeholder="40x5, 60x3, 80x1"
                                             @input="setWarmUpText(block, ($event.target as HTMLInputElement).value)"
                                         />
                                     </td>
@@ -393,14 +445,59 @@ const errorList = computed(() => Object.values(form.errors));
                                 />
                             </label>
                         </div>
-                        <label class="mt-3 block">
-                            <span class="text-xs text-muted-foreground">Warm-up % (comma-separated)</span>
-                            <input
-                                :value="warmUpText(activeBlock)"
-                                class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-primary/90"
-                                @input="setWarmUpText(activeBlock, ($event.target as HTMLInputElement).value)"
-                            />
-                        </label>
+                        <div class="mt-3 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-muted-foreground">Warm-up steps (% × reps)</span>
+                                <button
+                                    type="button"
+                                    class="text-xs text-primary"
+                                    @click="addWarmUpStep(activeBlock)"
+                                >
+                                    + Step
+                                </button>
+                            </div>
+                            <div
+                                v-for="(step, si) in activeBlock.warm_up.steps"
+                                :key="si"
+                                class="flex items-center gap-2"
+                            >
+                                <input
+                                    v-model.number="step.percent"
+                                    type="number"
+                                    min="1"
+                                    max="100"
+                                    class="w-20 rounded-xl border border-border bg-background px-3 py-2 font-mono"
+                                    aria-label="Warm-up percent"
+                                />
+                                <span class="text-muted-foreground">×</span>
+                                <input
+                                    v-model.number="step.reps"
+                                    type="number"
+                                    min="1"
+                                    max="100"
+                                    class="w-20 rounded-xl border border-border bg-background px-3 py-2 font-mono"
+                                    aria-label="Warm-up reps"
+                                />
+                                <button
+                                    type="button"
+                                    class="text-xs text-muted-foreground hover:text-destructive"
+                                    @click="removeWarmUpStep(activeBlock, si)"
+                                >
+                                    Remove
+                                </button>
+                            </div>
+                            <p v-if="!activeBlock.warm_up.steps.length" class="text-xs text-muted-foreground">
+                                No warm-up. Tap + Step or use compact field below.
+                            </p>
+                            <label class="block">
+                                <span class="text-xs text-muted-foreground">Compact (40x5, 60x3)</span>
+                                <input
+                                    :value="warmUpText(activeBlock)"
+                                    class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-primary/90"
+                                    @change="setWarmUpText(activeBlock, ($event.target as HTMLInputElement).value)"
+                                />
+                            </label>
+                        </div>
                         <div class="mt-4 flex gap-4 text-sm">
                             <label class="flex items-center gap-2">
                                 <input type="checkbox" :checked="activeBlock.is_superset" @change="toggleSuperset(activeBlock)" />

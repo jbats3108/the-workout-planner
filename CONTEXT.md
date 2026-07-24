@@ -21,7 +21,7 @@ A block with exactly two exercises played as matched rounds: A → transition �
 _Avoid_: Circuit, giant set, pairing (as a noun for the block)
 
 **Set Group**:
-A bag of like sets on a block: either warm-up or working. One set count and one rest for the whole group (for a superset, rest is after the pair; transition sits between A and B). Warm-up weights are % of that exercise’s working weight; each exercise on the block has its own working weight and prescribed rep target.
+A bag of like sets on a block: either warm-up or working. One set count and one rest for the whole group (for a superset, rest is after the pair; transition sits between A and B). Warm-up steps are each a % of that exercise’s working weight with their own reps; each exercise on the block has its own working weight and prescribed rep target.
 _Avoid_: Set scheme, wave, drop set
 
 **Working Weight**:

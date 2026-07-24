@@ -70,7 +70,14 @@ class UpdateRoutineControllerTest extends TestCase
                         ],
                     ],
                     'working' => ['set_count' => 3, 'rest_seconds' => 180],
-                    'warm_up' => ['set_count' => 2, 'rest_seconds' => 60, 'percents' => [50, 75]],
+                    'warm_up' => [
+                        'set_count' => 2,
+                        'rest_seconds' => 60,
+                        'steps' => [
+                            ['percent' => 50, 'reps' => 5],
+                            ['percent' => 75, 'reps' => 3],
+                        ],
+                    ],
                 ],
             ],
         ]);
@@ -85,10 +92,13 @@ class UpdateRoutineControllerTest extends TestCase
         $this->assertTrue($block->has_setup_after);
         $this->assertSame(80000, $block->blockExercises->first()->working_weight_g);
         $this->assertCount(2, $block->warmUpSetGroup->warmUpSteps);
+        $this->assertSame(50, $block->warmUpSetGroup->warmUpSteps[0]->percent_of_working);
+        $this->assertSame(5, $block->warmUpSetGroup->warmUpSteps[0]->reps);
+        $this->assertSame(3, $block->warmUpSetGroup->warmUpSteps[1]->reps);
     }
 
     #[Test]
-    public function it_allows_saving_blocks_with_no_warm_up_percents(): void
+    public function it_allows_saving_blocks_with_no_warm_up_steps(): void
     {
         $routine = Routine::factory()->withUser($this->user)->create();
         $exercise = Exercise::factory()->create();
@@ -111,7 +121,7 @@ class UpdateRoutineControllerTest extends TestCase
                         ],
                     ],
                     'working' => ['set_count' => 3, 'rest_seconds' => 120],
-                    'warm_up' => ['set_count' => 0, 'rest_seconds' => 60, 'percents' => []],
+                    'warm_up' => ['set_count' => 0, 'rest_seconds' => 60, 'steps' => []],
                 ],
             ],
         ]);
@@ -132,6 +142,7 @@ class UpdateRoutineControllerTest extends TestCase
         $response->assertInertia(fn ($page) => $page
             ->component('routines/Edit')
             ->has('routine')
-            ->has('exercises'));
+            ->has('exercises')
+            ->has('warm_up_defaults'));
     }
 }

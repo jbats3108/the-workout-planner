@@ -2,11 +2,11 @@
 
 namespace App\Routines\Http\Controllers;
 
+use App\Exercises\Models\Exercise;
 use App\Routines\Data\Editor\RoutineEditorExerciseOptionData;
 use App\Routines\Data\Editor\RoutineEditorPageData;
-use App\Shared\Http\Controllers\Controller;
-use App\Exercises\Models\Exercise;
 use App\Routines\Models\Routine;
+use App\Shared\Http\Controllers\Controller;
 use App\Users\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -44,6 +44,7 @@ class EditRoutineController extends Controller
             'routine' => Arr::except($payload, ['exercises', 'weight_unit']),
             'exercises' => $payload['exercises'],
             'weight_unit' => $payload['weight_unit'],
+            'warm_up_defaults' => $user->resolvedWarmUpStepsDefault(),
         ]);
     }
 }

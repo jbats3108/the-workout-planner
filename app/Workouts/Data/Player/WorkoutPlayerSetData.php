@@ -47,7 +47,9 @@ class WorkoutPlayerSetData extends Data
             setIndex: $set->set_index,
             groupType: $groupType->value,
             targetWeightKg: round($targetWeightG / 1000, 3),
-            targetReps: $groupType === SetGroupType::Working ? $prescribedReps : null,
+            targetReps: $groupType === SetGroupType::WarmUp
+                ? ($warmUpStep?->reps)
+                : ($groupType === SetGroupType::Working ? $prescribedReps : null),
             loggedWeightKg: $set->weight_g !== null ? round($set->weight_g / 1000, 3) : null,
             loggedReps: $set->reps,
             completed: $set->completed_at !== null,

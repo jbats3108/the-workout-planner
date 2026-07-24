@@ -2,17 +2,19 @@
 
 namespace App\Routines\Data\Editor;
 
+use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\Validation\Min;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 
 #[MapName(SnakeCaseMapper::class)]
 class SyncWarmUpData extends Data
 {
     /**
-     * @param  list<int>|null  $percents
+     * @param  DataCollection<int, SyncWarmUpStepData>|null  $steps
      */
     public function __construct(
         #[Min(0), Max(20)]
@@ -21,18 +23,23 @@ class SyncWarmUpData extends Data
         #[Min(0), Max(3600)]
         public readonly int $restSeconds = 60,
 
-        /** Empty list is valid (no warm-up steps). */
-        public readonly ?array $percents = null,
+        /** Empty collection is valid (no warm-up steps). */
+        #[DataCollectionOf(SyncWarmUpStepData::class)]
+        public readonly ?DataCollection $steps = null,
     ) {}
 
     /**
-     * @return list<int>
+     * @return list<SyncWarmUpStepData>
      */
-    public function percentList(): array
+    public function stepList(): array
     {
+        if ($this->steps === null) {
+            return [];
+        }
+
         return array_values(array_filter(
-            $this->percents ?? [],
-            fn (mixed $p): bool => is_int($p) ? $p > 0 : (is_numeric($p) && (int) $p > 0)
+            $this->steps->all(),
+            static fn (SyncWarmUpStepData $step): bool => $step->percent > 0 && $step->reps > 0
         ));
     }
 }

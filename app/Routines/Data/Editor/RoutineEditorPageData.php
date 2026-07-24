@@ -2,10 +2,10 @@
 
 namespace App\Routines\Data\Editor;
 
-use App\Shared\Enums\SetGroupType;
 use App\Routines\Models\Routine;
 use App\Routines\Models\RoutineBlock;
 use App\Routines\Models\RoutineBlockExercise;
+use App\Shared\Enums\SetGroupType;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Data;
@@ -65,7 +65,13 @@ class RoutineEditorPageData extends Data
                 warmUp: new SyncWarmUpData(
                     setCount: $warmUp?->set_count ?? 0,
                     restSeconds: $warmUp?->rest_seconds ?? 60,
-                    percents: $warmUp?->warmUpSteps->pluck('percent_of_working')->all() ?? [],
+                    steps: SyncWarmUpStepData::collect(
+                        $warmUp?->warmUpSteps->map(fn ($step) => new SyncWarmUpStepData(
+                            percent: (int) $step->percent_of_working,
+                            reps: (int) ($step->reps ?? 5),
+                        )) ?? [],
+                        DataCollection::class,
+                    ),
                 ),
             );
         });

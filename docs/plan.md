@@ -19,7 +19,7 @@ Ordered for the core loop; reshuffle if product priority changes.
 1. **Progression on finish** — ~~carry-forward highest achieved top weight; confirm bumps when progression target hit; skip both for deload workouts~~ done
 2. **Mid-session structure edits** — ~~mutate the in-progress workout snapshot (not the routine) from the player~~ done (add/remove incomplete working sets)
 3. **More app-like mobile behaviour** — ~~chrome polish: safe areas, player full-bleed (no AppLayout), leave confirm, overscroll off on player+editor~~ done (grill notes below; no PWA / bottom nav)
-4. **User default warm-up %s and reps** — prefs on the user (with per-exercise overrides already on blocks); seed sensible defaults into new routine blocks / editor empty state
+4. **User default warm-up %s and reps** — ~~prefs on the user; per-step %×reps on warm-up steps; seed into new blocks; Settings → Training~~ done
 5. **Restyle whole app to match Overload branding** — ~~zinc + lime~~ done: dark-first near-black + neon yellow primary + cyan accent (`docs/branding.md`, `resources/css/app.css`)
 6. **Find and import exercises** — expand shared catalog (seed/import path); no fancy CMS in v1
 7. **Admin panel** — admin-only surfaces for shared catalog / users as needed (keep thin)

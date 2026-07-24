@@ -86,23 +86,21 @@ class RoutineEditorService
         ]);
 
         $warmUp = $blockData->warmUp ?? new SyncWarmUpData;
-        $percents = array_map(
-            static fn (mixed $p): int => (int) $p,
-            $warmUp->percentList()
-        );
+        $steps = $warmUp->stepList();
 
         $warmUpGroup = RoutineSetGroup::create([
             'routine_block_id' => $block->id,
             'type' => SetGroupType::WarmUp,
-            'set_count' => max(count($percents), $warmUp->setCount),
+            'set_count' => max(count($steps), $warmUp->setCount),
             'rest_seconds' => $warmUp->restSeconds,
         ]);
 
-        foreach ($percents as $stepIndex => $percent) {
+        foreach ($steps as $stepIndex => $step) {
             RoutineWarmUpStep::create([
                 'routine_set_group_id' => $warmUpGroup->id,
                 'position' => $stepIndex + 1,
-                'percent_of_working' => min(100, max(1, $percent)),
+                'percent_of_working' => min(100, max(1, $step->percent)),
+                'reps' => min(100, max(1, $step->reps)),
             ]);
         }
     }

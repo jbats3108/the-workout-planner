@@ -30,6 +30,7 @@ class User extends Authenticatable
         'weight_unit',
         'achievement_floor_default',
         'progression_target_default',
+        'warm_up_steps_default',
     ];
 
     /** @var list<string> */
@@ -47,7 +48,42 @@ class User extends Authenticatable
             'weight_unit' => WeightUnit::class,
             'achievement_floor_default' => 'integer',
             'progression_target_default' => 'integer',
+            'warm_up_steps_default' => 'array',
         ];
+    }
+
+    /**
+     * App-wide warm-up ladder when the user has not set prefs yet.
+     *
+     * @return list<array{percent: int, reps: int}>
+     */
+    public static function fallbackWarmUpSteps(): array
+    {
+        return [
+            ['percent' => 40, 'reps' => 5],
+            ['percent' => 60, 'reps' => 3],
+            ['percent' => 80, 'reps' => 1],
+        ];
+    }
+
+    /**
+     * Steps to seed into new routine blocks. Null column → app fallback; empty list → no warm-up.
+     *
+     * @return list<array{percent: int, reps: int}>
+     */
+    public function resolvedWarmUpStepsDefault(): array
+    {
+        if ($this->warm_up_steps_default === null) {
+            return self::fallbackWarmUpSteps();
+        }
+
+        return array_values(array_map(
+            static fn (mixed $step): array => [
+                'percent' => (int) (is_array($step) ? ($step['percent'] ?? 0) : 0),
+                'reps' => (int) (is_array($step) ? ($step['reps'] ?? 5) : 5),
+            ],
+            $this->warm_up_steps_default
+        ));
     }
 
     public function isAdmin(): bool

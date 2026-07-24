@@ -11,6 +11,7 @@ class WorkoutWarmUpStep extends Model
         'workout_set_group_id',
         'position',
         'percent_of_working',
+        'reps',
     ];
 
     /** @return array<string, string> */
@@ -19,6 +20,7 @@ class WorkoutWarmUpStep extends Model
         return [
             'position' => 'integer',
             'percent_of_working' => 'integer',
+            'reps' => 'integer',
         ];
     }
 

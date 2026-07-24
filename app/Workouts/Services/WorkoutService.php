@@ -109,6 +109,7 @@ class WorkoutService
                             'workout_set_group_id' => $workoutSetGroup->id,
                             'position' => $warmUpStep->position,
                             'percent_of_working' => $warmUpStep->percent_of_working,
+                            'reps' => $warmUpStep->reps,
                         ]);
                     }
 
