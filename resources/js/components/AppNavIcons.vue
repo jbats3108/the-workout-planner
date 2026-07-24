@@ -1,7 +1,23 @@
 <script setup lang="ts">
 import { Link, router, usePage } from '@inertiajs/vue3';
-import { LayoutGrid, LogOut, Settings, Shield } from 'lucide-vue-next';
-import { computed } from 'vue';
+import {
+    Dumbbell,
+    LayoutGrid,
+    LogOut,
+    Palette,
+    Settings,
+    Shield,
+    UserRound,
+} from 'lucide-vue-next';
+import { computed, type Component } from 'vue';
+
+const props = withDefaults(
+    defineProps<{
+        /** `rail` = icon-only desktop strip; `drawer` = labeled mobile sheet */
+        variant?: 'rail' | 'drawer';
+    }>(),
+    { variant: 'rail' },
+);
 
 const emit = defineEmits<{
     navigate: [];
@@ -10,13 +26,23 @@ const emit = defineEmits<{
 const page = usePage();
 const path = computed(() => page.url.split('?')[0]);
 const isAdmin = computed(() => Boolean(page.props.auth.user?.is_admin));
+const labeled = computed(() => props.variant === 'drawer');
 
 const isActive = (href: string) => path.value === href || path.value.startsWith(`${href}/`);
 
-const iconClass = (active: boolean) =>
-    active
-        ? 'bg-secondary text-primary'
-        : 'text-muted-foreground hover:bg-secondary hover:text-foreground';
+const settingsActive = computed(
+    () => path.value.startsWith('/settings/profile') || path.value.startsWith('/settings/appearance'),
+);
+
+const itemClass = (active: boolean) =>
+    [
+        labeled.value
+            ? 'flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors'
+            : 'flex size-9 items-center justify-center rounded-md transition-colors',
+        active
+            ? 'bg-secondary text-primary'
+            : 'text-muted-foreground hover:bg-secondary hover:text-foreground',
+    ].join(' ');
 
 const onNavigate = () => emit('navigate');
 
@@ -25,46 +51,73 @@ const logout = () => {
     router.post(route('logout'));
     onNavigate();
 };
+
+type NavLink = { href: string; label: string; icon: Component; match: string };
+
+const primaryLinks = computed((): NavLink[] => {
+    const links: NavLink[] = [
+        { href: route('dashboard'), label: 'Dashboard', icon: LayoutGrid, match: '/dashboard' },
+        { href: route('training.edit'), label: 'Training', icon: Dumbbell, match: '/settings/training' },
+    ];
+    if (isAdmin.value) {
+        links.splice(1, 0, { href: route('admin.index'), label: 'Admin', icon: Shield, match: '/admin' });
+    }
+    return links;
+});
+
+const settingsLinks: NavLink[] = [
+    { href: route('profile.edit'), label: 'Profile', icon: UserRound, match: '/settings/profile' },
+    { href: route('appearance'), label: 'Appearance', icon: Palette, match: '/settings/appearance' },
+];
 </script>
 
 <template>
     <Link
         :href="route('dashboard')"
         class="mb-6 text-sm font-bold tracking-wide"
+        :class="labeled ? 'self-start px-3' : ''"
         aria-label="OVRLOAD home"
         @click="onNavigate"
     >
         <span class="text-primary">OVR</span>
+        <span v-if="labeled" class="text-foreground">LOAD</span>
     </Link>
 
-    <nav class="flex flex-1 flex-col items-center gap-1">
+    <nav class="flex flex-1 flex-col gap-1" :class="labeled ? 'items-stretch' : 'items-center'">
         <Link
-            :href="route('dashboard')"
-            class="flex size-9 items-center justify-center rounded-md transition-colors"
-            :class="iconClass(isActive('/dashboard'))"
-            aria-label="Dashboard"
+            v-for="link in primaryLinks"
+            :key="link.match"
+            :href="link.href"
+            :class="itemClass(isActive(link.match))"
+            :aria-label="link.label"
             @click="onNavigate"
         >
-            <LayoutGrid class="size-4" />
-        </Link>
-
-        <Link
-            v-if="isAdmin"
-            :href="route('admin.index')"
-            class="flex size-9 items-center justify-center rounded-md transition-colors"
-            :class="iconClass(isActive('/admin'))"
-            aria-label="Admin"
-            @click="onNavigate"
-        >
-            <Shield class="size-4" />
+            <component :is="link.icon" class="size-4 shrink-0" />
+            <span v-if="labeled">{{ link.label }}</span>
         </Link>
     </nav>
 
-    <div class="flex flex-col items-center gap-1">
+    <div class="flex flex-col gap-1" :class="labeled ? 'items-stretch' : 'items-center'">
+        <template v-if="labeled">
+            <p class="mb-1 px-3 text-xs tracking-[0.15em] text-muted-foreground uppercase">Settings</p>
+            <Link
+                v-for="link in settingsLinks"
+                :key="link.match"
+                :href="link.href"
+                :class="itemClass(isActive(link.match))"
+                :aria-label="link.label"
+                prefetch
+                @click="onNavigate"
+            >
+                <component :is="link.icon" class="size-4 shrink-0" />
+                <span>{{ link.label }}</span>
+            </Link>
+        </template>
+
         <Link
+            v-else
             :href="route('profile.edit')"
-            class="flex size-9 items-center justify-center rounded-md transition-colors"
-            :class="iconClass(isActive('/settings'))"
+            :class="itemClass(settingsActive)"
             aria-label="Settings"
             prefetch
             @click="onNavigate"
@@ -74,11 +127,12 @@ const logout = () => {
 
         <button
             type="button"
-            class="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+            :class="[itemClass(false), labeled ? 'justify-start' : '']"
             aria-label="Log out"
             @click="logout"
         >
-            <LogOut class="size-4" />
+            <LogOut class="size-4 shrink-0" />
+            <span v-if="labeled">Log out</span>
         </button>
     </div>
 </template>

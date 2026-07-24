@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AppNavIcons from '@/components/AppNavIcons.vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import type { BreadcrumbItem } from '@/types';
 import { ref } from 'vue';
 
@@ -29,10 +29,14 @@ const mobileOpen = ref(false);
                 </button>
             </SheetTrigger>
 
-            <SheetContent side="left" class="w-14 border-border p-0 sm:max-w-14 [&>button]:hidden">
+            <SheetContent
+                side="left"
+                class="w-[min(20rem,85vw)] border-border p-0 sm:max-w-sm [&>button]:right-3 [&>button]:top-3"
+            >
                 <SheetTitle class="sr-only">Navigation</SheetTitle>
-                <div class="flex h-full flex-col items-center py-4">
-                    <AppNavIcons @navigate="mobileOpen = false" />
+                <SheetDescription class="sr-only">Main app navigation</SheetDescription>
+                <div class="flex h-full flex-col px-2 py-4 pt-12">
+                    <AppNavIcons variant="drawer" @navigate="mobileOpen = false" />
                 </div>
             </SheetContent>
         </Sheet>
