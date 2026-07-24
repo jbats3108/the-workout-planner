@@ -5,7 +5,6 @@ namespace App\DataTransferObjects\Casts;
 use App\Models\Exercise;
 use App\Models\MuscleGroup;
 use App\Models\Routine;
-use App\Models\RoutineType;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\LaravelData\Casts\Cast;
 use Spatie\LaravelData\Data;
@@ -29,7 +28,6 @@ class SlugToModelCast implements Cast
             Exercise::class => Exercise::lookup($value),
             Routine::class => Routine::lookup($value),
             MuscleGroup::class => MuscleGroup::lookup($value),
-            RoutineType::class => RoutineType::lookup($value),
             default => null,
         };
     }

@@ -2,12 +2,19 @@
 
 namespace App\Services;
 
+use App\Enums\WorkoutMode;
+use App\Enums\WorkoutStatus;
 use App\Exceptions\WorkoutServiceException;
 use App\Models\Routine;
-use App\Models\RoutineExercise;
+use App\Models\RoutineBlock;
+use App\Models\RoutineBlockExercise;
+use App\Models\RoutineSetGroup;
 use App\Models\Workouts\Workout;
-use App\Models\Workouts\WorkoutExercise;
+use App\Models\Workouts\WorkoutBlock;
+use App\Models\Workouts\WorkoutBlockExercise;
 use App\Models\Workouts\WorkoutSet;
+use App\Models\Workouts\WorkoutSetGroup;
+use App\Models\Workouts\WorkoutWarmUpStep;
 
 class WorkoutService
 {
@@ -18,37 +25,81 @@ class WorkoutService
      */
     public function createWorkout(Routine $routine): Workout
     {
+        $routine->load([
+            'user',
+            'blocks.blockExercises.exercise',
+            'blocks.setGroups.warmUpSteps',
+        ]);
 
-        if ($routine->exercises->count() === 0) {
+        $hasExercises = $routine->blocks->contains(
+            fn (RoutineBlock $block) => $block->blockExercises->isNotEmpty()
+        );
+
+        if (! $hasExercises) {
             throw new WorkoutServiceException(self::ROUTINE_HAS_NO_EXERCISES_ERROR);
         }
 
         $workout = Workout::create([
+            'user_id' => $routine->user_id,
             'routine_id' => $routine->id,
+            'mode' => WorkoutMode::Normal,
+            'status' => WorkoutStatus::InProgress,
+            'started_at' => now(),
         ]);
 
-        $routine->routineExercises->each(fn (RoutineExercise $exercise) => WorkoutExercise::create([
-            'workout_id' => $workout->id,
-            'routine_exercise_id' => $exercise->id,
-        ]));
+        foreach ($routine->blocks as $routineBlock) {
+            $workoutBlock = WorkoutBlock::create([
+                'workout_id' => $workout->id,
+                'position' => $routineBlock->position,
+                'is_superset' => $routineBlock->is_superset,
+                'has_setup_after' => $routineBlock->has_setup_after,
+            ]);
 
-        $workout->exercises->each(function (WorkoutExercise $workoutExercise): void {
-
-            $routineExercise = $workoutExercise->routineExercise;
-            $sets = $routineExercise->sets;
-
-            for ($i = 0; $i < $sets; $i++) {
-                $setNumber = $i + 1;
-
-                WorkoutSet::create([
-                    'set' => $setNumber,
-                    'workout_exercise_id' => $workoutExercise->id,
+            foreach ($routineBlock->blockExercises as $routineBlockExercise) {
+                WorkoutBlockExercise::create([
+                    'workout_block_id' => $workoutBlock->id,
+                    'exercise_id' => $routineBlockExercise->exercise_id,
+                    'position' => $routineBlockExercise->position,
+                    'exercise_name' => $routineBlockExercise->exercise->getName(),
+                    'working_weight_g' => $routineBlockExercise->working_weight_g,
+                    'prescribed_reps' => $routineBlockExercise->prescribed_reps,
+                    'achievement_floor' => $routineBlockExercise->achievement_floor_override
+                        ?? $routine->user->achievement_floor_default,
+                    'progression_target' => $routineBlockExercise->progression_target_override
+                        ?? $routine->user->progression_target_default,
                 ]);
             }
 
-        });
+            $workoutBlock->load('blockExercises');
+
+            foreach ($routineBlock->setGroups as $routineSetGroup) {
+                $workoutSetGroup = WorkoutSetGroup::create([
+                    'workout_block_id' => $workoutBlock->id,
+                    'type' => $routineSetGroup->type,
+                    'set_count' => $routineSetGroup->set_count,
+                    'rest_seconds' => $routineSetGroup->rest_seconds,
+                ]);
+
+                foreach ($routineSetGroup->warmUpSteps as $warmUpStep) {
+                    WorkoutWarmUpStep::create([
+                        'workout_set_group_id' => $workoutSetGroup->id,
+                        'position' => $warmUpStep->position,
+                        'percent_of_working' => $warmUpStep->percent_of_working,
+                    ]);
+                }
+
+                for ($setIndex = 0; $setIndex < $routineSetGroup->set_count; $setIndex++) {
+                    foreach ($workoutBlock->blockExercises as $workoutBlockExercise) {
+                        WorkoutSet::create([
+                            'workout_set_group_id' => $workoutSetGroup->id,
+                            'workout_block_exercise_id' => $workoutBlockExercise->id,
+                            'set_index' => $setIndex,
+                        ]);
+                    }
+                }
+            }
+        }
 
         return $workout;
-
     }
 }

@@ -28,7 +28,6 @@ const breadcrumbs: BreadcrumbItem[] = [
             <div class="grid auto-rows-min gap-4 md:grid-cols-3">
                 <div v-for="(routine, key) in props.data.routines" :key="key" class="border-2 p-3">
                     <h3 class="text-lg font-semibold">{{ routine.name }}</h3>
-                    <p class="color: var(--color-accent) text-sm">Type: {{ routine.routine_type }}</p>
                 </div>
             </div>
         </div>

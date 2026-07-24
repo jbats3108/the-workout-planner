@@ -25,11 +25,11 @@ class IndexRoutineControllerTest extends TestCase
     {
         // Given
         $userRoutines = Routine::factory()->count(3)->create([
-            'owner_id' => $this->user->id,
+            'user_id' => $this->user->id,
         ]);
 
         $secondUserRoutines = Routine::factory()->count(3)->create([
-            'owner_id' => $this->secondUser->id,
+            'user_id' => $this->secondUser->id,
         ]);
 
         // When
@@ -38,9 +38,13 @@ class IndexRoutineControllerTest extends TestCase
         // Then
         $response->assertOk();
 
-        $userRoutines->each(fn (Routine $routine) => $this->assertContains(RoutineData::fromRoutine($routine)->toArray(), $response->json()));
+        $userRoutines->each(function (Routine $routine) use ($response): void {
+            $this->assertContainsEquals(RoutineData::fromRoutine($routine)->toArray(), $response->json());
+        });
 
-        $secondUserRoutines->each(fn (Routine $routine) => $this->assertContains(RoutineData::fromRoutine($routine)->toArray(), $response->json()));
+        $secondUserRoutines->each(function (Routine $routine) use ($response): void {
+            $this->assertContainsEquals(RoutineData::fromRoutine($routine)->toArray(), $response->json());
+        });
 
     }
 
@@ -49,11 +53,11 @@ class IndexRoutineControllerTest extends TestCase
     {
         // Given
         $userRoutines = Routine::factory()->count(3)->create([
-            'owner_id' => $this->user->id,
+            'user_id' => $this->user->id,
         ]);
 
         $secondUserRoutines = Routine::factory()->count(3)->create([
-            'owner_id' => $this->secondUser->id,
+            'user_id' => $this->secondUser->id,
         ]);
 
         // When
@@ -62,9 +66,13 @@ class IndexRoutineControllerTest extends TestCase
         // Then
         $response->assertOk();
 
-        $userRoutines->each(fn (Routine $routine) => $this->assertContains(RoutineData::fromRoutine($routine)->toArray(), $response->json()));
+        $userRoutines->each(function (Routine $routine) use ($response): void {
+            $this->assertContainsEquals(RoutineData::fromRoutine($routine)->toArray(), $response->json());
+        });
 
-        $secondUserRoutines->each(fn (Routine $routine) => $this->assertNotContains(RoutineData::fromRoutine($routine)->toArray(), $response->json()));
+        $secondUserRoutines->each(function (Routine $routine) use ($response): void {
+            $this->assertNotContainsEquals(RoutineData::fromRoutine($routine)->toArray(), $response->json());
+        });
 
     }
 }

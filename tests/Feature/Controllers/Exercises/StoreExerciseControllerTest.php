@@ -49,9 +49,6 @@ class StoreExerciseControllerTest extends TestCase
             'slug' => 'test-exercise',
             'primary_muscle_group' => 'invalid',
             'secondary_muscle_group' => null,
-            'equipment' => ['barbell'],
-            'difficulty' => 'beginner',
-            'movement_type' => 'pull',
         ];
 
         // When
@@ -70,9 +67,6 @@ class StoreExerciseControllerTest extends TestCase
             'slug' => 'test-exercise',
             'primary_muscle_group' => $this->validMuscleGroup->getSlug(),
             'secondary_muscle_group' => $this->validMuscleGroup->getSlug(),
-            'equipment' => ['barbell'],
-            'difficulty' => 'beginner',
-            'movement_type' => 'pull',
         ];
 
         // When
@@ -80,51 +74,6 @@ class StoreExerciseControllerTest extends TestCase
 
         // Then
         $response->assertSessionHasErrors('secondary_muscle_group');
-
-    }
-
-    #[Test]
-    public function it_rejects_requests_with_invalid_movement_type(): void
-    {
-        // Given
-        $createExerciseRequest = [
-            'name' => 'Test Exercise',
-            'slug' => 'test-exercise',
-            'primary_muscle_group' => $this->validMuscleGroup->getSlug(),
-            'secondary_muscle_group' => null,
-            'equipment' => ['barbell'],
-            'difficulty' => 'beginner',
-            'movement_type' => 'invalid',
-        ];
-
-        // When
-        $response = $this->makeRequest($createExerciseRequest);
-
-        // Then
-        $response->assertSessionHasErrors('movement_type');
-
-    }
-
-    #[Test]
-    public function it_rejects_requests_with_invalid_difficulty(): void
-    {
-        // Given
-        $createExerciseRequest = [
-            'name' => 'Test Exercise',
-            'slug' => 'test-exercise',
-            'primary_muscle_group' => $this->validMuscleGroup->getSlug(),
-            'secondary_muscle_group' => null,
-            'equipment' => ['barbell'],
-            'movement_type' => 'pull',
-            'difficulty' => 'invalid',
-        ];
-
-        // When
-        $response = $this->makeRequest($createExerciseRequest);
-
-        // Then
-        $response->assertSessionHasErrors('difficulty');
-
     }
 
     #[Test]
@@ -136,9 +85,6 @@ class StoreExerciseControllerTest extends TestCase
             'slug' => 'test-exercise',
             'primary_muscle_group' => $this->validMuscleGroup->getSlug(),
             'secondary_muscle_group' => null,
-            'equipment' => ['barbell'],
-            'difficulty' => 'beginner',
-            'movement_type' => 'pull',
         ];
 
         // When
@@ -150,15 +96,12 @@ class StoreExerciseControllerTest extends TestCase
         $this->assertDatabaseHas(Exercise::class, [
             'name' => 'Test Exercise',
             'slug' => 'test-exercise',
-            'difficulty' => 'beginner',
-            'movement_type' => 'pull',
         ]);
 
         $createdExercise = Exercise::lookup('test-exercise');
 
         $this->assertTrue($createdExercise->primaryMuscleGroup->is($this->validMuscleGroup));
         $this->assertNull($createdExercise->secondaryMuscleGroup);
-        $this->assertSame(['barbell'], $createdExercise->equipment);
     }
 
     /**
@@ -167,9 +110,6 @@ class StoreExerciseControllerTest extends TestCase
      *     slug: string,
      *     primary_muscle_group: string,
      *     secondary_muscle_group: string|null,
-     *     equipment: array<string>,
-     *     difficulty: string,
-     *     movement_type: string,
      * } $createExerciseRequest
      * @return TestResponse<Response>
      */

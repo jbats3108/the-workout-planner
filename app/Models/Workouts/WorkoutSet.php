@@ -6,37 +6,58 @@ use Database\Factories\Workouts\WorkoutSetFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class WorkoutSet extends Model
 {
     /** @use HasFactory<WorkoutSetFactory> */
     use HasFactory;
 
-    use SoftDeletes;
-
     protected $fillable = [
-        'workout_exercise_id',
-        'set',
+        'workout_set_group_id',
+        'workout_block_exercise_id',
+        'set_index',
         'reps',
-        'weight',
+        'weight_g',
+        'completed_at',
     ];
 
-    /**
-     * @return BelongsTo<WorkoutExercise, $this>
-     */
-    public function workoutExercise(): BelongsTo
+    /** @return array<string, string> */
+    protected function casts(): array
     {
-        return $this->belongsTo(WorkoutExercise::class);
+        return [
+            'set_index' => 'integer',
+            'reps' => 'integer',
+            'weight_g' => 'integer',
+            'completed_at' => 'datetime',
+        ];
+    }
+
+    /** @return BelongsTo<WorkoutSetGroup, $this> */
+    public function setGroup(): BelongsTo
+    {
+        return $this->belongsTo(WorkoutSetGroup::class, 'workout_set_group_id');
+    }
+
+    /** @return BelongsTo<WorkoutBlockExercise, $this> */
+    public function blockExercise(): BelongsTo
+    {
+        return $this->belongsTo(WorkoutBlockExercise::class, 'workout_block_exercise_id');
     }
 
     public function recordReps(int $reps): void
     {
-        $this->update(['reps' => $reps]);
+        $this->reps = $reps;
+        $this->save();
     }
 
-    public function recordWeight(float $weight): void
+    public function recordWeight(int $weightGrams): void
     {
-        $this->update(['weight' => $weight]);
+        $this->weight_g = $weightGrams;
+        $this->save();
+    }
+
+    protected static function newFactory(): WorkoutSetFactory
+    {
+        return WorkoutSetFactory::new();
     }
 }

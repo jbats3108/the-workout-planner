@@ -2,8 +2,12 @@
 
 namespace Tests\Feature\Controllers\Workouts;
 
+use App\Enums\SetGroupType;
 use App\Models\Exercise;
 use App\Models\Routine;
+use App\Models\RoutineBlock;
+use App\Models\RoutineBlockExercise;
+use App\Models\RoutineSetGroup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Helpers\UserHelper;
@@ -24,21 +28,20 @@ class StoreWorkoutControllerTest extends TestCase
     public function it_requires_the_routine_to_belong_to_the_user(): void
     {
         // Given
-        $routine = Routine::factory()->withOwner($this->user)->create();
+        $routine = Routine::factory()->withUser($this->user)->create();
 
         // When
         $response = $this->actingAs($this->secondUser)->post(route('workout.store', ['routine' => $routine->id]));
 
         // Then
         $response->assertForbidden();
-
     }
 
     #[Test]
     public function it_requires_the_routine_to_have_at_least_one_exercise(): void
     {
         // Given
-        $routine = Routine::factory()->withOwner($this->user)->create();
+        $routine = Routine::factory()->withUser($this->user)->create();
 
         // When
         $response = $this->actingAs($this->user)->post(route('workout.store', ['routine' => $routine->id]));
@@ -52,10 +55,8 @@ class StoreWorkoutControllerTest extends TestCase
     public function it_creates_a_workout_from_the_provided_routine(): void
     {
         // Given
-        $routine = Routine::factory()->withOwner($this->user)->create();
-        $exercise = Exercise::factory()->create();
-
-        $routine->exercises()->save($exercise);
+        $routine = Routine::factory()->withUser($this->user)->create();
+        $this->seedRoutineBlockWithExercise($routine);
 
         // When
         $response = $this->actingAs($this->user)->post(route('workout.store', ['routine' => $routine->id]));
@@ -65,7 +66,29 @@ class StoreWorkoutControllerTest extends TestCase
 
         $this->assertDatabaseHas('workouts', [
             'routine_id' => $routine->id,
+            'user_id' => $this->user->id,
+        ]);
+    }
+
+    private function seedRoutineBlockWithExercise(Routine $routine): void
+    {
+        $block = RoutineBlock::create([
+            'routine_id' => $routine->id,
+            'position' => 1,
         ]);
 
+        RoutineBlockExercise::create([
+            'routine_block_id' => $block->id,
+            'exercise_id' => Exercise::factory()->create()->id,
+            'position' => 1,
+            'working_weight_g' => 80000,
+            'prescribed_reps' => 6,
+        ]);
+
+        RoutineSetGroup::create([
+            'routine_block_id' => $block->id,
+            'type' => SetGroupType::Working,
+            'set_count' => 3,
+        ]);
     }
 }

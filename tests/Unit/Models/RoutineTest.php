@@ -2,9 +2,8 @@
 
 namespace Tests\Unit\Models;
 
-use App\Models\Exercise;
 use App\Models\Routine;
-use App\Models\RoutineType;
+use App\Models\RoutineBlock;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
@@ -15,67 +14,30 @@ class RoutineTest extends TestCase
     use RefreshDatabase;
 
     #[Test]
-    public function it_has_a_type(): void
-    {
-        // Given
-        $routineType = RoutineType::factory()->create([
-            'name' => 'Cardio',
-        ]);
-
-        // When
-        $routine = Routine::factory()->create([
-            'routine_type_id' => $routineType->id,
-        ]);
-
-        // Then
-        $this->assertTrue($routine->routineType->is($routineType));
-    }
-
-    #[Test]
-    public function it_can_be_linked_to_multiple_exercises(): void
-    {
-        // Given
-        $exerciseOne = Exercise::factory()->create();
-        $exerciseTwo = Exercise::factory()->create();
-
-        $routine = Routine::factory()->create();
-
-        // When
-        $exerciseOne->routines()->attach($routine);
-        $exerciseTwo->routines()->attach($routine);
-
-        // Then
-        $this->assertCount(2, $routine->exercises);
-
-    }
-
-    #[Test]
-    public function it_has_routine_exercises(): void
-    {
-        // Given
-        $exercise = Exercise::factory()->create();
-
-        $routine = Routine::factory()->create();
-
-        // When
-        $routine->exercises()->sync($exercise);
-
-        // Then
-        $this->assertCount(1, $routine->routineExercises);
-
-    }
-
-    #[Test]
-    public function it_has_an_owner(): void
+    public function it_belongs_to_a_user(): void
     {
         // Given
         $user = User::factory()->create();
 
         // When
-        $routine = Routine::factory()->withOwner($user)->create();
+        $routine = Routine::factory()->withUser($user)->create();
 
         // Then
-        $this->assertTrue($routine->owner->is($user));
+        $this->assertTrue($routine->user->is($user));
+    }
 
+    #[Test]
+    public function it_has_blocks(): void
+    {
+        // Given
+        $routine = Routine::factory()->create();
+
+        RoutineBlock::create([
+            'routine_id' => $routine->id,
+            'position' => 1,
+        ]);
+
+        // When / Then
+        $this->assertCount(1, $routine->blocks);
     }
 }

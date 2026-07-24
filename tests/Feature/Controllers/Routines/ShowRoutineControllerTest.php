@@ -25,7 +25,7 @@ class ShowRoutineControllerTest extends TestCase
     public function it_allows_a_user_to_view_their_own_routine(): void
     {
         // Given
-        $routine = Routine::factory()->withOwner($this->user)->create();
+        $routine = Routine::factory()->withUser($this->user)->create();
 
         // When
         $response = $this->actingAs($this->user)->get(route('routines.show', $routine));
@@ -33,14 +33,14 @@ class ShowRoutineControllerTest extends TestCase
         // Then
         $response->assertOk();
 
-        $this->assertSame(RoutineData::fromRoutine($routine)->toArray(), $response->json());
+        $this->assertEquals(RoutineData::fromRoutine($routine)->toArray(), $response->json());
     }
 
     #[Test]
     public function it_allows_an_admin_to_view_any_routine(): void
     {
         // Given
-        $routine = Routine::factory()->withOwner($this->user)->create();
+        $routine = Routine::factory()->withUser($this->user)->create();
 
         // When
         $response = $this->actingAs($this->adminUser)->get(route('routines.show', $routine));
@@ -48,14 +48,14 @@ class ShowRoutineControllerTest extends TestCase
         // Then
         $response->assertOk();
 
-        $this->assertSame(RoutineData::fromRoutine($routine)->toArray(), $response->json());
+        $this->assertEquals(RoutineData::fromRoutine($routine)->toArray(), $response->json());
     }
 
     #[Test]
     public function it_does_not_allow_users_to_view_another_users_routine(): void
     {
         // Given
-        $routine = Routine::factory()->withOwner($this->user)->create();
+        $routine = Routine::factory()->withUser($this->user)->create();
 
         $otherUser = User::factory()->withRole('user')->create();
 

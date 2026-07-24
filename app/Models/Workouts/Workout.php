@@ -2,7 +2,10 @@
 
 namespace App\Models\Workouts;
 
+use App\Enums\WorkoutMode;
+use App\Enums\WorkoutStatus;
 use App\Models\Routine;
+use App\Models\User;
 use Database\Factories\Workouts\WorkoutFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,40 +21,46 @@ class Workout extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'user_id',
         'routine_id',
+        'mode',
+        'status',
         'notes',
+        'started_at',
+        'finished_at',
     ];
 
-    protected static function newFactory(): WorkoutFactory
+    /** @return array<string, string> */
+    protected function casts(): array
     {
-        return new WorkoutFactory;
+        return [
+            'mode' => WorkoutMode::class,
+            'status' => WorkoutStatus::class,
+            'started_at' => 'datetime',
+            'finished_at' => 'datetime',
+        ];
     }
 
-    /**
-     * @return BelongsTo<Routine, $this>
-     */
+    /** @return BelongsTo<User, $this> */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /** @return BelongsTo<Routine, $this> */
     public function routine(): BelongsTo
     {
         return $this->belongsTo(Routine::class);
     }
 
-    /**
-     * @return HasMany<WorkoutExercise, $this>
-     */
-    public function exercises(): HasMany
+    /** @return HasMany<WorkoutBlock, $this> */
+    public function blocks(): HasMany
     {
-        return $this->hasMany(WorkoutExercise::class);
+        return $this->hasMany(WorkoutBlock::class)->orderBy('position');
     }
 
-    public function addNotes(string $note): void
+    protected static function newFactory(): WorkoutFactory
     {
-        $this->update([
-            'notes' => $note,
-        ]);
-    }
-
-    public function getNotes(): ?string
-    {
-        return $this->notes;
+        return WorkoutFactory::new();
     }
 }

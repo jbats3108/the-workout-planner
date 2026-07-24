@@ -11,6 +11,6 @@ class ShowRoutineController extends Controller
 {
     public function __invoke(Request $request, Routine $routine): RoutineData
     {
-        return RoutineData::from($routine);
+        return RoutineData::fromRoutine($routine);
     }
 }

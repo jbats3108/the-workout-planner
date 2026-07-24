@@ -50,7 +50,7 @@ class UserTest extends TestCase
         $this->seed(RoleSeeder::class);
         $user = $this->createUser('user');
 
-        $routines = Routine::factory(3)->withOwner($user)->create();
+        $routines = Routine::factory(3)->withUser($user)->create();
 
         // When
         $userRoutines = $user->routines;

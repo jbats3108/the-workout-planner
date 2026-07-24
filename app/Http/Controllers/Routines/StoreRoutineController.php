@@ -11,10 +11,12 @@ class StoreRoutineController extends Controller
 {
     public function __invoke(StoreRoutineData $request): RedirectResponse
     {
-        $routine = new Routine($request->toArray());
-        $routine->owner()->associate($request->owner);
-        $routine->routineType()->associate($request->routineType);
-        $routine->save();
+        Routine::create([
+            'user_id' => $request->user->id,
+            'name' => $request->name,
+            'deload_weight_factor' => $request->deloadWeightFactor ?? 0.5,
+            'deload_reps_factor' => $request->deloadRepsFactor ?? 2,
+        ]);
 
         return redirect(route('dashboard'))->with('success', 'Routine has been created.');
     }

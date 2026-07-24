@@ -28,7 +28,7 @@ class DashboardServiceTest extends TestCase
     public function it_returns_the_users_routines(): void
     {
         // Given
-        $routines = Routine::factory(5)->withOwner($this->user)->create();
+        $routines = Routine::factory(5)->withUser($this->user)->create();
 
         $dashboardService = new DashboardService;
 
@@ -40,7 +40,7 @@ class DashboardServiceTest extends TestCase
 
         $this->assertCount(5, $dashboardRoutines);
 
-        $routineData = RoutineData::collect($routines);
+        $routineData = $routines->map(fn (Routine $routine) => RoutineData::fromRoutine($routine));
 
         $this->assertEquals($routineData, $dashboardRoutines);
 

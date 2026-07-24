@@ -23,9 +23,6 @@ class StoreExerciseDataTest extends TestCase
             'slug' => 'test-exercise',
             'primary_muscle_group' => $muscleGroup->getSlug(),
             'secondary_muscle_group' => null,
-            'equipment' => ['barbell'],
-            'difficulty' => 'beginner',
-            'movement_type' => 'pull',
         ];
 
         // When
@@ -33,7 +30,6 @@ class StoreExerciseDataTest extends TestCase
 
         // Then
         $this->assertTrue($storeExerciseData->primaryMuscleGroup->is($muscleGroup));
-
     }
 
     #[Test]
@@ -47,9 +43,6 @@ class StoreExerciseDataTest extends TestCase
             'slug' => 'test-exercise',
             'primary_muscle_group' => $primaryMuscleGroup->getSlug(),
             'secondary_muscle_group' => $secondaryMuscleGroup->getSlug(),
-            'equipment' => ['barbell'],
-            'difficulty' => 'beginner',
-            'movement_type' => 'pull',
         ];
 
         // When
@@ -57,6 +50,5 @@ class StoreExerciseDataTest extends TestCase
 
         // Then
         $this->assertTrue($storeExerciseData->secondaryMuscleGroup->is($secondaryMuscleGroup));
-
     }
 }

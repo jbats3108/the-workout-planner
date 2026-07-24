@@ -4,7 +4,6 @@ namespace Tests\Unit\Models\Workouts;
 
 use App\Models\Routine;
 use App\Models\Workouts\Workout;
-use App\Models\Workouts\WorkoutExercise;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -38,42 +37,22 @@ class WorkoutTest extends TestCase
             'notes' => 'I am a note',
         ]);
 
-        // When
-        $workoutNotes = $workout->getNotes();
-
-        // Then
-        $this->assertSame('I am a note', $workoutNotes);
+        // When / Then
+        $this->assertSame('I am a note', $workout->notes);
     }
 
     #[Test]
-    public function it_allows_adding_notes(): void
+    public function it_has_blocks(): void
     {
         // Given
         $workout = Workout::factory()->create();
 
-        $this->assertNull($workout->getNotes());
-
-        $addedNote = 'I am a newly added note';
-
-        // When
-        $workout->addNotes($addedNote);
-
-        // Then
-        $this->assertSame($addedNote, $workout->getNotes());
-    }
-
-    #[Test]
-    public function it_has_exercises(): void
-    {
-        // Given
-        $workout = Workout::factory()->create();
-
-        WorkoutExercise::factory(3)->create([
+        \App\Models\Workouts\WorkoutBlock::create([
             'workout_id' => $workout->id,
+            'position' => 1,
         ]);
 
         // When / Then
-        $this->assertCount(3, $workout->exercises);
-
+        $this->assertCount(1, $workout->blocks);
     }
 }

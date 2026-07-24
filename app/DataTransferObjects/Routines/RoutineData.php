@@ -10,18 +10,18 @@ use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 #[MapName(SnakeCaseMapper::class)]
 final class RoutineData extends Data
 {
-    private function __construct(
+    public function __construct(
         public readonly string $name,
-        public readonly string $routineType,
-        public string $ownerName,
+        public readonly ?float $deloadWeightFactor = null,
+        public readonly ?float $deloadRepsFactor = null,
     ) {}
 
     public static function fromRoutine(Routine $routine): RoutineData
     {
         return new self(
             $routine->getName(),
-            $routine->routineType->getName(),
-            $routine->owner->name,
+            $routine->deload_weight_factor !== null ? (float) $routine->deload_weight_factor : null,
+            $routine->deload_reps_factor !== null ? (float) $routine->deload_reps_factor : null,
         );
     }
 }

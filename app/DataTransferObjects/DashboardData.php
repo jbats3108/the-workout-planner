@@ -17,7 +17,7 @@ final class DashboardData extends Data
     public static function fromUser(User $user): DashboardData
     {
         return new self(
-            RoutineData::collect($user->routines)
+            $user->routines->map(fn ($routine) => RoutineData::fromRoutine($routine))
         );
     }
 }

@@ -12,6 +12,6 @@ class WorkoutPolicy
 
     public function create(User $user, Routine $routine): bool
     {
-        return $routine->owner->is($user);
+        return $routine->user->is($user);
     }
 }

@@ -2,8 +2,11 @@
 
 namespace Tests\Unit\Models\Workouts;
 
-use App\Models\Workouts\WorkoutExercise;
+use App\Models\Exercise;
+use App\Models\Workouts\WorkoutBlock;
+use App\Models\Workouts\WorkoutBlockExercise;
 use App\Models\Workouts\WorkoutSet;
+use App\Models\Workouts\WorkoutSetGroup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -13,18 +16,38 @@ class WorkoutSetTest extends TestCase
     use RefreshDatabase;
 
     #[Test]
-    public function it_has_a_workout_exercise(): void
+    public function it_has_a_block_exercise(): void
     {
         // Given
-        $workoutExercise = WorkoutExercise::factory()->create();
+        $workoutBlock = WorkoutBlock::create([
+            'workout_id' => \App\Models\Workouts\Workout::factory()->create()->id,
+            'position' => 1,
+        ]);
+
+        $workoutBlockExercise = WorkoutBlockExercise::create([
+            'workout_block_id' => $workoutBlock->id,
+            'exercise_id' => Exercise::factory()->create()->id,
+            'position' => 1,
+            'exercise_name' => 'Test Exercise',
+            'working_weight_g' => 80000,
+            'prescribed_reps' => 6,
+        ]);
+
+        $workoutSetGroup = WorkoutSetGroup::create([
+            'workout_block_id' => $workoutBlock->id,
+            'type' => 'working',
+            'set_count' => 3,
+        ]);
 
         // When
-        $workoutSet = WorkoutSet::factory()->create([
-            'workout_exercise_id' => $workoutExercise->id,
+        $workoutSet = WorkoutSet::create([
+            'workout_set_group_id' => $workoutSetGroup->id,
+            'workout_block_exercise_id' => $workoutBlockExercise->id,
+            'set_index' => 0,
         ]);
 
         // Then
-        $this->assertTrue($workoutSet->workoutExercise->is($workoutExercise));
+        $this->assertTrue($workoutSet->blockExercise->is($workoutBlockExercise));
     }
 
     #[Test]
@@ -38,7 +61,6 @@ class WorkoutSetTest extends TestCase
 
         // Then
         $this->assertSame(6, $workoutSet->reps);
-
     }
 
     #[Test]
@@ -48,10 +70,9 @@ class WorkoutSetTest extends TestCase
         $workoutSet = WorkoutSet::factory()->create();
 
         // When
-        $workoutSet->recordWeight(92.5);
+        $workoutSet->recordWeight(92500);
 
         // Then
-        $this->assertSame(92.5, $workoutSet->weight);
-
+        $this->assertSame(92500, $workoutSet->weight_g);
     }
 }

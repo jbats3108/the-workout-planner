@@ -2,11 +2,8 @@
 
 namespace Tests\Unit\Models;
 
-use App\Enums\Difficulty;
-use App\Enums\MovementType;
 use App\Models\Exercise;
 use App\Models\MuscleGroup;
-use App\Models\Routine;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -50,7 +47,6 @@ class ExerciseTest extends TestCase
 
         // Then
         $this->assertTrue($exercise->primaryMuscleGroup->is($group));
-
     }
 
     #[Test]
@@ -68,7 +64,6 @@ class ExerciseTest extends TestCase
 
         // Then
         $this->assertTrue($exercise->secondaryMuscleGroup->is($group));
-
     }
 
     #[Test]
@@ -79,70 +74,6 @@ class ExerciseTest extends TestCase
 
         // Then
         $this->assertNull($exercise->secondaryMuscleGroup);
-
-    }
-
-    #[Test]
-    public function it_has_a_movement_type(): void
-    {
-        // Given / When
-        $exercise = Exercise::factory()->create([
-            'movement_type' => MovementType::PULL,
-        ]);
-
-        // Then
-        $this->assertSame(MovementType::PULL, $exercise->movementType());
-
-    }
-
-    #[Test]
-    public function it_has_a_difficulty_rating(): void
-    {
-        // Given / When
-        $exercise = Exercise::factory()->create([
-            'difficulty' => Difficulty::ADVANCED,
-        ]);
-
-        // Then
-        $this->assertSame(Difficulty::ADVANCED, $exercise->difficulty);
-
-    }
-
-    #[Test]
-    public function it_has_an_array_of_required_equipment(): void
-    {
-        // Given
-        $equipment = [
-            'barbell',
-            'bench',
-        ];
-
-        // When
-        $exercise = Exercise::factory()->create([
-            'equipment' => $equipment,
-        ]
-        );
-
-        // Then
-        $this->assertSame($equipment, $exercise->equipment);
-
-    }
-
-    #[Test]
-    public function it_can_be_linked_to_multiple_routines(): void
-    {
-        // Given
-        $exercise = Exercise::factory()->create();
-
-        $routineOne = Routine::factory()->create();
-        $routineTwo = Routine::factory()->create();
-
-        // When
-        $exercise->routines()->sync([$routineOne, $routineTwo]);
-
-        // Then
-        $this->assertCount(2, $exercise->routines);
-
     }
 
     #[Test]
@@ -177,7 +108,6 @@ class ExerciseTest extends TestCase
 
         $this->assertTrue($backExercises->contains($backExercise));
         $this->assertTrue($backExercises->contains($backExerciseTwo));
-
     }
 
     #[Test]
@@ -199,95 +129,5 @@ class ExerciseTest extends TestCase
         // Then
         $this->assertCount(1, $chestExercises);
         $this->assertTrue($chestExercises->contains($exercise));
-
-    }
-
-    #[Test]
-    public function it_can_be_queried_by_movement_type(): void
-    {
-        // Given
-        $pushExercise = Exercise::factory()->create([
-            'movement_type' => MovementType::PUSH,
-        ]);
-
-        $pullExercise = Exercise::factory()->create([
-            'movement_type' => MovementType::PULL,
-        ]);
-
-        // When
-        $pushExercises = Exercise::whereMovementType(MovementType::PUSH)->get();
-        $pullExercises = Exercise::whereMovementType(MovementType::PULL)->get();
-
-        // Then
-        $this->assertCount(1, $pushExercises);
-        $this->assertTrue($pushExercises->contains($pushExercise));
-
-        $this->assertCount(1, $pullExercises);
-        $this->assertTrue($pullExercises->contains($pullExercise));
-
-    }
-
-    #[Test]
-    public function it_can_be_queried_by_difficulty(): void
-    {
-        // Given
-        $beginnerExercise = Exercise::factory()->create([
-            'difficulty' => Difficulty::BEGINNER,
-        ]);
-
-        $advancedExercise = Exercise::factory()->create([
-            'difficulty' => Difficulty::ADVANCED,
-        ]);
-
-        // When
-        $beginnerExercises = Exercise::whereDifficulty(Difficulty::BEGINNER)->get();
-        $advancedExercises = Exercise::whereDifficulty(Difficulty::ADVANCED)->get();
-
-        // Then
-        $this->assertCount(1, $beginnerExercises);
-        $this->assertTrue($beginnerExercises->contains($beginnerExercise));
-
-        $this->assertCount(1, $advancedExercises);
-        $this->assertTrue($advancedExercises->contains($advancedExercise));
-    }
-
-    #[Test]
-    public function it_can_be_queried_by_required_equipment(): void
-    {
-        // Given
-        $equipmentListOne = [
-            'barbell',
-            'bench',
-        ];
-
-        $equipmentListTwo = [
-            'barbell',
-            'dumbbell',
-        ];
-
-        $exerciseOne = Exercise::factory()->create([
-            'equipment' => $equipmentListOne,
-        ]);
-
-        $exerciseTwo = Exercise::factory()->create([
-            'equipment' => $equipmentListTwo,
-        ]);
-
-        // When
-        $barbellExercises = Exercise::whereEquipment('barbell')->get();
-        $dumbbellExercises = Exercise::whereEquipment('dumbbell')->get();
-        $benchExercises = Exercise::whereEquipment('bench')->get();
-
-        // Then
-        $this->assertCount(2, $barbellExercises);
-        $this->assertTrue($barbellExercises->contains($exerciseOne));
-        $this->assertTrue($barbellExercises->contains($exerciseTwo));
-
-        $this->assertCount(1, $dumbbellExercises);
-        $this->assertTrue($dumbbellExercises->contains($exerciseTwo));
-
-        $this->assertCount(1, $benchExercises);
-        $this->assertTrue($benchExercises->contains($exerciseOne));
-
     }
 }

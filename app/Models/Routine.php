@@ -7,7 +7,6 @@ use Database\Factories\RoutineFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -20,40 +19,37 @@ class Routine extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'user_id',
         'name',
-        'owner_id',
-        'routine_type_id',
+        'deload_weight_factor',
+        'deload_reps_factor',
     ];
 
-    /** @return BelongsToMany<Exercise, $this> */
-    public function exercises(): BelongsToMany
+    /** @return array<string, string> */
+    protected function casts(): array
     {
-        return $this->belongsToMany(Exercise::class, 'routine_exercise', 'routine_id', 'exercise_id');
-    }
-
-    /**
-     * @return HasMany<RoutineExercise, $this>
-     */
-    public function routineExercises(): HasMany
-    {
-        return $this->hasMany(RoutineExercise::class);
-    }
-
-    /** @return BelongsTo<RoutineType, $this> */
-    public function routineType(): BelongsTo
-    {
-        return $this->belongsTo(RoutineType::class);
+        return [
+            'deload_weight_factor' => 'decimal:3',
+            'deload_reps_factor' => 'decimal:3',
+        ];
     }
 
     /** @return BelongsTo<User, $this> */
-    public function owner(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'owner_id');
+        return $this->belongsTo(User::class);
     }
 
-    public static function lookup(string $slug): ?Routine
+    /** @return HasMany<RoutineBlock, $this> */
+    public function blocks(): HasMany
     {
-        return self::firstWhere('slug', $slug);
+        return $this->hasMany(RoutineBlock::class)->orderBy('position');
+    }
+
+    /** @return HasMany<\App\Models\Workouts\Workout, $this> */
+    public function workouts(): HasMany
+    {
+        return $this->hasMany(\App\Models\Workouts\Workout::class);
     }
 
     protected static function newFactory(): RoutineFactory

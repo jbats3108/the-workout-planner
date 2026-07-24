@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Routine;
-use App\Models\RoutineType;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -15,42 +14,26 @@ class RoutineSeeder extends Seeder
             $query->where('name', 'user');
         })->limit(2)->get();
 
-        $routineTypeIds = RoutineType::pluck('id');
+        $routineNames = [
+            'Push Day',
+            'Pull Day',
+            'Chest Day',
+            'Back Day',
+            'Leg Day',
+            'Upper Day',
+            'Cardio Session',
+        ];
 
-        $users->each(function (User $user) use ($routineTypeIds) {
+        $users->each(function (User $user) use ($routineNames): void {
+            $names = $routineNames;
+            shuffle($names);
 
-            $routineNames = [
-                'Push Day',
-                'Pull Day',
-                'Chest Day',
-                'Back Day',
-                'Leg Day',
-                'Upper Day',
-                'Cardio Session',
-            ];
-
-            $idsToUse = $routineTypeIds->random(3);
-
-            $idsToUse->each(function (int $routineTypeId) use (&$routineNames, $user) {
-
-                $index = array_rand($routineNames);
-
-                if (! isset($routineNames[$index])) {
-                    return;
-                }
-
-                $routineName = $routineNames[$index];
-
-                unset($routineNames[$index]);
-
+            foreach (array_slice($names, 0, 3) as $routineName) {
                 Routine::create([
                     'name' => $routineName,
-                    'owner_id' => $user->id,
-                    'routine_type_id' => $routineTypeId,
+                    'user_id' => $user->id,
                 ]);
-
-            });
-
+            }
         });
     }
 }

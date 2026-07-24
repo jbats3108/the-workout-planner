@@ -17,6 +17,8 @@ class IndexRoutineController extends Controller
             ? Routine::all()
             : $user->routines;
 
-        return response()->json(RoutineData::collect($routines));
+        return response()->json(
+            $routines->map(fn (Routine $routine) => RoutineData::fromRoutine($routine))
+        );
     }
 }

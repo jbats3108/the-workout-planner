@@ -8,20 +8,15 @@ use App\Http\Controllers\MuscleGroups\DeleteMuscleGroupController;
 use App\Http\Controllers\MuscleGroups\IndexMuscleGroupsController;
 use App\Http\Controllers\MuscleGroups\StoreMuscleGroupController;
 use App\Http\Controllers\MuscleGroups\UpdateMuscleGroupController;
-use App\Http\Controllers\RoutineExercise\AddRoutineExerciseController;
 use App\Http\Controllers\Routines\DeleteRoutineController;
 use App\Http\Controllers\Routines\IndexRoutineController;
 use App\Http\Controllers\Routines\ShowRoutineController;
 use App\Http\Controllers\Routines\StoreRoutineController;
 use App\Http\Controllers\Routines\UpdateRoutineController;
-use App\Http\Controllers\RoutineTypes\DeleteRoutineTypeController;
-use App\Http\Controllers\RoutineTypes\IndexRoutineTypesController;
-use App\Http\Controllers\RoutineTypes\StoreRoutineTypeController;
 use App\Http\Controllers\ShowDashboardController;
 use App\Http\Controllers\Workouts\StoreWorkoutController;
 use App\Models\Exercise;
 use App\Models\MuscleGroup;
-use App\Models\RoutineType;
 use App\Models\Workouts\Workout;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -68,25 +63,6 @@ Route::middleware('auth')->group(function (): void {
         Route::put('/{routine}', UpdateRoutineController::class)
             ->can('update', 'routine')
             ->name('routines.update');
-
-        Route::post('/{routine}/add-exercise/{exercise}', AddRoutineExerciseController::class)
-            ->can('addExercise', 'routine')
-            ->name('routines.add-exercise');
-    });
-
-    Route::prefix('/routine-types')->group(function (): void {
-
-        Route::post('/create', StoreRoutineTypeController::class)
-            ->can('create', RoutineType::class)
-            ->name('routine-types.store');
-
-        Route::get('/', IndexRoutineTypesController::class)
-            ->name('routine-types.index');
-
-        Route::delete('/{routineType}', DeleteRoutineTypeController::class)
-            ->can('delete', RoutineType::class)
-            ->name('routine-types.delete');
-
     });
 
     Route::prefix('/muscle-groups')->group(function (): void {

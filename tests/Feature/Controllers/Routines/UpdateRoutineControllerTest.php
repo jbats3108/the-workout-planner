@@ -23,7 +23,7 @@ class UpdateRoutineControllerTest extends TestCase
     public function admins_cannot_update_user_routines(): void
     {
         // Given
-        $routine = Routine::factory()->withOwner($this->user)->create();
+        $routine = Routine::factory()->withUser($this->user)->create();
 
         $updatePayload = [
             'name' => 'New Name',
@@ -41,7 +41,7 @@ class UpdateRoutineControllerTest extends TestCase
     public function users_can_only_update_their_own_routines(): void
     {
         // Given
-        $routine = Routine::factory()->withOwner($this->user)->create();
+        $routine = Routine::factory()->withUser($this->user)->create();
 
         $updatePayload = [
             'name' => 'New Name',
@@ -59,7 +59,7 @@ class UpdateRoutineControllerTest extends TestCase
     public function it_updates_the_routine_details(): void
     {
         // Given
-        $routine = Routine::factory()->withOwner($this->user)->create();
+        $routine = Routine::factory()->withUser($this->user)->create();
 
         $updatePayload = [
             'name' => 'New Name',
