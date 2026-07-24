@@ -20,7 +20,7 @@ Ordered for the core loop; reshuffle if product priority changes.
 2. **Mid-session structure edits** — mutate the in-progress workout snapshot (not the routine) from the player
 3. **More app-like mobile behaviour** — **grill before building** (see below)
 4. **User default warm-up %s and reps** — prefs on the user (with per-exercise overrides already on blocks); seed sensible defaults into new routine blocks / editor empty state
-5. **Restyle whole app to match routine flow** — bring auth, settings, dashboard chrome, and player into the same zinc + lime language as the editor/player (not a second visual system)
+5. **Restyle whole app to match Overload branding** — ~~zinc + lime~~ done: dark-first near-black + neon yellow primary + cyan accent (`docs/branding.md`, `resources/css/app.css`)
 6. **Find and import exercises** — expand shared catalog (seed/import path); no fancy CMS in v1
 7. **Admin panel** — admin-only surfaces for shared catalog / users as needed (keep thin)
 8. **Dead code audit (v1 leftovers)** — remove unused controllers, pages, routes, ziggy ghosts, factories, and migrations residue from the pre-v2 gym schema

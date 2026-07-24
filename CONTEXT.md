@@ -1,6 +1,6 @@
-# Workout Planner
+# Overload (working title)
 
-Personal strength training: plan routines, log sessions, track progression. Not coaching.
+Personal strength training for serious lifters: plan routines, log sessions, track progressive overload. Not coaching. Product branding (name candidates, visual direction) lives in `docs/branding.md`.
 
 ## Language
 
