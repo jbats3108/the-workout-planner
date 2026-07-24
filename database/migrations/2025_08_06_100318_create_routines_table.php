@@ -10,9 +10,10 @@ return new class extends Migration
     {
         Schema::create('routines', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('name');
-            $table->foreignId('routine_type_id')->constrained('routine_types');
-            $table->foreignId('owner_id')->constrained('users');
+            $table->decimal('deload_weight_factor', 5, 3)->default(0.5);
+            $table->decimal('deload_reps_factor', 5, 3)->default(2);
             $table->timestamps();
             $table->softDeletes();
         });
