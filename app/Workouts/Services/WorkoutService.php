@@ -4,6 +4,7 @@ namespace App\Workouts\Services;
 
 use App\Routines\Models\Routine;
 use App\Routines\Models\RoutineBlock;
+use App\Shared\Enums\SetGroupType;
 use App\Users\Models\User;
 use App\Workouts\Enums\WorkoutMode;
 use App\Workouts\Enums\WorkoutStatus;
@@ -24,6 +25,12 @@ class WorkoutService
     public const ALREADY_IN_PROGRESS_ERROR = 'You already have a workout in progress';
 
     public const WORKOUT_NOT_IN_PROGRESS_ERROR = 'This workout is not in progress';
+
+    public const SET_ALREADY_COMPLETED_ERROR = 'Completed sets cannot be removed';
+
+    public const CANNOT_REMOVE_LAST_WORKING_SET_ERROR = 'At least one working set is required';
+
+    public const WORKING_SET_GROUP_MISSING_ERROR = 'This block has no working sets';
 
     public function __construct(
         private readonly WorkoutProgressionService $progressionService,
@@ -148,6 +155,79 @@ class WorkoutService
         $set->save();
 
         return $set->fresh();
+    }
+
+    /**
+     * @throws WorkoutServiceException
+     */
+    public function addWorkingSet(WorkoutBlock $block): WorkoutBlock
+    {
+        $block->loadMissing(['workout', 'blockExercises', 'workingSetGroup.sets']);
+
+        if ($block->workout->status !== WorkoutStatus::InProgress) {
+            throw new WorkoutServiceException(self::WORKOUT_NOT_IN_PROGRESS_ERROR);
+        }
+
+        $workingGroup = $block->workingSetGroup;
+
+        if ($workingGroup === null) {
+            throw new WorkoutServiceException(self::WORKING_SET_GROUP_MISSING_ERROR);
+        }
+
+        return DB::transaction(function () use ($block, $workingGroup): WorkoutBlock {
+            $nextIndex = (int) $workingGroup->sets->max('set_index') + 1;
+
+            foreach ($block->blockExercises as $exercise) {
+                WorkoutSet::create([
+                    'workout_set_group_id' => $workingGroup->id,
+                    'workout_block_exercise_id' => $exercise->id,
+                    'set_index' => $nextIndex,
+                ]);
+            }
+
+            $workingGroup->set_count = $workingGroup->set_count + 1;
+            $workingGroup->save();
+
+            return $block->fresh(['blockExercises', 'setGroups.sets']);
+        });
+    }
+
+    /**
+     * @throws WorkoutServiceException
+     */
+    public function removeWorkingSetRound(WorkoutSet $set): void
+    {
+        $set->loadMissing(['setGroup.block.workout', 'setGroup.sets']);
+
+        $group = $set->setGroup;
+        $workout = $group->block->workout;
+
+        if ($workout->status !== WorkoutStatus::InProgress) {
+            throw new WorkoutServiceException(self::WORKOUT_NOT_IN_PROGRESS_ERROR);
+        }
+
+        if ($group->type !== SetGroupType::Working) {
+            throw new WorkoutServiceException(self::WORKING_SET_GROUP_MISSING_ERROR);
+        }
+
+        $roundSets = $group->sets->where('set_index', $set->set_index);
+
+        if ($roundSets->contains(fn (WorkoutSet $roundSet): bool => $roundSet->completed_at !== null)) {
+            throw new WorkoutServiceException(self::SET_ALREADY_COMPLETED_ERROR);
+        }
+
+        if ($group->set_count <= 1) {
+            throw new WorkoutServiceException(self::CANNOT_REMOVE_LAST_WORKING_SET_ERROR);
+        }
+
+        DB::transaction(function () use ($group, $roundSets): void {
+            foreach ($roundSets as $roundSet) {
+                $roundSet->delete();
+            }
+
+            $group->set_count = max(1, $group->set_count - 1);
+            $group->save();
+        });
     }
 
     /**

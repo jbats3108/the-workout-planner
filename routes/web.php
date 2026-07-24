@@ -17,10 +17,12 @@ use App\Routines\Http\Controllers\IndexRoutineController;
 use App\Routines\Http\Controllers\ShowRoutineController;
 use App\Routines\Http\Controllers\StoreRoutineController;
 use App\Routines\Http\Controllers\UpdateRoutineController;
+use App\Workouts\Http\Controllers\AddWorkingSetController;
 use App\Workouts\Http\Controllers\ApplyProgressionBumpsController;
 use App\Workouts\Http\Controllers\CompleteWorkoutSetController;
 use App\Workouts\Http\Controllers\FinishWorkoutController;
 use App\Workouts\Http\Controllers\PlayWorkoutController;
+use App\Workouts\Http\Controllers\RemoveWorkingSetController;
 use App\Workouts\Http\Controllers\ShowProgressionController;
 use App\Workouts\Http\Controllers\SkipProgressionController;
 use App\Workouts\Http\Controllers\StoreWorkoutController;
@@ -106,6 +108,14 @@ Route::middleware('auth')->group(function (): void {
         Route::post('/{workout}/sets/{set}', CompleteWorkoutSetController::class)
             ->can('update', 'workout')
             ->name('workouts.sets.complete');
+
+        Route::post('/{workout}/blocks/{block}/working-sets', AddWorkingSetController::class)
+            ->can('update', 'workout')
+            ->name('workouts.working-sets.add');
+
+        Route::delete('/{workout}/sets/{set}', RemoveWorkingSetController::class)
+            ->can('update', 'workout')
+            ->name('workouts.sets.remove');
 
         Route::post('/{workout}/finish', FinishWorkoutController::class)
             ->can('update', 'workout')

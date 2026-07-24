@@ -197,6 +197,43 @@ const finishWorkout = () => {
     router.post(route('workouts.finish', props.workout.id));
 };
 
+const workingRoundsInBlock = computed(() => {
+    if (!current.value) return 0;
+    const indexes = new Set(
+        current.value.block.sets.filter((s) => s.group_type === 'working').map((s) => s.set_index),
+    );
+    return indexes.size;
+});
+
+const canAddWorkingSet = computed(
+    () =>
+        props.workout.status === 'in_progress' &&
+        current.value !== null &&
+        current.value.set.group_type === 'working',
+);
+
+const canRemoveWorkingSet = computed(() => {
+    if (!current.value || props.workout.status !== 'in_progress') return false;
+    if (current.value.set.group_type !== 'working' || current.value.set.completed) return false;
+    if (workingRoundsInBlock.value <= 1) return false;
+
+    const index = current.value.set.set_index;
+    const round = current.value.block.sets.filter(
+        (s) => s.group_type === 'working' && s.set_index === index,
+    );
+    return round.every((s) => !s.completed);
+});
+
+const addWorkingSet = () => {
+    if (!current.value) return;
+    router.post(route('workouts.working-sets.add', [props.workout.id, current.value.block.id]));
+};
+
+const removeWorkingSet = () => {
+    if (!current.value) return;
+    router.delete(route('workouts.sets.remove', [props.workout.id, current.value.set.id]));
+};
+
 const groupLabel = (type: string) => (type === 'warm_up' ? 'Warm-up' : 'Working');
 </script>
 
@@ -286,6 +323,24 @@ const groupLabel = (type: string) => (type === 'warm_up' ? 'Warm-up' : 'Working'
                         >
                             Complete set
                         </button>
+                        <div v-if="canAddWorkingSet || canRemoveWorkingSet" class="flex gap-2">
+                            <button
+                                v-if="canAddWorkingSet"
+                                type="button"
+                                class="flex-1 rounded-md border border-border px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
+                                @click="addWorkingSet"
+                            >
+                                + Set
+                            </button>
+                            <button
+                                v-if="canRemoveWorkingSet"
+                                type="button"
+                                class="flex-1 rounded-md border border-border px-4 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                                @click="removeWorkingSet"
+                            >
+                                − Set
+                            </button>
+                        </div>
                         <button
                             v-if="flatSets.every(({ set }) => set.completed)"
                             type="button"

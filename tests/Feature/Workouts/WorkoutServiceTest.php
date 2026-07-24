@@ -129,6 +129,55 @@ class WorkoutServiceTest extends TestCase
         $this->workoutService->createWorkout($other);
     }
 
+    #[Test]
+    public function it_adds_a_working_set_round_to_the_block(): void
+    {
+        $routine = Routine::factory()->create();
+        $this->seedRoutineBlockWithExercise($routine, setCount: 2);
+        $workout = $this->workoutService->createWorkout($routine);
+        $block = $workout->blocks->first();
+
+        $this->workoutService->addWorkingSet($block);
+
+        $working = $block->fresh()->workingSetGroup;
+        $this->assertSame(3, $working->set_count);
+        $this->assertCount(3, $working->sets);
+    }
+
+    #[Test]
+    public function it_removes_an_incomplete_working_set_round(): void
+    {
+        $routine = Routine::factory()->create();
+        $this->seedRoutineBlockWithExercise($routine, setCount: 2);
+        $workout = $this->workoutService->createWorkout($routine);
+        $set = WorkoutSet::query()
+            ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workout->id))
+            ->where('set_index', 1)
+            ->firstOrFail();
+
+        $this->workoutService->removeWorkingSetRound($set);
+
+        $working = $workout->blocks->first()->fresh()->workingSetGroup;
+        $this->assertSame(1, $working->set_count);
+        $this->assertCount(1, $working->sets);
+    }
+
+    #[Test]
+    public function it_does_not_remove_the_last_working_set(): void
+    {
+        $routine = Routine::factory()->create();
+        $this->seedRoutineBlockWithExercise($routine, setCount: 1);
+        $workout = $this->workoutService->createWorkout($routine);
+        $set = WorkoutSet::query()
+            ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workout->id))
+            ->firstOrFail();
+
+        $this->expectException(WorkoutServiceException::class);
+        $this->expectExceptionMessage(WorkoutService::CANNOT_REMOVE_LAST_WORKING_SET_ERROR);
+
+        $this->workoutService->removeWorkingSetRound($set);
+    }
+
     private function seedRoutineBlockWithExercise(Routine $routine, int $setCount = 3): void
     {
         $block = RoutineBlock::create([
