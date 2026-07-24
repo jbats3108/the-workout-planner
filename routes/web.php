@@ -17,9 +17,12 @@ use App\Routines\Http\Controllers\IndexRoutineController;
 use App\Routines\Http\Controllers\ShowRoutineController;
 use App\Routines\Http\Controllers\StoreRoutineController;
 use App\Routines\Http\Controllers\UpdateRoutineController;
+use App\Workouts\Http\Controllers\ApplyProgressionBumpsController;
 use App\Workouts\Http\Controllers\CompleteWorkoutSetController;
 use App\Workouts\Http\Controllers\FinishWorkoutController;
 use App\Workouts\Http\Controllers\PlayWorkoutController;
+use App\Workouts\Http\Controllers\ShowProgressionController;
+use App\Workouts\Http\Controllers\SkipProgressionController;
 use App\Workouts\Http\Controllers\StoreWorkoutController;
 use App\Workouts\Models\Workout;
 use Illuminate\Support\Facades\Route;
@@ -107,6 +110,18 @@ Route::middleware('auth')->group(function (): void {
         Route::post('/{workout}/finish', FinishWorkoutController::class)
             ->can('update', 'workout')
             ->name('workouts.finish');
+
+        Route::get('/{workout}/progression', ShowProgressionController::class)
+            ->can('view', 'workout')
+            ->name('workouts.progression');
+
+        Route::post('/{workout}/progression', ApplyProgressionBumpsController::class)
+            ->can('applyProgression', 'workout')
+            ->name('workouts.progression.apply');
+
+        Route::post('/{workout}/progression/skip', SkipProgressionController::class)
+            ->can('applyProgression', 'workout')
+            ->name('workouts.progression.skip');
     });
 });
 

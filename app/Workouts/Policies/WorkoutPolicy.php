@@ -26,4 +26,9 @@ class WorkoutPolicy
     {
         return $workout->user->is($user) && $workout->status === WorkoutStatus::InProgress;
     }
+
+    public function applyProgression(User $user, Workout $workout): bool
+    {
+        return $workout->user->is($user) && $workout->status === WorkoutStatus::Finished;
+    }
 }

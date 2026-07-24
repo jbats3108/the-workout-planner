@@ -16,7 +16,7 @@ Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domai
 
 Ordered for the core loop; reshuffle if product priority changes.
 
-1. **Progression on finish** — carry-forward highest achieved top weight; confirm bumps when progression target hit; skip both for deload workouts (`CONTEXT.md`)
+1. **Progression on finish** — ~~carry-forward highest achieved top weight; confirm bumps when progression target hit; skip both for deload workouts~~ done
 2. **Mid-session structure edits** — mutate the in-progress workout snapshot (not the routine) from the player
 3. **More app-like mobile behaviour** — **grill before building** (see below)
 4. **User default warm-up %s and reps** — prefs on the user (with per-exercise overrides already on blocks); seed sensible defaults into new routine blocks / editor empty state

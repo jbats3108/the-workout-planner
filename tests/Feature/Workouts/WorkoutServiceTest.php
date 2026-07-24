@@ -24,7 +24,7 @@ class WorkoutServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->workoutService = new WorkoutService;
+        $this->workoutService = app(WorkoutService::class);
     }
 
     #[Test]

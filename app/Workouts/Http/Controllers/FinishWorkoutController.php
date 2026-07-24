@@ -13,11 +13,19 @@ class FinishWorkoutController extends Controller
     public function __invoke(Workout $workout, WorkoutService $workoutService): RedirectResponse
     {
         try {
-            $workoutService->finishWorkout($workout);
+            $bumps = $workoutService->finishWorkout($workout);
         } catch (WorkoutServiceException $exception) {
             return back()->withErrors(['workout' => $exception->getMessage()]);
         }
 
-        return redirect()->route('dashboard');
+        if ($bumps->count() === 0) {
+            return redirect()->route('dashboard');
+        }
+
+        session([
+            "workout_progression.{$workout->id}" => $bumps->toArray(),
+        ]);
+
+        return redirect()->route('workouts.progression', $workout);
     }
 }

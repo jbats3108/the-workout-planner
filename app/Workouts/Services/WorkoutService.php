@@ -15,6 +15,7 @@ use App\Workouts\Models\WorkoutSet;
 use App\Workouts\Models\WorkoutSetGroup;
 use App\Workouts\Models\WorkoutWarmUpStep;
 use Illuminate\Support\Facades\DB;
+use Spatie\LaravelData\DataCollection;
 
 class WorkoutService
 {
@@ -23,6 +24,10 @@ class WorkoutService
     public const ALREADY_IN_PROGRESS_ERROR = 'You already have a workout in progress';
 
     public const WORKOUT_NOT_IN_PROGRESS_ERROR = 'This workout is not in progress';
+
+    public function __construct(
+        private readonly WorkoutProgressionService $progressionService,
+    ) {}
 
     /**
      * @throws WorkoutServiceException
@@ -146,18 +151,22 @@ class WorkoutService
     }
 
     /**
+     * @return DataCollection<int, \App\Workouts\Data\Progression\BumpProposalData>
+     *
      * @throws WorkoutServiceException
      */
-    public function finishWorkout(Workout $workout): Workout
+    public function finishWorkout(Workout $workout): DataCollection
     {
         if ($workout->status !== WorkoutStatus::InProgress) {
             throw new WorkoutServiceException(self::WORKOUT_NOT_IN_PROGRESS_ERROR);
         }
 
-        $workout->status = WorkoutStatus::Finished;
-        $workout->finished_at = now();
-        $workout->save();
+        return DB::transaction(function () use ($workout): DataCollection {
+            $workout->status = WorkoutStatus::Finished;
+            $workout->finished_at = now();
+            $workout->save();
 
-        return $workout;
+            return $this->progressionService->applyCarryForwardAndCollectBumps($workout);
+        });
     }
 }
