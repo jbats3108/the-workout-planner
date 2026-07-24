@@ -5,6 +5,7 @@ Working product identity. Domain language stays in `CONTEXT.md`; backlog in `doc
 ## Brand identity
 
 - **Working title:** Overload
+- **Chosen stylization:** OVRLOAD (also explore mark/chrome around OVR / OVRLD)
 - **Spelling / stylization candidates:** OVRLOAD, OVR LOAD, Overlode, OVRLD
 - **Target audience:** Serious lifters, powerlifters, and strength athletes
 - **Brand essence:** Data-driven, high-performance, built around progressive overload and tracking heavy lifting
