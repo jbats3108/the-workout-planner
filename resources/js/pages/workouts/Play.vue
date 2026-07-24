@@ -257,9 +257,29 @@ const acknowledgeSetup = () => {
 };
 
 const finishWorkout = () => {
+    if (props.workout.status !== 'in_progress') return;
+    const incomplete = flatSets.value.some(({ set }) => !set.completed);
+    if (incomplete && !confirm('Finish now? Incomplete sets stay incomplete.')) {
+        return;
+    }
     leaveConfirmed.value = true;
     router.post(
         route('workouts.finish', props.workout.id),
+        {},
+        {
+            onError: () => {
+                leaveConfirmed.value = false;
+            },
+        },
+    );
+};
+
+const abandonWorkout = () => {
+    if (props.workout.status !== 'in_progress') return;
+    if (!confirm('Abandon this workout? It will not count as finished.')) return;
+    leaveConfirmed.value = true;
+    router.post(
+        route('workouts.discard', props.workout.id),
         {},
         {
             onError: () => {
@@ -343,8 +363,24 @@ const formatPlateStack = computed(() => {
                 <p class="text-xs uppercase tracking-wide text-muted-foreground">{{ workout.mode }}</p>
                 <h1 class="truncate text-lg font-semibold">{{ workout.routine_name }}</h1>
             </div>
-            <div class="flex shrink-0 items-center gap-3">
+            <div class="flex shrink-0 items-center gap-2">
                 <div class="font-mono text-sm text-muted-foreground">{{ progressLabel }}</div>
+                <button
+                    v-if="workout.status === 'in_progress'"
+                    type="button"
+                    class="rounded-md border border-border px-3 py-1.5 text-sm text-foreground hover:bg-secondary"
+                    @click="finishWorkout"
+                >
+                    Finish
+                </button>
+                <button
+                    v-if="workout.status === 'in_progress'"
+                    type="button"
+                    class="rounded-md border border-destructive/40 px-3 py-1.5 text-sm text-destructive"
+                    @click="abandonWorkout"
+                >
+                    Abandon
+                </button>
                 <button
                     type="button"
                     class="rounded-md border border-border px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground"
@@ -468,9 +504,9 @@ const formatPlateStack = computed(() => {
                         </button>
                     </div>
                     <button
-                        v-if="flatSets.every(({ set }) => set.completed)"
                         type="button"
                         class="rounded-full border border-border px-6 py-3 text-sm"
+                        :disabled="workout.status !== 'in_progress'"
                         @click="finishWorkout"
                     >
                         Finish workout

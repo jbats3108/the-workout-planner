@@ -3,7 +3,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Routine } from '@/types/workouts';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import { Trash2 } from 'lucide-vue-next';
+import { Pencil, Trash2 } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 type InProgressWorkout = {
@@ -39,6 +39,20 @@ const startWorkout = (routineId: number, mode: 'normal' | 'deload' = 'normal') =
 };
 
 const canStart = (routine: DashboardRoutine) => !props.data.in_progress_workout && routine.can_start === true;
+
+const finishInProgress = () => {
+    const workout = props.data.in_progress_workout;
+    if (!workout) return;
+    if (!confirm('Finish this workout now? Incomplete sets stay incomplete.')) return;
+    router.post(route('workouts.finish', workout.id));
+};
+
+const abandonInProgress = () => {
+    const workout = props.data.in_progress_workout;
+    if (!workout) return;
+    if (!confirm('Abandon this workout? Logged sets are kept but it will not count as finished.')) return;
+    router.post(route('workouts.discard', workout.id));
+};
 
 const deleteRoutine = (routine: DashboardRoutine) => {
     if (!confirm(`Delete “${routine.name}”? It will be archived and removed from your list.`)) {
@@ -77,12 +91,28 @@ const deleteRoutine = (routine: DashboardRoutine) => {
                     <p class="text-lg font-semibold">{{ data.in_progress_workout.routine_name }}</p>
                     <p class="font-mono text-xs text-muted-foreground">{{ data.in_progress_workout.mode }}</p>
                 </div>
-                <Link
-                    :href="route('workouts.play', data.in_progress_workout.id)"
-                    class="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground"
-                >
-                    Resume
-                </Link>
+                <div class="flex flex-wrap gap-2">
+                    <Link
+                        :href="route('workouts.play', data.in_progress_workout.id)"
+                        class="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground"
+                    >
+                        Resume
+                    </Link>
+                    <button
+                        type="button"
+                        class="rounded-full border border-border px-4 py-2 text-sm text-foreground"
+                        @click="finishInProgress"
+                    >
+                        Finish
+                    </button>
+                    <button
+                        type="button"
+                        class="rounded-full border border-destructive/40 px-4 py-2 text-sm text-destructive"
+                        @click="abandonInProgress"
+                    >
+                        Abandon
+                    </button>
+                </div>
             </div>
 
             <div class="flex flex-wrap items-center justify-between gap-3">
@@ -130,15 +160,25 @@ const deleteRoutine = (routine: DashboardRoutine) => {
                             Deload
                         </button>
                     </div>
-                    <button
-                        type="button"
-                        class="absolute right-3 bottom-3 rounded p-1 text-destructive transition-opacity hover:opacity-80"
-                        title="Delete routine"
-                        aria-label="Delete routine"
-                        @click="deleteRoutine(routine)"
-                    >
-                        <Trash2 class="size-3.5" />
-                    </button>
+                    <div class="absolute right-3 bottom-3 flex items-center gap-1">
+                        <Link
+                            :href="route('routines.edit', routine.id)"
+                            class="rounded p-1 text-muted-foreground transition-colors hover:text-primary"
+                            title="Edit routine"
+                            aria-label="Edit routine"
+                        >
+                            <Pencil class="size-3.5" />
+                        </Link>
+                        <button
+                            type="button"
+                            class="rounded p-1 text-destructive transition-opacity hover:opacity-80"
+                            title="Delete routine"
+                            aria-label="Delete routine"
+                            @click="deleteRoutine(routine)"
+                        >
+                            <Trash2 class="size-3.5" />
+                        </button>
+                    </div>
                 </div>
             </div>
             <p v-if="!props.data.routines.length" class="text-sm text-muted-foreground">No routines yet. Tap Create to start one.</p>

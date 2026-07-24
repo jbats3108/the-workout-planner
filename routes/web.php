@@ -20,6 +20,7 @@ use App\Routines\Http\Controllers\UpdateRoutineController;
 use App\Workouts\Http\Controllers\AddWorkingSetController;
 use App\Workouts\Http\Controllers\ApplyProgressionBumpsController;
 use App\Workouts\Http\Controllers\CompleteWorkoutSetController;
+use App\Workouts\Http\Controllers\DiscardWorkoutController;
 use App\Workouts\Http\Controllers\FinishWorkoutController;
 use App\Workouts\Http\Controllers\PlayWorkoutController;
 use App\Workouts\Http\Controllers\RemoveWorkingSetController;
@@ -104,6 +105,10 @@ Route::middleware('auth')->group(function (): void {
         Route::post('/{workout}/finish', FinishWorkoutController::class)
             ->can('update', 'workout')
             ->name('workouts.finish');
+
+        Route::post('/{workout}/discard', DiscardWorkoutController::class)
+            ->can('update', 'workout')
+            ->name('workouts.discard');
 
         Route::get('/{workout}/progression', ShowProgressionController::class)
             ->can('view', 'workout')

@@ -250,4 +250,17 @@ class WorkoutService
             return $this->progressionService->applyCarryForwardAndCollectBumps($workout);
         });
     }
+
+    /**
+     * @throws WorkoutServiceException
+     */
+    public function discardWorkout(Workout $workout): void
+    {
+        if ($workout->status !== WorkoutStatus::InProgress) {
+            throw new WorkoutServiceException(self::WORKOUT_NOT_IN_PROGRESS_ERROR);
+        }
+
+        $workout->status = WorkoutStatus::Discarded;
+        $workout->save();
+    }
 }

@@ -52,8 +52,16 @@ const filteredExercises = computed(() => {
     return props.exercises.filter(
         (e) =>
             e.name.toLowerCase().includes(q) ||
-            e.primary_muscle_group.toLowerCase().includes(q),
+            (e.primary_muscle_group ?? '').toLowerCase().includes(q),
     );
+});
+
+const findMatches = computed(() => {
+    const q = exerciseQuery.value.trim();
+    if (!q) {
+        return [];
+    }
+    return filteredExercises.value.slice(0, 40);
 });
 
 /** Keep the current selection visible even when it falls outside the filter. */
@@ -117,16 +125,33 @@ const form = useForm({
 });
 
 const active = ref(0);
+const activeExerciseIndex = ref(0);
 watch(
     () => form.blocks.length,
     (len) => {
         if (active.value >= len) {
             active.value = Math.max(0, len - 1);
         }
+        activeExerciseIndex.value = 0;
     },
 );
 
 const activeBlock = computed(() => form.blocks[active.value] ?? null);
+
+const selectBlockExercise = (blockIndex: number, exerciseIndex = 0) => {
+    active.value = blockIndex;
+    activeExerciseIndex.value = exerciseIndex;
+};
+
+const applyExercisePick = (exerciseId: number) => {
+    const block = form.blocks[active.value];
+    const exercise = block?.exercises[activeExerciseIndex.value] ?? block?.exercises[0];
+    if (!exercise) {
+        return;
+    }
+    exercise.exercise_id = exerciseId;
+    exerciseQuery.value = '';
+};
 
 /** Compact editor string: `40x5, 60x3, 80x1` (also accepts legacy `40, 60, 80`). */
 const warmUpText = (block: Block) =>
@@ -208,7 +233,7 @@ const errorList = computed(() => Object.values(form.errors));
     <AppLayout :breadcrumbs="[{ title: 'Dashboard', href: '/dashboard' }, { title: form.name || 'Routine', href: '#' }]">
         <Head :title="`Edit · ${form.name}`" />
 
-        <div class="flex min-h-[calc(100vh-8rem)] flex-1 flex-col overflow-x-auto overscroll-none bg-background text-foreground">
+        <div class="flex flex-1 flex-col overscroll-y-none bg-background text-foreground">
             <!-- Shared header -->
             <header class="border-b border-border px-4 py-4 md:px-6">
                 <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
@@ -284,6 +309,31 @@ const errorList = computed(() => Object.values(form.errors));
                 </label>
                 <p class="mt-1 text-xs text-muted-foreground">
                     Showing {{ filteredExercises.length }} of {{ exercises.length }}
+                    <span v-if="exerciseQuery.trim() && activeBlock"> · tap to set selected exercise</span>
+                </p>
+                <ul
+                    v-if="findMatches.length"
+                    class="mt-2 max-h-48 max-w-md overflow-y-auto divide-y divide-border rounded-xl border border-border"
+                >
+                    <li v-for="exercise in findMatches" :key="exercise.id">
+                        <button
+                            type="button"
+                            class="flex w-full flex-col items-start gap-0.5 px-3 py-2 text-left hover:bg-secondary"
+                            :disabled="!activeBlock"
+                            @click="applyExercisePick(exercise.id)"
+                        >
+                            <span class="text-sm font-medium text-foreground">{{ exercise.name }}</span>
+                            <span class="font-mono text-xs text-muted-foreground">{{
+                                exercise.primary_muscle_group
+                            }}</span>
+                        </button>
+                    </li>
+                </ul>
+                <p
+                    v-else-if="exerciseQuery.trim()"
+                    class="mt-2 text-xs text-muted-foreground"
+                >
+                    No matches.
                 </p>
             </div>
 
@@ -310,6 +360,8 @@ const errorList = computed(() => Object.values(form.errors));
                                     v-for="(ex, ei) in block.exercises"
                                     :key="`${bi}-${ei}`"
                                     class="border-b border-border"
+                                    :class="bi === active && ei === activeExerciseIndex ? 'bg-primary/5' : ''"
+                                    @click="selectBlockExercise(bi, ei)"
                                 >
                                     <td class="px-2 py-2 font-mono text-muted-foreground">{{ ei === 0 ? bi + 1 : '' }}</td>
                                     <td class="px-2 py-2">
@@ -318,6 +370,7 @@ const errorList = computed(() => Object.values(form.errors));
                                             <select
                                                 v-model.number="ex.exercise_id"
                                                 class="max-w-xs rounded border border-border bg-card px-2 py-1"
+                                                @focus="selectBlockExercise(bi, ei)"
                                             >
                                                 <option
                                                     v-for="opt in exerciseOptionsFor(ex.exercise_id)"
@@ -413,7 +466,7 @@ const errorList = computed(() => Object.values(form.errors));
             </div>
 
             <!-- Mobile: stage focus (B) -->
-            <div class="flex flex-1 flex-col overscroll-none md:hidden">
+            <div class="flex flex-col md:hidden">
                 <div class="flex gap-2 overflow-x-auto px-4 py-3">
                     <button
                         v-for="(b, i) in form.blocks"
@@ -431,7 +484,7 @@ const errorList = computed(() => Object.values(form.errors));
                     </button>
                 </div>
 
-                <main v-if="activeBlock" class="mx-auto flex w-full max-w-lg flex-1 flex-col gap-4 px-4 pb-28">
+                <main v-if="activeBlock" class="mx-auto flex w-full max-w-lg flex-col gap-4 px-4 pb-28">
                     <div class="rounded-2xl border border-border bg-card p-5">
                         <div class="mb-4 flex items-center justify-between">
                             <h2 class="text-lg font-semibold">
@@ -443,7 +496,11 @@ const errorList = computed(() => Object.values(form.errors));
 
                         <div v-for="(ex, ei) in activeBlock.exercises" :key="ei" class="mb-6 last:mb-0">
                             <p v-if="activeBlock.is_superset" class="mb-1 font-mono text-xs text-muted-foreground">{{ ei === 0 ? 'A' : 'B' }}</p>
-                            <select v-model.number="ex.exercise_id" class="w-full rounded-xl border border-border bg-background px-3 py-3 text-lg">
+                            <select
+                                v-model.number="ex.exercise_id"
+                                class="w-full rounded-xl border border-border bg-background px-3 py-3 text-lg"
+                                @focus="selectBlockExercise(active, ei)"
+                            >
                                 <option
                                     v-for="opt in exerciseOptionsFor(ex.exercise_id)"
                                     :key="opt.id"

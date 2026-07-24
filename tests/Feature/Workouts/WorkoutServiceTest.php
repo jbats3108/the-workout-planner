@@ -8,6 +8,7 @@ use App\Routines\Models\RoutineBlock;
 use App\Routines\Models\RoutineBlockExercise;
 use App\Routines\Models\RoutineSetGroup;
 use App\Shared\Enums\SetGroupType;
+use App\Workouts\Enums\WorkoutStatus;
 use App\Workouts\Exceptions\WorkoutServiceException;
 use App\Workouts\Models\WorkoutSet;
 use App\Workouts\Services\WorkoutService;
@@ -176,6 +177,19 @@ class WorkoutServiceTest extends TestCase
         $this->expectExceptionMessage(WorkoutService::CANNOT_REMOVE_LAST_WORKING_SET_ERROR);
 
         $this->workoutService->removeWorkingSetRound($set);
+    }
+
+    #[Test]
+    public function it_discards_an_in_progress_workout(): void
+    {
+        $routine = Routine::factory()->create();
+        $this->seedRoutineBlockWithExercise($routine);
+        $workout = $this->workoutService->createWorkout($routine);
+
+        $this->workoutService->discardWorkout($workout);
+
+        $this->assertSame(WorkoutStatus::Discarded, $workout->fresh()->status);
+        $this->assertNull($workout->fresh()->finished_at);
     }
 
     private function seedRoutineBlockWithExercise(Routine $routine, int $setCount = 3): void
