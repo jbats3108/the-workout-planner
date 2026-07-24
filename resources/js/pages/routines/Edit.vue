@@ -42,6 +42,30 @@ const props = defineProps<{
     warm_up_defaults: WarmUpStep[];
 }>();
 
+const exerciseQuery = ref('');
+
+const filteredExercises = computed(() => {
+    const q = exerciseQuery.value.trim().toLowerCase();
+    if (!q) {
+        return props.exercises;
+    }
+    return props.exercises.filter(
+        (e) =>
+            e.name.toLowerCase().includes(q) ||
+            e.primary_muscle_group.toLowerCase().includes(q),
+    );
+});
+
+/** Keep the current selection visible even when it falls outside the filter. */
+const exerciseOptionsFor = (selectedId: number | null) => {
+    const list = filteredExercises.value;
+    if (selectedId == null || list.some((e) => e.id === selectedId)) {
+        return list;
+    }
+    const selected = props.exercises.find((e) => e.id === selectedId);
+    return selected ? [selected, ...list] : list;
+};
+
 const emptyExercise = (): BlockExercise => ({
     exercise_id: props.exercises[0]?.id ?? null,
     working_weight_kg: 60,
@@ -248,6 +272,21 @@ const errorList = computed(() => Object.values(form.errors));
                 <p v-if="form.recentlySuccessful" class="mt-2 text-sm text-primary">Saved.</p>
             </header>
 
+            <div class="border-b border-border px-4 py-3 md:px-6">
+                <label class="flex flex-col gap-1 text-xs text-muted-foreground">
+                    Find exercise
+                    <input
+                        v-model="exerciseQuery"
+                        type="search"
+                        placeholder="Name or muscle group…"
+                        class="w-full max-w-md rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground outline-none focus:border-primary"
+                    />
+                </label>
+                <p class="mt-1 text-xs text-muted-foreground">
+                    Showing {{ filteredExercises.length }} of {{ exercises.length }}
+                </p>
+            </div>
+
             <!-- Desktop: dense list (A structure) -->
             <div class="hidden flex-1 flex-col md:flex">
                 <div class="flex-1 overflow-x-auto px-2 py-3">
@@ -280,7 +319,13 @@ const errorList = computed(() => Object.values(form.errors));
                                                 v-model.number="ex.exercise_id"
                                                 class="max-w-xs rounded border border-border bg-card px-2 py-1"
                                             >
-                                                <option v-for="opt in exercises" :key="opt.id" :value="opt.id">{{ opt.name }}</option>
+                                                <option
+                                                    v-for="opt in exerciseOptionsFor(ex.exercise_id)"
+                                                    :key="opt.id"
+                                                    :value="opt.id"
+                                                >
+                                                    {{ opt.name }}
+                                                </option>
                                             </select>
                                         </div>
                                     </td>
@@ -399,7 +444,13 @@ const errorList = computed(() => Object.values(form.errors));
                         <div v-for="(ex, ei) in activeBlock.exercises" :key="ei" class="mb-6 last:mb-0">
                             <p v-if="activeBlock.is_superset" class="mb-1 font-mono text-xs text-muted-foreground">{{ ei === 0 ? 'A' : 'B' }}</p>
                             <select v-model.number="ex.exercise_id" class="w-full rounded-xl border border-border bg-background px-3 py-3 text-lg">
-                                <option v-for="opt in exercises" :key="opt.id" :value="opt.id">{{ opt.name }}</option>
+                                <option
+                                    v-for="opt in exerciseOptionsFor(ex.exercise_id)"
+                                    :key="opt.id"
+                                    :value="opt.id"
+                                >
+                                    {{ opt.name }}
+                                </option>
                             </select>
                             <div class="mt-3 grid grid-cols-2 gap-3">
                                 <label class="block">

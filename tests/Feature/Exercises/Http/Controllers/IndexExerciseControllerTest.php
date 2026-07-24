@@ -23,23 +23,37 @@ class IndexExerciseControllerTest extends TestCase
 
     #[Test]
     #[DataProvider('provideUserRoles')]
-    public function it_returns_all_exercises(string $userRole): void
+    public function it_returns_shared_exercises_for_the_user(string $userRole): void
     {
-        // Given
-        $exercises = Exercise::factory()->count(3)->create();
+        $shared = Exercise::factory()->count(2)->create();
+        $otherCustom = Exercise::factory()->create(['user_id' => $this->secondUser->id]);
 
         $user = $this->createUser($userRole);
 
-        // When
         $response = $this->actingAs($user)->get(route('exercises.index'));
 
-        // Then
         $response->assertOk();
-
-        $exercises->each(fn (Exercise $exercise) => $this->assertContains(
+        $shared->each(fn (Exercise $exercise) => $this->assertContains(
             ExerciseData::fromExercise($exercise)->toArray(),
-            $response->json())
+            $response->json()
+        ));
+        $this->assertNotContains(
+            ExerciseData::fromExercise($otherCustom)->toArray(),
+            $response->json()
         );
+    }
 
+    #[Test]
+    public function it_includes_the_authenticated_users_custom_exercises(): void
+    {
+        $custom = Exercise::factory()->create(['user_id' => $this->user->id]);
+
+        $response = $this->actingAs($this->user)->get(route('exercises.index'));
+
+        $response->assertOk();
+        $this->assertContains(
+            ExerciseData::fromExercise($custom)->toArray(),
+            $response->json()
+        );
     }
 }
