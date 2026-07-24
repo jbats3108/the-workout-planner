@@ -5,6 +5,7 @@
 import InputError from '@/components/InputError.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
+import { ChevronDown } from 'lucide-vue-next';
 import { computed, ref, watch } from 'vue';
 
 type ExerciseOption = { id: number; name: string; primary_muscle_group: string };
@@ -126,6 +127,7 @@ const form = useForm({
 
 const active = ref(0);
 const activeExerciseIndex = ref(0);
+const warmUpExpanded = ref(false);
 watch(
     () => form.blocks.length,
     (len) => {
@@ -135,6 +137,11 @@ watch(
         activeExerciseIndex.value = 0;
     },
 );
+watch(active, () => {
+    warmUpExpanded.value = false;
+    exerciseQuery.value = '';
+    activeExerciseIndex.value = 0;
+});
 
 const activeBlock = computed(() => form.blocks[active.value] ?? null);
 
@@ -297,7 +304,7 @@ const errorList = computed(() => Object.values(form.errors));
                 <p v-if="form.recentlySuccessful" class="mt-2 text-sm text-primary">Saved.</p>
             </header>
 
-            <div class="border-b border-border px-4 py-3 md:px-6">
+            <div class="hidden border-b border-border px-4 py-3 md:block md:px-6">
                 <label class="flex flex-col gap-1 text-xs text-muted-foreground">
                     Find exercise
                     <input
@@ -474,31 +481,62 @@ const errorList = computed(() => Object.values(form.errors));
                         type="button"
                         class="shrink-0 rounded-lg border px-3 py-2 text-left text-sm"
                         :class="i === active ? 'border-primary bg-primary/10 text-primary' : 'border-border text-muted-foreground'"
-                        @click="active = i"
+                        @click="selectBlockExercise(i, 0)"
                     >
                         <div class="font-mono text-xs">{{ i + 1 }}{{ b.is_superset ? ' SS' : '' }}</div>
                         <div class="max-w-28 truncate">{{ exerciseName(b.exercises[0]?.exercise_id) }}</div>
                     </button>
-                    <button type="button" class="shrink-0 rounded-lg border border-dashed border-border px-4 text-muted-foreground" @click="addBlock(false)">
-                        +
-                    </button>
                 </div>
 
                 <main v-if="activeBlock" class="mx-auto flex w-full max-w-lg flex-col gap-4 px-4 pb-28">
-                    <div class="rounded-2xl border border-border bg-card p-5">
-                        <div class="mb-4 flex items-center justify-between">
-                            <h2 class="text-lg font-semibold">
+                    <div class="rounded-2xl border border-border bg-card p-4">
+                        <div class="mb-3 flex items-center justify-between">
+                            <h2 class="text-base font-semibold">
                                 Block {{ active + 1 }}
                                 <span v-if="activeBlock.is_superset" class="ml-2 text-sm font-normal text-primary">Superset</span>
                             </h2>
                             <button type="button" class="text-xs text-destructive" @click="removeBlock(active)">Remove</button>
                         </div>
 
-                        <div v-for="(ex, ei) in activeBlock.exercises" :key="ei" class="mb-6 last:mb-0">
+                        <div class="mb-4">
+                            <label class="flex flex-col gap-1 text-xs text-muted-foreground">
+                                Find exercise
+                                <input
+                                    v-model="exerciseQuery"
+                                    type="search"
+                                    placeholder="Name or muscle group…"
+                                    class="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-base text-foreground outline-none focus:border-primary"
+                                />
+                            </label>
+                            <p v-if="activeBlock.is_superset" class="mt-1 text-xs text-muted-foreground">
+                                Sets {{ activeExerciseIndex === 0 ? 'A' : 'B' }} · tap a match or focus a slot below
+                            </p>
+                            <ul
+                                v-if="findMatches.length"
+                                class="mt-2 max-h-40 overflow-y-auto divide-y divide-border rounded-xl border border-border"
+                            >
+                                <li v-for="exercise in findMatches" :key="exercise.id">
+                                    <button
+                                        type="button"
+                                        class="flex w-full flex-col items-start gap-0.5 px-3 py-2.5 text-left active:bg-secondary"
+                                        @click="applyExercisePick(exercise.id)"
+                                    >
+                                        <span class="text-sm font-medium text-foreground">{{ exercise.name }}</span>
+                                        <span class="font-mono text-xs text-muted-foreground">{{
+                                            exercise.primary_muscle_group
+                                        }}</span>
+                                    </button>
+                                </li>
+                            </ul>
+                            <p v-else-if="exerciseQuery.trim()" class="mt-2 text-xs text-muted-foreground">No matches.</p>
+                        </div>
+
+                        <div v-for="(ex, ei) in activeBlock.exercises" :key="ei" class="mb-4 last:mb-0">
                             <p v-if="activeBlock.is_superset" class="mb-1 font-mono text-xs text-muted-foreground">{{ ei === 0 ? 'A' : 'B' }}</p>
                             <select
                                 v-model.number="ex.exercise_id"
-                                class="w-full rounded-xl border border-border bg-background px-3 py-3 text-lg"
+                                class="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-base"
+                                :class="ei === activeExerciseIndex ? 'border-primary' : ''"
                                 @focus="selectBlockExercise(active, ei)"
                             >
                                 <option
@@ -509,7 +547,7 @@ const errorList = computed(() => Object.values(form.errors));
                                     {{ opt.name }}
                                 </option>
                             </select>
-                            <div class="mt-3 grid grid-cols-2 gap-3">
+                            <div class="mt-2 grid grid-cols-2 gap-2">
                                 <label class="block">
                                     <span class="text-xs text-muted-foreground">Working kg</span>
                                     <input
@@ -517,7 +555,7 @@ const errorList = computed(() => Object.values(form.errors));
                                         type="number"
                                         step="0.5"
                                         min="0"
-                                        class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-3 text-center text-3xl font-semibold tabular-nums outline-none focus:border-primary"
+                                        class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 text-center text-2xl font-semibold tabular-nums outline-none focus:border-primary"
                                     />
                                 </label>
                                 <label class="block">
@@ -526,20 +564,20 @@ const errorList = computed(() => Object.values(form.errors));
                                         v-model.number="ex.prescribed_reps"
                                         type="number"
                                         min="1"
-                                        class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-3 text-center text-3xl font-semibold tabular-nums outline-none focus:border-primary"
+                                        class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 text-center text-2xl font-semibold tabular-nums outline-none focus:border-primary"
                                     />
                                 </label>
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-3 border-t border-border pt-4">
+                        <div class="grid grid-cols-2 gap-2 border-t border-border pt-3">
                             <label>
                                 <span class="text-xs text-muted-foreground">Working sets</span>
                                 <input
                                     v-model.number="activeBlock.working.set_count"
                                     type="number"
                                     min="1"
-                                    class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-xl"
+                                    class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-lg"
                                 />
                             </label>
                             <label>
@@ -549,13 +587,72 @@ const errorList = computed(() => Object.values(form.errors));
                                     type="number"
                                     min="0"
                                     step="15"
-                                    class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-xl"
+                                    class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-lg"
                                 />
                             </label>
                         </div>
-                        <div class="mt-3 space-y-2">
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs text-muted-foreground">Warm-up steps (% × reps)</span>
+
+                        <div class="mt-3 border-t border-border pt-3">
+                            <button
+                                type="button"
+                                class="flex w-full items-center justify-between gap-2 text-left"
+                                :aria-expanded="warmUpExpanded"
+                                @click="warmUpExpanded = !warmUpExpanded"
+                            >
+                                <span class="min-w-0">
+                                    <span class="block text-xs text-muted-foreground">Warm-up</span>
+                                    <span class="block truncate font-mono text-sm text-foreground">
+                                        {{
+                                            activeBlock.warm_up.steps.length
+                                                ? warmUpText(activeBlock)
+                                                : 'None'
+                                        }}
+                                    </span>
+                                </span>
+                                <ChevronDown
+                                    class="size-4 shrink-0 text-muted-foreground transition-transform"
+                                    :class="warmUpExpanded ? 'rotate-180' : ''"
+                                />
+                            </button>
+                            <div v-if="warmUpExpanded" class="mt-3 space-y-2">
+                                <label class="block">
+                                    <span class="text-xs text-muted-foreground">Compact (40x5, 60x3)</span>
+                                    <input
+                                        :value="warmUpText(activeBlock)"
+                                        class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-sm text-primary/90"
+                                        @change="setWarmUpText(activeBlock, ($event.target as HTMLInputElement).value)"
+                                    />
+                                </label>
+                                <div
+                                    v-for="(step, si) in activeBlock.warm_up.steps"
+                                    :key="si"
+                                    class="flex items-center gap-1.5"
+                                >
+                                    <input
+                                        v-model.number="step.percent"
+                                        type="number"
+                                        min="1"
+                                        max="100"
+                                        class="w-16 rounded-lg border border-border bg-background px-2 py-1.5 font-mono text-sm"
+                                        aria-label="Warm-up percent"
+                                    />
+                                    <span class="text-xs text-muted-foreground">×</span>
+                                    <input
+                                        v-model.number="step.reps"
+                                        type="number"
+                                        min="1"
+                                        max="100"
+                                        class="w-14 rounded-lg border border-border bg-background px-2 py-1.5 font-mono text-sm"
+                                        aria-label="Warm-up reps"
+                                    />
+                                    <button
+                                        type="button"
+                                        class="ml-auto text-xs text-muted-foreground hover:text-destructive"
+                                        @click="removeWarmUpStep(activeBlock, si)"
+                                    >
+                                        −
+                                    </button>
+                                </div>
                                 <button
                                     type="button"
                                     class="text-xs text-primary"
@@ -564,49 +661,9 @@ const errorList = computed(() => Object.values(form.errors));
                                     + Step
                                 </button>
                             </div>
-                            <div
-                                v-for="(step, si) in activeBlock.warm_up.steps"
-                                :key="si"
-                                class="flex items-center gap-2"
-                            >
-                                <input
-                                    v-model.number="step.percent"
-                                    type="number"
-                                    min="1"
-                                    max="100"
-                                    class="w-20 rounded-xl border border-border bg-background px-3 py-2 font-mono"
-                                    aria-label="Warm-up percent"
-                                />
-                                <span class="text-muted-foreground">×</span>
-                                <input
-                                    v-model.number="step.reps"
-                                    type="number"
-                                    min="1"
-                                    max="100"
-                                    class="w-20 rounded-xl border border-border bg-background px-3 py-2 font-mono"
-                                    aria-label="Warm-up reps"
-                                />
-                                <button
-                                    type="button"
-                                    class="text-xs text-muted-foreground hover:text-destructive"
-                                    @click="removeWarmUpStep(activeBlock, si)"
-                                >
-                                    Remove
-                                </button>
-                            </div>
-                            <p v-if="!activeBlock.warm_up.steps.length" class="text-xs text-muted-foreground">
-                                No warm-up. Tap + Step or use compact field below.
-                            </p>
-                            <label class="block">
-                                <span class="text-xs text-muted-foreground">Compact (40x5, 60x3)</span>
-                                <input
-                                    :value="warmUpText(activeBlock)"
-                                    class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-primary/90"
-                                    @change="setWarmUpText(activeBlock, ($event.target as HTMLInputElement).value)"
-                                />
-                            </label>
                         </div>
-                        <div class="mt-4 flex gap-4 text-sm">
+
+                        <div class="mt-3 flex gap-4 border-t border-border pt-3 text-sm">
                             <label class="flex items-center gap-2">
                                 <input type="checkbox" :checked="activeBlock.is_superset" @change="toggleSuperset(activeBlock)" />
                                 Superset
@@ -617,9 +674,44 @@ const errorList = computed(() => Object.values(form.errors));
                             </label>
                         </div>
                     </div>
+
+                    <div class="flex gap-2">
+                        <button
+                            type="button"
+                            class="flex-1 rounded-xl border border-dashed border-border px-4 py-3 text-sm text-muted-foreground hover:border-primary hover:text-primary"
+                            @click="addBlock(false)"
+                        >
+                            Add block
+                        </button>
+                        <button
+                            type="button"
+                            class="flex-1 rounded-xl border border-dashed border-border px-4 py-3 text-sm text-muted-foreground hover:border-primary hover:text-primary"
+                            @click="addBlock(true)"
+                        >
+                            Add superset
+                        </button>
+                    </div>
                 </main>
 
-                <p v-else class="px-4 py-12 text-center text-muted-foreground">No blocks. Tap + to add.</p>
+                <div v-else class="px-4 pb-28">
+                    <p class="py-8 text-center text-muted-foreground">No blocks yet.</p>
+                    <div class="flex gap-2">
+                        <button
+                            type="button"
+                            class="flex-1 rounded-xl border border-dashed border-border px-4 py-3 text-sm text-muted-foreground hover:border-primary hover:text-primary"
+                            @click="addBlock(false)"
+                        >
+                            Add block
+                        </button>
+                        <button
+                            type="button"
+                            class="flex-1 rounded-xl border border-dashed border-border px-4 py-3 text-sm text-muted-foreground hover:border-primary hover:text-primary"
+                            @click="addBlock(true)"
+                        >
+                            Add superset
+                        </button>
+                    </div>
+                </div>
 
                 <div
                     class="fixed right-0 bottom-0 left-0 flex justify-center gap-2 px-4 pt-2 pb-[max(1rem,env(safe-area-inset-bottom,0px))]"
@@ -637,7 +729,6 @@ const errorList = computed(() => Object.values(form.errors));
                     >
                         Delete
                     </button>
-                    <button type="button" class="rounded-full bg-secondary px-4 py-3 text-sm" @click="addBlock(true)">+ SS</button>
                     <button
                         type="button"
                         class="rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground disabled:opacity-50"
