@@ -204,36 +204,36 @@ const groupLabel = (type: string) => (type === 'warm_up' ? 'Warm-up' : 'Working'
     <Head :title="`Play · ${workout.routine_name}`" />
 
     <AppLayout>
-        <div class="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-lg flex-col bg-zinc-950 text-zinc-100">
-            <header class="flex items-center justify-between border-b border-zinc-800 px-4 py-3">
+        <div class="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-lg flex-col bg-background text-foreground">
+            <header class="flex items-center justify-between border-b border-border px-4 py-3">
                 <div>
-                    <p class="text-xs uppercase tracking-wide text-zinc-500">{{ workout.mode }}</p>
+                    <p class="text-xs uppercase tracking-wide text-muted-foreground">{{ workout.mode }}</p>
                     <h1 class="text-lg font-semibold">{{ workout.routine_name }}</h1>
                 </div>
-                <div class="text-right font-mono text-sm text-zinc-400">{{ progressLabel }}</div>
+                <div class="text-right font-mono text-sm text-muted-foreground">{{ progressLabel }}</div>
             </header>
 
             <div v-if="restSecondsLeft > 0" class="flex flex-1 flex-col items-center justify-center gap-4 px-6">
-                <p class="text-sm uppercase tracking-widest text-zinc-500">Rest</p>
-                <p class="font-mono text-6xl font-semibold text-lime-400">{{ restLabel }}</p>
-                <button type="button" class="rounded-full border border-zinc-700 px-5 py-2 text-sm" @click="skipRest">Skip</button>
+                <p class="text-sm uppercase tracking-widest text-muted-foreground">Rest</p>
+                <p class="font-mono text-6xl font-semibold text-primary">{{ restLabel }}</p>
+                <button type="button" class="rounded-full border border-border px-5 py-2 text-sm" @click="skipRest">Skip</button>
             </div>
 
             <div v-else-if="focus.kind === 'setup' && currentBlock" class="flex flex-1 flex-col items-center justify-center gap-6 px-6">
-                <p class="text-sm uppercase tracking-widest text-zinc-500">Setup</p>
+                <p class="text-sm uppercase tracking-widest text-muted-foreground">Setup</p>
                 <p class="text-center text-2xl font-semibold">Change equipment, then continue</p>
-                <p class="text-sm text-zinc-500">After block {{ currentBlock.position }}</p>
-                <button type="button" class="rounded-full bg-lime-400 px-8 py-3 text-sm font-semibold text-zinc-950" @click="acknowledgeSetup">
+                <p class="text-sm text-muted-foreground">After block {{ currentBlock.position }}</p>
+                <button type="button" class="rounded-full bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground" @click="acknowledgeSetup">
                     Setup done
                 </button>
             </div>
 
             <div v-else-if="focus.kind === 'done'" class="flex flex-1 flex-col items-center justify-center gap-6 px-6">
-                <p class="text-sm uppercase tracking-widest text-zinc-500">Complete</p>
+                <p class="text-sm uppercase tracking-widest text-muted-foreground">Complete</p>
                 <p class="text-center text-2xl font-semibold">All sets logged</p>
                 <button
                     type="button"
-                    class="rounded-full bg-lime-400 px-8 py-3 text-sm font-semibold text-zinc-950"
+                    class="rounded-full bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground"
                     :disabled="workout.status !== 'in_progress'"
                     @click="finishWorkout"
                 >
@@ -242,13 +242,13 @@ const groupLabel = (type: string) => (type === 'warm_up' ? 'Warm-up' : 'Working'
             </div>
 
             <div v-else-if="current" class="flex flex-1 flex-col px-4 py-6">
-                <p class="text-xs uppercase tracking-widest text-zinc-500">
+                <p class="text-xs uppercase tracking-widest text-muted-foreground">
                     Block {{ current.block.position }} · {{ groupLabel(current.set.group_type) }} · Set
                     {{ current.set.set_index + 1 }}
                     <span v-if="current.block.is_superset"> · Superset</span>
                 </p>
                 <h2 class="mt-2 text-3xl font-semibold leading-tight">{{ current.set.exercise_name }}</h2>
-                <p class="mt-2 font-mono text-zinc-400">
+                <p class="mt-2 font-mono text-muted-foreground">
                     Target
                     <span v-if="current.set.target_weight_kg != null">{{ current.set.target_weight_kg }}{{ workout.weight_unit }}</span>
                     <span v-if="current.set.target_reps != null"> × {{ current.set.target_reps }}</span>
@@ -256,32 +256,32 @@ const groupLabel = (type: string) => (type === 'warm_up' ? 'Warm-up' : 'Working'
                 </p>
 
                 <form class="mt-8 flex flex-1 flex-col gap-4" @submit.prevent="completeSet">
-                    <label class="flex flex-col gap-1 text-sm text-zinc-400">
+                    <label class="flex flex-col gap-1 text-sm text-muted-foreground">
                         Weight ({{ workout.weight_unit }})
                         <input
                             v-model.number="setForm.weight_kg"
                             type="number"
                             step="0.5"
                             min="0"
-                            class="rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-lg text-zinc-100"
+                            class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground"
                             required
                         />
                     </label>
-                    <label class="flex flex-col gap-1 text-sm text-zinc-400">
+                    <label class="flex flex-col gap-1 text-sm text-muted-foreground">
                         Reps
                         <input
                             v-model.number="setForm.reps"
                             type="number"
                             min="0"
                             max="100"
-                            class="rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-lg text-zinc-100"
+                            class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground"
                             required
                         />
                     </label>
                     <div class="mt-auto flex flex-col gap-3 pb-4">
                         <button
                             type="submit"
-                            class="rounded-full bg-lime-400 px-6 py-4 text-base font-semibold text-zinc-950 disabled:opacity-50"
+                            class="rounded-full bg-primary px-6 py-4 text-base font-semibold text-primary-foreground disabled:opacity-50"
                             :disabled="setForm.processing || workout.status !== 'in_progress'"
                         >
                             Complete set
@@ -289,7 +289,7 @@ const groupLabel = (type: string) => (type === 'warm_up' ? 'Warm-up' : 'Working'
                         <button
                             v-if="flatSets.every(({ set }) => set.completed)"
                             type="button"
-                            class="rounded-full border border-zinc-700 px-6 py-3 text-sm"
+                            class="rounded-full border border-border px-6 py-3 text-sm"
                             @click="finishWorkout"
                         >
                             Finish workout

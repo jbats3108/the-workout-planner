@@ -122,43 +122,43 @@ const errorList = computed(() => Object.values(form.errors));
     <AppLayout :breadcrumbs="[{ title: 'Dashboard', href: '/dashboard' }, { title: form.name || 'Routine', href: '#' }]">
         <Head :title="`Edit · ${form.name}`" />
 
-        <div class="flex min-h-[calc(100vh-8rem)] flex-1 flex-col overflow-x-auto bg-zinc-950 text-zinc-100">
+        <div class="flex min-h-[calc(100vh-8rem)] flex-1 flex-col overflow-x-auto bg-background text-foreground">
             <!-- Shared header -->
-            <header class="border-b border-zinc-800 px-4 py-4 md:px-6">
+            <header class="border-b border-border px-4 py-4 md:px-6">
                 <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
                     <div class="min-w-0 flex-1">
-                        <p class="text-xs tracking-[0.2em] text-zinc-500 uppercase">Routine</p>
+                        <p class="text-xs tracking-[0.2em] text-muted-foreground uppercase">Routine</p>
                         <input
                             v-model="form.name"
-                            class="mt-1 w-full border-0 border-b border-zinc-700 bg-transparent text-2xl font-bold outline-none focus:border-lime-400"
+                            class="mt-1 w-full border-0 border-b border-border bg-transparent text-2xl font-bold outline-none focus:border-primary"
                             required
                         />
                         <InputError :message="form.errors.name" />
                     </div>
                     <div class="flex flex-wrap gap-3 font-mono text-sm">
-                        <label class="flex items-center gap-2 text-zinc-400">
+                        <label class="flex items-center gap-2 text-muted-foreground">
                             Deload ×W
                             <input
                                 v-model.number="form.deload_weight_factor"
                                 type="number"
                                 step="0.1"
                                 min="0"
-                                class="w-16 rounded border border-zinc-700 bg-zinc-900 px-2 py-1 text-zinc-100"
+                                class="w-16 rounded border border-border bg-card px-2 py-1 text-foreground"
                             />
                         </label>
-                        <label class="flex items-center gap-2 text-zinc-400">
+                        <label class="flex items-center gap-2 text-muted-foreground">
                             ×R
                             <input
                                 v-model.number="form.deload_reps_factor"
                                 type="number"
                                 step="0.1"
                                 min="0"
-                                class="w-16 rounded border border-zinc-700 bg-zinc-900 px-2 py-1 text-zinc-100"
+                                class="w-16 rounded border border-border bg-card px-2 py-1 text-foreground"
                             />
                         </label>
                         <button
                             type="button"
-                            class="rounded-full bg-lime-400 px-4 py-2 text-sm font-semibold text-zinc-950 disabled:opacity-50"
+                            class="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-50"
                             :disabled="form.processing"
                             @click="save"
                         >
@@ -167,10 +167,10 @@ const errorList = computed(() => Object.values(form.errors));
                     </div>
                 </div>
                 <InputError class="mt-2" :message="form.errors.blocks" />
-                <div v-if="errorList.length" class="mt-2 space-y-1 text-sm text-red-400">
+                <div v-if="errorList.length" class="mt-2 space-y-1 text-sm text-destructive">
                     <p v-for="(message, index) in errorList" :key="index">{{ message }}</p>
                 </div>
-                <p v-if="form.recentlySuccessful" class="mt-2 text-sm text-lime-400">Saved.</p>
+                <p v-if="form.recentlySuccessful" class="mt-2 text-sm text-primary">Saved.</p>
             </header>
 
             <!-- Desktop: dense list (A structure) -->
@@ -178,7 +178,7 @@ const errorList = computed(() => Object.values(form.errors));
                 <div class="flex-1 overflow-x-auto px-2 py-3">
                     <table class="w-full min-w-[56rem] border-collapse text-left text-sm">
                         <thead>
-                            <tr class="border-b border-zinc-700 font-mono text-xs uppercase text-zinc-500">
+                            <tr class="border-b border-border font-mono text-xs uppercase text-muted-foreground">
                                 <th class="px-2 py-2">#</th>
                                 <th class="px-2 py-2">Exercise</th>
                                 <th class="px-2 py-2">kg</th>
@@ -195,15 +195,15 @@ const errorList = computed(() => Object.values(form.errors));
                                 <tr
                                     v-for="(ex, ei) in block.exercises"
                                     :key="`${bi}-${ei}`"
-                                    class="border-b border-zinc-800"
+                                    class="border-b border-border"
                                 >
-                                    <td class="px-2 py-2 font-mono text-zinc-500">{{ ei === 0 ? bi + 1 : '' }}</td>
+                                    <td class="px-2 py-2 font-mono text-muted-foreground">{{ ei === 0 ? bi + 1 : '' }}</td>
                                     <td class="px-2 py-2">
                                         <div class="flex items-center gap-2">
-                                            <span v-if="block.is_superset" class="font-mono text-xs text-lime-400">{{ ei === 0 ? 'A' : 'B' }}</span>
+                                            <span v-if="block.is_superset" class="font-mono text-xs text-primary">{{ ei === 0 ? 'A' : 'B' }}</span>
                                             <select
                                                 v-model.number="ex.exercise_id"
-                                                class="max-w-xs rounded border border-zinc-700 bg-zinc-900 px-2 py-1"
+                                                class="max-w-xs rounded border border-border bg-card px-2 py-1"
                                             >
                                                 <option v-for="opt in exercises" :key="opt.id" :value="opt.id">{{ opt.name }}</option>
                                             </select>
@@ -215,7 +215,7 @@ const errorList = computed(() => Object.values(form.errors));
                                             type="number"
                                             step="0.5"
                                             min="0"
-                                            class="w-20 rounded border border-zinc-700 bg-zinc-900 px-2 py-1 font-mono tabular-nums"
+                                            class="w-20 rounded border border-border bg-card px-2 py-1 font-mono tabular-nums"
                                         />
                                     </td>
                                     <td class="px-2 py-2">
@@ -223,7 +223,7 @@ const errorList = computed(() => Object.values(form.errors));
                                             v-model.number="ex.prescribed_reps"
                                             type="number"
                                             min="1"
-                                            class="w-16 rounded border border-zinc-700 bg-zinc-900 px-2 py-1 font-mono"
+                                            class="w-16 rounded border border-border bg-card px-2 py-1 font-mono"
                                         />
                                     </td>
                                     <td class="px-2 py-2">
@@ -232,7 +232,7 @@ const errorList = computed(() => Object.values(form.errors));
                                             v-model.number="block.working.set_count"
                                             type="number"
                                             min="1"
-                                            class="w-14 rounded border border-zinc-700 bg-zinc-900 px-2 py-1 font-mono"
+                                            class="w-14 rounded border border-border bg-card px-2 py-1 font-mono"
                                         />
                                     </td>
                                     <td class="px-2 py-2">
@@ -242,14 +242,14 @@ const errorList = computed(() => Object.values(form.errors));
                                             type="number"
                                             min="0"
                                             step="15"
-                                            class="w-20 rounded border border-zinc-700 bg-zinc-900 px-2 py-1 font-mono"
+                                            class="w-20 rounded border border-border bg-card px-2 py-1 font-mono"
                                         />
                                     </td>
                                     <td class="px-2 py-2">
                                         <input
                                             v-if="ei === 0"
                                             :value="warmUpText(block)"
-                                            class="w-32 rounded border border-zinc-700 bg-zinc-900 px-2 py-1 font-mono text-lime-300/90"
+                                            class="w-32 rounded border border-border bg-card px-2 py-1 font-mono text-primary/90"
                                             placeholder="40, 60, 80"
                                             @input="setWarmUpText(block, ($event.target as HTMLInputElement).value)"
                                         />
@@ -270,7 +270,7 @@ const errorList = computed(() => Object.values(form.errors));
                                         <button
                                             v-if="ei === 0"
                                             type="button"
-                                            class="text-xs text-zinc-500 hover:text-red-400"
+                                            class="text-xs text-muted-foreground hover:text-destructive"
                                             @click="removeBlock(bi)"
                                         >
                                             Remove
@@ -280,13 +280,13 @@ const errorList = computed(() => Object.values(form.errors));
                             </template>
                         </tbody>
                     </table>
-                    <p v-if="!form.blocks.length" class="px-4 py-8 text-center text-zinc-500">No blocks yet. Add one below.</p>
+                    <p v-if="!form.blocks.length" class="px-4 py-8 text-center text-muted-foreground">No blocks yet. Add one below.</p>
                 </div>
-                <footer class="flex gap-2 border-t border-zinc-800 px-4 py-3">
-                    <button type="button" class="rounded border border-zinc-600 px-3 py-2 text-sm hover:border-lime-400" @click="addBlock(false)">
+                <footer class="flex gap-2 border-t border-border px-4 py-3">
+                    <button type="button" class="rounded border border-border px-3 py-2 text-sm hover:border-primary" @click="addBlock(false)">
                         + Block
                     </button>
-                    <button type="button" class="rounded border border-zinc-600 px-3 py-2 text-sm hover:border-lime-400" @click="addBlock(true)">
+                    <button type="button" class="rounded border border-border px-3 py-2 text-sm hover:border-primary" @click="addBlock(true)">
                         + Superset
                     </button>
                 </footer>
@@ -300,81 +300,81 @@ const errorList = computed(() => Object.values(form.errors));
                         :key="i"
                         type="button"
                         class="shrink-0 rounded-lg border px-3 py-2 text-left text-sm"
-                        :class="i === active ? 'border-lime-400 bg-lime-400/10 text-lime-200' : 'border-zinc-700 text-zinc-400'"
+                        :class="i === active ? 'border-primary bg-primary/10 text-primary' : 'border-border text-muted-foreground'"
                         @click="active = i"
                     >
                         <div class="font-mono text-xs">{{ i + 1 }}{{ b.is_superset ? ' SS' : '' }}</div>
                         <div class="max-w-28 truncate">{{ exerciseName(b.exercises[0]?.exercise_id) }}</div>
                     </button>
-                    <button type="button" class="shrink-0 rounded-lg border border-dashed border-zinc-600 px-4 text-zinc-500" @click="addBlock(false)">
+                    <button type="button" class="shrink-0 rounded-lg border border-dashed border-border px-4 text-muted-foreground" @click="addBlock(false)">
                         +
                     </button>
                 </div>
 
                 <main v-if="activeBlock" class="mx-auto flex w-full max-w-lg flex-1 flex-col gap-4 px-4 pb-28">
-                    <div class="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
+                    <div class="rounded-2xl border border-border bg-card p-5">
                         <div class="mb-4 flex items-center justify-between">
                             <h2 class="text-lg font-semibold">
                                 Block {{ active + 1 }}
-                                <span v-if="activeBlock.is_superset" class="ml-2 text-sm font-normal text-lime-400">Superset</span>
+                                <span v-if="activeBlock.is_superset" class="ml-2 text-sm font-normal text-primary">Superset</span>
                             </h2>
-                            <button type="button" class="text-xs text-red-400" @click="removeBlock(active)">Remove</button>
+                            <button type="button" class="text-xs text-destructive" @click="removeBlock(active)">Remove</button>
                         </div>
 
                         <div v-for="(ex, ei) in activeBlock.exercises" :key="ei" class="mb-6 last:mb-0">
-                            <p v-if="activeBlock.is_superset" class="mb-1 font-mono text-xs text-zinc-500">{{ ei === 0 ? 'A' : 'B' }}</p>
-                            <select v-model.number="ex.exercise_id" class="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-3 text-lg">
+                            <p v-if="activeBlock.is_superset" class="mb-1 font-mono text-xs text-muted-foreground">{{ ei === 0 ? 'A' : 'B' }}</p>
+                            <select v-model.number="ex.exercise_id" class="w-full rounded-xl border border-border bg-background px-3 py-3 text-lg">
                                 <option v-for="opt in exercises" :key="opt.id" :value="opt.id">{{ opt.name }}</option>
                             </select>
                             <div class="mt-3 grid grid-cols-2 gap-3">
                                 <label class="block">
-                                    <span class="text-xs text-zinc-500">Working kg</span>
+                                    <span class="text-xs text-muted-foreground">Working kg</span>
                                     <input
                                         v-model.number="ex.working_weight_kg"
                                         type="number"
                                         step="0.5"
                                         min="0"
-                                        class="mt-1 w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-3 text-center text-3xl font-semibold tabular-nums outline-none focus:border-lime-400"
+                                        class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-3 text-center text-3xl font-semibold tabular-nums outline-none focus:border-primary"
                                     />
                                 </label>
                                 <label class="block">
-                                    <span class="text-xs text-zinc-500">Target reps</span>
+                                    <span class="text-xs text-muted-foreground">Target reps</span>
                                     <input
                                         v-model.number="ex.prescribed_reps"
                                         type="number"
                                         min="1"
-                                        class="mt-1 w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-3 text-center text-3xl font-semibold tabular-nums outline-none focus:border-lime-400"
+                                        class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-3 text-center text-3xl font-semibold tabular-nums outline-none focus:border-primary"
                                     />
                                 </label>
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-3 border-t border-zinc-800 pt-4">
+                        <div class="grid grid-cols-2 gap-3 border-t border-border pt-4">
                             <label>
-                                <span class="text-xs text-zinc-500">Working sets</span>
+                                <span class="text-xs text-muted-foreground">Working sets</span>
                                 <input
                                     v-model.number="activeBlock.working.set_count"
                                     type="number"
                                     min="1"
-                                    class="mt-1 w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2 font-mono text-xl"
+                                    class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-xl"
                                 />
                             </label>
                             <label>
-                                <span class="text-xs text-zinc-500">Rest ({{ formatRest(activeBlock.working.rest_seconds) }})</span>
+                                <span class="text-xs text-muted-foreground">Rest ({{ formatRest(activeBlock.working.rest_seconds) }})</span>
                                 <input
                                     v-model.number="activeBlock.working.rest_seconds"
                                     type="number"
                                     min="0"
                                     step="15"
-                                    class="mt-1 w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2 font-mono text-xl"
+                                    class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-xl"
                                 />
                             </label>
                         </div>
                         <label class="mt-3 block">
-                            <span class="text-xs text-zinc-500">Warm-up % (comma-separated)</span>
+                            <span class="text-xs text-muted-foreground">Warm-up % (comma-separated)</span>
                             <input
                                 :value="warmUpText(activeBlock)"
-                                class="mt-1 w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2 font-mono text-lime-300/90"
+                                class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-primary/90"
                                 @input="setWarmUpText(activeBlock, ($event.target as HTMLInputElement).value)"
                             />
                         </label>
@@ -391,13 +391,13 @@ const errorList = computed(() => Object.values(form.errors));
                     </div>
                 </main>
 
-                <p v-else class="px-4 py-12 text-center text-zinc-500">No blocks. Tap + to add.</p>
+                <p v-else class="px-4 py-12 text-center text-muted-foreground">No blocks. Tap + to add.</p>
 
                 <div class="fixed right-0 bottom-4 left-0 flex justify-center gap-3 px-4">
-                    <button type="button" class="rounded-full bg-zinc-800 px-5 py-3 text-sm" @click="addBlock(true)">+ SS</button>
+                    <button type="button" class="rounded-full bg-secondary px-5 py-3 text-sm" @click="addBlock(true)">+ SS</button>
                     <button
                         type="button"
-                        class="rounded-full bg-lime-400 px-5 py-3 text-sm font-semibold text-zinc-950 disabled:opacity-50"
+                        class="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground disabled:opacity-50"
                         :disabled="form.processing"
                         @click="save"
                     >
