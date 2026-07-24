@@ -2,7 +2,7 @@
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Routine } from '@/types/workouts';
-import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { Trash2 } from 'lucide-vue-next';
 import { computed } from 'vue';
 
@@ -25,6 +25,7 @@ const props = defineProps<{
 
 const page = usePage();
 const formErrors = computed(() => Object.values(page.props.errors ?? {}));
+const successMessage = computed(() => page.props.flash?.success ?? null);
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -32,16 +33,6 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
 ];
-
-const createForm = useForm({
-    name: '',
-});
-
-const createRoutine = () => {
-    createForm.post(route('routines.create'), {
-        onSuccess: () => createForm.reset('name'),
-    });
-};
 
 const startWorkout = (routineId: number, mode: 'normal' | 'deload' = 'normal') => {
     router.post(route('workouts.store', { routine: routineId }), { mode });
@@ -62,6 +53,14 @@ const deleteRoutine = (routine: DashboardRoutine) => {
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl bg-background p-4 text-foreground">
+            <div
+                v-if="successMessage"
+                class="rounded-xl border border-primary/40 bg-primary/10 px-4 py-3 text-sm text-primary"
+                role="status"
+            >
+                {{ successMessage }}
+            </div>
+
             <div
                 v-if="formErrors.length"
                 class="rounded-xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive"
@@ -88,17 +87,12 @@ const deleteRoutine = (routine: DashboardRoutine) => {
 
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <h2 class="text-xl font-semibold">My Routines</h2>
-                <form class="flex gap-2" @submit.prevent="createRoutine">
-                    <input
-                        v-model="createForm.name"
-                        class="rounded border border-border bg-card px-3 py-2 text-sm"
-                        placeholder="New routine name"
-                        required
-                    />
-                    <button type="submit" class="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground" :disabled="createForm.processing">
-                        Create
-                    </button>
-                </form>
+                <Link
+                    :href="route('routines.create')"
+                    class="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+                >
+                    Create
+                </Link>
             </div>
 
             <div class="grid auto-rows-min gap-3 md:grid-cols-3">
@@ -147,7 +141,7 @@ const deleteRoutine = (routine: DashboardRoutine) => {
                     </button>
                 </div>
             </div>
-            <p v-if="!props.data.routines.length" class="text-sm text-muted-foreground">No routines yet. Create one above.</p>
+            <p v-if="!props.data.routines.length" class="text-sm text-muted-foreground">No routines yet. Tap Create to start one.</p>
         </div>
     </AppLayout>
 </template>

@@ -23,7 +23,7 @@ class StoreRoutineControllerTest extends TestCase
     public function it_must_have_a_name(): void
     {
         // When
-        $response = $this->actingAs($this->user)->post('/routines/create', []);
+        $response = $this->actingAs($this->user)->post(route('routines.store'), []);
 
         // Then
         $response->assertSessionHasErrors('name');
@@ -38,7 +38,7 @@ class StoreRoutineControllerTest extends TestCase
         ];
 
         // When
-        $response = $this->actingAs($this->user)->post('/routines/create', $createRoutineRequest);
+        $response = $this->actingAs($this->user)->post(route('routines.store'), $createRoutineRequest);
 
         // Then
         $response->assertRedirect(route('routines.edit', Routine::where('name', 'Test Routine')->first()));

@@ -115,7 +115,7 @@ const toggleSuperset = (block: Block) => {
 };
 
 const save = () => {
-    form.put(route('routines.update', props.routine.id), { preserveScroll: true });
+    form.put(route('routines.update', props.routine.id));
 };
 
 const deleteRoutine = () => {

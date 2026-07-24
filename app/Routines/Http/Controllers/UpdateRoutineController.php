@@ -3,9 +3,9 @@
 namespace App\Routines\Http\Controllers;
 
 use App\Routines\Data\Editor\SyncRoutineData;
-use App\Shared\Http\Controllers\Controller;
 use App\Routines\Models\Routine;
 use App\Routines\Services\RoutineEditorService;
+use App\Shared\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\ValidationException;
 use InvalidArgumentException;
@@ -21,7 +21,7 @@ class UpdateRoutineController extends Controller
         }
 
         return redirect()
-            ->route('routines.edit', $routine)
+            ->route('dashboard')
             ->with('success', 'Routine saved.');
     }
 }

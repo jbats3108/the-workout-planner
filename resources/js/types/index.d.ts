@@ -20,6 +20,9 @@ export interface NavItem {
 export type AppPageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
     name: string;
     auth: Auth;
+    flash: {
+        success: string | null;
+    };
     ziggy: Config & { location: string };
     sidebarOpen: boolean;
 };

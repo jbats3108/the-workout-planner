@@ -11,6 +11,7 @@ use App\MuscleGroups\Http\Controllers\IndexMuscleGroupsController;
 use App\MuscleGroups\Http\Controllers\StoreMuscleGroupController;
 use App\MuscleGroups\Http\Controllers\UpdateMuscleGroupController;
 use App\MuscleGroups\Models\MuscleGroup;
+use App\Routines\Http\Controllers\CreateRoutineController;
 use App\Routines\Http\Controllers\DeleteRoutineController;
 use App\Routines\Http\Controllers\EditRoutineController;
 use App\Routines\Http\Controllers\IndexRoutineController;
@@ -58,8 +59,11 @@ Route::middleware('auth')->group(function (): void {
         Route::get('/', IndexRoutineController::class)
             ->name('routines.index');
 
-        Route::post('/create', StoreRoutineController::class)
+        Route::get('/create', CreateRoutineController::class)
             ->name('routines.create');
+
+        Route::post('/create', StoreRoutineController::class)
+            ->name('routines.store');
 
         Route::get('/{routine}/edit', EditRoutineController::class)
             ->can('view', 'routine')

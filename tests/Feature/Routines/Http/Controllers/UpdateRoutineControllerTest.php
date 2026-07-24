@@ -75,7 +75,8 @@ class UpdateRoutineControllerTest extends TestCase
             ],
         ]);
 
-        $response->assertRedirect(route('routines.edit', $routine));
+        $response->assertRedirect(route('dashboard'));
+        $response->assertSessionHas('success', 'Routine saved.');
 
         $routine->refresh();
         $this->assertSame('New Name', $routine->name);
@@ -115,7 +116,8 @@ class UpdateRoutineControllerTest extends TestCase
             ],
         ]);
 
-        $response->assertRedirect(route('routines.edit', $routine));
+        $response->assertRedirect(route('dashboard'));
+        $response->assertSessionHas('success', 'Routine saved.');
         $this->assertCount(1, $routine->fresh()->blocks);
     }
 
