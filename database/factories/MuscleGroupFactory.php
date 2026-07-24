@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\MuscleGroup;
+use App\MuscleGroups\Models\MuscleGroup;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 

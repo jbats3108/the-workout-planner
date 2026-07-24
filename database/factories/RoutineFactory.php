@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\Routine;
-use App\Models\User;
+use App\Routines\Models\Routine;
+use App\Users\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 

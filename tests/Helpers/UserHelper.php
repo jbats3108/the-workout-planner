@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Helpers;
 
-use App\Models\User;
+use App\Users\Models\User;
 
 trait UserHelper
 {

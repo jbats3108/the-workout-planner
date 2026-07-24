@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Routine;
-use App\Models\User;
+use App\Routines\Models\Routine;
+use App\Users\Models\User;
 use Illuminate\Database\Seeder;
 
 class RoutineSeeder extends Seeder

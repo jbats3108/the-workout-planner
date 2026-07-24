@@ -1,23 +1,24 @@
 <?php
 
-use App\Http\Controllers\Exercises\DeleteExerciseController;
-use App\Http\Controllers\Exercises\IndexExerciseController;
-use App\Http\Controllers\Exercises\ShowExerciseController;
-use App\Http\Controllers\Exercises\StoreExerciseController;
-use App\Http\Controllers\MuscleGroups\DeleteMuscleGroupController;
-use App\Http\Controllers\MuscleGroups\IndexMuscleGroupsController;
-use App\Http\Controllers\MuscleGroups\StoreMuscleGroupController;
-use App\Http\Controllers\MuscleGroups\UpdateMuscleGroupController;
-use App\Http\Controllers\Routines\DeleteRoutineController;
-use App\Http\Controllers\Routines\IndexRoutineController;
-use App\Http\Controllers\Routines\ShowRoutineController;
-use App\Http\Controllers\Routines\StoreRoutineController;
-use App\Http\Controllers\Routines\UpdateRoutineController;
-use App\Http\Controllers\ShowDashboardController;
-use App\Http\Controllers\Workouts\StoreWorkoutController;
-use App\Models\Exercise;
-use App\Models\MuscleGroup;
-use App\Models\Workouts\Workout;
+use App\Exercises\Http\Controllers\DeleteExerciseController;
+use App\Exercises\Http\Controllers\IndexExerciseController;
+use App\Exercises\Http\Controllers\ShowExerciseController;
+use App\Exercises\Http\Controllers\StoreExerciseController;
+use App\MuscleGroups\Http\Controllers\DeleteMuscleGroupController;
+use App\MuscleGroups\Http\Controllers\IndexMuscleGroupsController;
+use App\MuscleGroups\Http\Controllers\StoreMuscleGroupController;
+use App\MuscleGroups\Http\Controllers\UpdateMuscleGroupController;
+use App\Routines\Http\Controllers\DeleteRoutineController;
+use App\Routines\Http\Controllers\EditRoutineController;
+use App\Routines\Http\Controllers\IndexRoutineController;
+use App\Routines\Http\Controllers\ShowRoutineController;
+use App\Routines\Http\Controllers\StoreRoutineController;
+use App\Routines\Http\Controllers\UpdateRoutineController;
+use App\Dashboard\Http\Controllers\ShowDashboardController;
+use App\Workouts\Http\Controllers\StoreWorkoutController;
+use App\Exercises\Models\Exercise;
+use App\MuscleGroups\Models\MuscleGroup;
+use App\Workouts\Models\Workout;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -51,6 +52,10 @@ Route::middleware('auth')->group(function (): void {
 
         Route::post('/create', StoreRoutineController::class)
             ->name('routines.create');
+
+        Route::get('/{routine}/edit', EditRoutineController::class)
+            ->can('view', 'routine')
+            ->name('routines.edit');
 
         Route::get('/{routine}', ShowRoutineController::class)
             ->can('view', 'routine')

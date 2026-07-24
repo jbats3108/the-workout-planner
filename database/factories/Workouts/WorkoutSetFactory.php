@@ -2,13 +2,13 @@
 
 namespace Database\Factories\Workouts;
 
-use App\Enums\SetGroupType;
-use App\Models\Exercise;
-use App\Models\Workouts\Workout;
-use App\Models\Workouts\WorkoutBlock;
-use App\Models\Workouts\WorkoutBlockExercise;
-use App\Models\Workouts\WorkoutSet;
-use App\Models\Workouts\WorkoutSetGroup;
+use App\Shared\Enums\SetGroupType;
+use App\Exercises\Models\Exercise;
+use App\Workouts\Models\Workout;
+use App\Workouts\Models\WorkoutBlock;
+use App\Workouts\Models\WorkoutBlockExercise;
+use App\Workouts\Models\WorkoutSet;
+use App\Workouts\Models\WorkoutSetGroup;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /** @extends Factory<WorkoutSet> */

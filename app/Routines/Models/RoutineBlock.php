@@ -1,0 +1,58 @@
+<?php
+
+namespace App\Routines\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+
+class RoutineBlock extends Model
+{
+    protected $fillable = [
+        'routine_id',
+        'position',
+        'is_superset',
+        'has_setup_after',
+    ];
+
+    /** @return array<string, string> */
+    protected function casts(): array
+    {
+        return [
+            'position' => 'integer',
+            'is_superset' => 'boolean',
+            'has_setup_after' => 'boolean',
+        ];
+    }
+
+    /** @return BelongsTo<Routine, $this> */
+    public function routine(): BelongsTo
+    {
+        return $this->belongsTo(Routine::class);
+    }
+
+    /** @return HasMany<RoutineBlockExercise, $this> */
+    public function blockExercises(): HasMany
+    {
+        return $this->hasMany(RoutineBlockExercise::class)->orderBy('position');
+    }
+
+    /** @return HasMany<RoutineSetGroup, $this> */
+    public function setGroups(): HasMany
+    {
+        return $this->hasMany(RoutineSetGroup::class);
+    }
+
+    /** @return HasOne<RoutineSetGroup, $this> */
+    public function warmUpSetGroup(): HasOne
+    {
+        return $this->hasOne(RoutineSetGroup::class)->where('type', 'warm_up');
+    }
+
+    /** @return HasOne<RoutineSetGroup, $this> */
+    public function workingSetGroup(): HasOne
+    {
+        return $this->hasOne(RoutineSetGroup::class)->where('type', 'working');
+    }
+}

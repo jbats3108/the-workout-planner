@@ -2,11 +2,11 @@
 
 namespace Database\Factories\Workouts;
 
-use App\Enums\WorkoutMode;
-use App\Enums\WorkoutStatus;
-use App\Models\Routine;
-use App\Models\User;
-use App\Models\Workouts\Workout;
+use App\Workouts\Enums\WorkoutMode;
+use App\Workouts\Enums\WorkoutStatus;
+use App\Routines\Models\Routine;
+use App\Users\Models\User;
+use App\Workouts\Models\Workout;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 
