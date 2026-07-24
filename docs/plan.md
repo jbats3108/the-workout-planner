@@ -29,7 +29,10 @@ Ordered for the core loop; reshuffle if product priority changes.
 11. **Plate calculator UI** — ~~Settings for bars/plates; player shows nearest loadable stack~~ done
 12. **Player / editor UX polish** — ~~finish/abandon in-progress; edit affordance; exercise find results; mobile editor scroll, compact warm-up, in-card search, add-block placement~~ done
 13. **Warm-up weight prefill in Play** — incomplete warm-up sets should fill the weight field from `% × working` (`target_weight_kg`), not the previous logged warm-up; fix Target label `v-else` on reps
-14. **Flaky-network drafts** — best-effort offline/queue for player logging (postponed)
+14. **Warm-up setup steps** — plan setup (press-when-done) pauses inside the warm-up flow, not only setup-after-block
+15. **Rest after warm-ups** — make warm-up group rest first-class in editor + Play (rest after warm-up sets / before working)
+16. **Clear block warm-up** — one-tap remove all warm-up steps from a block in the editor
+17. **Flaky-network drafts** — best-effort offline/queue for player logging (postponed)
 
 ## Grill: app-like mobile behaviour
 
