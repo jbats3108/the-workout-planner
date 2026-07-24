@@ -30,3 +30,7 @@ Issues live in GitHub Issues for `jbats3108/the-workout-planner` (via `gh`). See
 
 Single-context layout (`CONTEXT.md` + `docs/adr/` at repo root). See `docs/agents/domain.md`.
 
+### Plan / backlog
+
+Active product backlog: `docs/plan.md`. Prefer updating that file over inventing a parallel todo list in chat.
+
