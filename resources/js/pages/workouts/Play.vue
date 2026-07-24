@@ -100,12 +100,28 @@ const setForm = useForm({
     weight_kg: 0,
 });
 
+const previousSetWeightKg = (entry: { block: PlayerBlock; set: PlayerSet }): number | null => {
+    const prior = entry.block.sets
+        .filter(
+            (s) =>
+                s.workout_block_exercise_id === entry.set.workout_block_exercise_id &&
+                s.group_type === entry.set.group_type &&
+                s.set_index < entry.set.set_index &&
+                s.completed &&
+                s.logged_weight_kg != null,
+        )
+        .sort((a, b) => b.set_index - a.set_index)[0];
+
+    return prior?.logged_weight_kg ?? null;
+};
+
 watch(
     current,
     (entry) => {
         if (!entry) return;
         setForm.reps = entry.set.logged_reps ?? entry.set.target_reps ?? 0;
-        setForm.weight_kg = entry.set.logged_weight_kg ?? entry.set.target_weight_kg ?? 0;
+        setForm.weight_kg =
+            entry.set.logged_weight_kg ?? previousSetWeightKg(entry) ?? entry.set.target_weight_kg ?? 0;
     },
     { immediate: true },
 );
