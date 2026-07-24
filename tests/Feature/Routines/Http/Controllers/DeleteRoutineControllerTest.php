@@ -33,7 +33,7 @@ class DeleteRoutineControllerTest extends TestCase
         $response = $this->actingAs($this->adminUser)->delete($route);
 
         // Then
-        $response->assertRedirect();
+        $response->assertRedirect(route('dashboard'));
         $this->assertSoftDeleted(Routine::class, ['id' => $routine->id]);
 
     }
@@ -48,7 +48,7 @@ class DeleteRoutineControllerTest extends TestCase
         $response = $this->makeRequest($routine);
 
         // Then
-        $response->assertRedirect();
+        $response->assertRedirect(route('dashboard'));
         $this->assertSoftDeleted(Routine::class, ['id' => $routine->id]);
 
     }

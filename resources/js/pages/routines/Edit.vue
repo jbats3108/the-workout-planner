@@ -4,7 +4,7 @@
  */
 import InputError from '@/components/InputError.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import { computed, ref, watch } from 'vue';
 
 type ExerciseOption = { id: number; name: string; primary_muscle_group: string };
@@ -59,7 +59,10 @@ const form = useForm({
     name: props.routine.name,
     deload_weight_factor: props.routine.deload_weight_factor,
     deload_reps_factor: props.routine.deload_reps_factor,
-    blocks: props.routine.blocks.length ? structuredClone(props.routine.blocks) : ([] as Block[]),
+    // Inertia props are nested reactive proxies — structuredClone cannot clone them
+    blocks: props.routine.blocks.length
+        ? (JSON.parse(JSON.stringify(props.routine.blocks)) as Block[])
+        : ([] as Block[]),
 });
 
 const active = ref(0);
@@ -115,6 +118,13 @@ const save = () => {
     form.put(route('routines.update', props.routine.id), { preserveScroll: true });
 };
 
+const deleteRoutine = () => {
+    if (!confirm(`Delete “${form.name || 'this routine'}”? It will be archived and removed from your list.`)) {
+        return;
+    }
+    router.delete(route('routines.delete', props.routine.id));
+};
+
 const errorList = computed(() => Object.values(form.errors));
 </script>
 
@@ -156,6 +166,19 @@ const errorList = computed(() => Object.values(form.errors));
                                 class="w-16 rounded border border-border bg-card px-2 py-1 text-foreground"
                             />
                         </label>
+                        <Link
+                            :href="route('dashboard')"
+                            class="rounded-full border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                        >
+                            Cancel
+                        </Link>
+                        <button
+                            type="button"
+                            class="rounded-full border border-destructive/50 px-4 py-2 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10"
+                            @click="deleteRoutine"
+                        >
+                            Delete
+                        </button>
                         <button
                             type="button"
                             class="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-50"
@@ -393,11 +416,24 @@ const errorList = computed(() => Object.values(form.errors));
 
                 <p v-else class="px-4 py-12 text-center text-muted-foreground">No blocks. Tap + to add.</p>
 
-                <div class="fixed right-0 bottom-4 left-0 flex justify-center gap-3 px-4">
-                    <button type="button" class="rounded-full bg-secondary px-5 py-3 text-sm" @click="addBlock(true)">+ SS</button>
+                <div class="fixed right-0 bottom-4 left-0 flex justify-center gap-2 px-4">
+                    <Link
+                        :href="route('dashboard')"
+                        class="rounded-full border border-border bg-background px-4 py-3 text-sm text-muted-foreground"
+                    >
+                        Cancel
+                    </Link>
                     <button
                         type="button"
-                        class="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground disabled:opacity-50"
+                        class="rounded-full border border-destructive/50 bg-background px-4 py-3 text-sm text-destructive"
+                        @click="deleteRoutine"
+                    >
+                        Delete
+                    </button>
+                    <button type="button" class="rounded-full bg-secondary px-4 py-3 text-sm" @click="addBlock(true)">+ SS</button>
+                    <button
+                        type="button"
+                        class="rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground disabled:opacity-50"
                         :disabled="form.processing"
                         @click="save"
                     >

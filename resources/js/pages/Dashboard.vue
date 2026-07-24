@@ -3,6 +3,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Routine } from '@/types/workouts';
 import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
+import { Trash2 } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 type InProgressWorkout = {
@@ -47,6 +48,13 @@ const startWorkout = (routineId: number, mode: 'normal' | 'deload' = 'normal') =
 };
 
 const canStart = (routine: DashboardRoutine) => !props.data.in_progress_workout && routine.can_start === true;
+
+const deleteRoutine = (routine: DashboardRoutine) => {
+    if (!confirm(`Delete “${routine.name}”? It will be archived and removed from your list.`)) {
+        return;
+    }
+    router.delete(route('routines.delete', routine.id));
+};
 </script>
 
 <template>
@@ -97,7 +105,7 @@ const canStart = (routine: DashboardRoutine) => !props.data.in_progress_workout 
                 <div
                     v-for="routine in props.data.routines"
                     :key="routine.id"
-                    class="rounded-xl border border-border bg-card p-4"
+                    class="relative rounded-xl border border-border bg-card p-4 pb-10"
                 >
                     <Link :href="route('routines.edit', routine.id)" class="block transition hover:text-primary">
                         <h3 class="text-lg font-semibold">{{ routine.name }}</h3>
@@ -128,6 +136,15 @@ const canStart = (routine: DashboardRoutine) => !props.data.in_progress_workout 
                             Deload
                         </button>
                     </div>
+                    <button
+                        type="button"
+                        class="absolute right-3 bottom-3 rounded p-1 text-destructive transition-opacity hover:opacity-80"
+                        title="Delete routine"
+                        aria-label="Delete routine"
+                        @click="deleteRoutine(routine)"
+                    >
+                        <Trash2 class="size-3.5" />
+                    </button>
                 </div>
             </div>
             <p v-if="!props.data.routines.length" class="text-sm text-muted-foreground">No routines yet. Create one above.</p>
