@@ -2,17 +2,17 @@
 
 namespace App\Routines\Services;
 
+use App\Exercises\Models\Exercise;
 use App\Routines\Data\Editor\SyncBlockExerciseData;
 use App\Routines\Data\Editor\SyncRoutineBlockData;
 use App\Routines\Data\Editor\SyncRoutineData;
 use App\Routines\Data\Editor\SyncWarmUpData;
-use App\Shared\Enums\SetGroupType;
-use App\Exercises\Models\Exercise;
 use App\Routines\Models\Routine;
 use App\Routines\Models\RoutineBlock;
 use App\Routines\Models\RoutineBlockExercise;
 use App\Routines\Models\RoutineSetGroup;
 use App\Routines\Models\RoutineWarmUpStep;
+use App\Shared\Enums\SetGroupType;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
@@ -86,10 +86,10 @@ class RoutineEditorService
         ]);
 
         $warmUp = $blockData->warmUp ?? new SyncWarmUpData;
-        $percents = array_values(array_filter(
-            $warmUp->percents,
-            fn (int $p): bool => $p > 0
-        ));
+        $percents = array_map(
+            static fn (mixed $p): int => (int) $p,
+            $warmUp->percentList()
+        );
 
         $warmUpGroup = RoutineSetGroup::create([
             'routine_block_id' => $block->id,

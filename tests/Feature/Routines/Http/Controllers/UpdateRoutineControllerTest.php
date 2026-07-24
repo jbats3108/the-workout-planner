@@ -87,6 +87,39 @@ class UpdateRoutineControllerTest extends TestCase
     }
 
     #[Test]
+    public function it_allows_saving_blocks_with_no_warm_up_percents(): void
+    {
+        $routine = Routine::factory()->withUser($this->user)->create();
+        $exercise = Exercise::factory()->create();
+
+        $response = $this->actingAs($this->user)->put(route('routines.update', $routine), [
+            'name' => 'No Warmups',
+            'deload_weight_factor' => 0.5,
+            'deload_reps_factor' => 2,
+            'blocks' => [
+                [
+                    'is_superset' => false,
+                    'has_setup_after' => false,
+                    'exercises' => [
+                        [
+                            'exercise_id' => $exercise->id,
+                            'working_weight_kg' => 60,
+                            'prescribed_reps' => 6,
+                            'achievement_floor' => null,
+                            'progression_target' => null,
+                        ],
+                    ],
+                    'working' => ['set_count' => 3, 'rest_seconds' => 120],
+                    'warm_up' => ['set_count' => 0, 'rest_seconds' => 60, 'percents' => []],
+                ],
+            ],
+        ]);
+
+        $response->assertRedirect(route('routines.edit', $routine));
+        $this->assertCount(1, $routine->fresh()->blocks);
+    }
+
+    #[Test]
     public function edit_page_renders_for_owner(): void
     {
         $routine = Routine::factory()->withUser($this->user)->create();

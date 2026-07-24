@@ -15,15 +15,23 @@ final class RoutineData extends Data
         public readonly string $name,
         public readonly ?float $deloadWeightFactor = null,
         public readonly ?float $deloadRepsFactor = null,
+        public readonly bool $canStart = false,
     ) {}
 
     public static function fromRoutine(Routine $routine): RoutineData
     {
+        $routine->loadMissing('blocks.blockExercises');
+
+        $hasExercises = $routine->blocks->contains(
+            fn ($block) => $block->blockExercises->isNotEmpty()
+        );
+
         return new self(
             $routine->id,
             $routine->getName(),
             $routine->deload_weight_factor !== null ? (float) $routine->deload_weight_factor : null,
             $routine->deload_reps_factor !== null ? (float) $routine->deload_reps_factor : null,
+            canStart: $hasExercises,
         );
     }
 }

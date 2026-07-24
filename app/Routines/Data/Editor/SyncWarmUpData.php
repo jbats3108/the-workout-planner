@@ -12,7 +12,7 @@ use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 class SyncWarmUpData extends Data
 {
     /**
-     * @param  list<int>  $percents
+     * @param  list<int>|null  $percents
      */
     public function __construct(
         #[Min(0), Max(20)]
@@ -21,6 +21,18 @@ class SyncWarmUpData extends Data
         #[Min(0), Max(3600)]
         public readonly int $restSeconds = 60,
 
-        public readonly array $percents = [],
+        /** Empty list is valid (no warm-up steps). */
+        public readonly ?array $percents = null,
     ) {}
+
+    /**
+     * @return list<int>
+     */
+    public function percentList(): array
+    {
+        return array_values(array_filter(
+            $this->percents ?? [],
+            fn (mixed $p): bool => is_int($p) ? $p > 0 : (is_numeric($p) && (int) $p > 0)
+        ));
+    }
 }

@@ -114,15 +114,17 @@ const toggleSuperset = (block: Block) => {
 const save = () => {
     form.put(route('routines.update', props.routine.id), { preserveScroll: true });
 };
+
+const errorList = computed(() => Object.values(form.errors));
 </script>
 
 <template>
     <AppLayout :breadcrumbs="[{ title: 'Dashboard', href: '/dashboard' }, { title: form.name || 'Routine', href: '#' }]">
         <Head :title="`Edit · ${form.name}`" />
 
-        <div class="-m-4 flex min-h-[calc(100vh-8rem)] flex-col bg-zinc-950 text-zinc-100 md:-m-6">
+        <div class="flex min-h-[calc(100vh-8rem)] flex-1 flex-col overflow-x-auto bg-zinc-950 text-zinc-100">
             <!-- Shared header -->
-            <header class="border-b border-zinc-800 px-4 py-4">
+            <header class="border-b border-zinc-800 px-4 py-4 md:px-6">
                 <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
                     <div class="min-w-0 flex-1">
                         <p class="text-xs tracking-[0.2em] text-zinc-500 uppercase">Routine</p>
@@ -165,6 +167,9 @@ const save = () => {
                     </div>
                 </div>
                 <InputError class="mt-2" :message="form.errors.blocks" />
+                <div v-if="errorList.length" class="mt-2 space-y-1 text-sm text-red-400">
+                    <p v-for="(message, index) in errorList" :key="index">{{ message }}</p>
+                </div>
                 <p v-if="form.recentlySuccessful" class="mt-2 text-sm text-lime-400">Saved.</p>
             </header>
 

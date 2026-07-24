@@ -2,12 +2,14 @@
 
 namespace Tests\Feature\Workouts\Http\Controllers;
 
-use App\Shared\Enums\SetGroupType;
 use App\Exercises\Models\Exercise;
 use App\Routines\Models\Routine;
 use App\Routines\Models\RoutineBlock;
 use App\Routines\Models\RoutineBlockExercise;
 use App\Routines\Models\RoutineSetGroup;
+use App\Shared\Enums\SetGroupType;
+use App\Workouts\Enums\WorkoutStatus;
+use App\Workouts\Models\Workout;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Helpers\UserHelper;
@@ -27,47 +29,53 @@ class StoreWorkoutControllerTest extends TestCase
     #[Test]
     public function it_requires_the_routine_to_belong_to_the_user(): void
     {
-        // Given
         $routine = Routine::factory()->withUser($this->user)->create();
 
-        // When
-        $response = $this->actingAs($this->secondUser)->post(route('workout.store', ['routine' => $routine->id]));
+        $response = $this->actingAs($this->secondUser)->post(route('workouts.store', ['routine' => $routine->id]));
 
-        // Then
         $response->assertForbidden();
     }
 
     #[Test]
     public function it_requires_the_routine_to_have_at_least_one_exercise(): void
     {
-        // Given
         $routine = Routine::factory()->withUser($this->user)->create();
 
-        // When
-        $response = $this->actingAs($this->user)->post(route('workout.store', ['routine' => $routine->id]));
+        $response = $this->actingAs($this->user)->post(route('workouts.store', ['routine' => $routine->id]));
 
-        // Then
         $response->assertRedirectBack();
         $response->assertRedirectBackWithErrors();
     }
 
     #[Test]
-    public function it_creates_a_workout_from_the_provided_routine(): void
+    public function it_creates_a_workout_and_redirects_to_the_player(): void
     {
-        // Given
         $routine = Routine::factory()->withUser($this->user)->create();
         $this->seedRoutineBlockWithExercise($routine);
 
-        // When
-        $response = $this->actingAs($this->user)->post(route('workout.store', ['routine' => $routine->id]));
+        $response = $this->actingAs($this->user)->post(route('workouts.store', ['routine' => $routine->id]));
 
-        // Then
-        $response->assertCreated();
+        $workout = Workout::query()->where('routine_id', $routine->id)->firstOrFail();
 
-        $this->assertDatabaseHas('workouts', [
-            'routine_id' => $routine->id,
-            'user_id' => $this->user->id,
-        ]);
+        $response->assertRedirect(route('workouts.play', $workout));
+        $this->assertSame(WorkoutStatus::InProgress, $workout->status);
+    }
+
+    #[Test]
+    public function it_rejects_starting_a_second_in_progress_workout(): void
+    {
+        $routine = Routine::factory()->withUser($this->user)->create();
+        $this->seedRoutineBlockWithExercise($routine);
+        $this->actingAs($this->user)->post(route('workouts.store', ['routine' => $routine->id]));
+
+        $other = Routine::factory()->withUser($this->user)->create();
+        $this->seedRoutineBlockWithExercise($other);
+
+        $response = $this->actingAs($this->user)->post(route('workouts.store', ['routine' => $other->id]));
+
+        $response->assertRedirectBack();
+        $response->assertRedirectBackWithErrors();
+        $this->assertSame(1, Workout::query()->where('user_id', $this->user->id)->count());
     }
 
     private function seedRoutineBlockWithExercise(Routine $routine): void

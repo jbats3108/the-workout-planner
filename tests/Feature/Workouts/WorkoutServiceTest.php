@@ -2,13 +2,13 @@
 
 namespace Tests\Feature\Workouts;
 
-use App\Shared\Enums\SetGroupType;
-use App\Workouts\Exceptions\WorkoutServiceException;
 use App\Exercises\Models\Exercise;
 use App\Routines\Models\Routine;
 use App\Routines\Models\RoutineBlock;
 use App\Routines\Models\RoutineBlockExercise;
 use App\Routines\Models\RoutineSetGroup;
+use App\Shared\Enums\SetGroupType;
+use App\Workouts\Exceptions\WorkoutServiceException;
 use App\Workouts\Models\WorkoutSet;
 use App\Workouts\Services\WorkoutService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -93,6 +93,40 @@ class WorkoutServiceTest extends TestCase
 
         $this->assertCount(4, $sets);
         $sets->each(fn (WorkoutSet $workoutSet, int $key) => $this->assertSame($key, $workoutSet->set_index));
+    }
+
+    #[Test]
+    public function it_applies_deload_factors_when_starting_in_deload_mode(): void
+    {
+        $routine = Routine::factory()->create([
+            'deload_weight_factor' => 0.5,
+            'deload_reps_factor' => 0.5,
+        ]);
+        $this->seedRoutineBlockWithExercise($routine, setCount: 1);
+
+        $workout = $this->workoutService->createWorkout($routine, \App\Workouts\Enums\WorkoutMode::Deload);
+
+        $exercise = $workout->blocks->first()->blockExercises->first();
+
+        $this->assertSame('deload', $workout->mode->value);
+        $this->assertSame(40000, $exercise->working_weight_g);
+        $this->assertSame(3, $exercise->prescribed_reps);
+    }
+
+    #[Test]
+    public function it_rejects_a_second_in_progress_workout_for_the_same_user(): void
+    {
+        $routine = Routine::factory()->create();
+        $this->seedRoutineBlockWithExercise($routine);
+        $this->workoutService->createWorkout($routine);
+
+        $other = Routine::factory()->create(['user_id' => $routine->user_id]);
+        $this->seedRoutineBlockWithExercise($other);
+
+        $this->expectException(WorkoutServiceException::class);
+        $this->expectExceptionMessage(WorkoutService::ALREADY_IN_PROGRESS_ERROR);
+
+        $this->workoutService->createWorkout($other);
     }
 
     private function seedRoutineBlockWithExercise(Routine $routine, int $setCount = 3): void

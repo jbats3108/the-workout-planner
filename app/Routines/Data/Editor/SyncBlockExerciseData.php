@@ -7,6 +7,7 @@ use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Attributes\Validation\Exists;
 use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\Validation\Min;
+use Spatie\LaravelData\Attributes\Validation\Nullable;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 
@@ -23,10 +24,10 @@ class SyncBlockExerciseData extends Data
         #[Min(1), Max(100)]
         public readonly int $prescribedReps,
 
-        #[Min(1), Max(100)]
+        #[Nullable, Min(1), Max(100)]
         public readonly ?int $achievementFloor = null,
 
-        #[Min(1), Max(100)]
+        #[Nullable, Min(1), Max(100)]
         public readonly ?int $progressionTarget = null,
     ) {}
 

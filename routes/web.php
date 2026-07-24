@@ -1,23 +1,26 @@
 <?php
 
+use App\Dashboard\Http\Controllers\ShowDashboardController;
 use App\Exercises\Http\Controllers\DeleteExerciseController;
 use App\Exercises\Http\Controllers\IndexExerciseController;
 use App\Exercises\Http\Controllers\ShowExerciseController;
 use App\Exercises\Http\Controllers\StoreExerciseController;
+use App\Exercises\Models\Exercise;
 use App\MuscleGroups\Http\Controllers\DeleteMuscleGroupController;
 use App\MuscleGroups\Http\Controllers\IndexMuscleGroupsController;
 use App\MuscleGroups\Http\Controllers\StoreMuscleGroupController;
 use App\MuscleGroups\Http\Controllers\UpdateMuscleGroupController;
+use App\MuscleGroups\Models\MuscleGroup;
 use App\Routines\Http\Controllers\DeleteRoutineController;
 use App\Routines\Http\Controllers\EditRoutineController;
 use App\Routines\Http\Controllers\IndexRoutineController;
 use App\Routines\Http\Controllers\ShowRoutineController;
 use App\Routines\Http\Controllers\StoreRoutineController;
 use App\Routines\Http\Controllers\UpdateRoutineController;
-use App\Dashboard\Http\Controllers\ShowDashboardController;
+use App\Workouts\Http\Controllers\CompleteWorkoutSetController;
+use App\Workouts\Http\Controllers\FinishWorkoutController;
+use App\Workouts\Http\Controllers\PlayWorkoutController;
 use App\Workouts\Http\Controllers\StoreWorkoutController;
-use App\Exercises\Models\Exercise;
-use App\MuscleGroups\Models\MuscleGroup;
 use App\Workouts\Models\Workout;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -88,12 +91,22 @@ Route::middleware('auth')->group(function (): void {
             ->name('muscle-groups.update');
     });
 
-    Route::prefix('/workout')->group(function (): void {
-
+    Route::prefix('/workouts')->group(function (): void {
         Route::post('/create/{routine}', StoreWorkoutController::class)
             ->can('create', [Workout::class, 'routine'])
-            ->name('workout.store');
+            ->name('workouts.store');
 
+        Route::get('/{workout}/play', PlayWorkoutController::class)
+            ->can('view', 'workout')
+            ->name('workouts.play');
+
+        Route::post('/{workout}/sets/{set}', CompleteWorkoutSetController::class)
+            ->can('update', 'workout')
+            ->name('workouts.sets.complete');
+
+        Route::post('/{workout}/finish', FinishWorkoutController::class)
+            ->can('update', 'workout')
+            ->name('workouts.finish');
     });
 });
 
