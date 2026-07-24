@@ -5,7 +5,7 @@ import { createSSRApp, DefineComponent, h } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import { ZiggyVue } from 'ziggy-js';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'OVRLOAD';
 
 createServer(
     (page) =>

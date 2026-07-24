@@ -23,7 +23,7 @@ defineProps<Props>();
         stroke-linejoin="round"
         stroke-width="3"
         role="img"
-        aria-label="Barbell icon"
+        aria-label="OVRLOAD"
         v-bind="$attrs"
     >
         <!-- Center bar -->

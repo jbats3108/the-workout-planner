@@ -1,13 +1,25 @@
 <script setup lang="ts">
-import { useDark, useToggle } from '@vueuse/core';
+import { useAppearance } from '@/composables/useAppearance';
+import { computed } from 'vue';
 
-const isDark = useDark();
-const toggleDark = useToggle(isDark);
+const { appearance, updateAppearance } = useAppearance();
+
+const isDark = computed(() => {
+    if (appearance.value === 'system') {
+        return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+
+    return appearance.value === 'dark';
+});
+
+function toggle() {
+    updateAppearance(isDark.value ? 'light' : 'dark');
+}
 </script>
 
 <template>
     <button
-        @click="toggleDark()"
+        @click="toggle"
         class="rounded-md p-2 transition-colors hover:bg-secondary hover:text-secondary-foreground"
         :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
     >

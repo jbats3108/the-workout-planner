@@ -12,7 +12,9 @@ import { Head, Link } from '@inertiajs/vue3';
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="flex h-16 items-center justify-between">
                     <div class="flex items-center">
-                        <h1 class="text-xl font-bold text-primary">The Workout Planner</h1>
+                        <h1 class="text-xl font-bold tracking-wide">
+                            <span class="text-primary">OVR</span><span class="text-foreground">LOAD</span>
+                        </h1>
                     </div>
                     <div class="hidden items-center space-x-8 sm:flex">
                         <Link href="login" class="rounded-md bg-primary px-4 py-2 text-primary-foreground transition-opacity hover:opacity-90"
@@ -28,9 +30,9 @@ import { Head, Link } from '@inertiajs/vue3';
         <div class="relative overflow-hidden">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="relative z-10 py-8 sm:py-16 md:py-20 lg:max-w-2xl lg:py-28">
-                    <h2 class="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">Ready to plan your workouts?</h2>
+                    <h2 class="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">Progressive strength, tracked.</h2>
                     <p class="mt-6 text-xl text-muted-foreground">
-                        The Workout Planner is the premier platform to create, plan and track your workouts online.
+                        OVRLOAD is built for serious lifters: plan routines, log heavy sessions, and drive progressive overload.
                     </p>
                 </div>
             </div>
@@ -41,7 +43,7 @@ import { Head, Link } from '@inertiajs/vue3';
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="text-center">
                     <h2 class="text-3xl font-bold text-card-foreground">Features</h2>
-                    <p class="mt-4 text-muted-foreground">Explore The Workout Planner</p>
+                    <p class="mt-4 text-muted-foreground">Explore OVRLOAD</p>
                 </div>
                 <div class="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
                     <HomepageFeatureCallout>

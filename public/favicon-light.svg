@@ -2,23 +2,18 @@
   <defs>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&amp;display=swap');
-      .text-ovr {
-        font-family: 'Space Grotesk', sans-serif;
-        font-weight: 700;
-        font-size: 190px;
-        fill: #CCFF00;
-        letter-spacing: -0.05em;
-      }
+      .text-ovr,
       .text-load {
         font-family: 'Space Grotesk', sans-serif;
         font-weight: 700;
         font-size: 190px;
-        fill: #ECECEA;
+        fill: #0F0F0F;
         letter-spacing: -0.05em;
       }
     </style>
   </defs>
-  <rect width="512" height="512" fill="#0F0F0F"/>
+  <!-- Inverted plate: primary yellow field, dark type — readable on light browser chrome -->
+  <rect width="512" height="512" fill="#CCFF00"/>
   <g text-anchor="middle">
     <text x="256" y="215" class="text-ovr">OVR</text>
     <text x="256" y="395" class="text-load">LOAD</text>

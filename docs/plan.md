@@ -1,6 +1,6 @@
 # Plan
 
-Working backlog for The Workout Planner v2. Update this as items ship or get deferred. Domain language stays in `CONTEXT.md`; hard decisions stay in `docs/adr/`.
+Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domain language stays in `CONTEXT.md`; hard decisions stay in `docs/adr/`.
 
 ## Now (recently shipped)
 
@@ -25,7 +25,7 @@ Ordered for the core loop; reshuffle if product priority changes.
 7. **Admin panel** — admin-only surfaces for shared catalog / users as needed (keep thin)
 8. **Dead code audit (v1 leftovers)** — remove unused controllers, pages, routes, ziggy ghosts, factories, and migrations residue from the pre-v2 gym schema
 9. **Strip Laravel starter-kit UI** — remove obvious Breeze/starter chrome and behaviours that still read as the stock kit (generic nav/footer links, placeholder home copy, appearance leftovers, etc.)
-10. **Rebrand to OVRLOAD** — rename product surfaces to **OVRLOAD**; mark/icon and related chrome around **OVR** / **OVRLD** (`docs/branding.md`)
+10. **Rebrand to OVRLOAD** — ~~rename product surfaces to **OVRLOAD**; mark/icon and related chrome around **OVR** / **OVRLD**~~ done (`docs/branding.md`; logos, home, auth, `APP_NAME`)
 11. **Plate calculator UI** — plate profile + nearest loadable (schema exists; UI deferred)
 12. **Flaky-network drafts** — best-effort offline/queue for player logging (later)
 

@@ -4,20 +4,34 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        {{-- Inline script to detect system dark mode preference and apply it immediately --}}
+        {{-- SVG only here; .ico is still on disk for older clients that request /favicon.ico directly --}}
+        <link rel="icon" href="/favicon-dark.svg" type="image/svg+xml" data-app-favicon>
+
+        {{-- Inline script: apply theme class + favicon before paint --}}
         <script>
             (function() {
                 const appearance = '{{ $appearance ?? "dark" }}';
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                const isDark = appearance === 'dark'
+                    || (appearance === 'system' && prefersDark)
+                    || (appearance !== 'light' && appearance !== 'system');
 
-                if (appearance === 'system') {
-                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                document.documentElement.classList.toggle('dark', isDark);
 
-                    if (prefersDark) {
-                        document.documentElement.classList.add('dark');
-                    }
-                }
+                const href = (isDark ? '/favicon-dark.svg' : '/favicon-light.svg') + '?theme=' + (isDark ? 'dark' : 'light');
+                document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]').forEach(function (el) {
+                    el.remove();
+                });
+                var link = document.createElement('link');
+                link.rel = 'icon';
+                link.type = 'image/svg+xml';
+                link.setAttribute('data-app-favicon', '');
+                link.href = href;
+                document.head.appendChild(link);
             })();
         </script>
+
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
         {{-- Inline style to set the HTML background color based on our theme in app.css --}}
         <style>
@@ -30,11 +44,7 @@
             }
         </style>
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
-
-        <link rel="icon" href="/favicon.ico" sizes="any">
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        <title inertia>{{ config('app.name', 'OVRLOAD') }}</title>
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=space-grotesk:400,500,600,700|jetbrains-mono:400,500,600" rel="stylesheet" />

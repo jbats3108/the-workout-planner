@@ -13,10 +13,13 @@ defineProps<{
         <div class="w-full max-w-sm">
             <div class="flex flex-col gap-8">
                 <div class="flex flex-col items-center gap-4">
-                    <Link :href="route('home')" class="flex flex-col items-center gap-2 font-medium">
+                    <Link :href="route('home')" class="flex flex-col items-center gap-2 font-medium tracking-wide">
                         <div class="mb-1 flex h-9 w-9 items-center justify-center rounded-md">
-                            <AppLogoIcon class="size-9 fill-current text-foreground" />
+                            <AppLogoIcon class="size-9 fill-current text-primary" />
                         </div>
+                        <span class="text-lg font-semibold">
+                            <span class="text-primary">OVR</span><span class="text-foreground">LOAD</span>
+                        </span>
                         <span class="sr-only">{{ title }}</span>
                     </Link>
                     <div class="space-y-2 text-center">

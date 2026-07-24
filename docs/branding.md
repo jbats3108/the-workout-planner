@@ -1,12 +1,12 @@
-# Branding: Overload
+# Branding: OVRLOAD
 
 Working product identity. Domain language stays in `CONTEXT.md`; backlog in `docs/plan.md`.
 
 ## Brand identity
 
-- **Working title:** Overload
-- **Chosen stylization:** OVRLOAD (also explore mark/chrome around OVR / OVRLD)
-- **Spelling / stylization candidates:** OVRLOAD, OVR LOAD, Overlode, OVRLD
+- **Product name:** OVRLOAD
+- **Mark / chrome:** Emphasize **OVR** (primary neon yellow) + **LOAD** (foreground); explore OVRLD shorthand where space is tight
+- **Former working titles:** Overload, The Workout Planner
 - **Target audience:** Serious lifters, powerlifters, and strength athletes
 - **Brand essence:** Data-driven, high-performance, built around progressive overload and tracking heavy lifting
 
