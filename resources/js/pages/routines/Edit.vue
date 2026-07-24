@@ -132,7 +132,7 @@ const errorList = computed(() => Object.values(form.errors));
     <AppLayout :breadcrumbs="[{ title: 'Dashboard', href: '/dashboard' }, { title: form.name || 'Routine', href: '#' }]">
         <Head :title="`Edit · ${form.name}`" />
 
-        <div class="flex min-h-[calc(100vh-8rem)] flex-1 flex-col overflow-x-auto bg-background text-foreground">
+        <div class="flex min-h-[calc(100vh-8rem)] flex-1 flex-col overflow-x-auto overscroll-none bg-background text-foreground">
             <!-- Shared header -->
             <header class="border-b border-border px-4 py-4 md:px-6">
                 <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
@@ -316,7 +316,7 @@ const errorList = computed(() => Object.values(form.errors));
             </div>
 
             <!-- Mobile: stage focus (B) -->
-            <div class="flex flex-1 flex-col md:hidden">
+            <div class="flex flex-1 flex-col overscroll-none md:hidden">
                 <div class="flex gap-2 overflow-x-auto px-4 py-3">
                     <button
                         v-for="(b, i) in form.blocks"
@@ -416,7 +416,9 @@ const errorList = computed(() => Object.values(form.errors));
 
                 <p v-else class="px-4 py-12 text-center text-muted-foreground">No blocks. Tap + to add.</p>
 
-                <div class="fixed right-0 bottom-4 left-0 flex justify-center gap-2 px-4">
+                <div
+                    class="fixed right-0 bottom-0 left-0 flex justify-center gap-2 px-4 pt-2 pb-[max(1rem,env(safe-area-inset-bottom,0px))]"
+                >
                     <Link
                         :href="route('dashboard')"
                         class="rounded-full border border-border bg-background px-4 py-3 text-sm text-muted-foreground"

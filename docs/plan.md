@@ -18,7 +18,7 @@ Ordered for the core loop; reshuffle if product priority changes.
 
 1. **Progression on finish** — ~~carry-forward highest achieved top weight; confirm bumps when progression target hit; skip both for deload workouts~~ done
 2. **Mid-session structure edits** — ~~mutate the in-progress workout snapshot (not the routine) from the player~~ done (add/remove incomplete working sets)
-3. **More app-like mobile behaviour** — **grill before building** (see below)
+3. **More app-like mobile behaviour** — ~~chrome polish: safe areas, player full-bleed (no AppLayout), leave confirm, overscroll off on player+editor~~ done (grill notes below; no PWA / bottom nav)
 4. **User default warm-up %s and reps** — prefs on the user (with per-exercise overrides already on blocks); seed sensible defaults into new routine blocks / editor empty state
 5. **Restyle whole app to match Overload branding** — ~~zinc + lime~~ done: dark-first near-black + neon yellow primary + cyan accent (`docs/branding.md`, `resources/css/app.css`)
 6. **Find and import exercises** — expand shared catalog (seed/import path); no fancy CMS in v1
@@ -31,16 +31,16 @@ Ordered for the core loop; reshuffle if product priority changes.
 
 ## Grill: app-like mobile behaviour
 
-Trigger a grilling session before implementing. Probe at least:
+Decisions (2026-07-24), chrome-polish pass only:
 
-- What “app-like” means here vs a mobile website (installability, full-bleed chrome, gesture edges, bottom nav, safe areas)
-- Player vs editor vs dashboard: one mobile shell or surface-specific chrome?
-- Navigation: keep Laravel/Inertia URLs vs a tabbed app shell with fewer full page reloads
-- System UI: status bar / notch, pull-to-refresh, prevent accidental back while in-progress
-- Motion and haptics budget (intentional, not noisy)
-- Whether PWA / home-screen install is in scope for this pass
+- **Scope:** A — safe areas / full-bleed / leave guard / overscroll; not bottom nav, not PWA
+- **Surfaces:** player + editor
+- **Leave:** soft confirm on player (`beforeunload` + Inertia `before` when leaving `/workouts/{id}/*`); no history trap
+- **Overscroll:** disabled on player + editor
+- **Motion/haptics:** none this pass
+- **Top chrome:** player chrome-minimal (no AppLayout); editor keeps AppLayout
 
-Capture decisions in an ADR only if the outcome is hard to reverse (e.g. PWA vs not, dedicated mobile shell).
+Deferred: installable PWA, tabbed app shell, haptics.
 
 ## Parking lot
 

@@ -1,8 +1,7 @@
 <script setup lang="ts">
 /**
- * Workout player — phone-first stage (dark zinc + lime).
+ * Workout player — chrome-minimal full-bleed stage.
  */
-import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, router, useForm } from '@inertiajs/vue3';
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
@@ -166,11 +165,49 @@ const startRest = (seconds: number) => {
     }, 1000);
 };
 
-onBeforeUnmount(clearRest);
+const leaveConfirmed = ref(false);
+
+const onBeforeUnload = (event: BeforeUnloadEvent) => {
+    if (props.workout.status !== 'in_progress') return;
+    event.preventDefault();
+    event.returnValue = '';
+};
+
+const visitLeavesWorkout = (visit: { url: string | URL }): boolean => {
+    const url = typeof visit.url === 'string' ? new URL(visit.url, window.location.origin) : visit.url;
+    return !url.pathname.startsWith(`/workouts/${props.workout.id}`);
+};
+
+let removeBeforeListener: (() => void) | undefined;
+
+onBeforeUnmount(() => {
+    clearRest();
+    removeBeforeListener?.();
+    window.removeEventListener('beforeunload', onBeforeUnload);
+});
 
 onMounted(() => {
     focus.value = firstIncomplete();
+    window.addEventListener('beforeunload', onBeforeUnload);
+    removeBeforeListener = router.on('before', (event) => {
+        if (leaveConfirmed.value) return;
+        if (props.workout.status !== 'in_progress') return;
+        if (!visitLeavesWorkout(event.detail.visit)) return;
+        if (!confirm('Leave workout? Progress is saved — you can resume from the dashboard.')) {
+            event.preventDefault();
+        }
+    });
 });
+
+const leaveWorkout = () => {
+    if (props.workout.status === 'in_progress') {
+        if (!confirm('Leave workout? Progress is saved — you can resume from the dashboard.')) {
+            return;
+        }
+    }
+    leaveConfirmed.value = true;
+    router.visit(route('dashboard'));
+};
 
 const shouldRestAfter = (block: PlayerBlock, set: PlayerSet): boolean => {
     if (!block.is_superset) {
@@ -210,7 +247,16 @@ const acknowledgeSetup = () => {
 };
 
 const finishWorkout = () => {
-    router.post(route('workouts.finish', props.workout.id));
+    leaveConfirmed.value = true;
+    router.post(
+        route('workouts.finish', props.workout.id),
+        {},
+        {
+            onError: () => {
+                leaveConfirmed.value = false;
+            },
+        },
+    );
 };
 
 const workingRoundsInBlock = computed(() => {
@@ -256,118 +302,127 @@ const groupLabel = (type: string) => (type === 'warm_up' ? 'Warm-up' : 'Working'
 <template>
     <Head :title="`Play · ${workout.routine_name}`" />
 
-    <AppLayout>
-        <div class="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-lg flex-col bg-background text-foreground">
-            <header class="flex items-center justify-between border-b border-border px-4 py-3">
-                <div>
-                    <p class="text-xs uppercase tracking-wide text-muted-foreground">{{ workout.mode }}</p>
-                    <h1 class="text-lg font-semibold">{{ workout.routine_name }}</h1>
-                </div>
-                <div class="text-right font-mono text-sm text-muted-foreground">{{ progressLabel }}</div>
-            </header>
-
-            <div v-if="restSecondsLeft > 0" class="flex flex-1 flex-col items-center justify-center gap-4 px-6">
-                <p class="text-sm uppercase tracking-widest text-muted-foreground">Rest</p>
-                <p class="font-mono text-6xl font-semibold text-primary">{{ restLabel }}</p>
-                <button type="button" class="rounded-full border border-border px-5 py-2 text-sm" @click="skipRest">Skip</button>
+    <div
+        class="mx-auto flex min-h-dvh w-full max-w-lg flex-col overscroll-none bg-background text-foreground safe-pt safe-pb safe-px"
+    >
+        <header class="flex items-center justify-between border-b border-border px-4 py-3">
+            <div class="min-w-0">
+                <p class="text-xs uppercase tracking-wide text-muted-foreground">{{ workout.mode }}</p>
+                <h1 class="truncate text-lg font-semibold">{{ workout.routine_name }}</h1>
             </div>
-
-            <div v-else-if="focus.kind === 'setup' && currentBlock" class="flex flex-1 flex-col items-center justify-center gap-6 px-6">
-                <p class="text-sm uppercase tracking-widest text-muted-foreground">Setup</p>
-                <p class="text-center text-2xl font-semibold">Change equipment, then continue</p>
-                <p class="text-sm text-muted-foreground">After block {{ currentBlock.position }}</p>
-                <button type="button" class="rounded-full bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground" @click="acknowledgeSetup">
-                    Setup done
-                </button>
-            </div>
-
-            <div v-else-if="focus.kind === 'done'" class="flex flex-1 flex-col items-center justify-center gap-6 px-6">
-                <p class="text-sm uppercase tracking-widest text-muted-foreground">Complete</p>
-                <p class="text-center text-2xl font-semibold">All sets logged</p>
+            <div class="flex shrink-0 items-center gap-3">
+                <div class="font-mono text-sm text-muted-foreground">{{ progressLabel }}</div>
                 <button
                     type="button"
-                    class="rounded-full bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground"
-                    :disabled="workout.status !== 'in_progress'"
-                    @click="finishWorkout"
+                    class="rounded-md border border-border px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground"
+                    @click="leaveWorkout"
                 >
-                    Finish workout
+                    Leave
                 </button>
             </div>
+        </header>
 
-            <div v-else-if="current" class="flex flex-1 flex-col px-4 py-6">
-                <p class="text-xs uppercase tracking-widest text-muted-foreground">
-                    Block {{ current.block.position }} · {{ groupLabel(current.set.group_type) }} · Set
-                    {{ current.set.set_index + 1 }}
-                    <span v-if="current.block.is_superset"> · Superset</span>
-                </p>
-                <h2 class="mt-2 text-3xl font-semibold leading-tight">{{ current.set.exercise_name }}</h2>
-                <p class="mt-2 font-mono text-muted-foreground">
-                    Target
-                    <span v-if="current.set.target_weight_kg != null">{{ current.set.target_weight_kg }}{{ workout.weight_unit }}</span>
-                    <span v-if="current.set.target_reps != null"> × {{ current.set.target_reps }}</span>
-                    <span v-else> warm-up</span>
-                </p>
+        <div v-if="restSecondsLeft > 0" class="flex flex-1 flex-col items-center justify-center gap-4 px-6">
+            <p class="text-sm uppercase tracking-widest text-muted-foreground">Rest</p>
+            <p class="font-mono text-6xl font-semibold text-primary">{{ restLabel }}</p>
+            <button type="button" class="rounded-full border border-border px-5 py-2 text-sm" @click="skipRest">Skip</button>
+        </div>
 
-                <form class="mt-8 flex flex-1 flex-col gap-4" @submit.prevent="completeSet">
-                    <label class="flex flex-col gap-1 text-sm text-muted-foreground">
-                        Weight ({{ workout.weight_unit }})
-                        <input
-                            v-model.number="setForm.weight_kg"
-                            type="number"
-                            step="0.5"
-                            min="0"
-                            class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground"
-                            required
-                        />
-                    </label>
-                    <label class="flex flex-col gap-1 text-sm text-muted-foreground">
-                        Reps
-                        <input
-                            v-model.number="setForm.reps"
-                            type="number"
-                            min="0"
-                            max="100"
-                            class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground"
-                            required
-                        />
-                    </label>
-                    <div class="mt-auto flex flex-col gap-3 pb-4">
+        <div v-else-if="focus.kind === 'setup' && currentBlock" class="flex flex-1 flex-col items-center justify-center gap-6 px-6">
+            <p class="text-sm uppercase tracking-widest text-muted-foreground">Setup</p>
+            <p class="text-center text-2xl font-semibold">Change equipment, then continue</p>
+            <p class="text-sm text-muted-foreground">After block {{ currentBlock.position }}</p>
+            <button type="button" class="rounded-full bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground" @click="acknowledgeSetup">
+                Setup done
+            </button>
+        </div>
+
+        <div v-else-if="focus.kind === 'done'" class="flex flex-1 flex-col items-center justify-center gap-6 px-6">
+            <p class="text-sm uppercase tracking-widest text-muted-foreground">Complete</p>
+            <p class="text-center text-2xl font-semibold">All sets logged</p>
+            <button
+                type="button"
+                class="rounded-full bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground"
+                :disabled="workout.status !== 'in_progress'"
+                @click="finishWorkout"
+            >
+                Finish workout
+            </button>
+        </div>
+
+        <div v-else-if="current" class="flex flex-1 flex-col px-4 py-6">
+            <p class="text-xs uppercase tracking-widest text-muted-foreground">
+                Block {{ current.block.position }} · {{ groupLabel(current.set.group_type) }} · Set
+                {{ current.set.set_index + 1 }}
+                <span v-if="current.block.is_superset"> · Superset</span>
+            </p>
+            <h2 class="mt-2 text-3xl font-semibold leading-tight">{{ current.set.exercise_name }}</h2>
+            <p class="mt-2 font-mono text-muted-foreground">
+                Target
+                <span v-if="current.set.target_weight_kg != null">{{ current.set.target_weight_kg }}{{ workout.weight_unit }}</span>
+                <span v-if="current.set.target_reps != null"> × {{ current.set.target_reps }}</span>
+                <span v-else> warm-up</span>
+            </p>
+
+            <form class="mt-8 flex flex-1 flex-col gap-4" @submit.prevent="completeSet">
+                <label class="flex flex-col gap-1 text-sm text-muted-foreground">
+                    Weight ({{ workout.weight_unit }})
+                    <input
+                        v-model.number="setForm.weight_kg"
+                        type="number"
+                        step="0.5"
+                        min="0"
+                        class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground"
+                        required
+                    />
+                </label>
+                <label class="flex flex-col gap-1 text-sm text-muted-foreground">
+                    Reps
+                    <input
+                        v-model.number="setForm.reps"
+                        type="number"
+                        min="0"
+                        max="100"
+                        class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground"
+                        required
+                    />
+                </label>
+                <div class="mt-auto flex flex-col gap-3 pb-4">
+                    <button
+                        type="submit"
+                        class="rounded-full bg-primary px-6 py-4 text-base font-semibold text-primary-foreground disabled:opacity-50"
+                        :disabled="setForm.processing || workout.status !== 'in_progress'"
+                    >
+                        Complete set
+                    </button>
+                    <div v-if="canAddWorkingSet || canRemoveWorkingSet" class="flex gap-2">
                         <button
-                            type="submit"
-                            class="rounded-full bg-primary px-6 py-4 text-base font-semibold text-primary-foreground disabled:opacity-50"
-                            :disabled="setForm.processing || workout.status !== 'in_progress'"
-                        >
-                            Complete set
-                        </button>
-                        <div v-if="canAddWorkingSet || canRemoveWorkingSet" class="flex gap-2">
-                            <button
-                                v-if="canAddWorkingSet"
-                                type="button"
-                                class="flex-1 rounded-md border border-border px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
-                                @click="addWorkingSet"
-                            >
-                                + Set
-                            </button>
-                            <button
-                                v-if="canRemoveWorkingSet"
-                                type="button"
-                                class="flex-1 rounded-md border border-border px-4 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-                                @click="removeWorkingSet"
-                            >
-                                − Set
-                            </button>
-                        </div>
-                        <button
-                            v-if="flatSets.every(({ set }) => set.completed)"
+                            v-if="canAddWorkingSet"
                             type="button"
-                            class="rounded-full border border-border px-6 py-3 text-sm"
-                            @click="finishWorkout"
+                            class="flex-1 rounded-md border border-border px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
+                            @click="addWorkingSet"
                         >
-                            Finish workout
+                            + Set
+                        </button>
+                        <button
+                            v-if="canRemoveWorkingSet"
+                            type="button"
+                            class="flex-1 rounded-md border border-border px-4 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                            @click="removeWorkingSet"
+                        >
+                            − Set
                         </button>
                     </div>
-                </form>
-            </div>
+                    <button
+                        v-if="flatSets.every(({ set }) => set.completed)"
+                        type="button"
+                        class="rounded-full border border-border px-6 py-3 text-sm"
+                        @click="finishWorkout"
+                    >
+                        Finish workout
+                    </button>
+                </div>
+            </form>
         </div>
-    </AppLayout>
+    </div>
 </template>
