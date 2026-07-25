@@ -34,7 +34,24 @@ Ordered for the core loop; reshuffle if product priority changes.
 15. **Rest after warm-ups** — ~~make warm-up group rest first-class in editor + Play (rest after warm-up sets / before working)~~ done (editor exposes WU rest; Play already used group rest)
 16. **Clear block warm-up** — ~~one-tap remove all warm-up steps from a block in the editor~~ done
 18. **Warm-up defaults scope** — ~~Settings: seed warm-ups into every new block vs first block only~~ done
+19. **Dropsets** — per working-set-slot multi-segment sets in editor + Play (grill notes below); update `CONTEXT.md` when shipping
 17. **Flaky-network drafts** — best-effort offline/queue for player logging (postponed)
+
+## Grill: dropsets
+
+Decisions (2026-07-25):
+
+- **Shape:** one working-set *slot* with ≥2 absolute-weight segments; one shared reps target; no rest timer between segments; working-group rest after the whole slot
+- **Scope:** per-set kind inside the working group (mix normal + dropset); **not on supersets** in v1
+- **Standard vs run-the-rack:** same stored segment list; “Run the rack” is an editor helper only (start / end / typed step → fill list); no separate persisted type; no gym DB inventory settings in v1
+- **Working weight:** first segment may default from working weight, then editable absolutes
+- **Progression:** dropsets ignored for achievement floor / bump / carry-forward
+- **Deload:** scale every segment weight + the shared reps by the deload recipe
+- **Play:** finish early or add extra drops (still ≥2 to count as a dropset); can **promote** a normal set to dropset mid-workout
+- **Editor:** ≥2 segments required to save a dropset; shrinking `set_count` trims high-index recipes; new indexes default to normal
+- **Language:** term **Dropset**; Set Group must still not be called a dropset
+
+Deferred: dropsets on supersets; user gym DB inventory (min/max/step); demote dropset → normal in Play.
 
 ## Grill: app-like mobile behaviour
 
@@ -55,3 +72,5 @@ Deferred: installable PWA, tabbed app shell, haptics.
 - Ad-hoc setup from player (beyond planned `has_setup_after`)
 - Transition duration as a stored preference (today client-side for supersets)
 - lb display/conversion end-to-end (API still kg-centric like the editor)
+- Dropsets on supersets
+- Gym dumbbell / rack inventory (min, max, step) for run-the-rack helper
