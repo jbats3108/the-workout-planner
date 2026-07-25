@@ -14,6 +14,7 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
+use Spatie\Permission\Models\Role;
 
 class RegisteredUserController extends Controller
 {
@@ -53,7 +54,7 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $user->assignRole($resolved['role']);
+        $user->assignRole(Role::findOrCreate($resolved['role'], 'web'));
         $this->invites->consume($resolved['invite'], $user);
 
         event(new Registered($user));
