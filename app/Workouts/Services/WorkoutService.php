@@ -77,6 +77,7 @@ class WorkoutService
                     'position' => $routineBlock->position,
                     'is_superset' => $routineBlock->is_superset,
                     'has_setup_after' => $routineBlock->has_setup_after,
+                    'has_setup_after_warm_up' => $routineBlock->has_setup_after_warm_up,
                 ]);
 
                 foreach ($routineBlock->blockExercises as $routineBlockExercise) {

@@ -14,6 +14,7 @@ class WorkoutBlock extends Model
         'position',
         'is_superset',
         'has_setup_after',
+        'has_setup_after_warm_up',
     ];
 
     /** @return array<string, string> */
@@ -23,6 +24,7 @@ class WorkoutBlock extends Model
             'position' => 'integer',
             'is_superset' => 'boolean',
             'has_setup_after' => 'boolean',
+            'has_setup_after_warm_up' => 'boolean',
         ];
     }
 

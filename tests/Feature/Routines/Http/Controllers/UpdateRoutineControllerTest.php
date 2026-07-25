@@ -60,6 +60,7 @@ class UpdateRoutineControllerTest extends TestCase
                 [
                     'is_superset' => false,
                     'has_setup_after' => true,
+                    'has_setup_after_warm_up' => true,
                     'exercises' => [
                         [
                             'exercise_id' => $exercise->id,
@@ -90,6 +91,7 @@ class UpdateRoutineControllerTest extends TestCase
         $this->assertCount(1, $routine->blocks);
         $block = $routine->blocks->first();
         $this->assertTrue($block->has_setup_after);
+        $this->assertTrue($block->has_setup_after_warm_up);
         $this->assertSame(80000, $block->blockExercises->first()->working_weight_g);
         $this->assertCount(2, $block->warmUpSetGroup->warmUpSteps);
         $this->assertSame(50, $block->warmUpSetGroup->warmUpSteps[0]->percent_of_working);

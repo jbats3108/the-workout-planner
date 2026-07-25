@@ -23,6 +23,7 @@ type WarmUpStep = { percent: number; reps: number };
 type Block = {
     is_superset: boolean;
     has_setup_after: boolean;
+    has_setup_after_warm_up: boolean;
     exercises: BlockExercise[];
     working: { set_count: number; rest_seconds: number };
     warm_up: { set_count: number; rest_seconds: number; steps: WarmUpStep[] };
@@ -94,6 +95,7 @@ const emptyBlock = (superset = false): Block => {
     return {
         is_superset: superset,
         has_setup_after: false,
+        has_setup_after_warm_up: false,
         exercises: superset ? [emptyExercise(), emptyExercise()] : [emptyExercise()],
         working: { set_count: 3, rest_seconds: 120 },
         warm_up: { set_count: steps.length, rest_seconds: 60, steps },
@@ -107,6 +109,7 @@ const normalizeBlock = (raw: Block): Block => {
     }));
     return {
         ...raw,
+        has_setup_after_warm_up: Boolean(raw.has_setup_after_warm_up),
         warm_up: {
             set_count: raw.warm_up?.set_count ?? steps.length,
             rest_seconds: raw.warm_up?.rest_seconds ?? 60,
@@ -192,6 +195,11 @@ const addWarmUpStep = (block: Block) => {
 const removeWarmUpStep = (block: Block, index: number) => {
     block.warm_up.steps.splice(index, 1);
     block.warm_up.set_count = block.warm_up.steps.length;
+};
+
+const clearWarmUp = (block: Block) => {
+    block.warm_up.steps = [];
+    block.warm_up.set_count = 0;
 };
 
 const formatRest = (seconds: number) => {
@@ -347,7 +355,7 @@ const errorList = computed(() => Object.values(form.errors));
             <!-- Desktop: dense list (A structure) -->
             <div class="hidden flex-1 flex-col md:flex">
                 <div class="flex-1 overflow-x-auto px-2 py-3">
-                    <table class="w-full min-w-[56rem] border-collapse text-left text-sm">
+                    <table class="w-full min-w-[60rem] border-collapse text-left text-sm">
                         <thead>
                             <tr class="border-b border-border font-mono text-xs uppercase text-muted-foreground">
                                 <th class="px-2 py-2">#</th>
@@ -357,6 +365,7 @@ const errorList = computed(() => Object.values(form.errors));
                                 <th class="px-2 py-2">Sets</th>
                                 <th class="px-2 py-2">Rest</th>
                                 <th class="px-2 py-2">Warm-up %×reps</th>
+                                <th class="px-2 py-2">WU rest</th>
                                 <th class="px-2 py-2">Flags</th>
                                 <th class="px-2 py-2" />
                             </tr>
@@ -426,12 +435,32 @@ const errorList = computed(() => Object.values(form.errors));
                                         />
                                     </td>
                                     <td class="px-2 py-2">
+                                        <div v-if="ei === 0" class="flex items-center gap-1">
+                                            <input
+                                                :value="warmUpText(block)"
+                                                class="w-32 rounded border border-border bg-card px-2 py-1 font-mono text-primary/90"
+                                                placeholder="40x5, 60x3, 80x1"
+                                                @input="setWarmUpText(block, ($event.target as HTMLInputElement).value)"
+                                            />
+                                            <button
+                                                v-if="block.warm_up.steps.length"
+                                                type="button"
+                                                class="shrink-0 text-xs text-muted-foreground hover:text-destructive"
+                                                title="Clear warm-up"
+                                                @click="clearWarmUp(block)"
+                                            >
+                                                Clear
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td class="px-2 py-2">
                                         <input
                                             v-if="ei === 0"
-                                            :value="warmUpText(block)"
-                                            class="w-32 rounded border border-border bg-card px-2 py-1 font-mono text-primary/90"
-                                            placeholder="40x5, 60x3, 80x1"
-                                            @input="setWarmUpText(block, ($event.target as HTMLInputElement).value)"
+                                            v-model.number="block.warm_up.rest_seconds"
+                                            type="number"
+                                            min="0"
+                                            step="15"
+                                            class="w-20 rounded border border-border bg-card px-2 py-1 font-mono"
                                         />
                                     </td>
                                     <td class="px-2 py-2">
@@ -441,8 +470,12 @@ const errorList = computed(() => Object.values(form.errors));
                                                 SS
                                             </label>
                                             <label class="flex items-center gap-1">
+                                                <input v-model="block.has_setup_after_warm_up" type="checkbox" />
+                                                Setup→work
+                                            </label>
+                                            <label class="flex items-center gap-1">
                                                 <input v-model="block.has_setup_after" type="checkbox" />
-                                                Setup
+                                                Setup→next
                                             </label>
                                         </div>
                                     </td>
@@ -623,6 +656,18 @@ const errorList = computed(() => Object.values(form.errors));
                                         @change="setWarmUpText(activeBlock, ($event.target as HTMLInputElement).value)"
                                     />
                                 </label>
+                                <label class="block">
+                                    <span class="text-xs text-muted-foreground"
+                                        >Warm-up rest ({{ formatRest(activeBlock.warm_up.rest_seconds) }})</span
+                                    >
+                                    <input
+                                        v-model.number="activeBlock.warm_up.rest_seconds"
+                                        type="number"
+                                        min="0"
+                                        step="15"
+                                        class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-lg"
+                                    />
+                                </label>
                                 <div
                                     v-for="(step, si) in activeBlock.warm_up.steps"
                                     :key="si"
@@ -653,24 +698,38 @@ const errorList = computed(() => Object.values(form.errors));
                                         −
                                     </button>
                                 </div>
-                                <button
-                                    type="button"
-                                    class="text-xs text-primary"
-                                    @click="addWarmUpStep(activeBlock)"
-                                >
-                                    + Step
-                                </button>
+                                <div class="flex items-center gap-3">
+                                    <button
+                                        type="button"
+                                        class="text-xs text-primary"
+                                        @click="addWarmUpStep(activeBlock)"
+                                    >
+                                        + Step
+                                    </button>
+                                    <button
+                                        v-if="activeBlock.warm_up.steps.length"
+                                        type="button"
+                                        class="text-xs text-muted-foreground hover:text-destructive"
+                                        @click="clearWarmUp(activeBlock)"
+                                    >
+                                        Clear warm-up
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="mt-3 flex gap-4 border-t border-border pt-3 text-sm">
+                        <div class="mt-3 flex flex-wrap gap-4 border-t border-border pt-3 text-sm">
                             <label class="flex items-center gap-2">
                                 <input type="checkbox" :checked="activeBlock.is_superset" @change="toggleSuperset(activeBlock)" />
                                 Superset
                             </label>
                             <label class="flex items-center gap-2">
+                                <input v-model="activeBlock.has_setup_after_warm_up" type="checkbox" />
+                                Setup before working
+                            </label>
+                            <label class="flex items-center gap-2">
                                 <input v-model="activeBlock.has_setup_after" type="checkbox" />
-                                Setup after
+                                Setup after block
                             </label>
                         </div>
                     </div>

@@ -83,6 +83,46 @@ class PlayWorkoutControllerTest extends TestCase
         $this->assertSame(WorkoutStatus::Finished, $workout->fresh()->status);
     }
 
+    #[Test]
+    public function it_snapshots_setup_after_warm_up_into_the_player(): void
+    {
+        $routine = Routine::factory()->withUser($this->user)->create();
+        $block = RoutineBlock::create([
+            'routine_id' => $routine->id,
+            'position' => 1,
+            'has_setup_after_warm_up' => true,
+        ]);
+        RoutineBlockExercise::create([
+            'routine_block_id' => $block->id,
+            'exercise_id' => Exercise::factory()->create()->id,
+            'position' => 1,
+            'working_weight_g' => 80000,
+            'prescribed_reps' => 6,
+        ]);
+        RoutineSetGroup::create([
+            'routine_block_id' => $block->id,
+            'type' => SetGroupType::WarmUp,
+            'set_count' => 1,
+            'rest_seconds' => 45,
+        ]);
+        RoutineSetGroup::create([
+            'routine_block_id' => $block->id,
+            'type' => SetGroupType::Working,
+            'set_count' => 1,
+            'rest_seconds' => 90,
+        ]);
+
+        $workout = app(WorkoutService::class)->createWorkout($routine);
+
+        $this->actingAs($this->user)
+            ->get(route('workouts.play', $workout))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('workouts/Play')
+                ->where('workout.blocks.0.has_setup_after_warm_up', true)
+            );
+    }
+
     private function createWorkoutForUser()
     {
         $routine = Routine::factory()->withUser($this->user)->create();

@@ -24,6 +24,7 @@ class WorkoutPlayerBlockData extends Data
         public readonly int $position,
         public readonly bool $isSuperset,
         public readonly bool $hasSetupAfter,
+        public readonly bool $hasSetupAfterWarmUp,
         #[DataCollectionOf(WorkoutPlayerExerciseData::class)]
         public readonly DataCollection $exercises,
         #[DataCollectionOf(WorkoutPlayerSetData::class)]
@@ -73,6 +74,7 @@ class WorkoutPlayerBlockData extends Data
             position: $block->position,
             isSuperset: $block->is_superset,
             hasSetupAfter: $block->has_setup_after,
+            hasSetupAfterWarmUp: $block->has_setup_after_warm_up,
             exercises: WorkoutPlayerExerciseData::collect(
                 $block->blockExercises->map(fn (WorkoutBlockExercise $exercise) => WorkoutPlayerExerciseData::fromBlockExercise($exercise)),
                 DataCollection::class,

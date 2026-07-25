@@ -17,6 +17,7 @@ class RoutineEditorBlockData extends Data
     public function __construct(
         public readonly bool $isSuperset,
         public readonly bool $hasSetupAfter,
+        public readonly bool $hasSetupAfterWarmUp,
         #[DataCollectionOf(RoutineEditorBlockExerciseData::class)]
         public readonly DataCollection $exercises,
         public readonly SyncSetGroupData $working,

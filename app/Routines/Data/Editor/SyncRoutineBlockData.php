@@ -27,5 +27,7 @@ class SyncRoutineBlockData extends Data
         public readonly SyncSetGroupData $working,
 
         public readonly ?SyncWarmUpData $warmUp = null,
+
+        public readonly bool $hasSetupAfterWarmUp = false,
     ) {}
 }

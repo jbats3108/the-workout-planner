@@ -61,6 +61,7 @@ class RoutineEditorService
             'position' => $position,
             'is_superset' => $blockData->isSuperset,
             'has_setup_after' => $blockData->hasSetupAfter,
+            'has_setup_after_warm_up' => $blockData->hasSetupAfterWarmUp,
         ]);
 
         foreach (array_values($exercises) as $index => $exerciseData) {

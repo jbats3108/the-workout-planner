@@ -48,6 +48,7 @@ class RoutineEditorPageData extends Data
             return new RoutineEditorBlockData(
                 isSuperset: $block->is_superset,
                 hasSetupAfter: $block->has_setup_after,
+                hasSetupAfterWarmUp: $block->has_setup_after_warm_up,
                 exercises: RoutineEditorBlockExerciseData::collect(
                     $block->blockExercises->map(fn (RoutineBlockExercise $row) => new RoutineEditorBlockExerciseData(
                         exerciseId: $row->exercise_id,

@@ -25,6 +25,7 @@ type PlayerBlock = {
     position: number;
     is_superset: boolean;
     has_setup_after: boolean;
+    has_setup_after_warm_up: boolean;
     exercises: Array<{
         id: number;
         name: string;
@@ -55,10 +56,14 @@ const props = defineProps<{
     plate_profile: PlateProfile;
 }>();
 
+type SetupPhase = 'after_warm_up' | 'after_block';
+
 type Focus =
     | { kind: 'set'; blockIndex: number; setId: number }
-    | { kind: 'setup'; blockIndex: number }
+    | { kind: 'setup'; blockIndex: number; phase: SetupPhase }
     | { kind: 'done' };
+
+const setupKey = (blockId: number, phase: SetupPhase) => `${blockId}:${phase}`;
 
 const flatSets = computed(() =>
     props.workout.blocks.flatMap((block, blockIndex) =>
@@ -69,18 +74,36 @@ const flatSets = computed(() =>
 const firstIncomplete = (): Focus => {
     for (let blockIndex = 0; blockIndex < props.workout.blocks.length; blockIndex++) {
         const block = props.workout.blocks[blockIndex];
-        const incomplete = block.sets.find((set) => !set.completed);
-        if (incomplete) {
-            return { kind: 'set', blockIndex, setId: incomplete.id };
+        const warmUps = block.sets.filter((s) => s.group_type === 'warm_up');
+        const working = block.sets.filter((s) => s.group_type === 'working');
+
+        const incompleteWarmUp = warmUps.find((s) => !s.completed);
+        if (incompleteWarmUp) {
+            return { kind: 'set', blockIndex, setId: incompleteWarmUp.id };
         }
-        if (block.has_setup_after && !setupDone.value[block.id]) {
-            return { kind: 'setup', blockIndex };
+
+        const hasIncompleteWorking = working.some((s) => !s.completed);
+        if (
+            block.has_setup_after_warm_up &&
+            hasIncompleteWorking &&
+            !setupDone.value[setupKey(block.id, 'after_warm_up')]
+        ) {
+            return { kind: 'setup', blockIndex, phase: 'after_warm_up' };
+        }
+
+        const incompleteWorking = working.find((s) => !s.completed);
+        if (incompleteWorking) {
+            return { kind: 'set', blockIndex, setId: incompleteWorking.id };
+        }
+
+        if (block.has_setup_after && !setupDone.value[setupKey(block.id, 'after_block')]) {
+            return { kind: 'setup', blockIndex, phase: 'after_block' };
         }
     }
     return { kind: 'done' };
 };
 
-const setupDone = ref<Record<number, boolean>>({});
+const setupDone = ref<Record<string, boolean>>({});
 const focus = ref<Focus>(firstIncomplete());
 
 watch(
@@ -129,6 +152,11 @@ watch(
     (entry) => {
         if (!entry) return;
         setForm.reps = entry.set.logged_reps ?? entry.set.target_reps ?? 0;
+        // Warm-ups are % of working — always prefer the derived target, not the prior logged warm-up.
+        if (entry.set.group_type === 'warm_up') {
+            setForm.weight_kg = entry.set.logged_weight_kg ?? entry.set.target_weight_kg ?? 0;
+            return;
+        }
         setForm.weight_kg =
             entry.set.logged_weight_kg ?? previousSetWeightKg(entry) ?? entry.set.target_weight_kg ?? 0;
     },
@@ -227,10 +255,25 @@ const shouldRestAfter = (block: PlayerBlock, set: PlayerSet): boolean => {
     return sameIndex.every((s) => s.completed || s.id === set.id);
 };
 
+/** True once this set finishes the block's warm-up group (treating the current set as done). */
+const finishesWarmUpGroup = (block: PlayerBlock, set: PlayerSet): boolean => {
+    if (set.group_type !== 'warm_up') return false;
+    return block.sets
+        .filter((s) => s.group_type === 'warm_up')
+        .every((s) => s.completed || s.id === set.id);
+};
+
+const workingRestSeconds = (block: PlayerBlock): number =>
+    block.sets.find((s) => s.group_type === 'working')?.rest_seconds ?? 0;
+
 const completeSet = () => {
     if (!current.value || props.workout.status !== 'in_progress') return;
     const { block, set } = current.value;
-    const restAfter = shouldRestAfter(block, set) ? set.rest_seconds : 0;
+    let restAfter = shouldRestAfter(block, set) ? set.rest_seconds : 0;
+    // When setup-before-working is planned, rest belongs after setup — not before it.
+    if (restAfter > 0 && block.has_setup_after_warm_up && finishesWarmUpGroup(block, set)) {
+        restAfter = 0;
+    }
 
     setForm.post(route('workouts.sets.complete', { workout: props.workout.id, set: set.id }), {
         preserveScroll: true,
@@ -251,10 +294,28 @@ const skipRest = () => {
 
 const acknowledgeSetup = () => {
     if (focus.value.kind !== 'setup') return;
+    const phase = focus.value.phase;
     const block = props.workout.blocks[focus.value.blockIndex];
-    setupDone.value[block.id] = true;
+    setupDone.value[setupKey(block.id, phase)] = true;
+
+    if (phase === 'after_warm_up') {
+        const rest = workingRestSeconds(block);
+        if (rest > 0) {
+            startRest(rest);
+            return;
+        }
+    }
+
     focus.value = firstIncomplete();
 };
+
+const setupHint = computed(() => {
+    if (focus.value.kind !== 'setup' || !currentBlock.value) return '';
+    if (focus.value.phase === 'after_warm_up') {
+        return `Block ${currentBlock.value.position} — before working sets`;
+    }
+    return `After block ${currentBlock.value.position}`;
+});
 
 const finishWorkout = () => {
     if (props.workout.status !== 'in_progress') return;
@@ -400,7 +461,7 @@ const formatPlateStack = computed(() => {
         <div v-else-if="focus.kind === 'setup' && currentBlock" class="flex flex-1 flex-col items-center justify-center gap-6 px-6">
             <p class="text-sm uppercase tracking-widest text-muted-foreground">Setup</p>
             <p class="text-center text-2xl font-semibold">Change equipment, then continue</p>
-            <p class="text-sm text-muted-foreground">After block {{ currentBlock.position }}</p>
+            <p class="text-sm text-muted-foreground">{{ setupHint }}</p>
             <button type="button" class="rounded-full bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground" @click="acknowledgeSetup">
                 Setup done
             </button>
@@ -430,7 +491,6 @@ const formatPlateStack = computed(() => {
                 Target
                 <span v-if="current.set.target_weight_kg != null">{{ current.set.target_weight_kg }}{{ workout.weight_unit }}</span>
                 <span v-if="current.set.target_reps != null"> × {{ current.set.target_reps }}</span>
-                <span v-else> warm-up</span>
             </p>
 
             <form class="mt-8 flex flex-1 flex-col gap-4" @submit.prevent="completeSet">
