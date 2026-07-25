@@ -13,6 +13,7 @@ type PlateProfile = { name: string; bars: PlateBar[]; plates: PlateRow[] };
 
 const props = defineProps<{
     warm_up_steps_default: WarmUpStep[];
+    warm_up_defaults_scope: 'all_blocks' | 'first_block';
     using_app_fallback: boolean;
     plate_profile: PlateProfile;
 }>();
@@ -29,6 +30,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
 const form = useForm({
     warm_up_steps_default: props.warm_up_steps_default.map((s) => ({ ...s })),
+    warm_up_defaults_scope: props.warm_up_defaults_scope,
 });
 
 const plateForm = useForm({
@@ -106,6 +108,18 @@ const gToKg = (g: number) => g / 1000;
                 </p>
 
                 <form class="space-y-4" @submit.prevent="submit">
+                    <fieldset class="space-y-2">
+                        <legend class="text-sm text-muted-foreground">Apply defaults to</legend>
+                        <label class="flex items-center gap-2 text-sm">
+                            <input v-model="form.warm_up_defaults_scope" type="radio" value="all_blocks" />
+                            Every new block
+                        </label>
+                        <label class="flex items-center gap-2 text-sm">
+                            <input v-model="form.warm_up_defaults_scope" type="radio" value="first_block" />
+                            First block only
+                        </label>
+                    </fieldset>
+
                     <div
                         v-for="(step, index) in form.warm_up_steps_default"
                         :key="index"

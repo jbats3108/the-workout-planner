@@ -145,6 +145,7 @@ class UpdateRoutineControllerTest extends TestCase
             ->component('routines/Edit')
             ->has('routine')
             ->has('exercises')
-            ->has('warm_up_defaults'));
+            ->has('warm_up_defaults')
+            ->has('warm_up_defaults_scope'));
     }
 }

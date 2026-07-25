@@ -4,6 +4,7 @@ namespace App\Settings\Http\Controllers;
 
 use App\Shared\Http\Controllers\Controller;
 use App\Users\Data\UpdateTrainingDefaultsData;
+use App\Users\Enums\WarmUpDefaultsScope;
 use App\Users\Models\User;
 use App\Users\Services\PlateProfileService;
 use Illuminate\Http\RedirectResponse;
@@ -20,6 +21,7 @@ class TrainingDefaultsController extends Controller
 
         return Inertia::render('settings/Training', [
             'warm_up_steps_default' => $user->resolvedWarmUpStepsDefault(),
+            'warm_up_defaults_scope' => ($user->warm_up_defaults_scope ?? WarmUpDefaultsScope::AllBlocks)->value,
             'using_app_fallback' => $user->warm_up_steps_default === null,
             'plate_profile' => $profiles->profilePayloadFor($user),
         ]);
@@ -41,6 +43,7 @@ class TrainingDefaultsController extends Controller
             ));
 
         $user->warm_up_steps_default = $steps;
+        $user->warm_up_defaults_scope = $data->warmUpDefaultsScope;
         $user->save();
 
         return redirect()

@@ -42,6 +42,7 @@ const props = defineProps<{
     exercises: ExerciseOption[];
     weight_unit: string;
     warm_up_defaults: WarmUpStep[];
+    warm_up_defaults_scope?: 'all_blocks' | 'first_block';
 }>();
 
 const exerciseQuery = ref('');
@@ -90,8 +91,8 @@ const defaultWarmUpSteps = (): WarmUpStep[] =>
         reps: s.reps,
     }));
 
-const emptyBlock = (superset = false): Block => {
-    const steps = defaultWarmUpSteps();
+const emptyBlock = (superset = false, seedWarmUp = true): Block => {
+    const steps = seedWarmUp ? defaultWarmUpSteps() : [];
     return {
         is_superset: superset,
         has_setup_after: false,
@@ -212,7 +213,9 @@ const formatRest = (seconds: number) => {
 const exerciseName = (id: number | null) => props.exercises.find((e) => e.id === id)?.name ?? 'Exercise';
 
 const addBlock = (superset = false) => {
-    form.blocks.push(emptyBlock(superset));
+    const seedWarmUp =
+        (props.warm_up_defaults_scope ?? 'all_blocks') === 'all_blocks' || form.blocks.length === 0;
+    form.blocks.push(emptyBlock(superset, seedWarmUp));
     active.value = form.blocks.length - 1;
 };
 

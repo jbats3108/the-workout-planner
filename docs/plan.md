@@ -32,6 +32,7 @@ Ordered for the core loop; reshuffle if product priority changes.
 14. **Warm-up setup steps** — ~~plan setup (press-when-done) pauses inside the warm-up flow, not only setup-after-block~~ done (`has_setup_after_warm_up`: once between last warm-up and first working)
 15. **Rest after warm-ups** — ~~make warm-up group rest first-class in editor + Play (rest after warm-up sets / before working)~~ done (editor exposes WU rest; Play already used group rest)
 16. **Clear block warm-up** — ~~one-tap remove all warm-up steps from a block in the editor~~ done
+18. **Warm-up defaults scope** — ~~Settings: seed warm-ups into every new block vs first block only~~ done
 17. **Flaky-network drafts** — best-effort offline/queue for player logging (postponed)
 
 ## Grill: app-like mobile behaviour

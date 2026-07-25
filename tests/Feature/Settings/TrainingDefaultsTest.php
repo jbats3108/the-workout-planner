@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Settings;
 
+use App\Users\Enums\WarmUpDefaultsScope;
 use App\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
@@ -28,6 +29,7 @@ class TrainingDefaultsTest extends TestCase
         $response->assertInertia(fn ($page) => $page
             ->component('settings/Training')
             ->where('using_app_fallback', true)
+            ->where('warm_up_defaults_scope', 'all_blocks')
             ->has('warm_up_steps_default', 3)
             ->has('plate_profile'));
     }
@@ -40,6 +42,7 @@ class TrainingDefaultsTest extends TestCase
                 ['percent' => 45, 'reps' => 6],
                 ['percent' => 70, 'reps' => 2],
             ],
+            'warm_up_defaults_scope' => 'first_block',
         ]);
 
         $response->assertRedirect(route('training.edit'));
@@ -60,6 +63,7 @@ class TrainingDefaultsTest extends TestCase
             ],
             $this->user->resolvedWarmUpStepsDefault()
         );
+        $this->assertSame(WarmUpDefaultsScope::FirstBlock, $this->user->warm_up_defaults_scope);
     }
 
     #[Test]

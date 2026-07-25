@@ -4,6 +4,7 @@ namespace App\Users\Models;
 
 use App\Exercises\Models\Exercise;
 use App\Routines\Models\Routine;
+use App\Users\Enums\WarmUpDefaultsScope;
 use App\Users\Enums\WeightUnit;
 use App\Workouts\Models\Workout;
 use Database\Factories\UserFactory;
@@ -31,6 +32,7 @@ class User extends Authenticatable
         'achievement_floor_default',
         'progression_target_default',
         'warm_up_steps_default',
+        'warm_up_defaults_scope',
     ];
 
     /** @var list<string> */
@@ -54,6 +56,7 @@ class User extends Authenticatable
             'achievement_floor_default' => 'integer',
             'progression_target_default' => 'integer',
             'warm_up_steps_default' => 'array',
+            'warm_up_defaults_scope' => WarmUpDefaultsScope::class,
         ];
     }
 
