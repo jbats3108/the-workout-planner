@@ -47,12 +47,16 @@ Minimum reps at the working weight that triggers a bump suggestion. Optional; us
 _Avoid_: Bump reps, increase-at, progression threshold
 
 **Carry-forward**:
-On finishing (or when applying progression), set the routine’s working weight for an exercise to the highest achieved top weight from the relevant workout — without asking. Does not apply from deload workouts.
+On finishing (or when re-evaluating an eligible finished workout), set the routine’s working weight for an exercise to the highest achieved top weight from that workout — without asking. Only raises weight; never lowers. Does not apply from deload workouts.
 _Avoid_: Sync, catch-up
 
 **Bump**:
-A confirmed increase to an exercise’s working weight on the routine, offered when the progression target was hit. Never silent.
+A confirmed increase to an exercise’s working weight on the routine, offered when the progression target was hit. Never silent. Each confirmation produces a **Bump Record**.
 _Avoid_: Increase, PR jump, auto-load
+
+**Bump Record**:
+A durable record that a confirmed **Bump** was applied from a specific finished **Workout** to a routine exercise (from→to weight). Source of truth for offering undo when that workout’s working sets are edited and progression is re-evaluated.
+_Avoid_: Bump event, progression audit, PR log
 
 **Deload Recipe**:
 Per-routine uniform factors (weight and reps) applied when starting in deload mode. Same factors for every exercise on the routine.

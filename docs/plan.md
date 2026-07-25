@@ -35,7 +35,23 @@ Ordered for the core loop; reshuffle if product priority changes.
 16. **Clear block warm-up** — ~~one-tap remove all warm-up steps from a block in the editor~~ done
 18. **Warm-up defaults scope** — ~~Settings: seed warm-ups into every new block vs first block only~~ done
 19. **Dropsets** — per working-set-slot multi-segment sets in editor + Play (grill notes below); update `CONTEXT.md` when shipping
+20. **Finished workout history** — browse/edit finished workouts; re-eval progression when eligible (grill notes below; ADR-0004)
 17. **Flaky-network drafts** — best-effort offline/queue for player logging (postponed)
+
+## Grill: finished workout history
+
+Decisions (2026-07-25):
+
+- **Job (v1):** browse finished **Workouts** (list → compact detail). Not per-exercise strength-over-time.
+- **Entry:** nav **History** + dashboard recent strip
+- **List:** finished only (no discarded); chronological; filter by routine
+- **Detail:** compact log; warm-ups read-only; edit working weight + reps only; do not surface `completed_at`
+- **Re-eval eligibility:** latest **non-deload** finished workout for that routine; a deload finished after it does **not** block. Older finished workouts: log edit only, no routine change
+- **On eligible save:** silent upward **Carry-forward**; then same **Progression** page for new **Bump**s and **undo bump**s
+- **Undo:** use persisted **Bump Record**s (ADR-0004), not inference
+- **Language:** UI label History = list of finished Workouts; not a new domain type. Avoid session/log/activity
+
+Deferred: exercise strength-over-time charts; warm-up edits on history; discarded in list; structure edits on finished workouts; step-by-step impl plan (separate pass)
 
 ## Grill: dropsets
 
@@ -68,7 +84,7 @@ Deferred: installable PWA, tabbed app shell, haptics.
 
 ## Parking lot
 
-- Editable history of finished workouts
+- Per-exercise strength-over-time (charts / PR timeline) — needs its own grill
 - Ad-hoc setup from player (beyond planned `has_setup_after`)
 - Transition duration as a stored preference (today client-side for supersets)
 - lb display/conversion end-to-end (API still kg-centric like the editor)
