@@ -8,7 +8,7 @@ This is **OVRLOAD** (repo: the-workout-planner): a Laravel 12 (PHP 8.4) backend 
 - Start everything with `composer run dev`. This runs `php artisan serve` (http://localhost:8000), `queue:listen`, `pail` (logs), and `npm run dev` (Vite on http://localhost:5173) concurrently. Run it in a long-lived tmux session, not as a one-shot command.
 - Phone / LAN: set `VITE_DEV_HOST` in `.env` to this machine’s LAN IP (`hostname -I`), then `composer run dev:lan`. Open `http://<that-ip>:8000` on the phone. If the IP changes (new Wi‑Fi), update `VITE_DEV_HOST` and restart.
 - The app requires built or dev-served frontend assets. When using `composer run dev`, Vite serves them in dev mode. Without Vite running, the app expects a production build (`npm run build`, output in `public/build/`).
-- Seeded login (from `database/seeders/UserSeeder.php`): `admin1@test.com` / `password` (admin) and `user1@test.com` / `password` (regular user). Registration is also available at `/register`.
+- Seeded login (from `database/seeders/UserSeeder.php`): `admin1@test.com` / `password` (admin) and `user1@test.com` / `password` (regular user). Registration is invite-only: leave `REGISTRATION_INVITE` empty locally (no public signup). Admins create one-time links under **Admin → Invites** (copy / mailto). Optional master secret for bootstrap: `php artisan registration:invite-secret --write` (production only).
 
 ### Testing / linting / building (see `composer.json`, `package.json`, CI in `.github/workflows/`)
 - Tests: `./vendor/bin/phpunit` (or `composer test`). Uses an in-memory SQLite DB.

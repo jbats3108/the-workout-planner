@@ -10,6 +10,7 @@ const sidebarNavItems: NavItem[] = [
     { title: 'Exercises', href: '/admin/exercises' },
     { title: 'Muscle groups', href: '/admin/muscle-groups' },
     { title: 'Users', href: '/admin/users' },
+    { title: 'Invites', href: '/admin/invites' },
 ];
 
 const page = usePage();

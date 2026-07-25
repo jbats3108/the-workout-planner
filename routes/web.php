@@ -1,9 +1,12 @@
 <?php
 
 use App\Admin\Http\Controllers\IndexAdminExercisesController;
+use App\Admin\Http\Controllers\IndexAdminInvitesController;
 use App\Admin\Http\Controllers\IndexAdminMuscleGroupsController;
 use App\Admin\Http\Controllers\IndexAdminUsersController;
+use App\Admin\Http\Controllers\RevokeAdminInviteController;
 use App\Admin\Http\Controllers\ShowAdminController;
+use App\Admin\Http\Controllers\StoreAdminInviteController;
 use App\Dashboard\Http\Controllers\ShowDashboardController;
 use App\Exercises\Http\Controllers\DeleteExerciseController;
 use App\Exercises\Http\Controllers\StoreExerciseController;
@@ -128,6 +131,9 @@ Route::middleware('auth')->group(function (): void {
         Route::get('/exercises', IndexAdminExercisesController::class)->name('admin.exercises');
         Route::get('/muscle-groups', IndexAdminMuscleGroupsController::class)->name('admin.muscle-groups');
         Route::get('/users', IndexAdminUsersController::class)->name('admin.users');
+        Route::get('/invites', IndexAdminInvitesController::class)->name('admin.invites');
+        Route::post('/invites', StoreAdminInviteController::class)->name('admin.invites.store');
+        Route::post('/invites/{invite}/revoke', RevokeAdminInviteController::class)->name('admin.invites.revoke');
     });
 });
 

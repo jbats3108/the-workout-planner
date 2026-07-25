@@ -2,6 +2,7 @@
 
 namespace App\Auth\Http\Controllers;
 
+use App\Auth\Services\RegistrationInviteService;
 use App\Shared\Http\Controllers\Controller;
 use App\Users\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -16,12 +17,18 @@ use Inertia\Response;
 
 class RegisteredUserController extends Controller
 {
+    public function __construct(
+        private readonly RegistrationInviteService $invites,
+    ) {}
+
     /**
      * Show the registration page.
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
-        return Inertia::render('auth/Register');
+        return Inertia::render('auth/Register', [
+            'invite' => $request->query('invite'),
+        ]);
     }
 
     /**
@@ -35,13 +42,19 @@ class RegisteredUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Password::defaults()],
+            'invite' => 'required|string',
         ]);
+
+        $resolved = $this->invites->resolve($request->string('invite')->toString());
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+        $user->assignRole($resolved['role']);
+        $this->invites->consume($resolved['invite'], $user);
 
         event(new Registered($user));
 

@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withCommands([
         __DIR__.'/../app/Exercises/Console',
+        __DIR__.'/../app/Auth/Console',
     ])
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
@@ -30,6 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => RoleMiddleware::class,
             'permission' => PermissionMiddleware::class,
+            'registration.invite' => \App\Auth\Http\Middleware\EnsureRegistrationInvite::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

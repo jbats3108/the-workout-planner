@@ -48,6 +48,33 @@ class AdminPanelTest extends TestCase
             ->assertInertia(fn ($page) => $page
                 ->component('admin/Users')
                 ->has('users'));
+
+        $this->actingAs($this->adminUser)->get(route('admin.invites'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('admin/Invites')
+                ->has('invites'));
+    }
+
+    #[Test]
+    public function admins_can_create_and_revoke_invites(): void
+    {
+        $this->actingAs($this->adminUser)
+            ->post(route('admin.invites.store'), [
+                'note' => 'Gym buddy',
+                'role' => 'user',
+                'expires_in_days' => 3,
+            ])
+            ->assertRedirect(route('admin.invites'))
+            ->assertSessionHas('invite_url');
+
+        $inviteId = \App\Auth\Models\RegistrationInvite::query()->firstOrFail()->id;
+
+        $this->actingAs($this->adminUser)
+            ->post(route('admin.invites.revoke', $inviteId))
+            ->assertRedirect(route('admin.invites'));
+
+        $this->assertNotNull(\App\Auth\Models\RegistrationInvite::query()->find($inviteId)?->revoked_at);
     }
 
     #[Test]
@@ -57,6 +84,7 @@ class AdminPanelTest extends TestCase
         $this->actingAs($this->user)->get(route('admin.exercises'))->assertForbidden();
         $this->actingAs($this->user)->get(route('admin.muscle-groups'))->assertForbidden();
         $this->actingAs($this->user)->get(route('admin.users'))->assertForbidden();
+        $this->actingAs($this->user)->get(route('admin.invites'))->assertForbidden();
     }
 
     #[Test]

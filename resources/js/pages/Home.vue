@@ -24,14 +24,8 @@ import { Head, Link } from '@inertiajs/vue3';
 
             <div class="home-cta mt-10 flex w-full max-w-sm flex-col gap-3 sm:max-w-none sm:flex-row sm:justify-center">
                 <Link
-                    :href="route('register')"
-                    class="rounded-md bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
-                >
-                    Create account
-                </Link>
-                <Link
                     :href="route('login')"
-                    class="rounded-md px-8 py-3 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                    class="rounded-md bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
                 >
                     Log in
                 </Link>

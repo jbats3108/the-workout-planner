@@ -8,11 +8,16 @@ import AuthBase from '@/layouts/AuthLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 
+const props = defineProps<{
+    invite: string;
+}>();
+
 const form = useForm({
     name: '',
     email: '',
     password: '',
     password_confirmation: '',
+    invite: props.invite,
 });
 
 const submit = () => {
@@ -27,6 +32,7 @@ const submit = () => {
         <Head title="Register" />
 
         <form @submit.prevent="submit" class="flex flex-col gap-6">
+            <input type="hidden" name="invite" :value="form.invite" />
             <div class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="name">Name</Label>

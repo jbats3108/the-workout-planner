@@ -35,6 +35,13 @@ const breadcrumbs: BreadcrumbItem[] = [{ title: 'Admin', href: '/admin' }];
                     <p class="text-sm font-semibold">Users</p>
                     <p class="mt-1 text-xs text-muted-foreground">Read-only account list</p>
                 </Link>
+                <Link
+                    :href="route('admin.invites')"
+                    class="rounded-xl border border-border bg-card p-4 transition hover:border-primary"
+                >
+                    <p class="text-sm font-semibold">Invites</p>
+                    <p class="mt-1 text-xs text-muted-foreground">Create and send registration links</p>
+                </Link>
             </div>
         </AdminLayout>
     </AppLayout>
