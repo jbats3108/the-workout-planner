@@ -2,6 +2,7 @@
 
 namespace App\Admin\Http\Controllers;
 
+use App\Exercises\Enums\ExerciseEquipment;
 use App\Exercises\Models\Exercise;
 use App\MuscleGroups\Models\MuscleGroup;
 use App\Shared\Http\Controllers\Controller;
@@ -21,6 +22,7 @@ class IndexAdminExercisesController extends Controller
                 'id' => $exercise->id,
                 'name' => $exercise->getName(),
                 'slug' => $exercise->getSlug(),
+                'equipment' => $exercise->equipment?->value,
                 'primary_muscle_group' => $exercise->primaryMuscleGroup->getName(),
                 'primary_muscle_group_slug' => $exercise->primaryMuscleGroup->getSlug(),
                 'secondary_muscle_group' => $exercise->secondaryMuscleGroup?->getName(),
@@ -35,9 +37,18 @@ class IndexAdminExercisesController extends Controller
                 'slug' => $group->getSlug(),
             ]);
 
+        $equipmentOptions = array_map(
+            fn (ExerciseEquipment $equipment): array => [
+                'value' => $equipment->value,
+                'label' => $equipment->label(),
+            ],
+            ExerciseEquipment::cases(),
+        );
+
         return Inertia::render('admin/Exercises', [
             'exercises' => $exercises,
             'muscle_groups' => $muscleGroups,
+            'equipment_options' => $equipmentOptions,
         ]);
     }
 }

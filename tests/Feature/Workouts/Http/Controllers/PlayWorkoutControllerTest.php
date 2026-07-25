@@ -123,6 +123,42 @@ class PlayWorkoutControllerTest extends TestCase
             );
     }
 
+    #[Test]
+    public function it_snapshots_exercise_equipment_into_the_player(): void
+    {
+        $routine = Routine::factory()->withUser($this->user)->create();
+        $block = RoutineBlock::create([
+            'routine_id' => $routine->id,
+            'position' => 1,
+        ]);
+        RoutineBlockExercise::create([
+            'routine_block_id' => $block->id,
+            'exercise_id' => Exercise::factory()->dumbbell()->create([
+                'name' => 'Alternate Hammer Curl',
+            ])->id,
+            'position' => 1,
+            'working_weight_g' => 20000,
+            'prescribed_reps' => 10,
+        ]);
+        RoutineSetGroup::create([
+            'routine_block_id' => $block->id,
+            'type' => SetGroupType::Working,
+            'set_count' => 1,
+            'rest_seconds' => 90,
+        ]);
+
+        $workout = app(WorkoutService::class)->createWorkout($routine);
+
+        $this->actingAs($this->user)
+            ->get(route('workouts.play', $workout))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('workouts/Play')
+                ->where('workout.blocks.0.sets.0.equipment', 'dumbbell')
+                ->where('workout.blocks.0.exercises.0.equipment', 'dumbbell')
+            );
+    }
+
     private function createWorkoutForUser()
     {
         $routine = Routine::factory()->withUser($this->user)->create();

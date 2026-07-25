@@ -86,6 +86,7 @@ class WorkoutService
                         'exercise_id' => $routineBlockExercise->exercise_id,
                         'position' => $routineBlockExercise->position,
                         'exercise_name' => $routineBlockExercise->exercise->getName(),
+                        'equipment' => $routineBlockExercise->exercise->equipment,
                         'working_weight_g' => (int) round($routineBlockExercise->working_weight_g * $weightFactor),
                         'prescribed_reps' => max(1, (int) round($routineBlockExercise->prescribed_reps * $repsFactor)),
                         'achievement_floor' => $routineBlockExercise->achievement_floor_override

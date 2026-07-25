@@ -14,6 +14,7 @@ class StoreExerciseController extends Controller
         $exercise = new Exercise([
             'name' => $request->name,
             'slug' => $request->slug,
+            'equipment' => $request->equipment,
         ]);
         $exercise->primaryMuscleGroup()->associate($request->primaryMuscleGroup);
         $exercise->secondaryMuscleGroup()->associate($request->secondaryMuscleGroup);

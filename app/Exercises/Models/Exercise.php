@@ -2,6 +2,7 @@
 
 namespace App\Exercises\Models;
 
+use App\Exercises\Enums\ExerciseEquipment;
 use App\MuscleGroups\Models\MuscleGroup;
 use App\Shared\Traits\HasName;
 use App\Shared\Traits\HasSlug;
@@ -28,7 +29,16 @@ class Exercise extends Model
         'slug',
         'primary_muscle_group_id',
         'secondary_muscle_group_id',
+        'equipment',
     ];
+
+    /** @return array<string, string> */
+    protected function casts(): array
+    {
+        return [
+            'equipment' => ExerciseEquipment::class,
+        ];
+    }
 
     /** @return BelongsTo<User, $this> */
     public function user(): BelongsTo

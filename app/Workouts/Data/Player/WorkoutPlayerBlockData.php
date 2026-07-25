@@ -59,6 +59,7 @@ class WorkoutPlayerBlockData extends Data
                         return WorkoutPlayerSetData::fromSet(
                             $set,
                             $exercise->exercise_name,
+                            $exercise->equipment,
                             $exercise->working_weight_g,
                             $exercise->prescribed_reps,
                             $group->type,

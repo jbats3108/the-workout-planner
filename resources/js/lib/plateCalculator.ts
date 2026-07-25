@@ -141,3 +141,8 @@ export function defaultBarG(
 export function gramsToKg(g: number): number {
     return Math.round(g) / 1000
 }
+
+/** Barbell plate stacks apply to barbell / E-Z curl bar work only. */
+export function usesBarbellPlates(equipment: string | null | undefined): boolean {
+    return equipment === 'barbell' || equipment === 'ez_curl_bar'
+}

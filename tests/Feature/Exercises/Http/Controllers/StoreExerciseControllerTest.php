@@ -85,6 +85,7 @@ class StoreExerciseControllerTest extends TestCase
             'slug' => 'test-exercise',
             'primary_muscle_group' => $this->validMuscleGroup->getSlug(),
             'secondary_muscle_group' => null,
+            'equipment' => 'barbell',
         ];
 
         // When
@@ -97,6 +98,7 @@ class StoreExerciseControllerTest extends TestCase
         $this->assertDatabaseHas(Exercise::class, [
             'name' => 'Test Exercise',
             'slug' => 'test-exercise',
+            'equipment' => 'barbell',
         ]);
 
         $createdExercise = Exercise::lookup('test-exercise');

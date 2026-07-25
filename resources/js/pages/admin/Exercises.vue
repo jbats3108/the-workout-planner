@@ -8,10 +8,12 @@ import { Head, router, useForm, usePage } from '@inertiajs/vue3';
 import { computed, ref, watch } from 'vue';
 
 type MuscleGroupOption = { name: string; slug: string };
+type EquipmentOption = { value: string; label: string };
 type AdminExercise = {
     id: number;
     name: string;
     slug: string;
+    equipment: string | null;
     primary_muscle_group: string;
     primary_muscle_group_slug: string;
     secondary_muscle_group: string | null;
@@ -21,6 +23,7 @@ type AdminExercise = {
 const props = defineProps<{
     exercises: AdminExercise[];
     muscle_groups: MuscleGroupOption[];
+    equipment_options: EquipmentOption[];
 }>();
 
 const page = usePage();
@@ -44,6 +47,7 @@ const form = useForm({
     slug: '',
     primary_muscle_group: props.muscle_groups[0]?.slug ?? '',
     secondary_muscle_group: null as string | null,
+    equipment: null as string | null,
 });
 
 watch(
@@ -68,8 +72,9 @@ const submit = () => {
     form.transform((data) => ({
         ...data,
         secondary_muscle_group: data.secondary_muscle_group || null,
+        equipment: data.equipment || null,
     })).post(route('exercises.store'), {
-        onSuccess: () => form.reset('name', 'slug'),
+        onSuccess: () => form.reset('name', 'slug', 'equipment'),
     });
 };
 
@@ -136,6 +141,19 @@ const remove = (exercise: AdminExercise) => {
                         </select>
                         <InputError :message="form.errors.secondary_muscle_group" />
                     </label>
+                    <label class="flex flex-col gap-1 text-xs text-muted-foreground">
+                        Equipment (optional)
+                        <select
+                            v-model="form.equipment"
+                            class="rounded border border-border bg-background px-3 py-2 text-sm text-foreground"
+                        >
+                            <option :value="null">Unspecified</option>
+                            <option v-for="opt in equipment_options" :key="opt.value" :value="opt.value">
+                                {{ opt.label }}
+                            </option>
+                        </select>
+                        <InputError :message="form.errors.equipment" />
+                    </label>
                 </div>
                 <button
                     type="submit"
@@ -165,6 +183,7 @@ const remove = (exercise: AdminExercise) => {
                             <p class="font-mono text-xs text-muted-foreground">
                                 {{ exercise.slug }} · {{ exercise.primary_muscle_group }}
                                 <span v-if="exercise.secondary_muscle_group"> / {{ exercise.secondary_muscle_group }}</span>
+                                <span v-if="exercise.equipment"> · {{ exercise.equipment }}</span>
                             </p>
                         </div>
                         <button

@@ -66,4051 +66,4726 @@
             "name": "3/4 Sit-Up",
             "slug": "34-sit-up",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Ab Crunch Machine",
             "slug": "ab-crunch-machine",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "machine"
         },
         {
             "name": "Ab Roller",
             "slug": "ab-roller",
             "primary": "core",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "other"
         },
         {
             "name": "Advanced Kettlebell Windmill",
             "slug": "advanced-kettlebell-windmill",
             "primary": "core",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "kettlebells"
         },
         {
             "name": "Air Bike",
             "slug": "air-bike",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Alternate Hammer Curl",
             "slug": "alternate-hammer-curl",
             "primary": "biceps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "dumbbell"
         },
         {
             "name": "Alternate Heel Touchers",
             "slug": "alternate-heel-touchers",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Alternate Incline Dumbbell Curl",
             "slug": "alternate-incline-dumbbell-curl",
             "primary": "biceps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "dumbbell"
         },
         {
             "name": "Alternating Cable Shoulder Press",
             "slug": "alternating-cable-shoulder-press",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "cable"
         },
         {
             "name": "Alternating Deltoid Raise",
             "slug": "alternating-deltoid-raise",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Alternating Floor Press",
             "slug": "alternating-floor-press",
             "primary": "chest",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "kettlebells"
         },
         {
             "name": "Alternating Hang Clean",
             "slug": "alternating-hang-clean",
             "primary": "hamstrings",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "kettlebells"
         },
         {
             "name": "Alternating Kettlebell Press",
             "slug": "alternating-kettlebell-press",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "kettlebells"
         },
         {
             "name": "Alternating Kettlebell Row",
             "slug": "alternating-kettlebell-row",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "kettlebells"
         },
         {
             "name": "Alternating Renegade Row",
             "slug": "alternating-renegade-row",
             "primary": "back",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "kettlebells"
         },
         {
             "name": "Anti-Gravity Press",
             "slug": "anti-gravity-press",
             "primary": "shoulders",
-            "secondary": "back"
+            "secondary": "back",
+            "equipment": "barbell"
         },
         {
             "name": "Arnold Dumbbell Press",
             "slug": "arnold-dumbbell-press",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "dumbbell"
         },
         {
             "name": "Around The Worlds",
             "slug": "around-the-worlds",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "dumbbell"
         },
         {
             "name": "Atlas Stone Trainer",
             "slug": "atlas-stone-trainer",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "other"
         },
         {
             "name": "Atlas Stones",
             "slug": "atlas-stones",
             "primary": "back",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "other"
         },
         {
             "name": "Axle Deadlift",
             "slug": "axle-deadlift",
             "primary": "back",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "other"
         },
         {
             "name": "Back Flyes - With Bands",
             "slug": "back-flyes-with-bands",
             "primary": "shoulders",
-            "secondary": "back"
+            "secondary": "back",
+            "equipment": "bands"
         },
         {
             "name": "Backward Drag",
             "slug": "backward-drag",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "other"
         },
         {
             "name": "Balance Board",
             "slug": "balance-board",
             "primary": "calves",
-            "secondary": "hamstrings"
+            "secondary": "hamstrings",
+            "equipment": "other"
         },
         {
             "name": "Ball Leg Curl",
             "slug": "ball-leg-curl",
             "primary": "hamstrings",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "exercise_ball"
         },
         {
             "name": "Band Assisted Pull-Up",
             "slug": "band-assisted-pull-up",
             "primary": "back",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "other"
         },
         {
             "name": "Band Good Morning",
             "slug": "band-good-morning",
             "primary": "hamstrings",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "bands"
         },
         {
             "name": "Band Good Morning (Pull Through)",
             "slug": "band-good-morning-pull-through",
             "primary": "hamstrings",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "bands"
         },
         {
             "name": "Band Hip Adductions",
             "slug": "band-hip-adductions",
             "primary": "adductors",
-            "secondary": null
+            "secondary": null,
+            "equipment": "bands"
         },
         {
             "name": "Band Pull Apart",
             "slug": "band-pull-apart",
             "primary": "shoulders",
-            "secondary": "back"
+            "secondary": "back",
+            "equipment": "bands"
         },
         {
             "name": "Band Skull Crusher",
             "slug": "band-skull-crusher",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "bands"
         },
         {
             "name": "Barbell Ab Rollout",
             "slug": "barbell-ab-rollout",
             "primary": "core",
-            "secondary": "back"
+            "secondary": "back",
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Ab Rollout - On Knees",
             "slug": "barbell-ab-rollout-on-knees",
             "primary": "core",
-            "secondary": "back"
+            "secondary": "back",
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Bench Press - Medium Grip",
             "slug": "barbell-bench-press-medium-grip",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Curl",
             "slug": "barbell-curl",
             "primary": "biceps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Curls Lying Against An Incline",
             "slug": "barbell-curls-lying-against-an-incline",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Deadlift",
             "slug": "barbell-deadlift",
             "primary": "back",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Full Squat",
             "slug": "barbell-full-squat",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Glute Bridge",
             "slug": "barbell-glute-bridge",
             "primary": "glutes",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Guillotine Bench Press",
             "slug": "barbell-guillotine-bench-press",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Hack Squat",
             "slug": "barbell-hack-squat",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Hip Thrust",
             "slug": "barbell-hip-thrust",
             "primary": "glutes",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Incline Bench Press - Medium Grip",
             "slug": "barbell-incline-bench-press-medium-grip",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Incline Shoulder Raise",
             "slug": "barbell-incline-shoulder-raise",
             "primary": "shoulders",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Lunge",
             "slug": "barbell-lunge",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Rear Delt Row",
             "slug": "barbell-rear-delt-row",
             "primary": "shoulders",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Rollout from Bench",
             "slug": "barbell-rollout-from-bench",
             "primary": "core",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Seated Calf Raise",
             "slug": "barbell-seated-calf-raise",
             "primary": "calves",
-            "secondary": null
+            "secondary": null,
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Shoulder Press",
             "slug": "barbell-shoulder-press",
             "primary": "shoulders",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Shrug",
             "slug": "barbell-shrug",
             "primary": "traps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Shrug Behind The Back",
             "slug": "barbell-shrug-behind-the-back",
             "primary": "traps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Side Bend",
             "slug": "barbell-side-bend",
             "primary": "core",
-            "secondary": "back"
+            "secondary": "back",
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Side Split Squat",
             "slug": "barbell-side-split-squat",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Squat",
             "slug": "barbell-squat",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Squat To A Bench",
             "slug": "barbell-squat-to-a-bench",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Step Ups",
             "slug": "barbell-step-ups",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Barbell Walking Lunge",
             "slug": "barbell-walking-lunge",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Battling Ropes",
             "slug": "battling-ropes",
             "primary": "shoulders",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "other"
         },
         {
             "name": "Bear Crawl Sled Drags",
             "slug": "bear-crawl-sled-drags",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "other"
         },
         {
             "name": "Bench Dips",
             "slug": "bench-dips",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "body_only"
         },
         {
             "name": "Bench Press - Powerlifting",
             "slug": "bench-press-powerlifting",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "barbell"
         },
         {
             "name": "Bench Press - With Bands",
             "slug": "bench-press-with-bands",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "bands"
         },
         {
             "name": "Bench Press with Chains",
             "slug": "bench-press-with-chains",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "barbell"
         },
         {
             "name": "Bent Over Barbell Row",
             "slug": "bent-over-barbell-row",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "barbell"
         },
         {
             "name": "Bent Over Dumbbell Rear Delt Raise With Head On Bench",
             "slug": "bent-over-dumbbell-rear-delt-raise-with-head-on-bench",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Bent Over Low-Pulley Side Lateral",
             "slug": "bent-over-low-pulley-side-lateral",
             "primary": "shoulders",
-            "secondary": "back"
+            "secondary": "back",
+            "equipment": "cable"
         },
         {
             "name": "Bent Over One-Arm Long Bar Row",
             "slug": "bent-over-one-arm-long-bar-row",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "barbell"
         },
         {
             "name": "Bent Over Two-Arm Long Bar Row",
             "slug": "bent-over-two-arm-long-bar-row",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "barbell"
         },
         {
             "name": "Bent Over Two-Dumbbell Row",
             "slug": "bent-over-two-dumbbell-row",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "dumbbell"
         },
         {
             "name": "Bent Over Two-Dumbbell Row With Palms In",
             "slug": "bent-over-two-dumbbell-row-with-palms-in",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "dumbbell"
         },
         {
             "name": "Bent Press",
             "slug": "bent-press",
             "primary": "core",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "kettlebells"
         },
         {
             "name": "Bent-Arm Barbell Pullover",
             "slug": "bent-arm-barbell-pullover",
             "primary": "back",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "barbell"
         },
         {
             "name": "Bent-Arm Dumbbell Pullover",
             "slug": "bent-arm-dumbbell-pullover",
             "primary": "chest",
-            "secondary": "back"
+            "secondary": "back",
+            "equipment": "dumbbell"
         },
         {
             "name": "Bent-Knee Hip Raise",
             "slug": "bent-knee-hip-raise",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Board Press",
             "slug": "board-press",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "barbell"
         },
         {
             "name": "Body Tricep Press",
             "slug": "body-tricep-press",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Body-Up",
             "slug": "body-up",
             "primary": "triceps",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "body_only"
         },
         {
             "name": "Bodyweight Flyes",
             "slug": "bodyweight-flyes",
             "primary": "chest",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "ez_curl_bar"
         },
         {
             "name": "Bodyweight Mid Row",
             "slug": "bodyweight-mid-row",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "other"
         },
         {
             "name": "Bodyweight Squat",
             "slug": "bodyweight-squat",
             "primary": "quads",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "body_only"
         },
         {
             "name": "Bodyweight Walking Lunge",
             "slug": "bodyweight-walking-lunge",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": null
         },
         {
             "name": "Bosu Ball Cable Crunch With Side Bends",
             "slug": "bosu-ball-cable-crunch-with-side-bends",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Bottoms Up",
             "slug": "bottoms-up",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Bottoms-Up Clean From The Hang Position",
             "slug": "bottoms-up-clean-from-the-hang-position",
             "primary": "forearms",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "kettlebells"
         },
         {
             "name": "Box Squat",
             "slug": "box-squat",
             "primary": "quads",
-            "secondary": "adductors"
+            "secondary": "adductors",
+            "equipment": "barbell"
         },
         {
             "name": "Box Squat with Bands",
             "slug": "box-squat-with-bands",
             "primary": "quads",
-            "secondary": "abductors"
+            "secondary": "abductors",
+            "equipment": "barbell"
         },
         {
             "name": "Box Squat with Chains",
             "slug": "box-squat-with-chains",
             "primary": "quads",
-            "secondary": "abductors"
+            "secondary": "abductors",
+            "equipment": "barbell"
         },
         {
             "name": "Bradford/Rocky Presses",
             "slug": "bradfordrocky-presses",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "barbell"
         },
         {
             "name": "Butt Lift (Bridge)",
             "slug": "butt-lift-bridge",
             "primary": "glutes",
-            "secondary": "hamstrings"
+            "secondary": "hamstrings",
+            "equipment": "body_only"
         },
         {
             "name": "Butt-Ups",
             "slug": "butt-ups",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Butterfly",
             "slug": "butterfly",
             "primary": "chest",
-            "secondary": null
+            "secondary": null,
+            "equipment": "machine"
         },
         {
             "name": "Cable Chest Press",
             "slug": "cable-chest-press",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "cable"
         },
         {
             "name": "Cable Crossover",
             "slug": "cable-crossover",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "cable"
         },
         {
             "name": "Cable Crunch",
             "slug": "cable-crunch",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Cable Deadlifts",
             "slug": "cable-deadlifts",
             "primary": "quads",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "cable"
         },
         {
             "name": "Cable Hammer Curls - Rope Attachment",
             "slug": "cable-hammer-curls-rope-attachment",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Cable Hip Adduction",
             "slug": "cable-hip-adduction",
             "primary": "quads",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Cable Incline Pushdown",
             "slug": "cable-incline-pushdown",
             "primary": "back",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Cable Incline Triceps Extension",
             "slug": "cable-incline-triceps-extension",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Cable Internal Rotation",
             "slug": "cable-internal-rotation",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Cable Iron Cross",
             "slug": "cable-iron-cross",
             "primary": "chest",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Cable Judo Flip",
             "slug": "cable-judo-flip",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Cable Lying Triceps Extension",
             "slug": "cable-lying-triceps-extension",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Cable One Arm Tricep Extension",
             "slug": "cable-one-arm-tricep-extension",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Cable Preacher Curl",
             "slug": "cable-preacher-curl",
             "primary": "biceps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "cable"
         },
         {
             "name": "Cable Rear Delt Fly",
             "slug": "cable-rear-delt-fly",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Cable Reverse Crunch",
             "slug": "cable-reverse-crunch",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Cable Rope Overhead Triceps Extension",
             "slug": "cable-rope-overhead-triceps-extension",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Cable Rope Rear-Delt Rows",
             "slug": "cable-rope-rear-delt-rows",
             "primary": "shoulders",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "cable"
         },
         {
             "name": "Cable Russian Twists",
             "slug": "cable-russian-twists",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Cable Seated Crunch",
             "slug": "cable-seated-crunch",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Cable Seated Lateral Raise",
             "slug": "cable-seated-lateral-raise",
             "primary": "shoulders",
-            "secondary": "back"
+            "secondary": "back",
+            "equipment": "cable"
         },
         {
             "name": "Cable Shoulder Press",
             "slug": "cable-shoulder-press",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "cable"
         },
         {
             "name": "Cable Shrugs",
             "slug": "cable-shrugs",
             "primary": "traps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Cable Wrist Curl",
             "slug": "cable-wrist-curl",
             "primary": "forearms",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Calf Press",
             "slug": "calf-press",
             "primary": "calves",
-            "secondary": null
+            "secondary": null,
+            "equipment": "machine"
         },
         {
             "name": "Calf Press On The Leg Press Machine",
             "slug": "calf-press-on-the-leg-press-machine",
             "primary": "calves",
-            "secondary": null
+            "secondary": null,
+            "equipment": "machine"
         },
         {
             "name": "Calf Raise On A Dumbbell",
             "slug": "calf-raise-on-a-dumbbell",
             "primary": "calves",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Calf Raises - With Bands",
             "slug": "calf-raises-with-bands",
             "primary": "calves",
-            "secondary": null
+            "secondary": null,
+            "equipment": "bands"
         },
         {
             "name": "Calf-Machine Shoulder Shrug",
             "slug": "calf-machine-shoulder-shrug",
             "primary": "traps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "machine"
         },
         {
             "name": "Car Deadlift",
             "slug": "car-deadlift",
             "primary": "quads",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "other"
         },
         {
             "name": "Car Drivers",
             "slug": "car-drivers",
             "primary": "shoulders",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "barbell"
         },
         {
             "name": "Chain Handle Extension",
             "slug": "chain-handle-extension",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "other"
         },
         {
             "name": "Chain Press",
             "slug": "chain-press",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "other"
         },
         {
             "name": "Chair Squat",
             "slug": "chair-squat",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "machine"
         },
         {
             "name": "Chin-Up",
             "slug": "chin-up",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "body_only"
         },
         {
             "name": "Circus Bell",
             "slug": "circus-bell",
             "primary": "shoulders",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "other"
         },
         {
             "name": "Clean",
             "slug": "clean",
             "primary": "hamstrings",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Clean and Jerk",
             "slug": "clean-and-jerk",
             "primary": "shoulders",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "barbell"
         },
         {
             "name": "Clean and Press",
             "slug": "clean-and-press",
             "primary": "shoulders",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "barbell"
         },
         {
             "name": "Clean Deadlift",
             "slug": "clean-deadlift",
             "primary": "hamstrings",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "barbell"
         },
         {
             "name": "Clean from Blocks",
             "slug": "clean-from-blocks",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Clean Pull",
             "slug": "clean-pull",
             "primary": "quads",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "barbell"
         },
         {
             "name": "Clean Shrug",
             "slug": "clean-shrug",
             "primary": "traps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "barbell"
         },
         {
             "name": "Clock Push-Up",
             "slug": "clock-push-up",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "body_only"
         },
         {
             "name": "Close-Grip Barbell Bench Press",
             "slug": "close-grip-barbell-bench-press",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "barbell"
         },
         {
             "name": "Close-Grip Dumbbell Press",
             "slug": "close-grip-dumbbell-press",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "dumbbell"
         },
         {
             "name": "Close-Grip EZ Bar Curl",
             "slug": "close-grip-ez-bar-curl",
             "primary": "biceps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "barbell"
         },
         {
             "name": "Close-Grip EZ-Bar Curl with Band",
             "slug": "close-grip-ez-bar-curl-with-band",
             "primary": "biceps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "ez_curl_bar"
         },
         {
             "name": "Close-Grip EZ-Bar Press",
             "slug": "close-grip-ez-bar-press",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "ez_curl_bar"
         },
         {
             "name": "Close-Grip Front Lat Pulldown",
             "slug": "close-grip-front-lat-pulldown",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "cable"
         },
         {
             "name": "Close-Grip Push-Up off of a Dumbbell",
             "slug": "close-grip-push-up-off-of-a-dumbbell",
             "primary": "triceps",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "body_only"
         },
         {
             "name": "Close-Grip Standing Barbell Curl",
             "slug": "close-grip-standing-barbell-curl",
             "primary": "biceps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "barbell"
         },
         {
             "name": "Cocoons",
             "slug": "cocoons",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Conan's Wheel",
             "slug": "conans-wheel",
             "primary": "quads",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "other"
         },
         {
             "name": "Concentration Curls",
             "slug": "concentration-curls",
             "primary": "biceps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "dumbbell"
         },
         {
             "name": "Cross Body Hammer Curl",
             "slug": "cross-body-hammer-curl",
             "primary": "biceps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "dumbbell"
         },
         {
             "name": "Cross Over - With Bands",
             "slug": "cross-over-with-bands",
             "primary": "chest",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "bands"
         },
         {
             "name": "Cross-Body Crunch",
             "slug": "cross-body-crunch",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Crucifix",
             "slug": "crucifix",
             "primary": "shoulders",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "other"
         },
         {
             "name": "Crunch - Hands Overhead",
             "slug": "crunch-hands-overhead",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Crunch - Legs On Exercise Ball",
             "slug": "crunch-legs-on-exercise-ball",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Crunches",
             "slug": "crunches",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Cuban Press",
             "slug": "cuban-press",
             "primary": "shoulders",
-            "secondary": "traps"
+            "secondary": "traps",
+            "equipment": "dumbbell"
         },
         {
             "name": "Dead Bug",
             "slug": "dead-bug",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Deadlift with Bands",
             "slug": "deadlift-with-bands",
             "primary": "back",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "barbell"
         },
         {
             "name": "Deadlift with Chains",
             "slug": "deadlift-with-chains",
             "primary": "back",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "barbell"
         },
         {
             "name": "Decline Barbell Bench Press",
             "slug": "decline-barbell-bench-press",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "barbell"
         },
         {
             "name": "Decline Close-Grip Bench To Skull Crusher",
             "slug": "decline-close-grip-bench-to-skull-crusher",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "barbell"
         },
         {
             "name": "Decline Crunch",
             "slug": "decline-crunch",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Decline Dumbbell Bench Press",
             "slug": "decline-dumbbell-bench-press",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "dumbbell"
         },
         {
             "name": "Decline Dumbbell Flyes",
             "slug": "decline-dumbbell-flyes",
             "primary": "chest",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Decline Dumbbell Triceps Extension",
             "slug": "decline-dumbbell-triceps-extension",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Decline EZ Bar Triceps Extension",
             "slug": "decline-ez-bar-triceps-extension",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "barbell"
         },
         {
             "name": "Decline Oblique Crunch",
             "slug": "decline-oblique-crunch",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Decline Push-Up",
             "slug": "decline-push-up",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": null
         },
         {
             "name": "Decline Reverse Crunch",
             "slug": "decline-reverse-crunch",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Decline Smith Press",
             "slug": "decline-smith-press",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "machine"
         },
         {
             "name": "Deficit Deadlift",
             "slug": "deficit-deadlift",
             "primary": "back",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "barbell"
         },
         {
             "name": "Dip Machine",
             "slug": "dip-machine",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "machine"
         },
         {
             "name": "Dips - Chest Version",
             "slug": "dips-chest-version",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "other"
         },
         {
             "name": "Dips - Triceps Version",
             "slug": "dips-triceps-version",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "body_only"
         },
         {
             "name": "Donkey Calf Raises",
             "slug": "donkey-calf-raises",
             "primary": "calves",
-            "secondary": null
+            "secondary": null,
+            "equipment": "other"
         },
         {
             "name": "Double Kettlebell Alternating Hang Clean",
             "slug": "double-kettlebell-alternating-hang-clean",
             "primary": "hamstrings",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "kettlebells"
         },
         {
             "name": "Double Kettlebell Jerk",
             "slug": "double-kettlebell-jerk",
             "primary": "shoulders",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "kettlebells"
         },
         {
             "name": "Double Kettlebell Push Press",
             "slug": "double-kettlebell-push-press",
             "primary": "shoulders",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "kettlebells"
         },
         {
             "name": "Double Kettlebell Snatch",
             "slug": "double-kettlebell-snatch",
             "primary": "shoulders",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "kettlebells"
         },
         {
             "name": "Double Kettlebell Windmill",
             "slug": "double-kettlebell-windmill",
             "primary": "core",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "kettlebells"
         },
         {
             "name": "Downward Facing Balance",
             "slug": "downward-facing-balance",
             "primary": "glutes",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "exercise_ball"
         },
         {
             "name": "Drag Curl",
             "slug": "drag-curl",
             "primary": "biceps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "barbell"
         },
         {
             "name": "Dumbbell Alternate Bicep Curl",
             "slug": "dumbbell-alternate-bicep-curl",
             "primary": "biceps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Bench Press",
             "slug": "dumbbell-bench-press",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Bench Press with Neutral Grip",
             "slug": "dumbbell-bench-press-with-neutral-grip",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Bicep Curl",
             "slug": "dumbbell-bicep-curl",
             "primary": "biceps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Clean",
             "slug": "dumbbell-clean",
             "primary": "hamstrings",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Floor Press",
             "slug": "dumbbell-floor-press",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Flyes",
             "slug": "dumbbell-flyes",
             "primary": "chest",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Incline Row",
             "slug": "dumbbell-incline-row",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Incline Shoulder Raise",
             "slug": "dumbbell-incline-shoulder-raise",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Lunges",
             "slug": "dumbbell-lunges",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Lying One-Arm Rear Lateral Raise",
             "slug": "dumbbell-lying-one-arm-rear-lateral-raise",
             "primary": "shoulders",
-            "secondary": "back"
+            "secondary": "back",
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Lying Pronation",
             "slug": "dumbbell-lying-pronation",
             "primary": "forearms",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Lying Rear Lateral Raise",
             "slug": "dumbbell-lying-rear-lateral-raise",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Lying Supination",
             "slug": "dumbbell-lying-supination",
             "primary": "forearms",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell One-Arm Shoulder Press",
             "slug": "dumbbell-one-arm-shoulder-press",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell One-Arm Triceps Extension",
             "slug": "dumbbell-one-arm-triceps-extension",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell One-Arm Upright Row",
             "slug": "dumbbell-one-arm-upright-row",
             "primary": "shoulders",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Prone Incline Curl",
             "slug": "dumbbell-prone-incline-curl",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Raise",
             "slug": "dumbbell-raise",
             "primary": "shoulders",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Rear Lunge",
             "slug": "dumbbell-rear-lunge",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Scaption",
             "slug": "dumbbell-scaption",
             "primary": "shoulders",
-            "secondary": "traps"
+            "secondary": "traps",
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Seated One-Leg Calf Raise",
             "slug": "dumbbell-seated-one-leg-calf-raise",
             "primary": "calves",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Shoulder Press",
             "slug": "dumbbell-shoulder-press",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Shrug",
             "slug": "dumbbell-shrug",
             "primary": "traps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Side Bend",
             "slug": "dumbbell-side-bend",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Squat",
             "slug": "dumbbell-squat",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Squat To A Bench",
             "slug": "dumbbell-squat-to-a-bench",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Step Ups",
             "slug": "dumbbell-step-ups",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "dumbbell"
         },
         {
             "name": "Dumbbell Tricep Extension -Pronated Grip",
             "slug": "dumbbell-tricep-extension-pronated-grip",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Elbow to Knee",
             "slug": "elbow-to-knee",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Elevated Back Lunge",
             "slug": "elevated-back-lunge",
             "primary": "quads",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "barbell"
         },
         {
             "name": "Elevated Cable Rows",
             "slug": "elevated-cable-rows",
             "primary": "back",
-            "secondary": "traps"
+            "secondary": "traps",
+            "equipment": "cable"
         },
         {
             "name": "Exercise Ball Crunch",
             "slug": "exercise-ball-crunch",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "exercise_ball"
         },
         {
             "name": "Exercise Ball Pull-In",
             "slug": "exercise-ball-pull-in",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "exercise_ball"
         },
         {
             "name": "Extended Range One-Arm Kettlebell Floor Press",
             "slug": "extended-range-one-arm-kettlebell-floor-press",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "kettlebells"
         },
         {
             "name": "External Rotation",
             "slug": "external-rotation",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "External Rotation with Band",
             "slug": "external-rotation-with-band",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "bands"
         },
         {
             "name": "External Rotation with Cable",
             "slug": "external-rotation-with-cable",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "EZ-Bar Curl",
             "slug": "ez-bar-curl",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "ez_curl_bar"
         },
         {
             "name": "EZ-Bar Skullcrusher",
             "slug": "ez-bar-skullcrusher",
             "primary": "triceps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "ez_curl_bar"
         },
         {
             "name": "Face Pull",
             "slug": "face-pull",
             "primary": "shoulders",
-            "secondary": "back"
+            "secondary": "back",
+            "equipment": "cable"
         },
         {
             "name": "Farmer's Walk",
             "slug": "farmers-walk",
             "primary": "forearms",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "other"
         },
         {
             "name": "Finger Curls",
             "slug": "finger-curls",
             "primary": "forearms",
-            "secondary": null
+            "secondary": null,
+            "equipment": "barbell"
         },
         {
             "name": "Flat Bench Cable Flyes",
             "slug": "flat-bench-cable-flyes",
             "primary": "chest",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Flat Bench Leg Pull-In",
             "slug": "flat-bench-leg-pull-in",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Flat Bench Lying Leg Raise",
             "slug": "flat-bench-lying-leg-raise",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Flexor Incline Dumbbell Curls",
             "slug": "flexor-incline-dumbbell-curls",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Floor Glute-Ham Raise",
             "slug": "floor-glute-ham-raise",
             "primary": "hamstrings",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": null
         },
         {
             "name": "Floor Press",
             "slug": "floor-press",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "barbell"
         },
         {
             "name": "Floor Press with Chains",
             "slug": "floor-press-with-chains",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "barbell"
         },
         {
             "name": "Flutter Kicks",
             "slug": "flutter-kicks",
             "primary": "glutes",
-            "secondary": "hamstrings"
+            "secondary": "hamstrings",
+            "equipment": "body_only"
         },
         {
             "name": "Forward Drag with Press",
             "slug": "forward-drag-with-press",
             "primary": "chest",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "other"
         },
         {
             "name": "Frankenstein Squat",
             "slug": "frankenstein-squat",
             "primary": "quads",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "barbell"
         },
         {
             "name": "Freehand Jump Squat",
             "slug": "freehand-jump-squat",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "body_only"
         },
         {
             "name": "Frog Sit-Ups",
             "slug": "frog-sit-ups",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Front Barbell Squat",
             "slug": "front-barbell-squat",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Front Barbell Squat To A Bench",
             "slug": "front-barbell-squat-to-a-bench",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Front Cable Raise",
             "slug": "front-cable-raise",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Front Dumbbell Raise",
             "slug": "front-dumbbell-raise",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Front Incline Dumbbell Raise",
             "slug": "front-incline-dumbbell-raise",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Front Plate Raise",
             "slug": "front-plate-raise",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "other"
         },
         {
             "name": "Front Raise And Pullover",
             "slug": "front-raise-and-pullover",
             "primary": "chest",
-            "secondary": "back"
+            "secondary": "back",
+            "equipment": "barbell"
         },
         {
             "name": "Front Squat (Clean Grip)",
             "slug": "front-squat-clean-grip",
             "primary": "quads",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "barbell"
         },
         {
             "name": "Front Squats With Two Kettlebells",
             "slug": "front-squats-with-two-kettlebells",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "kettlebells"
         },
         {
             "name": "Front Two-Dumbbell Raise",
             "slug": "front-two-dumbbell-raise",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Full Range-Of-Motion Lat Pulldown",
             "slug": "full-range-of-motion-lat-pulldown",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "cable"
         },
         {
             "name": "Gironda Sternum Chins",
             "slug": "gironda-sternum-chins",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "other"
         },
         {
             "name": "Glute Ham Raise",
             "slug": "glute-ham-raise",
             "primary": "hamstrings",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "machine"
         },
         {
             "name": "Glute Kickback",
             "slug": "glute-kickback",
             "primary": "glutes",
-            "secondary": "hamstrings"
+            "secondary": "hamstrings",
+            "equipment": "body_only"
         },
         {
             "name": "Goblet Squat",
             "slug": "goblet-squat",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "kettlebells"
         },
         {
             "name": "Good Morning",
             "slug": "good-morning",
             "primary": "hamstrings",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "barbell"
         },
         {
             "name": "Good Morning off Pins",
             "slug": "good-morning-off-pins",
             "primary": "hamstrings",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "barbell"
         },
         {
             "name": "Gorilla Chin/Crunch",
             "slug": "gorilla-chincrunch",
             "primary": "core",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "body_only"
         },
         {
             "name": "Hack Squat",
             "slug": "hack-squat",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "machine"
         },
         {
             "name": "Hammer Curls",
             "slug": "hammer-curls",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Hammer Grip Incline DB Bench Press",
             "slug": "hammer-grip-incline-db-bench-press",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "dumbbell"
         },
         {
             "name": "Handstand Push-Ups",
             "slug": "handstand-push-ups",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "body_only"
         },
         {
             "name": "Hang Clean",
             "slug": "hang-clean",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Hang Clean - Below the Knees",
             "slug": "hang-clean-below-the-knees",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Hang Snatch",
             "slug": "hang-snatch",
             "primary": "hamstrings",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "barbell"
         },
         {
             "name": "Hang Snatch - Below Knees",
             "slug": "hang-snatch-below-knees",
             "primary": "hamstrings",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "barbell"
         },
         {
             "name": "Hanging Bar Good Morning",
             "slug": "hanging-bar-good-morning",
             "primary": "hamstrings",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "barbell"
         },
         {
             "name": "Hanging Leg Raise",
             "slug": "hanging-leg-raise",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Hanging Pike",
             "slug": "hanging-pike",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Heaving Snatch Balance",
             "slug": "heaving-snatch-balance",
             "primary": "quads",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "barbell"
         },
         {
             "name": "High Cable Curls",
             "slug": "high-cable-curls",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Hip Extension with Bands",
             "slug": "hip-extension-with-bands",
             "primary": "glutes",
-            "secondary": "hamstrings"
+            "secondary": "hamstrings",
+            "equipment": "bands"
         },
         {
             "name": "Hip Flexion with Band",
             "slug": "hip-flexion-with-band",
             "primary": "quads",
-            "secondary": null
+            "secondary": null,
+            "equipment": "bands"
         },
         {
             "name": "Hip Lift with Band",
             "slug": "hip-lift-with-band",
             "primary": "glutes",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "bands"
         },
         {
             "name": "Hyperextensions (Back Extensions)",
             "slug": "hyperextensions-back-extensions",
             "primary": "back",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "other"
         },
         {
             "name": "Hyperextensions With No Hyperextension Bench",
             "slug": "hyperextensions-with-no-hyperextension-bench",
             "primary": "back",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "body_only"
         },
         {
             "name": "Incline Barbell Triceps Extension",
             "slug": "incline-barbell-triceps-extension",
             "primary": "triceps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "barbell"
         },
         {
             "name": "Incline Bench Pull",
             "slug": "incline-bench-pull",
             "primary": "back",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "barbell"
         },
         {
             "name": "Incline Cable Chest Press",
             "slug": "incline-cable-chest-press",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "cable"
         },
         {
             "name": "Incline Cable Flye",
             "slug": "incline-cable-flye",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "cable"
         },
         {
             "name": "Incline Dumbbell Bench With Palms Facing In",
             "slug": "incline-dumbbell-bench-with-palms-facing-in",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "dumbbell"
         },
         {
             "name": "Incline Dumbbell Curl",
             "slug": "incline-dumbbell-curl",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Incline Dumbbell Flyes",
             "slug": "incline-dumbbell-flyes",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "dumbbell"
         },
         {
             "name": "Incline Dumbbell Flyes - With A Twist",
             "slug": "incline-dumbbell-flyes-with-a-twist",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "dumbbell"
         },
         {
             "name": "Incline Dumbbell Press",
             "slug": "incline-dumbbell-press",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "dumbbell"
         },
         {
             "name": "Incline Hammer Curls",
             "slug": "incline-hammer-curls",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Incline Inner Biceps Curl",
             "slug": "incline-inner-biceps-curl",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Incline Push-Up",
             "slug": "incline-push-up",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "body_only"
         },
         {
             "name": "Incline Push-Up Close-Grip",
             "slug": "incline-push-up-close-grip",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "body_only"
         },
         {
             "name": "Incline Push-Up Medium",
             "slug": "incline-push-up-medium",
             "primary": "chest",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "body_only"
         },
         {
             "name": "Incline Push-Up Reverse Grip",
             "slug": "incline-push-up-reverse-grip",
             "primary": "chest",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "body_only"
         },
         {
             "name": "Incline Push-Up Wide",
             "slug": "incline-push-up-wide",
             "primary": "chest",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "body_only"
         },
         {
             "name": "Internal Rotation with Band",
             "slug": "internal-rotation-with-band",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "bands"
         },
         {
             "name": "Inverted Row",
             "slug": "inverted-row",
             "primary": "back",
-            "secondary": null
+            "secondary": null,
+            "equipment": null
         },
         {
             "name": "Inverted Row with Straps",
             "slug": "inverted-row-with-straps",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "other"
         },
         {
             "name": "Iron Cross",
             "slug": "iron-cross",
             "primary": "shoulders",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "dumbbell"
         },
         {
             "name": "Isometric Neck Exercise - Front And Back",
             "slug": "isometric-neck-exercise-front-and-back",
             "primary": "neck",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Isometric Neck Exercise - Sides",
             "slug": "isometric-neck-exercise-sides",
             "primary": "neck",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Isometric Wipers",
             "slug": "isometric-wipers",
             "primary": "chest",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "body_only"
         },
         {
             "name": "Jackknife Sit-Up",
             "slug": "jackknife-sit-up",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Janda Sit-Up",
             "slug": "janda-sit-up",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Jefferson Squats",
             "slug": "jefferson-squats",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Jerk Balance",
             "slug": "jerk-balance",
             "primary": "shoulders",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "barbell"
         },
         {
             "name": "Jerk Dip Squat",
             "slug": "jerk-dip-squat",
             "primary": "quads",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "barbell"
         },
         {
             "name": "JM Press",
             "slug": "jm-press",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "barbell"
         },
         {
             "name": "Keg Load",
             "slug": "keg-load",
             "primary": "back",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "other"
         },
         {
             "name": "Kettlebell Arnold Press",
             "slug": "kettlebell-arnold-press",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "kettlebells"
         },
         {
             "name": "Kettlebell Dead Clean",
             "slug": "kettlebell-dead-clean",
             "primary": "hamstrings",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "kettlebells"
         },
         {
             "name": "Kettlebell Figure 8",
             "slug": "kettlebell-figure-8",
             "primary": "core",
-            "secondary": "hamstrings"
+            "secondary": "hamstrings",
+            "equipment": "kettlebells"
         },
         {
             "name": "Kettlebell Hang Clean",
             "slug": "kettlebell-hang-clean",
             "primary": "hamstrings",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "kettlebells"
         },
         {
             "name": "Kettlebell One-Legged Deadlift",
             "slug": "kettlebell-one-legged-deadlift",
             "primary": "hamstrings",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "kettlebells"
         },
         {
             "name": "Kettlebell Pass Between The Legs",
             "slug": "kettlebell-pass-between-the-legs",
             "primary": "core",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "kettlebells"
         },
         {
             "name": "Kettlebell Pirate Ships",
             "slug": "kettlebell-pirate-ships",
             "primary": "shoulders",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "kettlebells"
         },
         {
             "name": "Kettlebell Pistol Squat",
             "slug": "kettlebell-pistol-squat",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "kettlebells"
         },
         {
             "name": "Kettlebell Seated Press",
             "slug": "kettlebell-seated-press",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "kettlebells"
         },
         {
             "name": "Kettlebell Seesaw Press",
             "slug": "kettlebell-seesaw-press",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "kettlebells"
         },
         {
             "name": "Kettlebell Sumo High Pull",
             "slug": "kettlebell-sumo-high-pull",
             "primary": "traps",
-            "secondary": "adductors"
+            "secondary": "adductors",
+            "equipment": "kettlebells"
         },
         {
             "name": "Kettlebell Thruster",
             "slug": "kettlebell-thruster",
             "primary": "shoulders",
-            "secondary": "quads"
+            "secondary": "quads",
+            "equipment": "kettlebells"
         },
         {
             "name": "Kettlebell Turkish Get-Up (Lunge style)",
             "slug": "kettlebell-turkish-get-up-lunge-style",
             "primary": "shoulders",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "kettlebells"
         },
         {
             "name": "Kettlebell Turkish Get-Up (Squat style)",
             "slug": "kettlebell-turkish-get-up-squat-style",
             "primary": "shoulders",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "kettlebells"
         },
         {
             "name": "Kettlebell Windmill",
             "slug": "kettlebell-windmill",
             "primary": "core",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "kettlebells"
         },
         {
             "name": "Kipping Muscle Up",
             "slug": "kipping-muscle-up",
             "primary": "back",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "other"
         },
         {
             "name": "Knee/Hip Raise On Parallel Bars",
             "slug": "kneehip-raise-on-parallel-bars",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "other"
         },
         {
             "name": "Kneeling Cable Crunch With Alternating Oblique Twists",
             "slug": "kneeling-cable-crunch-with-alternating-oblique-twists",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Kneeling Cable Triceps Extension",
             "slug": "kneeling-cable-triceps-extension",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Kneeling High Pulley Row",
             "slug": "kneeling-high-pulley-row",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "cable"
         },
         {
             "name": "Kneeling Jump Squat",
             "slug": "kneeling-jump-squat",
             "primary": "glutes",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Kneeling Single-Arm High Pulley Row",
             "slug": "kneeling-single-arm-high-pulley-row",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "cable"
         },
         {
             "name": "Kneeling Squat",
             "slug": "kneeling-squat",
             "primary": "glutes",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "barbell"
         },
         {
             "name": "Landmine 180's",
             "slug": "landmine-180s",
             "primary": "core",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "barbell"
         },
         {
             "name": "Landmine Linear Jammer",
             "slug": "landmine-linear-jammer",
             "primary": "shoulders",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "barbell"
         },
         {
             "name": "Lateral Raise - With Bands",
             "slug": "lateral-raise-with-bands",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "bands"
         },
         {
             "name": "Leg Extensions",
             "slug": "leg-extensions",
             "primary": "quads",
-            "secondary": null
+            "secondary": null,
+            "equipment": "machine"
         },
         {
             "name": "Leg Lift",
             "slug": "leg-lift",
             "primary": "glutes",
-            "secondary": "hamstrings"
+            "secondary": "hamstrings",
+            "equipment": "body_only"
         },
         {
             "name": "Leg Press",
             "slug": "leg-press",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "machine"
         },
         {
             "name": "Leg Pull-In",
             "slug": "leg-pull-in",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Leg-Over Floor Press",
             "slug": "leg-over-floor-press",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "kettlebells"
         },
         {
             "name": "Leverage Chest Press",
             "slug": "leverage-chest-press",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "machine"
         },
         {
             "name": "Leverage Deadlift",
             "slug": "leverage-deadlift",
             "primary": "quads",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "machine"
         },
         {
             "name": "Leverage Decline Chest Press",
             "slug": "leverage-decline-chest-press",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "machine"
         },
         {
             "name": "Leverage High Row",
             "slug": "leverage-high-row",
             "primary": "back",
-            "secondary": null
+            "secondary": null,
+            "equipment": "machine"
         },
         {
             "name": "Leverage Incline Chest Press",
             "slug": "leverage-incline-chest-press",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "machine"
         },
         {
             "name": "Leverage Iso Row",
             "slug": "leverage-iso-row",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "machine"
         },
         {
             "name": "Leverage Shoulder Press",
             "slug": "leverage-shoulder-press",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "machine"
         },
         {
             "name": "Leverage Shrug",
             "slug": "leverage-shrug",
             "primary": "traps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "machine"
         },
         {
             "name": "Log Lift",
             "slug": "log-lift",
             "primary": "shoulders",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "other"
         },
         {
             "name": "London Bridges",
             "slug": "london-bridges",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "other"
         },
         {
             "name": "Low Cable Crossover",
             "slug": "low-cable-crossover",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "cable"
         },
         {
             "name": "Low Cable Triceps Extension",
             "slug": "low-cable-triceps-extension",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Low Pulley Row To Neck",
             "slug": "low-pulley-row-to-neck",
             "primary": "shoulders",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "cable"
         },
         {
             "name": "Lunge Pass Through",
             "slug": "lunge-pass-through",
             "primary": "hamstrings",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "kettlebells"
         },
         {
             "name": "Lunge Sprint",
             "slug": "lunge-sprint",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "machine"
         },
         {
             "name": "Lying Cable Curl",
             "slug": "lying-cable-curl",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Lying Cambered Barbell Row",
             "slug": "lying-cambered-barbell-row",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "barbell"
         },
         {
             "name": "Lying Close-Grip Bar Curl On High Pulley",
             "slug": "lying-close-grip-bar-curl-on-high-pulley",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Lying Close-Grip Barbell Triceps Extension Behind The Head",
             "slug": "lying-close-grip-barbell-triceps-extension-behind-the-head",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "barbell"
         },
         {
             "name": "Lying Close-Grip Barbell Triceps Press To Chin",
             "slug": "lying-close-grip-barbell-triceps-press-to-chin",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "ez_curl_bar"
         },
         {
             "name": "Lying Dumbbell Tricep Extension",
             "slug": "lying-dumbbell-tricep-extension",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "dumbbell"
         },
         {
             "name": "Lying Face Down Plate Neck Resistance",
             "slug": "lying-face-down-plate-neck-resistance",
             "primary": "neck",
-            "secondary": null
+            "secondary": null,
+            "equipment": "other"
         },
         {
             "name": "Lying Face Up Plate Neck Resistance",
             "slug": "lying-face-up-plate-neck-resistance",
             "primary": "neck",
-            "secondary": null
+            "secondary": null,
+            "equipment": "other"
         },
         {
             "name": "Lying High Bench Barbell Curl",
             "slug": "lying-high-bench-barbell-curl",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "barbell"
         },
         {
             "name": "Lying Leg Curls",
             "slug": "lying-leg-curls",
             "primary": "hamstrings",
-            "secondary": null
+            "secondary": null,
+            "equipment": "machine"
         },
         {
             "name": "Lying Machine Squat",
             "slug": "lying-machine-squat",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "machine"
         },
         {
             "name": "Lying One-Arm Lateral Raise",
             "slug": "lying-one-arm-lateral-raise",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Lying Rear Delt Raise",
             "slug": "lying-rear-delt-raise",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Lying Supine Dumbbell Curl",
             "slug": "lying-supine-dumbbell-curl",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Lying T-Bar Row",
             "slug": "lying-t-bar-row",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "machine"
         },
         {
             "name": "Lying Triceps Press",
             "slug": "lying-triceps-press",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "ez_curl_bar"
         },
         {
             "name": "Machine Bench Press",
             "slug": "machine-bench-press",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "machine"
         },
         {
             "name": "Machine Bicep Curl",
             "slug": "machine-bicep-curl",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "machine"
         },
         {
             "name": "Machine Preacher Curls",
             "slug": "machine-preacher-curls",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "machine"
         },
         {
             "name": "Machine Shoulder (Military) Press",
             "slug": "machine-shoulder-military-press",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "machine"
         },
         {
             "name": "Machine Triceps Extension",
             "slug": "machine-triceps-extension",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "machine"
         },
         {
             "name": "Middle Back Shrug",
             "slug": "middle-back-shrug",
             "primary": "back",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Mixed Grip Chin",
             "slug": "mixed-grip-chin",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "other"
         },
         {
             "name": "Monster Walk",
             "slug": "monster-walk",
             "primary": "abductors",
-            "secondary": null
+            "secondary": null,
+            "equipment": "bands"
         },
         {
             "name": "Muscle Snatch",
             "slug": "muscle-snatch",
             "primary": "hamstrings",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "barbell"
         },
         {
             "name": "Muscle Up",
             "slug": "muscle-up",
             "primary": "back",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "other"
         },
         {
             "name": "Narrow Stance Hack Squats",
             "slug": "narrow-stance-hack-squats",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "machine"
         },
         {
             "name": "Narrow Stance Leg Press",
             "slug": "narrow-stance-leg-press",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "machine"
         },
         {
             "name": "Narrow Stance Squats",
             "slug": "narrow-stance-squats",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Natural Glute Ham Raise",
             "slug": "natural-glute-ham-raise",
             "primary": "hamstrings",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "body_only"
         },
         {
             "name": "Neck Press",
             "slug": "neck-press",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "barbell"
         },
         {
             "name": "Oblique Crunches",
             "slug": "oblique-crunches",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Oblique Crunches - On The Floor",
             "slug": "oblique-crunches-on-the-floor",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Olympic Squat",
             "slug": "olympic-squat",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "One Arm Chin-Up",
             "slug": "one-arm-chin-up",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "other"
         },
         {
             "name": "One Arm Dumbbell Bench Press",
             "slug": "one-arm-dumbbell-bench-press",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "dumbbell"
         },
         {
             "name": "One Arm Dumbbell Preacher Curl",
             "slug": "one-arm-dumbbell-preacher-curl",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "One Arm Floor Press",
             "slug": "one-arm-floor-press",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "barbell"
         },
         {
             "name": "One Arm Lat Pulldown",
             "slug": "one-arm-lat-pulldown",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "cable"
         },
         {
             "name": "One Arm Pronated Dumbbell Triceps Extension",
             "slug": "one-arm-pronated-dumbbell-triceps-extension",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "One Arm Supinated Dumbbell Triceps Extension",
             "slug": "one-arm-supinated-dumbbell-triceps-extension",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "One Leg Barbell Squat",
             "slug": "one-leg-barbell-squat",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "One-Arm Dumbbell Row",
             "slug": "one-arm-dumbbell-row",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "dumbbell"
         },
         {
             "name": "One-Arm Flat Bench Dumbbell Flye",
             "slug": "one-arm-flat-bench-dumbbell-flye",
             "primary": "chest",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "One-Arm High-Pulley Cable Side Bends",
             "slug": "one-arm-high-pulley-cable-side-bends",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "One-Arm Incline Lateral Raise",
             "slug": "one-arm-incline-lateral-raise",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "One-Arm Kettlebell Clean",
             "slug": "one-arm-kettlebell-clean",
             "primary": "hamstrings",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "kettlebells"
         },
         {
             "name": "One-Arm Kettlebell Clean and Jerk",
             "slug": "one-arm-kettlebell-clean-and-jerk",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "kettlebells"
         },
         {
             "name": "One-Arm Kettlebell Floor Press",
             "slug": "one-arm-kettlebell-floor-press",
             "primary": "chest",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "kettlebells"
         },
         {
             "name": "One-Arm Kettlebell Jerk",
             "slug": "one-arm-kettlebell-jerk",
             "primary": "shoulders",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "kettlebells"
         },
         {
             "name": "One-Arm Kettlebell Military Press To The Side",
             "slug": "one-arm-kettlebell-military-press-to-the-side",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "kettlebells"
         },
         {
             "name": "One-Arm Kettlebell Para Press",
             "slug": "one-arm-kettlebell-para-press",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "kettlebells"
         },
         {
             "name": "One-Arm Kettlebell Push Press",
             "slug": "one-arm-kettlebell-push-press",
             "primary": "shoulders",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "kettlebells"
         },
         {
             "name": "One-Arm Kettlebell Row",
             "slug": "one-arm-kettlebell-row",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "kettlebells"
         },
         {
             "name": "One-Arm Kettlebell Snatch",
             "slug": "one-arm-kettlebell-snatch",
             "primary": "shoulders",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "kettlebells"
         },
         {
             "name": "One-Arm Kettlebell Split Jerk",
             "slug": "one-arm-kettlebell-split-jerk",
             "primary": "shoulders",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "kettlebells"
         },
         {
             "name": "One-Arm Kettlebell Split Snatch",
             "slug": "one-arm-kettlebell-split-snatch",
             "primary": "shoulders",
-            "secondary": "hamstrings"
+            "secondary": "hamstrings",
+            "equipment": "kettlebells"
         },
         {
             "name": "One-Arm Kettlebell Swings",
             "slug": "one-arm-kettlebell-swings",
             "primary": "hamstrings",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "kettlebells"
         },
         {
             "name": "One-Arm Long Bar Row",
             "slug": "one-arm-long-bar-row",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "barbell"
         },
         {
             "name": "One-Arm Medicine Ball Slam",
             "slug": "one-arm-medicine-ball-slam",
             "primary": "core",
-            "secondary": "back"
+            "secondary": "back",
+            "equipment": "medicine_ball"
         },
         {
             "name": "One-Arm Open Palm Kettlebell Clean",
             "slug": "one-arm-open-palm-kettlebell-clean",
             "primary": "hamstrings",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "kettlebells"
         },
         {
             "name": "One-Arm Overhead Kettlebell Squats",
             "slug": "one-arm-overhead-kettlebell-squats",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "kettlebells"
         },
         {
             "name": "One-Arm Side Deadlift",
             "slug": "one-arm-side-deadlift",
             "primary": "quads",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "barbell"
         },
         {
             "name": "One-Arm Side Laterals",
             "slug": "one-arm-side-laterals",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "One-Legged Cable Kickback",
             "slug": "one-legged-cable-kickback",
             "primary": "glutes",
-            "secondary": "hamstrings"
+            "secondary": "hamstrings",
+            "equipment": "cable"
         },
         {
             "name": "Open Palm Kettlebell Clean",
             "slug": "open-palm-kettlebell-clean",
             "primary": "hamstrings",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "kettlebells"
         },
         {
             "name": "Otis-Up",
             "slug": "otis-up",
             "primary": "core",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "other"
         },
         {
             "name": "Overhead Cable Curl",
             "slug": "overhead-cable-curl",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Overhead Squat",
             "slug": "overhead-squat",
             "primary": "quads",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "barbell"
         },
         {
             "name": "Pallof Press",
             "slug": "pallof-press",
             "primary": "core",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "cable"
         },
         {
             "name": "Pallof Press With Rotation",
             "slug": "pallof-press-with-rotation",
             "primary": "core",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "cable"
         },
         {
             "name": "Palms-Down Dumbbell Wrist Curl Over A Bench",
             "slug": "palms-down-dumbbell-wrist-curl-over-a-bench",
             "primary": "forearms",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Palms-Down Wrist Curl Over A Bench",
             "slug": "palms-down-wrist-curl-over-a-bench",
             "primary": "forearms",
-            "secondary": null
+            "secondary": null,
+            "equipment": "barbell"
         },
         {
             "name": "Palms-Up Barbell Wrist Curl Over A Bench",
             "slug": "palms-up-barbell-wrist-curl-over-a-bench",
             "primary": "forearms",
-            "secondary": null
+            "secondary": null,
+            "equipment": "barbell"
         },
         {
             "name": "Palms-Up Dumbbell Wrist Curl Over A Bench",
             "slug": "palms-up-dumbbell-wrist-curl-over-a-bench",
             "primary": "forearms",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Parallel Bar Dip",
             "slug": "parallel-bar-dip",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "other"
         },
         {
             "name": "Physioball Hip Bridge",
             "slug": "physioball-hip-bridge",
             "primary": "glutes",
-            "secondary": "hamstrings"
+            "secondary": "hamstrings",
+            "equipment": "exercise_ball"
         },
         {
             "name": "Pin Presses",
             "slug": "pin-presses",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "barbell"
         },
         {
             "name": "Plank",
             "slug": "plank",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Plate Pinch",
             "slug": "plate-pinch",
             "primary": "forearms",
-            "secondary": null
+            "secondary": null,
+            "equipment": "other"
         },
         {
             "name": "Plate Twist",
             "slug": "plate-twist",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "other"
         },
         {
             "name": "Platform Hamstring Slides",
             "slug": "platform-hamstring-slides",
             "primary": "hamstrings",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "other"
         },
         {
             "name": "Plie Dumbbell Squat",
             "slug": "plie-dumbbell-squat",
             "primary": "quads",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "dumbbell"
         },
         {
             "name": "Plyo Kettlebell Pushups",
             "slug": "plyo-kettlebell-pushups",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "kettlebells"
         },
         {
             "name": "Power Clean",
             "slug": "power-clean",
             "primary": "hamstrings",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Power Clean from Blocks",
             "slug": "power-clean-from-blocks",
             "primary": "hamstrings",
-            "secondary": "quads"
+            "secondary": "quads",
+            "equipment": "barbell"
         },
         {
             "name": "Power Jerk",
             "slug": "power-jerk",
             "primary": "quads",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "barbell"
         },
         {
             "name": "Power Partials",
             "slug": "power-partials",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Power Snatch",
             "slug": "power-snatch",
             "primary": "hamstrings",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Power Snatch from Blocks",
             "slug": "power-snatch-from-blocks",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Power Stairs",
             "slug": "power-stairs",
             "primary": "hamstrings",
-            "secondary": "adductors"
+            "secondary": "adductors",
+            "equipment": "other"
         },
         {
             "name": "Preacher Curl",
             "slug": "preacher-curl",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "barbell"
         },
         {
             "name": "Preacher Hammer Dumbbell Curl",
             "slug": "preacher-hammer-dumbbell-curl",
             "primary": "biceps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "dumbbell"
         },
         {
             "name": "Press Sit-Up",
             "slug": "press-sit-up",
             "primary": "core",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "barbell"
         },
         {
             "name": "Prone Manual Hamstring",
             "slug": "prone-manual-hamstring",
             "primary": "hamstrings",
-            "secondary": null
+            "secondary": null,
+            "equipment": null
         },
         {
             "name": "Pull Through",
             "slug": "pull-through",
             "primary": "glutes",
-            "secondary": "hamstrings"
+            "secondary": "hamstrings",
+            "equipment": "cable"
         },
         {
             "name": "Pullups",
             "slug": "pullups",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "body_only"
         },
         {
             "name": "Push Press",
             "slug": "push-press",
             "primary": "shoulders",
-            "secondary": "quads"
+            "secondary": "quads",
+            "equipment": "barbell"
         },
         {
             "name": "Push Press - Behind the Neck",
             "slug": "push-press-behind-the-neck",
             "primary": "shoulders",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Push Up to Side Plank",
             "slug": "push-up-to-side-plank",
             "primary": "chest",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "body_only"
         },
         {
             "name": "Push-Up Wide",
             "slug": "push-up-wide",
             "primary": "chest",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "body_only"
         },
         {
             "name": "Push-Ups - Close Triceps Position",
             "slug": "push-ups-close-triceps-position",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "body_only"
         },
         {
             "name": "Push-Ups With Feet Elevated",
             "slug": "push-ups-with-feet-elevated",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "body_only"
         },
         {
             "name": "Push-Ups With Feet On An Exercise Ball",
             "slug": "push-ups-with-feet-on-an-exercise-ball",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "exercise_ball"
         },
         {
             "name": "Pushups",
             "slug": "pushups",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "body_only"
         },
         {
             "name": "Pushups (Close and Wide Hand Positions)",
             "slug": "pushups-close-and-wide-hand-positions",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "body_only"
         },
         {
             "name": "Rack Delivery",
             "slug": "rack-delivery",
             "primary": "shoulders",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "barbell"
         },
         {
             "name": "Rack Pull with Bands",
             "slug": "rack-pull-with-bands",
             "primary": "back",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "barbell"
         },
         {
             "name": "Rack Pulls",
             "slug": "rack-pulls",
             "primary": "back",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "barbell"
         },
         {
             "name": "Reverse Band Bench Press",
             "slug": "reverse-band-bench-press",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "barbell"
         },
         {
             "name": "Reverse Band Box Squat",
             "slug": "reverse-band-box-squat",
             "primary": "quads",
-            "secondary": "abductors"
+            "secondary": "abductors",
+            "equipment": "barbell"
         },
         {
             "name": "Reverse Band Deadlift",
             "slug": "reverse-band-deadlift",
             "primary": "back",
-            "secondary": "abductors"
+            "secondary": "abductors",
+            "equipment": "barbell"
         },
         {
             "name": "Reverse Band Power Squat",
             "slug": "reverse-band-power-squat",
             "primary": "quads",
-            "secondary": "adductors"
+            "secondary": "adductors",
+            "equipment": "barbell"
         },
         {
             "name": "Reverse Band Sumo Deadlift",
             "slug": "reverse-band-sumo-deadlift",
             "primary": "hamstrings",
-            "secondary": "abductors"
+            "secondary": "abductors",
+            "equipment": "barbell"
         },
         {
             "name": "Reverse Barbell Curl",
             "slug": "reverse-barbell-curl",
             "primary": "biceps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "barbell"
         },
         {
             "name": "Reverse Barbell Preacher Curls",
             "slug": "reverse-barbell-preacher-curls",
             "primary": "biceps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "ez_curl_bar"
         },
         {
             "name": "Reverse Cable Curl",
             "slug": "reverse-cable-curl",
             "primary": "biceps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "cable"
         },
         {
             "name": "Reverse Crunch",
             "slug": "reverse-crunch",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Reverse Flyes",
             "slug": "reverse-flyes",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Reverse Flyes With External Rotation",
             "slug": "reverse-flyes-with-external-rotation",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Reverse Grip Bent-Over Rows",
             "slug": "reverse-grip-bent-over-rows",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "barbell"
         },
         {
             "name": "Reverse Grip Triceps Pushdown",
             "slug": "reverse-grip-triceps-pushdown",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Reverse Hyperextension",
             "slug": "reverse-hyperextension",
             "primary": "hamstrings",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "machine"
         },
         {
             "name": "Reverse Machine Flyes",
             "slug": "reverse-machine-flyes",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "machine"
         },
         {
             "name": "Reverse Plate Curls",
             "slug": "reverse-plate-curls",
             "primary": "biceps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "other"
         },
         {
             "name": "Reverse Triceps Bench Press",
             "slug": "reverse-triceps-bench-press",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "barbell"
         },
         {
             "name": "Rickshaw Carry",
             "slug": "rickshaw-carry",
             "primary": "forearms",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "other"
         },
         {
             "name": "Rickshaw Deadlift",
             "slug": "rickshaw-deadlift",
             "primary": "quads",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "other"
         },
         {
             "name": "Ring Dips",
             "slug": "ring-dips",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "other"
         },
         {
             "name": "Rocking Standing Calf Raise",
             "slug": "rocking-standing-calf-raise",
             "primary": "calves",
-            "secondary": null
+            "secondary": null,
+            "equipment": "barbell"
         },
         {
             "name": "Rocky Pull-Ups/Pulldowns",
             "slug": "rocky-pull-upspulldowns",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "other"
         },
         {
             "name": "Romanian Deadlift",
             "slug": "romanian-deadlift",
             "primary": "hamstrings",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Romanian Deadlift from Deficit",
             "slug": "romanian-deadlift-from-deficit",
             "primary": "hamstrings",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "barbell"
         },
         {
             "name": "Rope Climb",
             "slug": "rope-climb",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "other"
         },
         {
             "name": "Rope Crunch",
             "slug": "rope-crunch",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Rope Straight-Arm Pulldown",
             "slug": "rope-straight-arm-pulldown",
             "primary": "back",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Russian Twist",
             "slug": "russian-twist",
             "primary": "core",
-            "secondary": "back"
+            "secondary": "back",
+            "equipment": "body_only"
         },
         {
             "name": "Sandbag Load",
             "slug": "sandbag-load",
             "primary": "quads",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "other"
         },
         {
             "name": "Scapular Pull-Up",
             "slug": "scapular-pull-up",
             "primary": "traps",
-            "secondary": "back"
+            "secondary": "back",
+            "equipment": null
         },
         {
             "name": "Seated Band Hamstring Curl",
             "slug": "seated-band-hamstring-curl",
             "primary": "hamstrings",
-            "secondary": null
+            "secondary": null,
+            "equipment": "other"
         },
         {
             "name": "Seated Barbell Military Press",
             "slug": "seated-barbell-military-press",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "barbell"
         },
         {
             "name": "Seated Barbell Twist",
             "slug": "seated-barbell-twist",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "barbell"
         },
         {
             "name": "Seated Bent-Over One-Arm Dumbbell Triceps Extension",
             "slug": "seated-bent-over-one-arm-dumbbell-triceps-extension",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Seated Bent-Over Rear Delt Raise",
             "slug": "seated-bent-over-rear-delt-raise",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Seated Bent-Over Two-Arm Dumbbell Triceps Extension",
             "slug": "seated-bent-over-two-arm-dumbbell-triceps-extension",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Seated Cable Rows",
             "slug": "seated-cable-rows",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "cable"
         },
         {
             "name": "Seated Cable Shoulder Press",
             "slug": "seated-cable-shoulder-press",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "cable"
         },
         {
             "name": "Seated Calf Raise",
             "slug": "seated-calf-raise",
             "primary": "calves",
-            "secondary": null
+            "secondary": null,
+            "equipment": "machine"
         },
         {
             "name": "Seated Close-Grip Concentration Barbell Curl",
             "slug": "seated-close-grip-concentration-barbell-curl",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "barbell"
         },
         {
             "name": "Seated Dumbbell Curl",
             "slug": "seated-dumbbell-curl",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Seated Dumbbell Inner Biceps Curl",
             "slug": "seated-dumbbell-inner-biceps-curl",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Seated Dumbbell Palms-Down Wrist Curl",
             "slug": "seated-dumbbell-palms-down-wrist-curl",
             "primary": "forearms",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Seated Dumbbell Palms-Up Wrist Curl",
             "slug": "seated-dumbbell-palms-up-wrist-curl",
             "primary": "forearms",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Seated Dumbbell Press",
             "slug": "seated-dumbbell-press",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "dumbbell"
         },
         {
             "name": "Seated Flat Bench Leg Pull-In",
             "slug": "seated-flat-bench-leg-pull-in",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Seated Good Mornings",
             "slug": "seated-good-mornings",
             "primary": "back",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "barbell"
         },
         {
             "name": "Seated Head Harness Neck Resistance",
             "slug": "seated-head-harness-neck-resistance",
             "primary": "neck",
-            "secondary": null
+            "secondary": null,
+            "equipment": "other"
         },
         {
             "name": "Seated Leg Curl",
             "slug": "seated-leg-curl",
             "primary": "hamstrings",
-            "secondary": null
+            "secondary": null,
+            "equipment": "machine"
         },
         {
             "name": "Seated Leg Tucks",
             "slug": "seated-leg-tucks",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Seated One-arm Cable Pulley Rows",
             "slug": "seated-one-arm-cable-pulley-rows",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "cable"
         },
         {
             "name": "Seated One-Arm Dumbbell Palms-Down Wrist Curl",
             "slug": "seated-one-arm-dumbbell-palms-down-wrist-curl",
             "primary": "forearms",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Seated One-Arm Dumbbell Palms-Up Wrist Curl",
             "slug": "seated-one-arm-dumbbell-palms-up-wrist-curl",
             "primary": "forearms",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Seated Palm-Up Barbell Wrist Curl",
             "slug": "seated-palm-up-barbell-wrist-curl",
             "primary": "forearms",
-            "secondary": null
+            "secondary": null,
+            "equipment": "barbell"
         },
         {
             "name": "Seated Palms-Down Barbell Wrist Curl",
             "slug": "seated-palms-down-barbell-wrist-curl",
             "primary": "forearms",
-            "secondary": null
+            "secondary": null,
+            "equipment": "barbell"
         },
         {
             "name": "Seated Side Lateral Raise",
             "slug": "seated-side-lateral-raise",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Seated Triceps Press",
             "slug": "seated-triceps-press",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Seated Two-Arm Palms-Up Low-Pulley Wrist Curl",
             "slug": "seated-two-arm-palms-up-low-pulley-wrist-curl",
             "primary": "forearms",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "See-Saw Press (Alternating Side Press)",
             "slug": "see-saw-press-alternating-side-press",
             "primary": "shoulders",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "dumbbell"
         },
         {
             "name": "Shotgun Row",
             "slug": "shotgun-row",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "cable"
         },
         {
             "name": "Shoulder Press - With Bands",
             "slug": "shoulder-press-with-bands",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "bands"
         },
         {
             "name": "Side Bridge",
             "slug": "side-bridge",
             "primary": "core",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "body_only"
         },
         {
             "name": "Side Jackknife",
             "slug": "side-jackknife",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Side Lateral Raise",
             "slug": "side-lateral-raise",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Side Laterals to Front Raise",
             "slug": "side-laterals-to-front-raise",
             "primary": "shoulders",
-            "secondary": "traps"
+            "secondary": "traps",
+            "equipment": "dumbbell"
         },
         {
             "name": "Side To Side Chins",
             "slug": "side-to-side-chins",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "other"
         },
         {
             "name": "Single Dumbbell Raise",
             "slug": "single-dumbbell-raise",
             "primary": "shoulders",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "dumbbell"
         },
         {
             "name": "Single Leg Glute Bridge",
             "slug": "single-leg-glute-bridge",
             "primary": "glutes",
-            "secondary": "hamstrings"
+            "secondary": "hamstrings",
+            "equipment": "body_only"
         },
         {
             "name": "Single-Arm Cable Crossover",
             "slug": "single-arm-cable-crossover",
             "primary": "chest",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Single-Arm Linear Jammer",
             "slug": "single-arm-linear-jammer",
             "primary": "shoulders",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "barbell"
         },
         {
             "name": "Single-Arm Push-Up",
             "slug": "single-arm-push-up",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "body_only"
         },
         {
             "name": "Single-Leg High Box Squat",
             "slug": "single-leg-high-box-squat",
             "primary": "quads",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "other"
         },
         {
             "name": "Single-Leg Leg Extension",
             "slug": "single-leg-leg-extension",
             "primary": "quads",
-            "secondary": null
+            "secondary": null,
+            "equipment": "machine"
         },
         {
             "name": "Sit-Up",
             "slug": "sit-up",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Sled Drag - Harness",
             "slug": "sled-drag-harness",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "other"
         },
         {
             "name": "Sled Overhead Backward Walk",
             "slug": "sled-overhead-backward-walk",
             "primary": "shoulders",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "other"
         },
         {
             "name": "Sled Overhead Triceps Extension",
             "slug": "sled-overhead-triceps-extension",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "other"
         },
         {
             "name": "Sled Push",
             "slug": "sled-push",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "other"
         },
         {
             "name": "Sled Reverse Flye",
             "slug": "sled-reverse-flye",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "other"
         },
         {
             "name": "Sled Row",
             "slug": "sled-row",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "other"
         },
         {
             "name": "Smith Incline Shoulder Raise",
             "slug": "smith-incline-shoulder-raise",
             "primary": "shoulders",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "barbell"
         },
         {
             "name": "Smith Machine Behind the Back Shrug",
             "slug": "smith-machine-behind-the-back-shrug",
             "primary": "traps",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "machine"
         },
         {
             "name": "Smith Machine Bench Press",
             "slug": "smith-machine-bench-press",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "machine"
         },
         {
             "name": "Smith Machine Bent Over Row",
             "slug": "smith-machine-bent-over-row",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "machine"
         },
         {
             "name": "Smith Machine Calf Raise",
             "slug": "smith-machine-calf-raise",
             "primary": "calves",
-            "secondary": null
+            "secondary": null,
+            "equipment": "machine"
         },
         {
             "name": "Smith Machine Close-Grip Bench Press",
             "slug": "smith-machine-close-grip-bench-press",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "machine"
         },
         {
             "name": "Smith Machine Decline Press",
             "slug": "smith-machine-decline-press",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "machine"
         },
         {
             "name": "Smith Machine Hang Power Clean",
             "slug": "smith-machine-hang-power-clean",
             "primary": "hamstrings",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "machine"
         },
         {
             "name": "Smith Machine Hip Raise",
             "slug": "smith-machine-hip-raise",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "machine"
         },
         {
             "name": "Smith Machine Incline Bench Press",
             "slug": "smith-machine-incline-bench-press",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "machine"
         },
         {
             "name": "Smith Machine Leg Press",
             "slug": "smith-machine-leg-press",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "machine"
         },
         {
             "name": "Smith Machine One-Arm Upright Row",
             "slug": "smith-machine-one-arm-upright-row",
             "primary": "shoulders",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "machine"
         },
         {
             "name": "Smith Machine Overhead Shoulder Press",
             "slug": "smith-machine-overhead-shoulder-press",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "machine"
         },
         {
             "name": "Smith Machine Pistol Squat",
             "slug": "smith-machine-pistol-squat",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "machine"
         },
         {
             "name": "Smith Machine Reverse Calf Raises",
             "slug": "smith-machine-reverse-calf-raises",
             "primary": "calves",
-            "secondary": null
+            "secondary": null,
+            "equipment": "machine"
         },
         {
             "name": "Smith Machine Squat",
             "slug": "smith-machine-squat",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "machine"
         },
         {
             "name": "Smith Machine Stiff-Legged Deadlift",
             "slug": "smith-machine-stiff-legged-deadlift",
             "primary": "hamstrings",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "machine"
         },
         {
             "name": "Smith Machine Upright Row",
             "slug": "smith-machine-upright-row",
             "primary": "traps",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "machine"
         },
         {
             "name": "Smith Single-Leg Split Squat",
             "slug": "smith-single-leg-split-squat",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "machine"
         },
         {
             "name": "Snatch",
             "slug": "snatch",
             "primary": "quads",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "barbell"
         },
         {
             "name": "Snatch Balance",
             "slug": "snatch-balance",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Snatch Deadlift",
             "slug": "snatch-deadlift",
             "primary": "hamstrings",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "barbell"
         },
         {
             "name": "Snatch from Blocks",
             "slug": "snatch-from-blocks",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Snatch Pull",
             "slug": "snatch-pull",
             "primary": "hamstrings",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Snatch Shrug",
             "slug": "snatch-shrug",
             "primary": "traps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "barbell"
         },
         {
             "name": "Speed Band Overhead Triceps",
             "slug": "speed-band-overhead-triceps",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "bands"
         },
         {
             "name": "Speed Box Squat",
             "slug": "speed-box-squat",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Speed Squats",
             "slug": "speed-squats",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Spell Caster",
             "slug": "spell-caster",
             "primary": "core",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "dumbbell"
         },
         {
             "name": "Spider Crawl",
             "slug": "spider-crawl",
             "primary": "core",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "body_only"
         },
         {
             "name": "Spider Curl",
             "slug": "spider-curl",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "ez_curl_bar"
         },
         {
             "name": "Split Clean",
             "slug": "split-clean",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Split Jerk",
             "slug": "split-jerk",
             "primary": "quads",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "barbell"
         },
         {
             "name": "Split Snatch",
             "slug": "split-snatch",
             "primary": "hamstrings",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Split Squat with Dumbbells",
             "slug": "split-squat-with-dumbbells",
             "primary": "quads",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "dumbbell"
         },
         {
             "name": "Squat Jerk",
             "slug": "squat-jerk",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Squat with Bands",
             "slug": "squat-with-bands",
             "primary": "quads",
-            "secondary": "adductors"
+            "secondary": "adductors",
+            "equipment": "barbell"
         },
         {
             "name": "Squat with Chains",
             "slug": "squat-with-chains",
             "primary": "quads",
-            "secondary": "adductors"
+            "secondary": "adductors",
+            "equipment": "barbell"
         },
         {
             "name": "Squat with Plate Movers",
             "slug": "squat-with-plate-movers",
             "primary": "quads",
-            "secondary": "abductors"
+            "secondary": "abductors",
+            "equipment": "barbell"
         },
         {
             "name": "Squats - With Bands",
             "slug": "squats-with-bands",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "bands"
         },
         {
             "name": "Standing Alternating Dumbbell Press",
             "slug": "standing-alternating-dumbbell-press",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "dumbbell"
         },
         {
             "name": "Standing Barbell Calf Raise",
             "slug": "standing-barbell-calf-raise",
             "primary": "calves",
-            "secondary": null
+            "secondary": null,
+            "equipment": "barbell"
         },
         {
             "name": "Standing Barbell Press Behind Neck",
             "slug": "standing-barbell-press-behind-neck",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "barbell"
         },
         {
             "name": "Standing Bent-Over One-Arm Dumbbell Triceps Extension",
             "slug": "standing-bent-over-one-arm-dumbbell-triceps-extension",
             "primary": "triceps",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "dumbbell"
         },
         {
             "name": "Standing Bent-Over Two-Arm Dumbbell Triceps Extension",
             "slug": "standing-bent-over-two-arm-dumbbell-triceps-extension",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Standing Biceps Cable Curl",
             "slug": "standing-biceps-cable-curl",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Standing Bradford Press",
             "slug": "standing-bradford-press",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "barbell"
         },
         {
             "name": "Standing Cable Chest Press",
             "slug": "standing-cable-chest-press",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "cable"
         },
         {
             "name": "Standing Cable Lift",
             "slug": "standing-cable-lift",
             "primary": "core",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "cable"
         },
         {
             "name": "Standing Cable Wood Chop",
             "slug": "standing-cable-wood-chop",
             "primary": "core",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "cable"
         },
         {
             "name": "Standing Calf Raises",
             "slug": "standing-calf-raises",
             "primary": "calves",
-            "secondary": null
+            "secondary": null,
+            "equipment": "machine"
         },
         {
             "name": "Standing Concentration Curl",
             "slug": "standing-concentration-curl",
             "primary": "biceps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "dumbbell"
         },
         {
             "name": "Standing Dumbbell Calf Raise",
             "slug": "standing-dumbbell-calf-raise",
             "primary": "calves",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Standing Dumbbell Press",
             "slug": "standing-dumbbell-press",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "dumbbell"
         },
         {
             "name": "Standing Dumbbell Reverse Curl",
             "slug": "standing-dumbbell-reverse-curl",
             "primary": "biceps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "dumbbell"
         },
         {
             "name": "Standing Dumbbell Straight-Arm Front Delt Raise Above Head",
             "slug": "standing-dumbbell-straight-arm-front-delt-raise-above-head",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Standing Dumbbell Triceps Extension",
             "slug": "standing-dumbbell-triceps-extension",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Standing Dumbbell Upright Row",
             "slug": "standing-dumbbell-upright-row",
             "primary": "traps",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "dumbbell"
         },
         {
             "name": "Standing Front Barbell Raise Over Head",
             "slug": "standing-front-barbell-raise-over-head",
             "primary": "shoulders",
-            "secondary": null
+            "secondary": null,
+            "equipment": "barbell"
         },
         {
             "name": "Standing Inner-Biceps Curl",
             "slug": "standing-inner-biceps-curl",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Standing Leg Curl",
             "slug": "standing-leg-curl",
             "primary": "hamstrings",
-            "secondary": null
+            "secondary": null,
+            "equipment": "machine"
         },
         {
             "name": "Standing Low-Pulley Deltoid Raise",
             "slug": "standing-low-pulley-deltoid-raise",
             "primary": "shoulders",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "cable"
         },
         {
             "name": "Standing Low-Pulley One-Arm Triceps Extension",
             "slug": "standing-low-pulley-one-arm-triceps-extension",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "cable"
         },
         {
             "name": "Standing Military Press",
             "slug": "standing-military-press",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "barbell"
         },
         {
             "name": "Standing Olympic Plate Hand Squeeze",
             "slug": "standing-olympic-plate-hand-squeeze",
             "primary": "forearms",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "other"
         },
         {
             "name": "Standing One-Arm Cable Curl",
             "slug": "standing-one-arm-cable-curl",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Standing One-Arm Dumbbell Curl Over Incline Bench",
             "slug": "standing-one-arm-dumbbell-curl-over-incline-bench",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Standing One-Arm Dumbbell Triceps Extension",
             "slug": "standing-one-arm-dumbbell-triceps-extension",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "dumbbell"
         },
         {
             "name": "Standing Overhead Barbell Triceps Extension",
             "slug": "standing-overhead-barbell-triceps-extension",
             "primary": "triceps",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "barbell"
         },
         {
             "name": "Standing Palm-In One-Arm Dumbbell Press",
             "slug": "standing-palm-in-one-arm-dumbbell-press",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "dumbbell"
         },
         {
             "name": "Standing Palms-In Dumbbell Press",
             "slug": "standing-palms-in-dumbbell-press",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "dumbbell"
         },
         {
             "name": "Standing Palms-Up Barbell Behind The Back Wrist Curl",
             "slug": "standing-palms-up-barbell-behind-the-back-wrist-curl",
             "primary": "forearms",
-            "secondary": null
+            "secondary": null,
+            "equipment": "barbell"
         },
         {
             "name": "Standing Rope Crunch",
             "slug": "standing-rope-crunch",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Standing Towel Triceps Extension",
             "slug": "standing-towel-triceps-extension",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Step-up with Knee Raise",
             "slug": "step-up-with-knee-raise",
             "primary": "glutes",
-            "secondary": "hamstrings"
+            "secondary": "hamstrings",
+            "equipment": "body_only"
         },
         {
             "name": "Stiff Leg Barbell Good Morning",
             "slug": "stiff-leg-barbell-good-morning",
             "primary": "back",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "barbell"
         },
         {
             "name": "Stiff-Legged Barbell Deadlift",
             "slug": "stiff-legged-barbell-deadlift",
             "primary": "hamstrings",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "barbell"
         },
         {
             "name": "Stiff-Legged Dumbbell Deadlift",
             "slug": "stiff-legged-dumbbell-deadlift",
             "primary": "hamstrings",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "dumbbell"
         },
         {
             "name": "Straight Bar Bench Mid Rows",
             "slug": "straight-bar-bench-mid-rows",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "barbell"
         },
         {
             "name": "Straight Raises on Incline Bench",
             "slug": "straight-raises-on-incline-bench",
             "primary": "shoulders",
-            "secondary": "traps"
+            "secondary": "traps",
+            "equipment": "barbell"
         },
         {
             "name": "Straight-Arm Dumbbell Pullover",
             "slug": "straight-arm-dumbbell-pullover",
             "primary": "chest",
-            "secondary": "back"
+            "secondary": "back",
+            "equipment": "dumbbell"
         },
         {
             "name": "Straight-Arm Pulldown",
             "slug": "straight-arm-pulldown",
             "primary": "back",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Sumo Deadlift",
             "slug": "sumo-deadlift",
             "primary": "hamstrings",
-            "secondary": "adductors"
+            "secondary": "adductors",
+            "equipment": "barbell"
         },
         {
             "name": "Sumo Deadlift with Bands",
             "slug": "sumo-deadlift-with-bands",
             "primary": "hamstrings",
-            "secondary": "adductors"
+            "secondary": "adductors",
+            "equipment": "barbell"
         },
         {
             "name": "Sumo Deadlift with Chains",
             "slug": "sumo-deadlift-with-chains",
             "primary": "hamstrings",
-            "secondary": "abductors"
+            "secondary": "abductors",
+            "equipment": "barbell"
         },
         {
             "name": "Suspended Fallout",
             "slug": "suspended-fallout",
             "primary": "core",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "other"
         },
         {
             "name": "Suspended Push-Up",
             "slug": "suspended-push-up",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "other"
         },
         {
             "name": "Suspended Reverse Crunch",
             "slug": "suspended-reverse-crunch",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "other"
         },
         {
             "name": "Suspended Row",
             "slug": "suspended-row",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "other"
         },
         {
             "name": "Suspended Split Squat",
             "slug": "suspended-split-squat",
             "primary": "quads",
-            "secondary": "abductors"
+            "secondary": "abductors",
+            "equipment": "other"
         },
         {
             "name": "Svend Press",
             "slug": "svend-press",
             "primary": "chest",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "other"
         },
         {
             "name": "T-Bar Row with Handle",
             "slug": "t-bar-row-with-handle",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "barbell"
         },
         {
             "name": "Tate Press",
             "slug": "tate-press",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "dumbbell"
         },
         {
             "name": "Thigh Abductor",
             "slug": "thigh-abductor",
             "primary": "abductors",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "machine"
         },
         {
             "name": "Thigh Adductor",
             "slug": "thigh-adductor",
             "primary": "adductors",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "machine"
         },
         {
             "name": "Tire Flip",
             "slug": "tire-flip",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "other"
         },
         {
             "name": "Trap Bar Deadlift",
             "slug": "trap-bar-deadlift",
             "primary": "quads",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "other"
         },
         {
             "name": "Tricep Dumbbell Kickback",
             "slug": "tricep-dumbbell-kickback",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Triceps Overhead Extension with Rope",
             "slug": "triceps-overhead-extension-with-rope",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Triceps Pushdown",
             "slug": "triceps-pushdown",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Triceps Pushdown - Rope Attachment",
             "slug": "triceps-pushdown-rope-attachment",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Triceps Pushdown - V-Bar Attachment",
             "slug": "triceps-pushdown-v-bar-attachment",
             "primary": "triceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "cable"
         },
         {
             "name": "Tuck Crunch",
             "slug": "tuck-crunch",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Two-Arm Dumbbell Preacher Curl",
             "slug": "two-arm-dumbbell-preacher-curl",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "dumbbell"
         },
         {
             "name": "Two-Arm Kettlebell Clean",
             "slug": "two-arm-kettlebell-clean",
             "primary": "shoulders",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "kettlebells"
         },
         {
             "name": "Two-Arm Kettlebell Jerk",
             "slug": "two-arm-kettlebell-jerk",
             "primary": "shoulders",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "kettlebells"
         },
         {
             "name": "Two-Arm Kettlebell Military Press",
             "slug": "two-arm-kettlebell-military-press",
             "primary": "shoulders",
-            "secondary": "triceps"
+            "secondary": "triceps",
+            "equipment": "kettlebells"
         },
         {
             "name": "Two-Arm Kettlebell Row",
             "slug": "two-arm-kettlebell-row",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "kettlebells"
         },
         {
             "name": "Underhand Cable Pulldowns",
             "slug": "underhand-cable-pulldowns",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "cable"
         },
         {
             "name": "Upright Barbell Row",
             "slug": "upright-barbell-row",
             "primary": "shoulders",
-            "secondary": "traps"
+            "secondary": "traps",
+            "equipment": "barbell"
         },
         {
             "name": "Upright Cable Row",
             "slug": "upright-cable-row",
             "primary": "traps",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "cable"
         },
         {
             "name": "Upright Row - With Bands",
             "slug": "upright-row-with-bands",
             "primary": "traps",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "bands"
         },
         {
             "name": "V-Bar Pulldown",
             "slug": "v-bar-pulldown",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "cable"
         },
         {
             "name": "V-Bar Pullup",
             "slug": "v-bar-pullup",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "body_only"
         },
         {
             "name": "Weighted Ball Hyperextension",
             "slug": "weighted-ball-hyperextension",
             "primary": "back",
-            "secondary": "glutes"
+            "secondary": "glutes",
+            "equipment": "exercise_ball"
         },
         {
             "name": "Weighted Ball Side Bend",
             "slug": "weighted-ball-side-bend",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "exercise_ball"
         },
         {
             "name": "Weighted Bench Dip",
             "slug": "weighted-bench-dip",
             "primary": "triceps",
-            "secondary": "chest"
+            "secondary": "chest",
+            "equipment": "other"
         },
         {
             "name": "Weighted Crunches",
             "slug": "weighted-crunches",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "medicine_ball"
         },
         {
             "name": "Weighted Jump Squat",
             "slug": "weighted-jump-squat",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Weighted Pull Ups",
             "slug": "weighted-pull-ups",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "other"
         },
         {
             "name": "Weighted Sissy Squat",
             "slug": "weighted-sissy-squat",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Weighted Sit-Ups - With Bands",
             "slug": "weighted-sit-ups-with-bands",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "other"
         },
         {
             "name": "Weighted Squat",
             "slug": "weighted-squat",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "other"
         },
         {
             "name": "Wide Stance Barbell Squat",
             "slug": "wide-stance-barbell-squat",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Wide Stance Stiff Legs",
             "slug": "wide-stance-stiff-legs",
             "primary": "hamstrings",
-            "secondary": "adductors"
+            "secondary": "adductors",
+            "equipment": "barbell"
         },
         {
             "name": "Wide-Grip Barbell Bench Press",
             "slug": "wide-grip-barbell-bench-press",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "barbell"
         },
         {
             "name": "Wide-Grip Decline Barbell Bench Press",
             "slug": "wide-grip-decline-barbell-bench-press",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "barbell"
         },
         {
             "name": "Wide-Grip Decline Barbell Pullover",
             "slug": "wide-grip-decline-barbell-pullover",
             "primary": "chest",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "barbell"
         },
         {
             "name": "Wide-Grip Lat Pulldown",
             "slug": "wide-grip-lat-pulldown",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "cable"
         },
         {
             "name": "Wide-Grip Pulldown Behind The Neck",
             "slug": "wide-grip-pulldown-behind-the-neck",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "cable"
         },
         {
             "name": "Wide-Grip Rear Pull-Up",
             "slug": "wide-grip-rear-pull-up",
             "primary": "back",
-            "secondary": "biceps"
+            "secondary": "biceps",
+            "equipment": "body_only"
         },
         {
             "name": "Wide-Grip Standing Barbell Curl",
             "slug": "wide-grip-standing-barbell-curl",
             "primary": "biceps",
-            "secondary": null
+            "secondary": null,
+            "equipment": "barbell"
         },
         {
             "name": "Wind Sprints",
             "slug": "wind-sprints",
             "primary": "core",
-            "secondary": null
+            "secondary": null,
+            "equipment": "body_only"
         },
         {
             "name": "Wrist Roller",
             "slug": "wrist-roller",
             "primary": "forearms",
-            "secondary": "shoulders"
+            "secondary": "shoulders",
+            "equipment": "other"
         },
         {
             "name": "Wrist Rotations with Straight Bar",
             "slug": "wrist-rotations-with-straight-bar",
             "primary": "forearms",
-            "secondary": null
+            "secondary": null,
+            "equipment": "barbell"
         },
         {
             "name": "Yoke Walk",
             "slug": "yoke-walk",
             "primary": "quads",
-            "secondary": "core"
+            "secondary": "core",
+            "equipment": "other"
         },
         {
             "name": "Zercher Squats",
             "slug": "zercher-squats",
             "primary": "quads",
-            "secondary": "calves"
+            "secondary": "calves",
+            "equipment": "barbell"
         },
         {
             "name": "Zottman Curl",
             "slug": "zottman-curl",
             "primary": "biceps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "dumbbell"
         },
         {
             "name": "Zottman Preacher Curl",
             "slug": "zottman-preacher-curl",
             "primary": "biceps",
-            "secondary": "forearms"
+            "secondary": "forearms",
+            "equipment": "dumbbell"
         }
     ]
 }

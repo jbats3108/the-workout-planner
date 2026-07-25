@@ -13,6 +13,7 @@ class WorkoutPlayerExerciseData extends Data
     public function __construct(
         public readonly int $id,
         public readonly string $name,
+        public readonly ?string $equipment,
         public readonly float $workingWeightKg,
         public readonly int $prescribedReps,
         public readonly int $position,
@@ -23,6 +24,7 @@ class WorkoutPlayerExerciseData extends Data
         return new self(
             id: $exercise->id,
             name: $exercise->exercise_name,
+            equipment: $exercise->equipment?->value,
             workingWeightKg: round($exercise->working_weight_g / 1000, 3),
             prescribedReps: $exercise->prescribed_reps,
             position: $exercise->position,

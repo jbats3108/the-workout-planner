@@ -2,6 +2,7 @@
 
 namespace App\Workouts\Models;
 
+use App\Exercises\Enums\ExerciseEquipment;
 use App\Exercises\Models\Exercise;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,6 +15,7 @@ class WorkoutBlockExercise extends Model
         'exercise_id',
         'position',
         'exercise_name',
+        'equipment',
         'working_weight_g',
         'prescribed_reps',
         'achievement_floor',
@@ -25,6 +27,7 @@ class WorkoutBlockExercise extends Model
     {
         return [
             'position' => 'integer',
+            'equipment' => ExerciseEquipment::class,
             'working_weight_g' => 'integer',
             'prescribed_reps' => 'integer',
             'achievement_floor' => 'integer',

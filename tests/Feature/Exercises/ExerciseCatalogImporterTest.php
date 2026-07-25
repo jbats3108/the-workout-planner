@@ -27,6 +27,15 @@ class ExerciseCatalogImporterTest extends TestCase
         $this->assertDatabaseHas('exercises', [
             'slug' => 'barbell-deadlift',
             'user_id' => null,
+            'equipment' => 'barbell',
+        ]);
+        $this->assertDatabaseHas('exercises', [
+            'slug' => 'arnold-dumbbell-press',
+            'equipment' => 'dumbbell',
+        ]);
+        $this->assertDatabaseHas('exercises', [
+            'slug' => 'bench-press-powerlifting',
+            'equipment' => 'barbell',
         ]);
     }
 
@@ -70,6 +79,36 @@ class ExerciseCatalogImporterTest extends TestCase
             'slug' => 'test-press',
             'name' => 'Test Press',
             'user_id' => null,
+            'equipment' => null,
+        ]);
+    }
+
+    #[Test]
+    public function it_imports_equipment_from_a_custom_catalog(): void
+    {
+        $path = storage_path('framework/testing/catalog-equipment.json');
+        File::ensureDirectoryExists(dirname($path));
+        File::put($path, json_encode([
+            'muscle_groups' => [
+                ['name' => 'Chest', 'slug' => 'chest'],
+            ],
+            'exercises' => [
+                [
+                    'name' => 'DB Press',
+                    'slug' => 'db-press',
+                    'primary' => 'chest',
+                    'secondary' => null,
+                    'equipment' => 'dumbbell',
+                ],
+            ],
+        ], JSON_THROW_ON_ERROR));
+
+        $this->artisan('exercises:import', ['path' => $path])
+            ->assertSuccessful();
+
+        $this->assertDatabaseHas('exercises', [
+            'slug' => 'db-press',
+            'equipment' => 'dumbbell',
         ]);
     }
 }

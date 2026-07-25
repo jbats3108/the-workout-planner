@@ -2,6 +2,7 @@
 
 namespace App\Workouts\Data\Player;
 
+use App\Exercises\Enums\ExerciseEquipment;
 use App\Shared\Enums\SetGroupType;
 use App\Workouts\Models\WorkoutSet;
 use App\Workouts\Models\WorkoutWarmUpStep;
@@ -16,6 +17,7 @@ class WorkoutPlayerSetData extends Data
         public readonly int $id,
         public readonly int $workoutBlockExerciseId,
         public readonly string $exerciseName,
+        public readonly ?string $equipment,
         public readonly int $setIndex,
         public readonly string $groupType,
         public readonly ?float $targetWeightKg,
@@ -29,6 +31,7 @@ class WorkoutPlayerSetData extends Data
     public static function fromSet(
         WorkoutSet $set,
         string $exerciseName,
+        ?ExerciseEquipment $equipment,
         int $workingWeightG,
         int $prescribedReps,
         SetGroupType $groupType,
@@ -44,6 +47,7 @@ class WorkoutPlayerSetData extends Data
             id: $set->id,
             workoutBlockExerciseId: $set->workout_block_exercise_id,
             exerciseName: $exerciseName,
+            equipment: $equipment?->value,
             setIndex: $set->set_index,
             groupType: $groupType->value,
             targetWeightKg: round($targetWeightG / 1000, 3),

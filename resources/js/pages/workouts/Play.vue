@@ -2,7 +2,7 @@
 /**
  * Workout player — chrome-minimal full-bleed stage.
  */
-import { defaultBarG, gramsToKg, nearestPlateLoad } from '@/lib/plateCalculator';
+import { defaultBarG, gramsToKg, nearestPlateLoad, usesBarbellPlates } from '@/lib/plateCalculator';
 import { Head, router, useForm } from '@inertiajs/vue3';
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
@@ -10,6 +10,7 @@ type PlayerSet = {
     id: number;
     workout_block_exercise_id: number;
     exercise_name: string;
+    equipment: string | null;
     set_index: number;
     group_type: 'warm_up' | 'working';
     target_weight_kg: number | null;
@@ -392,6 +393,9 @@ const removeWorkingSet = () => {
 const groupLabel = (type: string) => (type === 'warm_up' ? 'Warm-up' : 'Working');
 
 const plateLoad = computed(() => {
+    if (!current.value || !usesBarbellPlates(current.value.set.equipment)) {
+        return null;
+    }
     const barG = defaultBarG(props.plate_profile.bars);
     if (barG === null) return null;
     const targetKg = setForm.weight_kg;

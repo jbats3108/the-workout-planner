@@ -2,6 +2,7 @@
 
 namespace App\Exercises\Services;
 
+use App\Exercises\Enums\ExerciseEquipment;
 use App\Exercises\Models\Exercise;
 use App\MuscleGroups\Models\MuscleGroup;
 use InvalidArgumentException;
@@ -28,7 +29,7 @@ class ExerciseCatalogImporter
     }
 
     /**
-     * @param  array{muscle_groups?: list<array{name: string, slug: string}>, exercises?: list<array{name: string, slug: string, primary: string, secondary?: ?string}>}  $catalog
+     * @param  array{muscle_groups?: list<array{name: string, slug: string}>, exercises?: list<array{name: string, slug: string, primary: string, secondary?: ?string, equipment?: ?string}>}  $catalog
      * @return array{muscle_groups: int, created: int, updated: int, skipped: int}
      */
     public function import(array $catalog): array
@@ -69,6 +70,7 @@ class ExerciseCatalogImporter
             $name = $row['name'] ?? null;
             $primarySlug = $row['primary'] ?? null;
             $secondarySlug = $row['secondary'] ?? null;
+            $equipment = $this->parseEquipment($row['equipment'] ?? null);
 
             if (! is_string($slug) || $slug === '' || ! is_string($name) || $name === '' || ! is_string($primarySlug)) {
                 $skipped++;
@@ -102,6 +104,7 @@ class ExerciseCatalogImporter
             $exercise->name = $name;
             $exercise->primary_muscle_group_id = $primaryId;
             $exercise->secondary_muscle_group_id = $secondaryId;
+            $exercise->equipment = $equipment;
             if ($exercise->trashed()) {
                 $exercise->restore();
             }
@@ -125,5 +128,14 @@ class ExerciseCatalogImporter
     public static function defaultPath(): string
     {
         return database_path('data/exercises.json');
+    }
+
+    private function parseEquipment(mixed $value): ?ExerciseEquipment
+    {
+        if (! is_string($value) || $value === '') {
+            return null;
+        }
+
+        return ExerciseEquipment::tryFrom($value);
     }
 }
