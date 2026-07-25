@@ -83,8 +83,10 @@ const firstIncomplete = (): Focus => {
         }
 
         const hasIncompleteWorking = working.some((s) => !s.completed);
+        // Only between warm-ups and working — skip if the block has no warm-up sets.
         if (
             block.has_setup_after_warm_up &&
+            warmUps.length > 0 &&
             hasIncompleteWorking &&
             !setupDone.value[setupKey(block.id, 'after_warm_up')]
         ) {

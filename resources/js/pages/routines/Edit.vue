@@ -110,7 +110,7 @@ const normalizeBlock = (raw: Block): Block => {
     }));
     return {
         ...raw,
-        has_setup_after_warm_up: Boolean(raw.has_setup_after_warm_up),
+        has_setup_after_warm_up: Boolean(raw.has_setup_after_warm_up) && steps.length > 0,
         warm_up: {
             set_count: raw.warm_up?.set_count ?? steps.length,
             rest_seconds: raw.warm_up?.rest_seconds ?? 60,
@@ -168,6 +168,13 @@ const applyExercisePick = (exerciseId: number) => {
 const warmUpText = (block: Block) =>
     block.warm_up.steps.map((s) => `${s.percent}x${s.reps}`).join(', ');
 
+const syncWarmUpMeta = (block: Block) => {
+    block.warm_up.set_count = block.warm_up.steps.length;
+    if (block.warm_up.steps.length === 0) {
+        block.has_setup_after_warm_up = false;
+    }
+};
+
 const setWarmUpText = (block: Block, value: string) => {
     block.warm_up.steps = value
         .split(',')
@@ -185,22 +192,22 @@ const setWarmUpText = (block: Block, value: string) => {
             return null;
         })
         .filter((s): s is WarmUpStep => s !== null && s.percent > 0 && s.reps > 0);
-    block.warm_up.set_count = block.warm_up.steps.length;
+    syncWarmUpMeta(block);
 };
 
 const addWarmUpStep = (block: Block) => {
     block.warm_up.steps.push({ percent: 50, reps: 5 });
-    block.warm_up.set_count = block.warm_up.steps.length;
+    syncWarmUpMeta(block);
 };
 
 const removeWarmUpStep = (block: Block, index: number) => {
     block.warm_up.steps.splice(index, 1);
-    block.warm_up.set_count = block.warm_up.steps.length;
+    syncWarmUpMeta(block);
 };
 
 const clearWarmUp = (block: Block) => {
     block.warm_up.steps = [];
-    block.warm_up.set_count = 0;
+    syncWarmUpMeta(block);
 };
 
 const formatRest = (seconds: number) => {
@@ -472,8 +479,20 @@ const errorList = computed(() => Object.values(form.errors));
                                                 <input type="checkbox" :checked="block.is_superset" @change="toggleSuperset(block)" />
                                                 SS
                                             </label>
-                                            <label class="flex items-center gap-1">
-                                                <input v-model="block.has_setup_after_warm_up" type="checkbox" />
+                                            <label
+                                                class="flex items-center gap-1"
+                                                :class="block.warm_up.steps.length ? '' : 'opacity-40'"
+                                                :title="
+                                                    block.warm_up.steps.length
+                                                        ? undefined
+                                                        : 'Add warm-up steps first'
+                                                "
+                                            >
+                                                <input
+                                                    v-model="block.has_setup_after_warm_up"
+                                                    type="checkbox"
+                                                    :disabled="!block.warm_up.steps.length"
+                                                />
                                                 Setup→work
                                             </label>
                                             <label class="flex items-center gap-1">
@@ -726,8 +745,20 @@ const errorList = computed(() => Object.values(form.errors));
                                 <input type="checkbox" :checked="activeBlock.is_superset" @change="toggleSuperset(activeBlock)" />
                                 Superset
                             </label>
-                            <label class="flex items-center gap-2">
-                                <input v-model="activeBlock.has_setup_after_warm_up" type="checkbox" />
+                            <label
+                                class="flex items-center gap-2"
+                                :class="activeBlock.warm_up.steps.length ? '' : 'opacity-40'"
+                                :title="
+                                    activeBlock.warm_up.steps.length
+                                        ? undefined
+                                        : 'Add warm-up steps first'
+                                "
+                            >
+                                <input
+                                    v-model="activeBlock.has_setup_after_warm_up"
+                                    type="checkbox"
+                                    :disabled="!activeBlock.warm_up.steps.length"
+                                />
                                 Setup before working
                             </label>
                             <label class="flex items-center gap-2">
