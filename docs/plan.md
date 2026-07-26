@@ -16,10 +16,9 @@ Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domai
 
 Active queue ordered **easiest → hardest** (gym-test 2026-07-26 + remaining product). Shipped items stay below for history.
 
-1. **Plate guide visibility in Play** — Confirm/fix when the stack shows. By design only for `barbell` / `ez_curl_bar` (not Dip / machine / DB). If barbell lifts still hide it: check snapshot `equipment`, plate profile bars, and that the guide only renders on the log-set screen.
-2. **Complete-then-log UX** — Instinct was tap Complete first, then enter weight/reps. Today: fill fields → Complete. Redesign Play logging so Complete leads into (or opens) recording, without slowing the happy path.
-3. **Rest-end alert + leave-during-rest** — Sound/vibration when rest hits zero; persistent (or at least background) notification so users can leave the app during Rest and still get pinged. Likely needs Notification permission; full background reliability may touch PWA / service worker (deferred in app-like grill).
-4. **Finished workout history** — browse/edit finished workouts; re-eval progression when eligible (grill notes below; ADR-0004)
+1. **Complete-then-log UX** — Instinct was tap Complete first, then enter weight/reps. Today: fill fields → Complete. Redesign Play logging so Complete leads into (or opens) recording, without slowing the happy path.
+2. **Rest-end alert + leave-during-rest** — Sound/vibration when rest hits zero; persistent (or at least background) notification so users can leave the app during Rest and still get pinged. Likely needs Notification permission; full background reliability may touch PWA / service worker (deferred in app-like grill).
+3. **Finished workout history** — browse/edit finished workouts; re-eval progression when eligible (grill notes below; ADR-0004)
 
 ### Shipped (recent)
 
@@ -27,7 +26,8 @@ Active queue ordered **easiest → hardest** (gym-test 2026-07-26 + remaining pr
 2. **Prev set weight → next** — ~~pending-rest blocks focus race; client `lastWorkingWeightKg` + prior logged weight~~ done
 3. **Keep screen awake in Play** — ~~Screen Wake Lock while player mounted; re-request on visibility~~ done
 4. **Preview next during rest / setup** — ~~Up next card: exercise, set, weight/reps, plate stack when barbell~~ done
-5. **Progression on finish** — ~~carry-forward highest achieved top weight; confirm bumps when progression target hit; skip both for deload workouts~~ done
+5. **Plate guide visibility in Play** — ~~works for barbell/EZ; missing equipment on pre-import orphans~~ done (audit + merge original short-name catalog)
+6. **Progression on finish** — ~~carry-forward highest achieved top weight; confirm bumps when progression target hit; skip both for deload workouts~~ done
 5. **Mid-session structure edits** — ~~mutate the in-progress workout snapshot (not the routine) from the player~~ done (add/remove incomplete working sets)
 6. **More app-like mobile behaviour** — ~~chrome polish: safe areas, player full-bleed (no AppLayout), leave confirm, overscroll off on player+editor~~ done (grill notes below; no PWA / bottom nav)
 7. **User default warm-up %s and reps** — ~~prefs on the user; per-step %×reps on warm-up steps; seed into new blocks; Settings → Training~~ done

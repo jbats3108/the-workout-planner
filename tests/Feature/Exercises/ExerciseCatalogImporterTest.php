@@ -37,6 +37,11 @@ class ExerciseCatalogImporterTest extends TestCase
             'slug' => 'bench-press-powerlifting',
             'equipment' => 'barbell',
         ]);
+        $this->assertDatabaseHas('exercises', [
+            'slug' => 'barbell-bench-press',
+            'name' => 'Barbell Bench Press',
+            'equipment' => 'barbell',
+        ]);
     }
 
     #[Test]

@@ -1,54 +1,6 @@
 {
     "muscle_groups": [
         {
-            "name": "Back",
-            "slug": "back"
-        },
-        {
-            "name": "Chest",
-            "slug": "chest"
-        },
-        {
-            "name": "Shoulders",
-            "slug": "shoulders"
-        },
-        {
-            "name": "Quads",
-            "slug": "quads"
-        },
-        {
-            "name": "Hamstrings",
-            "slug": "hamstrings"
-        },
-        {
-            "name": "Glutes",
-            "slug": "glutes"
-        },
-        {
-            "name": "Calves",
-            "slug": "calves"
-        },
-        {
-            "name": "Biceps",
-            "slug": "biceps"
-        },
-        {
-            "name": "Triceps",
-            "slug": "triceps"
-        },
-        {
-            "name": "Core",
-            "slug": "core"
-        },
-        {
-            "name": "Traps",
-            "slug": "traps"
-        },
-        {
-            "name": "Forearms",
-            "slug": "forearms"
-        },
-        {
             "name": "Abductors",
             "slug": "abductors"
         },
@@ -57,8 +9,56 @@
             "slug": "adductors"
         },
         {
+            "name": "Back",
+            "slug": "back"
+        },
+        {
+            "name": "Biceps",
+            "slug": "biceps"
+        },
+        {
+            "name": "Calves",
+            "slug": "calves"
+        },
+        {
+            "name": "Chest",
+            "slug": "chest"
+        },
+        {
+            "name": "Core",
+            "slug": "core"
+        },
+        {
+            "name": "Forearms",
+            "slug": "forearms"
+        },
+        {
+            "name": "Glutes",
+            "slug": "glutes"
+        },
+        {
+            "name": "Hamstrings",
+            "slug": "hamstrings"
+        },
+        {
             "name": "Neck",
             "slug": "neck"
+        },
+        {
+            "name": "Quads",
+            "slug": "quads"
+        },
+        {
+            "name": "Shoulders",
+            "slug": "shoulders"
+        },
+        {
+            "name": "Traps",
+            "slug": "traps"
+        },
+        {
+            "name": "Triceps",
+            "slug": "triceps"
         }
     ],
     "exercises": [
@@ -81,6 +81,12 @@
             "slug": "ab-roller",
             "primary": "core",
             "secondary": "shoulders",
+            "equipment": "other"
+        },
+        {
+            "name": "Ab Wheel Rollout",
+            "slug": "ab-wheel-rollout",
+            "primary": "core",
             "equipment": "other"
         },
         {
@@ -182,6 +188,13 @@
             "equipment": "dumbbell"
         },
         {
+            "name": "Arnold Press",
+            "slug": "arnold-press",
+            "primary": "shoulders",
+            "equipment": "dumbbell",
+            "secondary": "triceps"
+        },
+        {
             "name": "Around The Worlds",
             "slug": "around-the-worlds",
             "primary": "chest",
@@ -210,11 +223,25 @@
             "equipment": "other"
         },
         {
+            "name": "Back Extension",
+            "slug": "back-extension",
+            "primary": "back",
+            "equipment": "machine",
+            "secondary": "glutes"
+        },
+        {
             "name": "Back Flyes - With Bands",
             "slug": "back-flyes-with-bands",
             "primary": "shoulders",
             "secondary": "back",
             "equipment": "bands"
+        },
+        {
+            "name": "Back Squat",
+            "slug": "back-squat",
+            "primary": "quads",
+            "equipment": "barbell",
+            "secondary": "glutes"
         },
         {
             "name": "Backward Drag",
@@ -292,6 +319,13 @@
             "primary": "core",
             "secondary": "back",
             "equipment": "barbell"
+        },
+        {
+            "name": "Barbell Bench Press",
+            "slug": "barbell-bench-press",
+            "primary": "chest",
+            "equipment": "barbell",
+            "secondary": "triceps"
         },
         {
             "name": "Barbell Bench Press - Medium Grip",
@@ -392,6 +426,13 @@
             "equipment": "barbell"
         },
         {
+            "name": "Barbell Row",
+            "slug": "barbell-row",
+            "primary": "back",
+            "equipment": "barbell",
+            "secondary": "biceps"
+        },
+        {
             "name": "Barbell Seated Calf Raise",
             "slug": "barbell-seated-calf-raise",
             "primary": "calves",
@@ -474,6 +515,13 @@
             "primary": "quads",
             "secondary": "calves",
             "equipment": "other"
+        },
+        {
+            "name": "Belt Squat",
+            "slug": "belt-squat",
+            "primary": "quads",
+            "equipment": "machine",
+            "secondary": "glutes"
         },
         {
             "name": "Bench Dips",
@@ -627,7 +675,7 @@
             "slug": "bodyweight-walking-lunge",
             "primary": "quads",
             "secondary": "calves",
-            "equipment": null
+            "equipment": "body_only"
         },
         {
             "name": "Bosu Ball Cable Crunch With Side Bends",
@@ -679,6 +727,13 @@
             "equipment": "barbell"
         },
         {
+            "name": "Bulgarian Split Squat",
+            "slug": "bulgarian-split-squat",
+            "primary": "quads",
+            "equipment": "dumbbell",
+            "secondary": "glutes"
+        },
+        {
             "name": "Butt Lift (Bridge)",
             "slug": "butt-lift-bridge",
             "primary": "glutes",
@@ -721,10 +776,22 @@
             "equipment": "cable"
         },
         {
+            "name": "Cable Curl",
+            "slug": "cable-curl",
+            "primary": "biceps",
+            "equipment": "cable"
+        },
+        {
             "name": "Cable Deadlifts",
             "slug": "cable-deadlifts",
             "primary": "quads",
             "secondary": "forearms",
+            "equipment": "cable"
+        },
+        {
+            "name": "Cable Fly",
+            "slug": "cable-fly",
+            "primary": "chest",
             "equipment": "cable"
         },
         {
@@ -777,6 +844,12 @@
             "equipment": "cable"
         },
         {
+            "name": "Cable Lateral Raise",
+            "slug": "cable-lateral-raise",
+            "primary": "shoulders",
+            "equipment": "cable"
+        },
+        {
             "name": "Cable Lying Triceps Extension",
             "slug": "cable-lying-triceps-extension",
             "primary": "triceps",
@@ -796,6 +869,13 @@
             "primary": "biceps",
             "secondary": "forearms",
             "equipment": "cable"
+        },
+        {
+            "name": "Cable Pull-Through",
+            "slug": "cable-pull-through",
+            "primary": "glutes",
+            "equipment": "cable",
+            "secondary": "hamstrings"
         },
         {
             "name": "Cable Rear Delt Fly",
@@ -824,6 +904,13 @@
             "primary": "shoulders",
             "secondary": "biceps",
             "equipment": "cable"
+        },
+        {
+            "name": "Cable Row to Neck",
+            "slug": "cable-row-to-neck",
+            "primary": "shoulders",
+            "equipment": "cable",
+            "secondary": "traps"
         },
         {
             "name": "Cable Russian Twists",
@@ -938,6 +1025,13 @@
             "equipment": "machine"
         },
         {
+            "name": "Chest-Supported Row",
+            "slug": "chest-supported-row",
+            "primary": "back",
+            "equipment": "dumbbell",
+            "secondary": "biceps"
+        },
+        {
             "name": "Chin-Up",
             "slug": "chin-up",
             "primary": "back",
@@ -1013,6 +1107,13 @@
             "primary": "triceps",
             "secondary": "chest",
             "equipment": "barbell"
+        },
+        {
+            "name": "Close-Grip Bench Press",
+            "slug": "close-grip-bench-press",
+            "primary": "triceps",
+            "equipment": "barbell",
+            "secondary": "chest"
         },
         {
             "name": "Close-Grip Dumbbell Press",
@@ -1222,7 +1323,7 @@
             "slug": "decline-push-up",
             "primary": "chest",
             "secondary": "shoulders",
-            "equipment": null
+            "equipment": "body_only"
         },
         {
             "name": "Decline Reverse Crunch",
@@ -1244,6 +1345,20 @@
             "primary": "back",
             "secondary": "forearms",
             "equipment": "barbell"
+        },
+        {
+            "name": "Diamond Push-Up",
+            "slug": "diamond-push-up",
+            "primary": "triceps",
+            "equipment": "body_only",
+            "secondary": "chest"
+        },
+        {
+            "name": "Dip",
+            "slug": "dip",
+            "primary": "chest",
+            "equipment": "body_only",
+            "secondary": "triceps"
         },
         {
             "name": "Dip Machine",
@@ -1358,10 +1473,23 @@
             "equipment": "dumbbell"
         },
         {
+            "name": "Dumbbell Curl",
+            "slug": "dumbbell-curl",
+            "primary": "biceps",
+            "equipment": "dumbbell",
+            "secondary": "forearms"
+        },
+        {
             "name": "Dumbbell Floor Press",
             "slug": "dumbbell-floor-press",
             "primary": "triceps",
             "secondary": "chest",
+            "equipment": "dumbbell"
+        },
+        {
+            "name": "Dumbbell Fly",
+            "slug": "dumbbell-fly",
+            "primary": "chest",
             "equipment": "dumbbell"
         },
         {
@@ -1610,6 +1738,13 @@
             "equipment": "cable"
         },
         {
+            "name": "Farmer Carry",
+            "slug": "farmer-carry",
+            "primary": "forearms",
+            "equipment": "other",
+            "secondary": "traps"
+        },
+        {
             "name": "Farmer's Walk",
             "slug": "farmers-walk",
             "primary": "forearms",
@@ -1656,7 +1791,7 @@
             "slug": "floor-glute-ham-raise",
             "primary": "hamstrings",
             "secondary": "calves",
-            "equipment": null
+            "equipment": "body_only"
         },
         {
             "name": "Floor Press",
@@ -1750,11 +1885,24 @@
             "equipment": "other"
         },
         {
+            "name": "Front Raise",
+            "slug": "front-raise",
+            "primary": "shoulders",
+            "equipment": "dumbbell"
+        },
+        {
             "name": "Front Raise And Pullover",
             "slug": "front-raise-and-pullover",
             "primary": "chest",
             "secondary": "back",
             "equipment": "barbell"
+        },
+        {
+            "name": "Front Squat",
+            "slug": "front-squat",
+            "primary": "quads",
+            "equipment": "barbell",
+            "secondary": "core"
         },
         {
             "name": "Front Squat (Clean Grip)",
@@ -1790,6 +1938,13 @@
             "primary": "back",
             "secondary": "biceps",
             "equipment": "other"
+        },
+        {
+            "name": "Glute Bridge",
+            "slug": "glute-bridge",
+            "primary": "glutes",
+            "equipment": "body_only",
+            "secondary": "hamstrings"
         },
         {
             "name": "Glute Ham Raise",
@@ -1839,6 +1994,13 @@
             "primary": "quads",
             "secondary": "calves",
             "equipment": "machine"
+        },
+        {
+            "name": "Hammer Curl",
+            "slug": "hammer-curl",
+            "primary": "biceps",
+            "equipment": "dumbbell",
+            "secondary": "forearms"
         },
         {
             "name": "Hammer Curls",
@@ -1946,6 +2108,13 @@
             "equipment": "bands"
         },
         {
+            "name": "Hip Thrust",
+            "slug": "hip-thrust",
+            "primary": "glutes",
+            "equipment": "barbell",
+            "secondary": "hamstrings"
+        },
+        {
             "name": "Hyperextensions (Back Extensions)",
             "slug": "hyperextensions-back-extensions",
             "primary": "back",
@@ -1958,6 +2127,13 @@
             "primary": "back",
             "secondary": "glutes",
             "equipment": "body_only"
+        },
+        {
+            "name": "Incline Barbell Bench Press",
+            "slug": "incline-barbell-bench-press",
+            "primary": "chest",
+            "equipment": "barbell",
+            "secondary": "shoulders"
         },
         {
             "name": "Incline Barbell Triceps Extension",
@@ -1986,6 +2162,13 @@
             "primary": "chest",
             "secondary": "shoulders",
             "equipment": "cable"
+        },
+        {
+            "name": "Incline Dumbbell Bench Press",
+            "slug": "incline-dumbbell-bench-press",
+            "primary": "chest",
+            "equipment": "dumbbell",
+            "secondary": "shoulders"
         },
         {
             "name": "Incline Dumbbell Bench With Palms Facing In",
@@ -2083,7 +2266,7 @@
             "slug": "inverted-row",
             "primary": "back",
             "secondary": null,
-            "equipment": null
+            "equipment": "body_only"
         },
         {
             "name": "Inverted Row with Straps",
@@ -2345,11 +2528,37 @@
             "equipment": "barbell"
         },
         {
+            "name": "Landmine Press",
+            "slug": "landmine-press",
+            "primary": "shoulders",
+            "equipment": "barbell",
+            "secondary": "chest"
+        },
+        {
+            "name": "Lat Pulldown",
+            "slug": "lat-pulldown",
+            "primary": "back",
+            "equipment": "cable",
+            "secondary": "biceps"
+        },
+        {
+            "name": "Lateral Raise",
+            "slug": "lateral-raise",
+            "primary": "shoulders",
+            "equipment": "dumbbell"
+        },
+        {
             "name": "Lateral Raise - With Bands",
             "slug": "lateral-raise-with-bands",
             "primary": "shoulders",
             "secondary": null,
             "equipment": "bands"
+        },
+        {
+            "name": "Leg Extension",
+            "slug": "leg-extension",
+            "primary": "quads",
+            "equipment": "machine"
         },
         {
             "name": "Leg Extensions",
@@ -2555,6 +2764,12 @@
             "equipment": "barbell"
         },
         {
+            "name": "Lying Leg Curl",
+            "slug": "lying-leg-curl",
+            "primary": "hamstrings",
+            "equipment": "machine"
+        },
+        {
             "name": "Lying Leg Curls",
             "slug": "lying-leg-curls",
             "primary": "hamstrings",
@@ -2618,11 +2833,31 @@
             "equipment": "machine"
         },
         {
+            "name": "Machine Chest Press",
+            "slug": "machine-chest-press",
+            "primary": "chest",
+            "equipment": "machine",
+            "secondary": "triceps"
+        },
+        {
             "name": "Machine Preacher Curls",
             "slug": "machine-preacher-curls",
             "primary": "biceps",
             "secondary": null,
             "equipment": "machine"
+        },
+        {
+            "name": "Machine Reverse Fly",
+            "slug": "machine-reverse-fly",
+            "primary": "shoulders",
+            "equipment": "machine"
+        },
+        {
+            "name": "Machine Row",
+            "slug": "machine-row",
+            "primary": "back",
+            "equipment": "machine",
+            "secondary": "biceps"
         },
         {
             "name": "Machine Shoulder (Military) Press",
@@ -2707,6 +2942,19 @@
             "primary": "chest",
             "secondary": "shoulders",
             "equipment": "barbell"
+        },
+        {
+            "name": "Neutral-Grip Pull-Up",
+            "slug": "neutral-grip-pull-up",
+            "primary": "back",
+            "equipment": "body_only",
+            "secondary": "biceps"
+        },
+        {
+            "name": "Nordic Hamstring Curl",
+            "slug": "nordic-hamstring-curl",
+            "primary": "hamstrings",
+            "equipment": "body_only"
         },
         {
             "name": "Oblique Crunches",
@@ -2968,11 +3216,24 @@
             "equipment": "cable"
         },
         {
+            "name": "Overhead Press",
+            "slug": "overhead-press",
+            "primary": "shoulders",
+            "equipment": "barbell",
+            "secondary": "triceps"
+        },
+        {
             "name": "Overhead Squat",
             "slug": "overhead-squat",
             "primary": "quads",
             "secondary": "core",
             "equipment": "barbell"
+        },
+        {
+            "name": "Overhead Triceps Extension",
+            "slug": "overhead-triceps-extension",
+            "primary": "triceps",
+            "equipment": "dumbbell"
         },
         {
             "name": "Pallof Press",
@@ -3022,6 +3283,13 @@
             "primary": "triceps",
             "secondary": "chest",
             "equipment": "other"
+        },
+        {
+            "name": "Pendlay Row",
+            "slug": "pendlay-row",
+            "primary": "back",
+            "equipment": "barbell",
+            "secondary": "biceps"
         },
         {
             "name": "Physioball Hip Bridge",
@@ -3154,7 +3422,7 @@
             "slug": "prone-manual-hamstring",
             "primary": "hamstrings",
             "secondary": null,
-            "equipment": null
+            "equipment": "body_only"
         },
         {
             "name": "Pull Through",
@@ -3162,6 +3430,13 @@
             "primary": "glutes",
             "secondary": "hamstrings",
             "equipment": "cable"
+        },
+        {
+            "name": "Pull-Up",
+            "slug": "pull-up",
+            "primary": "back",
+            "equipment": "body_only",
+            "secondary": "biceps"
         },
         {
             "name": "Pullups",
@@ -3190,6 +3465,13 @@
             "primary": "chest",
             "secondary": "core",
             "equipment": "body_only"
+        },
+        {
+            "name": "Push-Up",
+            "slug": "push-up",
+            "primary": "chest",
+            "equipment": "body_only",
+            "secondary": "triceps"
         },
         {
             "name": "Push-Up Wide",
@@ -3253,6 +3535,12 @@
             "primary": "back",
             "secondary": "forearms",
             "equipment": "barbell"
+        },
+        {
+            "name": "Rear Delt Fly",
+            "slug": "rear-delt-fly",
+            "primary": "shoulders",
+            "equipment": "dumbbell"
         },
         {
             "name": "Reverse Band Bench Press",
@@ -3351,6 +3639,13 @@
             "primary": "hamstrings",
             "secondary": "calves",
             "equipment": "machine"
+        },
+        {
+            "name": "Reverse Lunge",
+            "slug": "reverse-lunge",
+            "primary": "quads",
+            "equipment": "dumbbell",
+            "secondary": "glutes"
         },
         {
             "name": "Reverse Machine Flyes",
@@ -3462,7 +3757,7 @@
             "slug": "scapular-pull-up",
             "primary": "traps",
             "secondary": "back",
-            "equipment": null
+            "equipment": "body_only"
         },
         {
             "name": "Seated Band Hamstring Curl",
@@ -3505,6 +3800,13 @@
             "primary": "triceps",
             "secondary": null,
             "equipment": "dumbbell"
+        },
+        {
+            "name": "Seated Cable Row",
+            "slug": "seated-cable-row",
+            "primary": "back",
+            "equipment": "cable",
+            "secondary": "biceps"
         },
         {
             "name": "Seated Cable Rows",
@@ -3568,6 +3870,13 @@
             "primary": "shoulders",
             "secondary": "triceps",
             "equipment": "dumbbell"
+        },
+        {
+            "name": "Seated Dumbbell Shoulder Press",
+            "slug": "seated-dumbbell-shoulder-press",
+            "primary": "shoulders",
+            "equipment": "dumbbell",
+            "secondary": "triceps"
         },
         {
             "name": "Seated Flat Bench Leg Pull-In",
@@ -3766,11 +4075,30 @@
             "equipment": "machine"
         },
         {
+            "name": "Single-Leg RDL",
+            "slug": "single-leg-rdl",
+            "primary": "hamstrings",
+            "equipment": "dumbbell",
+            "secondary": "glutes"
+        },
+        {
+            "name": "Sissy Squat",
+            "slug": "sissy-squat",
+            "primary": "quads",
+            "equipment": "body_only"
+        },
+        {
             "name": "Sit-Up",
             "slug": "sit-up",
             "primary": "core",
             "secondary": null,
             "equipment": "body_only"
+        },
+        {
+            "name": "Skull Crusher",
+            "slug": "skull-crusher",
+            "primary": "triceps",
+            "equipment": "ez_curl_bar"
         },
         {
             "name": "Sled Drag - Harness",
@@ -4165,6 +4493,12 @@
             "equipment": "cable"
         },
         {
+            "name": "Standing Calf Raise",
+            "slug": "standing-calf-raise",
+            "primary": "calves",
+            "equipment": "machine"
+        },
+        {
             "name": "Standing Calf Raises",
             "slug": "standing-calf-raises",
             "primary": "calves",
@@ -4331,6 +4665,13 @@
             "primary": "triceps",
             "secondary": null,
             "equipment": "body_only"
+        },
+        {
+            "name": "Step-Up",
+            "slug": "step-up",
+            "primary": "quads",
+            "equipment": "dumbbell",
+            "secondary": "glutes"
         },
         {
             "name": "Step-up with Knee Raise",
@@ -4592,6 +4933,13 @@
             "equipment": "cable"
         },
         {
+            "name": "Upright Row",
+            "slug": "upright-row",
+            "primary": "shoulders",
+            "equipment": "barbell",
+            "secondary": "traps"
+        },
+        {
             "name": "Upright Row - With Bands",
             "slug": "upright-row-with-bands",
             "primary": "traps",
@@ -4611,6 +4959,13 @@
             "primary": "back",
             "secondary": "biceps",
             "equipment": "body_only"
+        },
+        {
+            "name": "Walking Lunge",
+            "slug": "walking-lunge",
+            "primary": "quads",
+            "equipment": "dumbbell",
+            "secondary": "glutes"
         },
         {
             "name": "Weighted Ball Hyperextension",
@@ -4744,6 +5099,12 @@
             "primary": "core",
             "secondary": null,
             "equipment": "body_only"
+        },
+        {
+            "name": "Wrist Curl",
+            "slug": "wrist-curl",
+            "primary": "forearms",
+            "equipment": "barbell"
         },
         {
             "name": "Wrist Roller",
