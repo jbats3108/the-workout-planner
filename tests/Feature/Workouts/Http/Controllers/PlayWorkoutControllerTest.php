@@ -85,6 +85,26 @@ class PlayWorkoutControllerTest extends TestCase
     }
 
     #[Test]
+    public function it_accepts_fractional_kilogram_weights(): void
+    {
+        $workout = $this->createWorkoutForUser();
+        $set = WorkoutSet::query()
+            ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workout->id))
+            ->firstOrFail();
+
+        $this->actingAs($this->user)
+            ->post(route('workouts.sets.complete', ['workout' => $workout, 'set' => $set]), [
+                'reps' => 8,
+                'weight_kg' => 28.75,
+            ])
+            ->assertRedirect();
+
+        $set->refresh();
+        $this->assertSame(28750, $set->weight_g);
+        $this->assertNotNull($set->completed_at);
+    }
+
+    #[Test]
     public function it_snapshots_setup_after_warm_up_into_the_player(): void
     {
         $routine = Routine::factory()->withUser($this->user)->create();

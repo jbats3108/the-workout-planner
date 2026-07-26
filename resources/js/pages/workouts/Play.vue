@@ -115,11 +115,15 @@ const firstIncomplete = (): Focus => {
 
 const setupDone = ref<Record<string, boolean>>({});
 const focus = ref<Focus>(firstIncomplete());
+/** Seconds of rest to start after the in-flight complete succeeds; blocks focus advance until then. */
+const pendingRestSeconds = ref(0);
+/** Last logged working weight per block-exercise — survives rest/focus races better than props alone. */
+const lastWorkingWeightKg = ref<Record<number, number>>({});
 
 watch(
     () => props.workout,
     () => {
-        if (restSecondsLeft.value > 0) {
+        if (restSecondsLeft.value > 0 || pendingRestSeconds.value > 0) {
             return;
         }
         focus.value = firstIncomplete();
@@ -184,7 +188,11 @@ const syncDraftFromSet = (entry: { block: PlayerBlock; set: PlayerSet }) => {
         return;
     }
     setForm.weight_kg =
-        entry.set.logged_weight_kg ?? previousSetWeightKg(entry) ?? entry.set.target_weight_kg ?? 0;
+        entry.set.logged_weight_kg ??
+        previousSetWeightKg(entry) ??
+        lastWorkingWeightKg.value[entry.set.workout_block_exercise_id] ??
+        entry.set.target_weight_kg ??
+        0;
 };
 
 watch(
@@ -222,6 +230,7 @@ const clearRest = () => {
 
 const startRest = (seconds: number) => {
     clearRest();
+    pendingRestSeconds.value = 0;
     if (seconds <= 0) {
         focus.value = firstIncomplete();
         return;
@@ -250,16 +259,51 @@ const visitLeavesWorkout = (visit: { url: string | URL }): boolean => {
 };
 
 let removeBeforeListener: (() => void) | undefined;
+let wakeLock: WakeLockSentinel | null = null;
+let removeVisibilityListener: (() => void) | undefined;
+
+const requestWakeLock = async () => {
+    if (!('wakeLock' in navigator)) {
+        return;
+    }
+    try {
+        wakeLock = await navigator.wakeLock.request('screen');
+        wakeLock.addEventListener('release', () => {
+            wakeLock = null;
+        });
+    } catch {
+        // Browser may deny (battery saver, permissions policy, etc.)
+    }
+};
+
+const releaseWakeLock = async () => {
+    try {
+        await wakeLock?.release();
+    } catch {
+        // already released
+    }
+    wakeLock = null;
+};
 
 onBeforeUnmount(() => {
     clearRest();
     removeBeforeListener?.();
+    removeVisibilityListener?.();
     window.removeEventListener('beforeunload', onBeforeUnload);
+    void releaseWakeLock();
 });
 
 onMounted(() => {
     focus.value = firstIncomplete();
     window.addEventListener('beforeunload', onBeforeUnload);
+    void requestWakeLock();
+    const onVisibility = () => {
+        if (document.visibilityState === 'visible') {
+            void requestWakeLock();
+        }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+    removeVisibilityListener = () => document.removeEventListener('visibilitychange', onVisibility);
     removeBeforeListener = router.on('before', (event) => {
         if (leaveConfirmed.value) return;
         if (props.workout.status !== 'in_progress') return;
@@ -318,17 +362,26 @@ const completeSet = () => {
               weight_kg: setForm.weight_kg,
           };
 
+    pendingRestSeconds.value = restAfter;
+
     setForm
         .transform(() => payload)
         .post(route('workouts.sets.complete', { workout: props.workout.id, set: set.id }), {
             preserveScroll: true,
             only: ['workout'],
             onSuccess: () => {
+                if (!set.is_dropset && set.group_type === 'working' && typeof payload.weight_kg === 'number') {
+                    lastWorkingWeightKg.value[set.workout_block_exercise_id] = payload.weight_kg;
+                }
                 if (restAfter > 0) {
                     startRest(restAfter);
                 } else {
+                    pendingRestSeconds.value = 0;
                     focus.value = firstIncomplete();
                 }
+            },
+            onError: () => {
+                pendingRestSeconds.value = 0;
             },
         });
 };
@@ -401,6 +454,67 @@ const setupHint = computed(() => {
         return `Block ${currentBlock.value.position} — before working sets`;
     }
     return `After block ${currentBlock.value.position}`;
+});
+
+const groupLabel = (type: string) => (type === 'warm_up' ? 'Warm-up' : 'Working');
+
+const formatLoadStack = (
+    equipment: string | null,
+    weightKg: number | null | undefined,
+): string | null => {
+    if (weightKg == null || Number.isNaN(weightKg) || !usesBarbellPlates(equipment)) {
+        return null;
+    }
+    const barG = defaultBarG(props.plate_profile.bars);
+    if (barG === null) return null;
+    const load = nearestPlateLoad(Math.round(weightKg * 1000), barG, props.plate_profile.plates);
+    if (!load) return null;
+    if (!load.per_side.length) {
+        return `${gramsToKg(load.bar_g)}${props.workout.weight_unit} bar only`;
+    }
+    const plates = load.per_side.map((s) => `${s.count}×${gramsToKg(s.denomination_g)}`).join(' + ');
+    return `${gramsToKg(load.bar_g)} bar + ${plates} / side`;
+};
+
+/** Next incomplete set — shown during Rest / Setup so users know what to load. */
+const upcoming = computed(() => {
+    const entry = flatSets.value.find(({ set }) => !set.completed) ?? null;
+    if (!entry) return null;
+
+    let weightKg: number | null = null;
+    let weightLabel: string | null = null;
+
+    if (entry.set.is_dropset) {
+        const segments =
+            entry.set.segments.length >= 2
+                ? entry.set.segments.map((s) => s.weight_kg)
+                : [
+                      workingWeightForSet(entry),
+                      Math.max(0, workingWeightForSet(entry) - 2.5),
+                  ];
+        weightLabel = segments.join(' → ');
+        weightKg = segments[0] ?? null;
+    } else if (entry.set.group_type === 'warm_up') {
+        weightKg = entry.set.target_weight_kg;
+        weightLabel = weightKg != null ? String(weightKg) : null;
+    } else {
+        weightKg =
+            previousSetWeightKg(entry) ??
+            lastWorkingWeightKg.value[entry.set.workout_block_exercise_id] ??
+            entry.set.target_weight_kg;
+        weightLabel = weightKg != null ? String(weightKg) : null;
+    }
+
+    return {
+        exerciseName: entry.set.exercise_name,
+        groupLabel: groupLabel(entry.set.group_type),
+        setNumber: entry.set.set_index + 1,
+        blockPosition: entry.block.position,
+        weightLabel,
+        reps: entry.set.target_reps,
+        isDropset: entry.set.is_dropset,
+        plateStack: formatLoadStack(entry.set.equipment, weightKg),
+    };
 });
 
 const finishWorkout = () => {
@@ -479,8 +593,6 @@ const removeWorkingSet = () => {
     });
 };
 
-const groupLabel = (type: string) => (type === 'warm_up' ? 'Warm-up' : 'Working');
-
 const plateLoad = computed(() => {
     if (!current.value || !usesBarbellPlates(current.value.set.equipment)) {
         return null;
@@ -550,6 +662,19 @@ const formatPlateStack = computed(() => {
         <div v-if="restSecondsLeft > 0" class="flex flex-1 flex-col items-center justify-center gap-4 px-6">
             <p class="text-sm uppercase tracking-widest text-muted-foreground">Rest</p>
             <p class="font-mono text-6xl font-semibold text-primary">{{ restLabel }}</p>
+            <div v-if="upcoming" class="mt-2 w-full max-w-sm rounded-xl border border-border bg-card/60 px-4 py-3 text-center">
+                <p class="text-xs uppercase tracking-wide text-muted-foreground">Up next</p>
+                <p class="mt-1 text-lg font-semibold">{{ upcoming.exerciseName }}</p>
+                <p class="mt-1 text-sm text-muted-foreground">
+                    Block {{ upcoming.blockPosition }} · {{ upcoming.groupLabel }} · Set {{ upcoming.setNumber }}
+                    <span v-if="upcoming.isDropset"> · Dropset</span>
+                </p>
+                <p v-if="upcoming.weightLabel != null || upcoming.reps != null" class="mt-1 font-mono text-sm text-foreground">
+                    <span v-if="upcoming.weightLabel != null">{{ upcoming.weightLabel }}{{ workout.weight_unit }}</span>
+                    <span v-if="upcoming.reps != null"> × {{ upcoming.reps }}</span>
+                </p>
+                <p v-if="upcoming.plateStack" class="mt-2 font-mono text-xs text-muted-foreground">{{ upcoming.plateStack }}</p>
+            </div>
             <button type="button" class="rounded-full border border-border px-5 py-2 text-sm" @click="skipRest">Skip</button>
         </div>
 
@@ -557,6 +682,19 @@ const formatPlateStack = computed(() => {
             <p class="text-sm uppercase tracking-widest text-muted-foreground">Setup</p>
             <p class="text-center text-2xl font-semibold">Change equipment, then continue</p>
             <p class="text-sm text-muted-foreground">{{ setupHint }}</p>
+            <div v-if="upcoming" class="w-full max-w-sm rounded-xl border border-border bg-card/60 px-4 py-3 text-center">
+                <p class="text-xs uppercase tracking-wide text-muted-foreground">Up next</p>
+                <p class="mt-1 text-lg font-semibold">{{ upcoming.exerciseName }}</p>
+                <p class="mt-1 text-sm text-muted-foreground">
+                    Block {{ upcoming.blockPosition }} · {{ upcoming.groupLabel }} · Set {{ upcoming.setNumber }}
+                    <span v-if="upcoming.isDropset"> · Dropset</span>
+                </p>
+                <p v-if="upcoming.weightLabel != null || upcoming.reps != null" class="mt-1 font-mono text-sm text-foreground">
+                    <span v-if="upcoming.weightLabel != null">{{ upcoming.weightLabel }}{{ workout.weight_unit }}</span>
+                    <span v-if="upcoming.reps != null"> × {{ upcoming.reps }}</span>
+                </p>
+                <p v-if="upcoming.plateStack" class="mt-2 font-mono text-xs text-muted-foreground">{{ upcoming.plateStack }}</p>
+            </div>
             <button type="button" class="rounded-full bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground" @click="acknowledgeSetup">
                 Setup done
             </button>
@@ -619,8 +757,9 @@ const formatPlateStack = computed(() => {
                             <input
                                 v-model.number="seg.weight_kg"
                                 type="number"
-                                step="0.5"
+                                step="0.01"
                                 min="0"
+                                inputmode="decimal"
                                 class="flex-1 rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground"
                                 required
                             />
@@ -645,8 +784,9 @@ const formatPlateStack = computed(() => {
                         <input
                             v-model.number="setForm.weight_kg"
                             type="number"
-                            step="0.5"
+                            step="0.01"
                             min="0"
+                            inputmode="decimal"
                             class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground"
                             required
                         />

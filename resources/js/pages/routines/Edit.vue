@@ -558,8 +558,9 @@ const errorList = computed(() => Object.values(form.errors));
                                         <input
                                             v-model.number="ex.working_weight_kg"
                                             type="number"
-                                            step="0.5"
+                                            step="0.01"
                                             min="0"
+                                            inputmode="decimal"
                                             class="w-20 rounded border border-border bg-card px-2 py-1 font-mono tabular-nums"
                                         />
                                     </td>
@@ -710,8 +711,9 @@ const errorList = computed(() => Object.values(form.errors));
                                     <input
                                         v-model.number="seg.weight_kg"
                                         type="number"
-                                        step="0.5"
+                                        step="0.01"
                                         min="0"
+                                        inputmode="decimal"
                                         class="w-20 rounded border border-border bg-card px-2 py-1 font-mono text-sm"
                                     />
                                     <span class="text-xs text-muted-foreground">kg</span>
@@ -741,8 +743,9 @@ const errorList = computed(() => Object.values(form.errors));
                                             <input
                                                 v-model.number="rackStart"
                                                 type="number"
-                                                step="0.5"
+                                                step="0.01"
                                                 min="0"
+                                                inputmode="decimal"
                                                 class="mt-0.5 w-16 rounded border border-border bg-card px-1 py-1 font-mono text-xs"
                                             />
                                         </label>
@@ -751,8 +754,9 @@ const errorList = computed(() => Object.values(form.errors));
                                             <input
                                                 v-model.number="rackEnd"
                                                 type="number"
-                                                step="0.5"
+                                                step="0.01"
                                                 min="0"
+                                                inputmode="decimal"
                                                 class="mt-0.5 w-16 rounded border border-border bg-card px-1 py-1 font-mono text-xs"
                                             />
                                         </label>
@@ -871,8 +875,9 @@ const errorList = computed(() => Object.values(form.errors));
                                     <input
                                         v-model.number="ex.working_weight_kg"
                                         type="number"
-                                        step="0.5"
+                                        step="0.01"
                                         min="0"
+                                        inputmode="decimal"
                                         class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 text-center text-2xl font-semibold tabular-nums outline-none focus:border-primary"
                                     />
                                 </label>
@@ -950,8 +955,9 @@ const errorList = computed(() => Object.values(form.errors));
                                         <input
                                             v-model.number="seg.weight_kg"
                                             type="number"
-                                            step="0.5"
+                                            step="0.01"
                                             min="0"
+                                            inputmode="decimal"
                                             class="w-24 rounded-lg border border-border bg-card px-2 py-1.5 font-mono text-base"
                                         />
                                         <span class="text-xs text-muted-foreground">kg</span>
@@ -981,8 +987,9 @@ const errorList = computed(() => Object.values(form.errors));
                                                 <input
                                                     v-model.number="rackStart"
                                                     type="number"
-                                                    step="0.5"
+                                                    step="0.01"
                                                     min="0"
+                                                    inputmode="decimal"
                                                     class="mt-0.5 w-full rounded-lg border border-border bg-card px-2 py-1.5 font-mono text-sm"
                                                 />
                                             </label>
@@ -991,8 +998,9 @@ const errorList = computed(() => Object.values(form.errors));
                                                 <input
                                                     v-model.number="rackEnd"
                                                     type="number"
-                                                    step="0.5"
+                                                    step="0.01"
                                                     min="0"
+                                                    inputmode="decimal"
                                                     class="mt-0.5 w-full rounded-lg border border-border bg-card px-2 py-1.5 font-mono text-sm"
                                                 />
                                             </label>
