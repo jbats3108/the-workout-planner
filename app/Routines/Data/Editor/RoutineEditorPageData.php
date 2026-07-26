@@ -39,11 +39,28 @@ class RoutineEditorPageData extends Data
         $routine->loadMissing([
             'blocks.blockExercises.exercise',
             'blocks.setGroups.warmUpSteps',
+            'blocks.setGroups.dropsetSegments',
         ]);
 
         $blocks = $routine->blocks->map(function (RoutineBlock $block) {
             $working = $block->setGroups->firstWhere('type', SetGroupType::Working);
             $warmUp = $block->setGroups->firstWhere('type', SetGroupType::WarmUp);
+
+            $dropsets = collect($working?->dropsetSegments ?? [])
+                ->groupBy('set_index')
+                ->filter(fn ($segments) => $segments->count() >= 2)
+                ->map(fn ($segments, $setIndex) => new SyncDropsetData(
+                    setIndex: (int) $setIndex,
+                    segments: SyncDropsetSegmentData::collect(
+                        $segments->sortBy('position')->values()->map(
+                            fn ($segment) => new SyncDropsetSegmentData(
+                                weightKg: round($segment->weight_g / 1000, 3),
+                            )
+                        ),
+                        DataCollection::class,
+                    ),
+                ))
+                ->values();
 
             return new RoutineEditorBlockData(
                 isSuperset: $block->is_superset,
@@ -62,6 +79,7 @@ class RoutineEditorPageData extends Data
                 working: new SyncSetGroupData(
                     setCount: $working?->set_count ?? 3,
                     restSeconds: $working?->rest_seconds ?? 120,
+                    dropsets: SyncDropsetData::collect($dropsets, DataCollection::class),
                 ),
                 warmUp: new SyncWarmUpData(
                     setCount: $warmUp?->set_count ?? 0,

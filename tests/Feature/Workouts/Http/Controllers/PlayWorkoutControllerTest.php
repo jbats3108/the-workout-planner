@@ -6,6 +6,7 @@ use App\Exercises\Models\Exercise;
 use App\Routines\Models\Routine;
 use App\Routines\Models\RoutineBlock;
 use App\Routines\Models\RoutineBlockExercise;
+use App\Routines\Models\RoutineDropsetSegment;
 use App\Routines\Models\RoutineSetGroup;
 use App\Shared\Enums\SetGroupType;
 use App\Workouts\Enums\WorkoutStatus;
@@ -157,6 +158,94 @@ class PlayWorkoutControllerTest extends TestCase
                 ->where('workout.blocks.0.sets.0.equipment', 'dumbbell')
                 ->where('workout.blocks.0.exercises.0.equipment', 'dumbbell')
             );
+    }
+
+    #[Test]
+    public function it_snapshots_dropsets_into_the_player_and_completes_them(): void
+    {
+        $routine = Routine::factory()->withUser($this->user)->create();
+        $block = RoutineBlock::create([
+            'routine_id' => $routine->id,
+            'position' => 1,
+        ]);
+        RoutineBlockExercise::create([
+            'routine_block_id' => $block->id,
+            'exercise_id' => Exercise::factory()->create()->id,
+            'position' => 1,
+            'working_weight_g' => 20000,
+            'prescribed_reps' => 12,
+        ]);
+        $working = RoutineSetGroup::create([
+            'routine_block_id' => $block->id,
+            'type' => SetGroupType::Working,
+            'set_count' => 1,
+            'rest_seconds' => 90,
+        ]);
+        RoutineDropsetSegment::create([
+            'routine_set_group_id' => $working->id,
+            'set_index' => 0,
+            'position' => 1,
+            'weight_g' => 20000,
+        ]);
+        RoutineDropsetSegment::create([
+            'routine_set_group_id' => $working->id,
+            'set_index' => 0,
+            'position' => 2,
+            'weight_g' => 15000,
+        ]);
+
+        $workout = app(WorkoutService::class)->createWorkout($routine);
+        $set = WorkoutSet::query()
+            ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workout->id))
+            ->firstOrFail();
+
+        $this->actingAs($this->user)
+            ->get(route('workouts.play', $workout))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('workouts/Play')
+                ->where('workout.blocks.0.sets.0.is_dropset', true)
+                ->where('workout.blocks.0.sets.0.segments.0.weight_kg', 20)
+                ->where('workout.blocks.0.sets.0.segments.1.weight_kg', 15)
+            );
+
+        $this->actingAs($this->user)
+            ->post(route('workouts.sets.complete', ['workout' => $workout, 'set' => $set]), [
+                'reps' => 10,
+                'segments' => [
+                    ['weight_kg' => 18],
+                    ['weight_kg' => 14],
+                    ['weight_kg' => 10],
+                ],
+            ])
+            ->assertRedirect();
+
+        $set->refresh()->load('segments');
+        $this->assertSame(10, $set->reps);
+        $this->assertNull($set->weight_g);
+        $this->assertSame([18000, 14000, 10000], $set->segments->pluck('weight_g')->all());
+    }
+
+    #[Test]
+    public function it_promotes_a_set_to_dropset_via_http(): void
+    {
+        $workout = $this->createWorkoutForUser();
+        $set = WorkoutSet::query()
+            ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workout->id))
+            ->firstOrFail();
+
+        $this->actingAs($this->user)
+            ->post(route('workouts.sets.promote-dropset', ['workout' => $workout, 'set' => $set]), [
+                'segments' => [
+                    ['weight_kg' => 80],
+                    ['weight_kg' => 60],
+                ],
+            ])
+            ->assertRedirect();
+
+        $set->refresh()->load('segments');
+        $this->assertTrue($set->isDropset());
+        $this->assertSame([80000, 60000], $set->segments->pluck('weight_g')->all());
     }
 
     private function createWorkoutForUser()

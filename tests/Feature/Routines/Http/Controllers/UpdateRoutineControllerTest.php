@@ -134,6 +134,113 @@ class UpdateRoutineControllerTest extends TestCase
     }
 
     #[Test]
+    public function it_saves_and_reloads_dropset_recipes(): void
+    {
+        $routine = Routine::factory()->withUser($this->user)->create();
+        $exercise = Exercise::factory()->create();
+
+        $this->actingAs($this->user)->put(route('routines.update', $routine), [
+            'name' => 'Dropset Finisher',
+            'deload_weight_factor' => 0.5,
+            'deload_reps_factor' => 2,
+            'blocks' => [
+                [
+                    'is_superset' => false,
+                    'has_setup_after' => false,
+                    'exercises' => [
+                        [
+                            'exercise_id' => $exercise->id,
+                            'working_weight_kg' => 20,
+                            'prescribed_reps' => 12,
+                            'achievement_floor' => null,
+                            'progression_target' => null,
+                        ],
+                    ],
+                    'working' => [
+                        'set_count' => 2,
+                        'rest_seconds' => 90,
+                        'dropsets' => [
+                            [
+                                'set_index' => 1,
+                                'segments' => [
+                                    ['weight_kg' => 20],
+                                    ['weight_kg' => 16],
+                                    ['weight_kg' => 12],
+                                    ['weight_kg' => 8],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'warm_up' => ['set_count' => 0, 'rest_seconds' => 60, 'steps' => []],
+                ],
+            ],
+        ])->assertRedirect(route('dashboard'));
+
+        $working = $routine->fresh(['blocks.setGroups.dropsetSegments'])->blocks->first()->workingSetGroup;
+        $segments = $working->dropsetSegments->where('set_index', 1)->sortBy('position')->values();
+        $this->assertCount(4, $segments);
+        $this->assertSame([20000, 16000, 12000, 8000], $segments->pluck('weight_g')->all());
+
+        $this->actingAs($this->user)
+            ->get(route('routines.edit', $routine))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('routines/Edit')
+                ->where('routine.blocks.0.working.dropsets.0.set_index', 1)
+                ->where('routine.blocks.0.working.dropsets.0.segments.0.weight_kg', 20)
+                ->where('routine.blocks.0.working.dropsets.0.segments.3.weight_kg', 8));
+    }
+
+    #[Test]
+    public function it_rejects_dropsets_on_supersets(): void
+    {
+        $routine = Routine::factory()->withUser($this->user)->create();
+        $exerciseA = Exercise::factory()->create();
+        $exerciseB = Exercise::factory()->create();
+
+        $response = $this->actingAs($this->user)->put(route('routines.update', $routine), [
+            'name' => 'Bad Superset Dropset',
+            'deload_weight_factor' => 0.5,
+            'deload_reps_factor' => 2,
+            'blocks' => [
+                [
+                    'is_superset' => true,
+                    'has_setup_after' => false,
+                    'exercises' => [
+                        [
+                            'exercise_id' => $exerciseA->id,
+                            'working_weight_kg' => 60,
+                            'prescribed_reps' => 6,
+                        ],
+                        [
+                            'exercise_id' => $exerciseB->id,
+                            'working_weight_kg' => 40,
+                            'prescribed_reps' => 8,
+                        ],
+                    ],
+                    'working' => [
+                        'set_count' => 2,
+                        'rest_seconds' => 120,
+                        'dropsets' => [
+                            [
+                                'set_index' => 0,
+                                'segments' => [
+                                    ['weight_kg' => 60],
+                                    ['weight_kg' => 40],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'warm_up' => ['set_count' => 0, 'rest_seconds' => 60, 'steps' => []],
+                ],
+            ],
+        ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHasErrors('blocks');
+    }
+
+    #[Test]
     public function edit_page_renders_for_owner(): void
     {
         $routine = Routine::factory()->withUser($this->user)->create();

@@ -37,4 +37,12 @@ class RoutineSetGroup extends Model
     {
         return $this->hasMany(RoutineWarmUpStep::class)->orderBy('position');
     }
+
+    /** @return HasMany<RoutineDropsetSegment, $this> */
+    public function dropsetSegments(): HasMany
+    {
+        return $this->hasMany(RoutineDropsetSegment::class)
+            ->orderBy('set_index')
+            ->orderBy('position');
+    }
 }

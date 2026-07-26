@@ -6,6 +6,11 @@ import { defaultBarG, gramsToKg, nearestPlateLoad, usesBarbellPlates } from '@/l
 import { Head, router, useForm } from '@inertiajs/vue3';
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
+type PlayerSetSegment = {
+    position: number;
+    weight_kg: number;
+};
+
 type PlayerSet = {
     id: number;
     workout_block_exercise_id: number;
@@ -19,6 +24,8 @@ type PlayerSet = {
     logged_reps: number | null;
     completed: boolean;
     rest_seconds: number;
+    is_dropset: boolean;
+    segments: PlayerSetSegment[];
 };
 
 type PlayerBlock = {
@@ -133,7 +140,10 @@ const currentBlock = computed(() => {
 const setForm = useForm({
     reps: 0,
     weight_kg: 0,
+    segments: [] as Array<{ weight_kg: number }>,
 });
+
+const draftSegments = ref<Array<{ weight_kg: number }>>([]);
 
 const previousSetWeightKg = (entry: { block: PlayerBlock; set: PlayerSet }): number | null => {
     const prior = entry.block.sets
@@ -150,18 +160,38 @@ const previousSetWeightKg = (entry: { block: PlayerBlock; set: PlayerSet }): num
     return prior?.logged_weight_kg ?? null;
 };
 
+const workingWeightForSet = (entry: { block: PlayerBlock; set: PlayerSet }): number => {
+    const exercise = entry.block.exercises.find((e) => e.id === entry.set.workout_block_exercise_id);
+    return exercise?.working_weight_kg ?? entry.set.target_weight_kg ?? 0;
+};
+
+const syncDraftFromSet = (entry: { block: PlayerBlock; set: PlayerSet }) => {
+    setForm.reps = entry.set.logged_reps ?? entry.set.target_reps ?? 0;
+    if (entry.set.is_dropset) {
+        draftSegments.value =
+            entry.set.segments.length >= 2
+                ? entry.set.segments.map((s) => ({ weight_kg: s.weight_kg }))
+                : [
+                      { weight_kg: workingWeightForSet(entry) },
+                      { weight_kg: Math.max(0, workingWeightForSet(entry) - 2.5) },
+                  ];
+        setForm.weight_kg = draftSegments.value[0]?.weight_kg ?? 0;
+        return;
+    }
+    draftSegments.value = [];
+    if (entry.set.group_type === 'warm_up') {
+        setForm.weight_kg = entry.set.logged_weight_kg ?? entry.set.target_weight_kg ?? 0;
+        return;
+    }
+    setForm.weight_kg =
+        entry.set.logged_weight_kg ?? previousSetWeightKg(entry) ?? entry.set.target_weight_kg ?? 0;
+};
+
 watch(
     current,
     (entry) => {
         if (!entry) return;
-        setForm.reps = entry.set.logged_reps ?? entry.set.target_reps ?? 0;
-        // Warm-ups are % of working — always prefer the derived target, not the prior logged warm-up.
-        if (entry.set.group_type === 'warm_up') {
-            setForm.weight_kg = entry.set.logged_weight_kg ?? entry.set.target_weight_kg ?? 0;
-            return;
-        }
-        setForm.weight_kg =
-            entry.set.logged_weight_kg ?? previousSetWeightKg(entry) ?? entry.set.target_weight_kg ?? 0;
+        syncDraftFromSet(entry);
     },
     { immediate: true },
 );
@@ -278,17 +308,69 @@ const completeSet = () => {
         restAfter = 0;
     }
 
-    setForm.post(route('workouts.sets.complete', { workout: props.workout.id, set: set.id }), {
-        preserveScroll: true,
-        only: ['workout'],
-        onSuccess: () => {
-            if (restAfter > 0) {
-                startRest(restAfter);
-            } else {
-                focus.value = firstIncomplete();
-            }
+    const payload = set.is_dropset
+        ? {
+              reps: setForm.reps,
+              segments: draftSegments.value.map((s) => ({ weight_kg: s.weight_kg })),
+          }
+        : {
+              reps: setForm.reps,
+              weight_kg: setForm.weight_kg,
+          };
+
+    setForm
+        .transform(() => payload)
+        .post(route('workouts.sets.complete', { workout: props.workout.id, set: set.id }), {
+            preserveScroll: true,
+            only: ['workout'],
+            onSuccess: () => {
+                if (restAfter > 0) {
+                    startRest(restAfter);
+                } else {
+                    focus.value = firstIncomplete();
+                }
+            },
+        });
+};
+
+const addDropSegment = () => {
+    const last = draftSegments.value[draftSegments.value.length - 1]?.weight_kg ?? 10;
+    draftSegments.value.push({ weight_kg: Math.max(0, Math.round((last - 2.5) * 2) / 2) });
+};
+
+const removeDropSegment = (index: number) => {
+    if (draftSegments.value.length <= 2) {
+        return;
+    }
+    draftSegments.value.splice(index, 1);
+};
+
+const canPromoteToDropset = computed(
+    () =>
+        props.workout.status === 'in_progress' &&
+        current.value !== null &&
+        current.value.set.group_type === 'working' &&
+        !current.value.set.completed &&
+        !current.value.set.is_dropset &&
+        !current.value.block.is_superset,
+);
+
+const promoteToDropset = () => {
+    if (!current.value || !canPromoteToDropset.value) return;
+    const entry = current.value;
+    const first = workingWeightForSet(entry);
+    const segments = [
+        { weight_kg: first },
+        { weight_kg: Math.max(0, Math.round((first - 2.5) * 2) / 2) },
+    ];
+    router.post(
+        route('workouts.sets.promote-dropset', { workout: props.workout.id, set: entry.set.id }),
+        { segments },
+        {
+            preserveScroll: true,
+            only: ['workout'],
         },
-    });
+    );
 };
 
 const skipRest = () => {
@@ -497,66 +579,126 @@ const formatPlateStack = computed(() => {
             <p class="text-xs uppercase tracking-widest text-muted-foreground">
                 Block {{ current.block.position }} · {{ groupLabel(current.set.group_type) }} · Set
                 {{ current.set.set_index + 1 }}
+                <span v-if="current.set.is_dropset"> · Dropset</span>
                 <span v-if="current.block.is_superset"> · Superset</span>
             </p>
             <h2 class="mt-2 text-3xl font-semibold leading-tight">{{ current.set.exercise_name }}</h2>
             <p class="mt-2 font-mono text-muted-foreground">
                 Target
-                <span v-if="current.set.target_weight_kg != null">{{ current.set.target_weight_kg }}{{ workout.weight_unit }}</span>
-                <span v-if="current.set.target_reps != null"> × {{ current.set.target_reps }}</span>
+                <template v-if="current.set.is_dropset">
+                    {{ draftSegments.map((s) => s.weight_kg).join(' → ') }}{{ workout.weight_unit }}
+                    <span v-if="current.set.target_reps != null"> × {{ current.set.target_reps }}</span>
+                </template>
+                <template v-else>
+                    <span v-if="current.set.target_weight_kg != null">{{ current.set.target_weight_kg }}{{ workout.weight_unit }}</span>
+                    <span v-if="current.set.target_reps != null"> × {{ current.set.target_reps }}</span>
+                </template>
             </p>
 
             <form class="mt-8 flex flex-1 flex-col gap-4" @submit.prevent="completeSet">
-                <label class="flex flex-col gap-1 text-sm text-muted-foreground">
-                    Weight ({{ workout.weight_unit }})
-                    <input
-                        v-model.number="setForm.weight_kg"
-                        type="number"
-                        step="0.5"
-                        min="0"
-                        class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground"
-                        required
-                    />
-                </label>
-                <div
-                    v-if="plateLoad && formatPlateStack"
-                    class="rounded-xl border border-border bg-card/60 px-4 py-3 text-sm"
-                >
-                    <p class="text-xs uppercase tracking-wide text-muted-foreground">Plates</p>
-                    <p class="mt-1 font-mono text-foreground">{{ formatPlateStack }}</p>
-                    <p v-if="!plateLoad.exact" class="mt-1 text-xs text-muted-foreground">
-                        Nearest loadable:
-                        {{ gramsToKg(plateLoad.total_g) }}{{ workout.weight_unit }}
-                        <span v-if="plateLoad.delta_g > 0">(+{{ gramsToKg(plateLoad.delta_g) }})</span>
-                        <span v-else-if="plateLoad.delta_g < 0">({{ gramsToKg(plateLoad.delta_g) }})</span>
-                    </p>
-                    <button
-                        v-if="!plateLoad.exact"
-                        type="button"
-                        class="mt-2 text-xs font-medium text-primary hover:underline"
-                        @click="applyNearestLoad"
+                <template v-if="current.set.is_dropset">
+                    <label class="flex flex-col gap-1 text-sm text-muted-foreground">
+                        Reps (shared)
+                        <input
+                            v-model.number="setForm.reps"
+                            type="number"
+                            min="0"
+                            max="100"
+                            class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground"
+                            required
+                        />
+                    </label>
+                    <div class="space-y-2">
+                        <p class="text-xs uppercase tracking-wide text-muted-foreground">Segments</p>
+                        <div
+                            v-for="(seg, si) in draftSegments"
+                            :key="si"
+                            class="flex items-center gap-2"
+                        >
+                            <span class="w-6 font-mono text-xs text-muted-foreground">{{ si + 1 }}</span>
+                            <input
+                                v-model.number="seg.weight_kg"
+                                type="number"
+                                step="0.5"
+                                min="0"
+                                class="flex-1 rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground"
+                                required
+                            />
+                            <span class="text-sm text-muted-foreground">{{ workout.weight_unit }}</span>
+                            <button
+                                type="button"
+                                class="text-sm text-muted-foreground hover:text-destructive disabled:opacity-30"
+                                :disabled="draftSegments.length <= 2"
+                                @click="removeDropSegment(si)"
+                            >
+                                −
+                            </button>
+                        </div>
+                        <button type="button" class="text-sm text-primary" @click="addDropSegment">
+                            + Drop
+                        </button>
+                    </div>
+                </template>
+                <template v-else>
+                    <label class="flex flex-col gap-1 text-sm text-muted-foreground">
+                        Weight ({{ workout.weight_unit }})
+                        <input
+                            v-model.number="setForm.weight_kg"
+                            type="number"
+                            step="0.5"
+                            min="0"
+                            class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground"
+                            required
+                        />
+                    </label>
+                    <div
+                        v-if="plateLoad && formatPlateStack"
+                        class="rounded-xl border border-border bg-card/60 px-4 py-3 text-sm"
                     >
-                        Apply nearest
-                    </button>
-                </div>
-                <label class="flex flex-col gap-1 text-sm text-muted-foreground">
-                    Reps
-                    <input
-                        v-model.number="setForm.reps"
-                        type="number"
-                        min="0"
-                        max="100"
-                        class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground"
-                        required
-                    />
-                </label>
+                        <p class="text-xs uppercase tracking-wide text-muted-foreground">Plates</p>
+                        <p class="mt-1 font-mono text-foreground">{{ formatPlateStack }}</p>
+                        <p v-if="!plateLoad.exact" class="mt-1 text-xs text-muted-foreground">
+                            Nearest loadable:
+                            {{ gramsToKg(plateLoad.total_g) }}{{ workout.weight_unit }}
+                            <span v-if="plateLoad.delta_g > 0">(+{{ gramsToKg(plateLoad.delta_g) }})</span>
+                            <span v-else-if="plateLoad.delta_g < 0">({{ gramsToKg(plateLoad.delta_g) }})</span>
+                        </p>
+                        <button
+                            v-if="!plateLoad.exact"
+                            type="button"
+                            class="mt-2 text-xs font-medium text-primary hover:underline"
+                            @click="applyNearestLoad"
+                        >
+                            Apply nearest
+                        </button>
+                    </div>
+                    <label class="flex flex-col gap-1 text-sm text-muted-foreground">
+                        Reps
+                        <input
+                            v-model.number="setForm.reps"
+                            type="number"
+                            min="0"
+                            max="100"
+                            class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground"
+                            required
+                        />
+                    </label>
+                </template>
                 <div class="mt-auto flex flex-col gap-3 pb-4">
                     <button
                         type="submit"
                         class="rounded-full bg-primary px-6 py-4 text-base font-semibold text-primary-foreground disabled:opacity-50"
                         :disabled="setForm.processing || workout.status !== 'in_progress'"
                     >
-                        Complete set
+                        {{ current.set.is_dropset ? 'Complete dropset' : 'Complete set' }}
+                    </button>
+                    <button
+                        v-if="canPromoteToDropset"
+                        type="button"
+                        class="rounded-md border border-border px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
+                        @click="promoteToDropset"
+                    >
+                        Promote to dropset
                     </button>
                     <div v-if="canAddWorkingSet || canRemoveWorkingSet" class="flex gap-2">
                         <button

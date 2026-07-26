@@ -6,13 +6,18 @@ use App\Exercises\Enums\ExerciseEquipment;
 use App\Shared\Enums\SetGroupType;
 use App\Workouts\Models\WorkoutSet;
 use App\Workouts\Models\WorkoutWarmUpStep;
+use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 
 #[MapName(SnakeCaseMapper::class)]
 class WorkoutPlayerSetData extends Data
 {
+    /**
+     * @param  DataCollection<int, WorkoutPlayerSetSegmentData>  $segments
+     */
     public function __construct(
         public readonly int $id,
         public readonly int $workoutBlockExerciseId,
@@ -26,6 +31,9 @@ class WorkoutPlayerSetData extends Data
         public readonly ?int $loggedReps,
         public readonly bool $completed,
         public readonly int $restSeconds,
+        public readonly bool $isDropset,
+        #[DataCollectionOf(WorkoutPlayerSetSegmentData::class)]
+        public readonly DataCollection $segments,
     ) {}
 
     public static function fromSet(
@@ -38,6 +46,17 @@ class WorkoutPlayerSetData extends Data
         int $restSeconds,
         ?WorkoutWarmUpStep $warmUpStep = null,
     ): self {
+        $set->loadMissing('segments');
+
+        $isDropset = $set->isDropset();
+        $segments = $set->segments
+            ->sortBy('position')
+            ->values()
+            ->map(fn ($segment) => new WorkoutPlayerSetSegmentData(
+                position: $segment->position,
+                weightKg: round($segment->weight_g / 1000, 3),
+            ));
+
         $targetWeightG = $workingWeightG;
         if ($groupType === SetGroupType::WarmUp && $warmUpStep !== null) {
             $targetWeightG = (int) round($workingWeightG * ($warmUpStep->percent_of_working / 100));
@@ -50,7 +69,9 @@ class WorkoutPlayerSetData extends Data
             equipment: $equipment?->value,
             setIndex: $set->set_index,
             groupType: $groupType->value,
-            targetWeightKg: round($targetWeightG / 1000, 3),
+            targetWeightKg: $isDropset
+                ? null
+                : round($targetWeightG / 1000, 3),
             targetReps: $groupType === SetGroupType::WarmUp
                 ? ($warmUpStep?->reps)
                 : ($groupType === SetGroupType::Working ? $prescribedReps : null),
@@ -58,6 +79,8 @@ class WorkoutPlayerSetData extends Data
             loggedReps: $set->reps,
             completed: $set->completed_at !== null,
             restSeconds: $restSeconds,
+            isDropset: $isDropset,
+            segments: WorkoutPlayerSetSegmentData::collect($segments, DataCollection::class),
         );
     }
 }

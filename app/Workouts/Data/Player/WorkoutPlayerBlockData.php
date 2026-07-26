@@ -33,7 +33,7 @@ class WorkoutPlayerBlockData extends Data
 
     public static function fromBlock(WorkoutBlock $block): self
     {
-        $block->loadMissing(['blockExercises', 'setGroups.sets', 'setGroups.warmUpSteps']);
+        $block->loadMissing(['blockExercises', 'setGroups.sets.segments', 'setGroups.warmUpSteps']);
 
         $exercisesById = $block->blockExercises->keyBy('id');
 

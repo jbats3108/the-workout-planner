@@ -6,8 +6,10 @@ use App\Exercises\Models\Exercise;
 use App\Routines\Models\Routine;
 use App\Routines\Models\RoutineBlock;
 use App\Routines\Models\RoutineBlockExercise;
+use App\Routines\Models\RoutineDropsetSegment;
 use App\Routines\Models\RoutineSetGroup;
 use App\Shared\Enums\SetGroupType;
+use App\Workouts\Enums\WorkoutMode;
 use App\Workouts\Enums\WorkoutStatus;
 use App\Workouts\Exceptions\WorkoutServiceException;
 use App\Workouts\Models\WorkoutSet;
@@ -105,7 +107,7 @@ class WorkoutServiceTest extends TestCase
         ]);
         $this->seedRoutineBlockWithExercise($routine, setCount: 1);
 
-        $workout = $this->workoutService->createWorkout($routine, \App\Workouts\Enums\WorkoutMode::Deload);
+        $workout = $this->workoutService->createWorkout($routine, WorkoutMode::Deload);
 
         $exercise = $workout->blocks->first()->blockExercises->first();
 
@@ -192,7 +194,95 @@ class WorkoutServiceTest extends TestCase
         $this->assertNull($workout->fresh()->finished_at);
     }
 
-    private function seedRoutineBlockWithExercise(Routine $routine, int $setCount = 3): void
+    #[Test]
+    public function it_snapshots_dropset_segments_and_scales_them_on_deload(): void
+    {
+        $routine = Routine::factory()->create([
+            'deload_weight_factor' => 0.5,
+            'deload_reps_factor' => 1,
+        ]);
+        $working = $this->seedRoutineBlockWithExercise($routine, setCount: 1);
+        RoutineDropsetSegment::create([
+            'routine_set_group_id' => $working->id,
+            'set_index' => 0,
+            'position' => 1,
+            'weight_g' => 20000,
+        ]);
+        RoutineDropsetSegment::create([
+            'routine_set_group_id' => $working->id,
+            'set_index' => 0,
+            'position' => 2,
+            'weight_g' => 15000,
+        ]);
+        RoutineDropsetSegment::create([
+            'routine_set_group_id' => $working->id,
+            'set_index' => 0,
+            'position' => 3,
+            'weight_g' => 10000,
+        ]);
+
+        $workout = $this->workoutService->createWorkout($routine, WorkoutMode::Deload);
+        $set = WorkoutSet::query()
+            ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workout->id))
+            ->with('segments')
+            ->firstOrFail();
+
+        $this->assertTrue($set->isDropset());
+        $this->assertSame([10000, 7500, 5000], $set->segments->pluck('weight_g')->all());
+    }
+
+    #[Test]
+    public function it_completes_a_dropset_with_segments(): void
+    {
+        $routine = Routine::factory()->create();
+        $working = $this->seedRoutineBlockWithExercise($routine, setCount: 1);
+        RoutineDropsetSegment::create([
+            'routine_set_group_id' => $working->id,
+            'set_index' => 0,
+            'position' => 1,
+            'weight_g' => 20000,
+        ]);
+        RoutineDropsetSegment::create([
+            'routine_set_group_id' => $working->id,
+            'set_index' => 0,
+            'position' => 2,
+            'weight_g' => 15000,
+        ]);
+
+        $workout = $this->workoutService->createWorkout($routine);
+        $set = WorkoutSet::query()
+            ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workout->id))
+            ->firstOrFail();
+
+        $this->workoutService->completeSet($set, reps: 12, weightGrams: null, segmentWeightGrams: [18000, 14000, 10000]);
+
+        $set->refresh()->load('segments');
+        $this->assertSame(12, $set->reps);
+        $this->assertNull($set->weight_g);
+        $this->assertNotNull($set->completed_at);
+        $this->assertSame([18000, 14000, 10000], $set->segments->pluck('weight_g')->all());
+    }
+
+    #[Test]
+    public function it_promotes_a_normal_set_to_dropset(): void
+    {
+        $routine = Routine::factory()->create();
+        $this->seedRoutineBlockWithExercise($routine, setCount: 1);
+        $workout = $this->workoutService->createWorkout($routine);
+        $set = WorkoutSet::query()
+            ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workout->id))
+            ->firstOrFail();
+
+        $this->assertFalse($set->isDropset());
+
+        $this->workoutService->promoteToDropset($set, [20000, 15000]);
+
+        $set->refresh()->load('segments');
+        $this->assertTrue($set->isDropset());
+        $this->assertSame([20000, 15000], $set->segments->pluck('weight_g')->all());
+    }
+
+    private function seedRoutineBlockWithExercise(Routine $routine, int $setCount = 3): RoutineSetGroup
     {
         $block = RoutineBlock::create([
             'routine_id' => $routine->id,
@@ -207,7 +297,7 @@ class WorkoutServiceTest extends TestCase
             'prescribed_reps' => 6,
         ]);
 
-        RoutineSetGroup::create([
+        return RoutineSetGroup::create([
             'routine_block_id' => $block->id,
             'type' => SetGroupType::Working,
             'set_count' => $setCount,

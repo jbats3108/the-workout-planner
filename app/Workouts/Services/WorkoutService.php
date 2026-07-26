@@ -6,6 +6,7 @@ use App\Routines\Models\Routine;
 use App\Routines\Models\RoutineBlock;
 use App\Shared\Enums\SetGroupType;
 use App\Users\Models\User;
+use App\Workouts\Data\Progression\BumpProposalData;
 use App\Workouts\Enums\WorkoutMode;
 use App\Workouts\Enums\WorkoutStatus;
 use App\Workouts\Exceptions\WorkoutServiceException;
@@ -14,6 +15,7 @@ use App\Workouts\Models\WorkoutBlock;
 use App\Workouts\Models\WorkoutBlockExercise;
 use App\Workouts\Models\WorkoutSet;
 use App\Workouts\Models\WorkoutSetGroup;
+use App\Workouts\Models\WorkoutSetSegment;
 use App\Workouts\Models\WorkoutWarmUpStep;
 use Illuminate\Support\Facades\DB;
 use Spatie\LaravelData\DataCollection;
@@ -32,6 +34,18 @@ class WorkoutService
 
     public const WORKING_SET_GROUP_MISSING_ERROR = 'This block has no working sets';
 
+    public const DROPSET_REQUIRES_SEGMENTS_ERROR = 'A dropset requires at least two segments';
+
+    public const PLANNED_DROPSET_REQUIRES_SEGMENTS_ERROR = 'This set is a dropset and must be logged with segments';
+
+    public const CANNOT_PROMOTE_COMPLETED_SET_ERROR = 'Completed sets cannot be promoted to a dropset';
+
+    public const CANNOT_PROMOTE_WARM_UP_ERROR = 'Only working sets can be promoted to a dropset';
+
+    public const CANNOT_PROMOTE_SUPERSET_ERROR = 'Dropsets are not supported on supersets';
+
+    public const ALREADY_A_DROPSET_ERROR = 'This set is already a dropset';
+
     public function __construct(
         private readonly WorkoutProgressionService $progressionService,
     ) {}
@@ -45,6 +59,7 @@ class WorkoutService
             'user',
             'blocks.blockExercises.exercise',
             'blocks.setGroups.warmUpSteps',
+            'blocks.setGroups.dropsetSegments',
         ]);
 
         $hasExercises = $routine->blocks->contains(
@@ -115,13 +130,32 @@ class WorkoutService
                         ]);
                     }
 
+                    $segmentsByIndex = $routineSetGroup->dropsetSegments
+                        ->groupBy('set_index');
+
                     for ($setIndex = 0; $setIndex < $routineSetGroup->set_count; $setIndex++) {
+                        $recipeSegments = $segmentsByIndex->get($setIndex, collect())
+                            ->sortBy('position')
+                            ->values();
+
                         foreach ($workoutBlock->blockExercises as $workoutBlockExercise) {
-                            WorkoutSet::create([
+                            $workoutSet = WorkoutSet::create([
                                 'workout_set_group_id' => $workoutSetGroup->id,
                                 'workout_block_exercise_id' => $workoutBlockExercise->id,
                                 'set_index' => $setIndex,
                             ]);
+
+                            if ($recipeSegments->count() < 2) {
+                                continue;
+                            }
+
+                            foreach ($recipeSegments as $segmentIndex => $recipeSegment) {
+                                WorkoutSetSegment::create([
+                                    'workout_set_id' => $workoutSet->id,
+                                    'position' => $segmentIndex + 1,
+                                    'weight_g' => (int) round($recipeSegment->weight_g * $weightFactor),
+                                ]);
+                            }
                         }
                     }
                 }
@@ -141,15 +175,36 @@ class WorkoutService
     }
 
     /**
+     * @param  list<int>|null  $segmentWeightGrams
+     *
      * @throws WorkoutServiceException
      */
-    public function completeSet(WorkoutSet $set, int $reps, int $weightGrams): WorkoutSet
-    {
-        $set->loadMissing('setGroup.block.workout');
+    public function completeSet(
+        WorkoutSet $set,
+        int $reps,
+        ?int $weightGrams = null,
+        ?array $segmentWeightGrams = null,
+    ): WorkoutSet {
+        $set->loadMissing(['setGroup.block.workout', 'segments']);
         $workout = $set->setGroup->block->workout;
 
         if ($workout->status !== WorkoutStatus::InProgress) {
             throw new WorkoutServiceException(self::WORKOUT_NOT_IN_PROGRESS_ERROR);
+        }
+
+        $isPlannedDropset = $set->isDropset();
+        $hasSegments = $segmentWeightGrams !== null && count($segmentWeightGrams) >= 2;
+
+        if ($isPlannedDropset && ! $hasSegments) {
+            throw new WorkoutServiceException(self::PLANNED_DROPSET_REQUIRES_SEGMENTS_ERROR);
+        }
+
+        if ($hasSegments) {
+            return $this->completeDropset($set, $reps, $segmentWeightGrams);
+        }
+
+        if ($weightGrams === null) {
+            throw new WorkoutServiceException(self::PLANNED_DROPSET_REQUIRES_SEGMENTS_ERROR);
         }
 
         $set->reps = $reps;
@@ -157,7 +212,88 @@ class WorkoutService
         $set->completed_at = now();
         $set->save();
 
-        return $set->fresh();
+        return $set->fresh(['segments']);
+    }
+
+    /**
+     * @param  list<int>  $segmentWeightGrams
+     *
+     * @throws WorkoutServiceException
+     */
+    public function completeDropset(WorkoutSet $set, int $reps, array $segmentWeightGrams): WorkoutSet
+    {
+        if (count($segmentWeightGrams) < 2) {
+            throw new WorkoutServiceException(self::DROPSET_REQUIRES_SEGMENTS_ERROR);
+        }
+
+        return DB::transaction(function () use ($set, $reps, $segmentWeightGrams): WorkoutSet {
+            $set->segments()->delete();
+
+            foreach (array_values($segmentWeightGrams) as $index => $weightGrams) {
+                WorkoutSetSegment::create([
+                    'workout_set_id' => $set->id,
+                    'position' => $index + 1,
+                    'weight_g' => $weightGrams,
+                ]);
+            }
+
+            $set->reps = $reps;
+            $set->weight_g = null;
+            $set->completed_at = now();
+            $set->save();
+
+            return $set->fresh(['segments']);
+        });
+    }
+
+    /**
+     * @param  list<int>  $segmentWeightGrams
+     *
+     * @throws WorkoutServiceException
+     */
+    public function promoteToDropset(WorkoutSet $set, array $segmentWeightGrams): WorkoutSet
+    {
+        $set->loadMissing(['setGroup.block.workout', 'segments']);
+
+        $workout = $set->setGroup->block->workout;
+
+        if ($workout->status !== WorkoutStatus::InProgress) {
+            throw new WorkoutServiceException(self::WORKOUT_NOT_IN_PROGRESS_ERROR);
+        }
+
+        if ($set->completed_at !== null) {
+            throw new WorkoutServiceException(self::CANNOT_PROMOTE_COMPLETED_SET_ERROR);
+        }
+
+        if ($set->setGroup->type !== SetGroupType::Working) {
+            throw new WorkoutServiceException(self::CANNOT_PROMOTE_WARM_UP_ERROR);
+        }
+
+        if ($set->setGroup->block->is_superset) {
+            throw new WorkoutServiceException(self::CANNOT_PROMOTE_SUPERSET_ERROR);
+        }
+
+        if ($set->isDropset()) {
+            throw new WorkoutServiceException(self::ALREADY_A_DROPSET_ERROR);
+        }
+
+        if (count($segmentWeightGrams) < 2) {
+            throw new WorkoutServiceException(self::DROPSET_REQUIRES_SEGMENTS_ERROR);
+        }
+
+        return DB::transaction(function () use ($set, $segmentWeightGrams): WorkoutSet {
+            $set->segments()->delete();
+
+            foreach (array_values($segmentWeightGrams) as $index => $weightGrams) {
+                WorkoutSetSegment::create([
+                    'workout_set_id' => $set->id,
+                    'position' => $index + 1,
+                    'weight_g' => $weightGrams,
+                ]);
+            }
+
+            return $set->fresh(['segments']);
+        });
     }
 
     /**
@@ -234,7 +370,7 @@ class WorkoutService
     }
 
     /**
-     * @return DataCollection<int, \App\Workouts\Data\Progression\BumpProposalData>
+     * @return DataCollection<int, BumpProposalData>
      *
      * @throws WorkoutServiceException
      */

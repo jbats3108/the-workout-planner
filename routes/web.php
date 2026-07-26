@@ -26,6 +26,7 @@ use App\Workouts\Http\Controllers\CompleteWorkoutSetController;
 use App\Workouts\Http\Controllers\DiscardWorkoutController;
 use App\Workouts\Http\Controllers\FinishWorkoutController;
 use App\Workouts\Http\Controllers\PlayWorkoutController;
+use App\Workouts\Http\Controllers\PromoteWorkoutSetToDropsetController;
 use App\Workouts\Http\Controllers\RemoveWorkingSetController;
 use App\Workouts\Http\Controllers\ShowProgressionController;
 use App\Workouts\Http\Controllers\SkipProgressionController;
@@ -96,6 +97,10 @@ Route::middleware('auth')->group(function (): void {
         Route::post('/{workout}/sets/{set}', CompleteWorkoutSetController::class)
             ->can('update', 'workout')
             ->name('workouts.sets.complete');
+
+        Route::post('/{workout}/sets/{set}/promote-dropset', PromoteWorkoutSetToDropsetController::class)
+            ->can('update', 'workout')
+            ->name('workouts.sets.promote-dropset');
 
         Route::post('/{workout}/blocks/{block}/working-sets', AddWorkingSetController::class)
             ->can('update', 'workout')

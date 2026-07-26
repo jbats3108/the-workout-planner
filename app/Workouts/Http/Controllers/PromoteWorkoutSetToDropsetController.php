@@ -3,17 +3,17 @@
 namespace App\Workouts\Http\Controllers;
 
 use App\Shared\Http\Controllers\Controller;
-use App\Workouts\Data\CompleteWorkoutSetData;
+use App\Workouts\Data\PromoteWorkoutSetToDropsetData;
 use App\Workouts\Exceptions\WorkoutServiceException;
 use App\Workouts\Models\Workout;
 use App\Workouts\Models\WorkoutSet;
 use App\Workouts\Services\WorkoutService;
 use Illuminate\Http\RedirectResponse;
 
-class CompleteWorkoutSetController extends Controller
+class PromoteWorkoutSetToDropsetController extends Controller
 {
     public function __invoke(
-        CompleteWorkoutSetData $data,
+        PromoteWorkoutSetToDropsetData $data,
         Workout $workout,
         WorkoutSet $set,
         WorkoutService $workoutService,
@@ -22,12 +22,7 @@ class CompleteWorkoutSetController extends Controller
         abort_unless($set->setGroup->block->workout_id === $workout->id, 404);
 
         try {
-            $workoutService->completeSet(
-                $set,
-                $data->reps,
-                $data->weightGrams(),
-                $data->segmentWeightGrams(),
-            );
+            $workoutService->promoteToDropset($set, $data->segmentWeightGrams());
         } catch (WorkoutServiceException $exception) {
             return back()->withErrors(['set' => $exception->getMessage()]);
         }

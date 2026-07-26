@@ -32,7 +32,7 @@ class WorkoutPlayerPageData extends Data
         $workout->loadMissing([
             'routine',
             'blocks.blockExercises',
-            'blocks.setGroups.sets',
+            'blocks.setGroups.sets.segments',
             'blocks.setGroups.warmUpSteps',
         ]);
 

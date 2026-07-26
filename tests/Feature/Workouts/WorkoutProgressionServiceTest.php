@@ -6,6 +6,7 @@ use App\Exercises\Models\Exercise;
 use App\Routines\Models\Routine;
 use App\Routines\Models\RoutineBlock;
 use App\Routines\Models\RoutineBlockExercise;
+use App\Routines\Models\RoutineDropsetSegment;
 use App\Routines\Models\RoutineSetGroup;
 use App\Shared\Enums\SetGroupType;
 use App\Users\Models\User;
@@ -90,6 +91,33 @@ class WorkoutProgressionServiceTest extends TestCase
         $this->assertSame(82500, $routineExercise->fresh()->working_weight_g);
     }
 
+    #[Test]
+    public function finish_ignores_dropsets_for_carry_forward_and_bumps(): void
+    {
+        [$routine, $routineExercise] = $this->seedRoutine(workingWeightG: 80000, progressionTarget: 6, achievementFloor: 4);
+        $working = $routine->blocks->first()->setGroups->firstWhere('type', SetGroupType::Working);
+        RoutineDropsetSegment::create([
+            'routine_set_group_id' => $working->id,
+            'set_index' => 0,
+            'position' => 1,
+            'weight_g' => 90000,
+        ]);
+        RoutineDropsetSegment::create([
+            'routine_set_group_id' => $working->id,
+            'set_index' => 0,
+            'position' => 2,
+            'weight_g' => 85000,
+        ]);
+
+        $workout = $this->workoutService->createWorkout($routine);
+        $set = $this->firstSet($workout->id);
+        $this->workoutService->completeSet($set, reps: 10, weightGrams: null, segmentWeightGrams: [90000, 85000]);
+        $bumps = $this->workoutService->finishWorkout($workout);
+
+        $this->assertCount(0, $bumps);
+        $this->assertSame(80000, $routineExercise->fresh()->working_weight_g);
+    }
+
     /**
      * @return array{0: Routine, 1: RoutineBlockExercise}
      */
@@ -117,7 +145,7 @@ class WorkoutProgressionServiceTest extends TestCase
             'set_count' => 1,
         ]);
 
-        return [$routine->fresh(['user', 'blocks.blockExercises']), $routineExercise];
+        return [$routine->fresh(['user', 'blocks.blockExercises', 'blocks.setGroups']), $routineExercise];
     }
 
     private function firstSet(int $workoutId): WorkoutSet

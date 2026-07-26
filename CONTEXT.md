@@ -21,11 +21,15 @@ A block with exactly two exercises played as matched rounds: A → transition �
 _Avoid_: Circuit, giant set, pairing (as a noun for the block)
 
 **Set Group**:
-A bag of like sets on a block: either warm-up or working. One set count and one rest for the whole group (for a superset, rest is after the pair; transition sits between A and B). Warm-up steps are each a % of that exercise’s working weight with their own reps; each exercise on the block has its own working weight and prescribed rep target.
-_Avoid_: Set scheme, wave, drop set
+A bag of like sets on a block: either warm-up or working. One set count and one rest for the whole group (for a superset, rest is after the pair; transition sits between A and B). Warm-up steps are each a % of that exercise’s working weight with their own reps; each exercise on the block has its own working weight and prescribed rep target. Individual working-set slots may be normal or a **Dropset**.
+_Avoid_: Set scheme, wave, drop set (as a name for the Set Group itself)
+
+**Dropset**:
+A working-set *slot* with two or more absolute-weight segments that share one reps target. No rest between segments; the working Set Group’s rest runs after the whole slot. Not available on supersets. Ignored by progression (achievement floor / bump / carry-forward). “Run the rack” is only an editor helper that fills the segment list.
+_Avoid_: Drop set (as a Set Group type), strip set, burn-out set
 
 **Working Weight**:
-The absolute load prescribed for an exercise on a block’s working sets. The number progression updates. Warm-ups are derived from it.
+The absolute load prescribed for an exercise on a block’s working sets. The number progression updates. Warm-ups are derived from it. On a Dropset, the first segment may default from working weight, then segments are editable absolutes.
 _Avoid_: Top set, training max, TM
 
 **Exercise**:

@@ -4,12 +4,15 @@ namespace App\Routines\Services;
 
 use App\Exercises\Models\Exercise;
 use App\Routines\Data\Editor\SyncBlockExerciseData;
+use App\Routines\Data\Editor\SyncDropsetData;
+use App\Routines\Data\Editor\SyncDropsetSegmentData;
 use App\Routines\Data\Editor\SyncRoutineBlockData;
 use App\Routines\Data\Editor\SyncRoutineData;
 use App\Routines\Data\Editor\SyncWarmUpData;
 use App\Routines\Models\Routine;
 use App\Routines\Models\RoutineBlock;
 use App\Routines\Models\RoutineBlockExercise;
+use App\Routines\Models\RoutineDropsetSegment;
 use App\Routines\Models\RoutineSetGroup;
 use App\Routines\Models\RoutineWarmUpStep;
 use App\Shared\Enums\SetGroupType;
@@ -40,6 +43,7 @@ class RoutineEditorService
             return $routine->fresh([
                 'blocks.blockExercises.exercise',
                 'blocks.setGroups.warmUpSteps',
+                'blocks.setGroups.dropsetSegments',
             ]) ?? $routine;
         });
     }
@@ -54,6 +58,12 @@ class RoutineEditorService
 
         if (! $blockData->isSuperset && count($exercises) !== 1) {
             throw new InvalidArgumentException('A single block must have exactly one exercise.');
+        }
+
+        $dropsets = $blockData->working->dropsetList();
+
+        if ($blockData->isSuperset && $dropsets !== []) {
+            throw new InvalidArgumentException('Dropsets are not supported on supersets.');
         }
 
         $block = RoutineBlock::create([
@@ -79,12 +89,14 @@ class RoutineEditorService
             ]);
         }
 
-        RoutineSetGroup::create([
+        $workingGroup = RoutineSetGroup::create([
             'routine_block_id' => $block->id,
             'type' => SetGroupType::Working,
             'set_count' => $blockData->working->setCount,
             'rest_seconds' => $blockData->working->restSeconds,
         ]);
+
+        $this->persistDropsets($workingGroup, $blockData->working->setCount, $dropsets);
 
         $warmUp = $blockData->warmUp ?? new SyncWarmUpData;
         $steps = $warmUp->stepList();
@@ -103,6 +115,46 @@ class RoutineEditorService
                 'percent_of_working' => min(100, max(1, $step->percent)),
                 'reps' => min(100, max(1, $step->reps)),
             ]);
+        }
+    }
+
+    /**
+     * @param  list<SyncDropsetData>  $dropsets
+     */
+    private function persistDropsets(RoutineSetGroup $workingGroup, int $setCount, array $dropsets): void
+    {
+        $seenIndexes = [];
+
+        foreach ($dropsets as $dropset) {
+            if ($dropset->setIndex < 0 || $dropset->setIndex >= $setCount) {
+                throw new InvalidArgumentException(
+                    "Dropset set index {$dropset->setIndex} is outside working set count {$setCount}."
+                );
+            }
+
+            if (isset($seenIndexes[$dropset->setIndex])) {
+                throw new InvalidArgumentException(
+                    "Duplicate dropset recipe for set index {$dropset->setIndex}."
+                );
+            }
+
+            $seenIndexes[$dropset->setIndex] = true;
+
+            $segments = array_values($dropset->segments->all());
+
+            if (count($segments) < 2) {
+                throw new InvalidArgumentException('A dropset requires at least two segments.');
+            }
+
+            foreach ($segments as $segmentIndex => $segment) {
+                /** @var SyncDropsetSegmentData $segment */
+                RoutineDropsetSegment::create([
+                    'routine_set_group_id' => $workingGroup->id,
+                    'set_index' => $dropset->setIndex,
+                    'position' => $segmentIndex + 1,
+                    'weight_g' => $segment->weightGrams(),
+                ]);
+            }
         }
     }
 

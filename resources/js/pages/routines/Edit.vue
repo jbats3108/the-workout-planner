@@ -20,12 +20,16 @@ type BlockExercise = {
 
 type WarmUpStep = { percent: number; reps: number };
 
+type DropsetSegment = { weight_kg: number };
+
+type DropsetRecipe = { set_index: number; segments: DropsetSegment[] };
+
 type Block = {
     is_superset: boolean;
     has_setup_after: boolean;
     has_setup_after_warm_up: boolean;
     exercises: BlockExercise[];
-    working: { set_count: number; rest_seconds: number };
+    working: { set_count: number; rest_seconds: number; dropsets: DropsetRecipe[] };
     warm_up: { set_count: number; rest_seconds: number; steps: WarmUpStep[] };
 };
 
@@ -100,7 +104,7 @@ const emptyBlock = (superset = false, seedWarmUp = true): Block => {
         has_setup_after: false,
         has_setup_after_warm_up: false,
         exercises: superset ? [emptyExercise(), emptyExercise()] : [emptyExercise()],
-        working: { set_count: 3, rest_seconds: 120 },
+        working: { set_count: 3, rest_seconds: 120, dropsets: [] },
         warm_up: { set_count: steps.length, rest_seconds: 60, steps },
     };
 };
@@ -110,9 +114,20 @@ const normalizeBlock = (raw: Block): Block => {
         percent: Number(s.percent),
         reps: Number(s.reps ?? 5),
     }));
+    const dropsets = (raw.working?.dropsets ?? [])
+        .map((d) => ({
+            set_index: Number(d.set_index),
+            segments: (d.segments ?? []).map((s) => ({ weight_kg: Number(s.weight_kg) })),
+        }))
+        .filter((d) => d.segments.length >= 2);
     return {
         ...raw,
         has_setup_after_warm_up: Boolean(raw.has_setup_after_warm_up) && steps.length > 0,
+        working: {
+            set_count: raw.working?.set_count ?? 3,
+            rest_seconds: raw.working?.rest_seconds ?? 120,
+            dropsets: raw.is_superset ? [] : dropsets,
+        },
         warm_up: {
             set_count: raw.warm_up?.set_count ?? steps.length,
             rest_seconds: raw.warm_up?.rest_seconds ?? 60,
@@ -240,10 +255,131 @@ const toggleSuperset = (block: Block) => {
     if (!block.is_superset && block.exercises.length > 1) {
         block.exercises = [block.exercises[0]];
     }
+    if (block.is_superset) {
+        block.working.dropsets = [];
+    }
+};
+
+const dropsetForIndex = (block: Block, setIndex: number): DropsetRecipe | undefined =>
+    block.working.dropsets.find((d) => d.set_index === setIndex);
+
+const isDropsetSlot = (block: Block, setIndex: number): boolean =>
+    !block.is_superset && (dropsetForIndex(block, setIndex)?.segments.length ?? 0) >= 2;
+
+const defaultDropsetSegments = (block: Block): DropsetSegment[] => {
+    const working = block.exercises[0]?.working_weight_kg ?? 20;
+    const step = Math.max(2.5, Math.round(working * 0.1 * 2) / 2);
+    return [
+        { weight_kg: working },
+        { weight_kg: Math.max(0, Math.round((working - step) * 2) / 2) },
+    ];
+};
+
+const setSlotKind = (block: Block, setIndex: number, kind: 'normal' | 'dropset') => {
+    if (block.is_superset) {
+        return;
+    }
+    const existing = dropsetForIndex(block, setIndex);
+    if (kind === 'normal') {
+        block.working.dropsets = block.working.dropsets.filter((d) => d.set_index !== setIndex);
+        return;
+    }
+    if (existing) {
+        return;
+    }
+    block.working.dropsets.push({
+        set_index: setIndex,
+        segments: defaultDropsetSegments(block),
+    });
+};
+
+const addDropsetSegment = (block: Block, setIndex: number) => {
+    const recipe = dropsetForIndex(block, setIndex);
+    if (!recipe) {
+        return;
+    }
+    const last = recipe.segments[recipe.segments.length - 1]?.weight_kg ?? 10;
+    const step = 2.5;
+    recipe.segments.push({ weight_kg: Math.max(0, Math.round((last - step) * 2) / 2) });
+};
+
+const removeDropsetSegment = (block: Block, setIndex: number, segmentIndex: number) => {
+    const recipe = dropsetForIndex(block, setIndex);
+    if (!recipe || recipe.segments.length <= 2) {
+        return;
+    }
+    recipe.segments.splice(segmentIndex, 1);
+};
+
+const rackStart = ref(20);
+const rackEnd = ref(10);
+const rackStep = ref(2.5);
+
+const applyRunTheRack = (block: Block, setIndex: number) => {
+    const start = Number(rackStart.value);
+    const end = Number(rackEnd.value);
+    const step = Number(rackStep.value);
+    if (!(step > 0) || start < end) {
+        return;
+    }
+    const segments: DropsetSegment[] = [];
+    for (let w = start; w >= end - 0.0001; w -= step) {
+        segments.push({ weight_kg: Math.round(w * 1000) / 1000 });
+    }
+    if (segments.length < 2) {
+        return;
+    }
+    const existing = dropsetForIndex(block, setIndex);
+    if (existing) {
+        existing.segments = segments;
+    } else {
+        block.working.dropsets.push({ set_index: setIndex, segments });
+    }
+};
+
+const trimDropsetsToSetCount = (block: Block) => {
+    const count = Math.max(1, Number(block.working.set_count) || 1);
+    block.working.set_count = count;
+    block.working.dropsets = block.working.dropsets.filter((d) => d.set_index < count);
+};
+
+watch(
+    () => form.blocks.map((b) => b.working.set_count),
+    () => {
+        form.blocks.forEach(trimDropsetsToSetCount);
+    },
+);
+
+const dropsetSummary = (block: Block): string => {
+    if (block.is_superset || !block.working.dropsets.length) {
+        return '';
+    }
+    return block.working.dropsets
+        .map((d) => `S${d.set_index + 1}:${d.segments.map((s) => s.weight_kg).join('→')}`)
+        .join(' · ');
 };
 
 const save = () => {
-    form.put(route('routines.update', props.routine.id));
+    form
+        .transform((data) => ({
+            ...data,
+            blocks: data.blocks.map((block) => ({
+                ...block,
+                working: {
+                    set_count: block.working.set_count,
+                    rest_seconds: block.working.rest_seconds,
+                    dropsets: block.is_superset
+                        ? []
+                        : block.working.dropsets
+                              .filter((d) => d.set_index < block.working.set_count && d.segments.length >= 2)
+                              .map((d) => ({
+                                  set_index: d.set_index,
+                                  segments: d.segments.map((s) => ({ weight_kg: s.weight_kg })),
+                              })),
+                },
+            })),
+        }))
+        .put(route('routines.update', props.routine.id));
 };
 
 const deleteRoutine = () => {
@@ -442,6 +578,7 @@ const errorList = computed(() => Object.values(form.errors));
                                             type="number"
                                             min="1"
                                             class="w-14 rounded border border-border bg-card px-2 py-1 font-mono"
+                                            @change="trimDropsetsToSetCount(block)"
                                         />
                                     </td>
                                     <td class="px-2 py-2">
@@ -527,6 +664,122 @@ const errorList = computed(() => Object.values(form.errors));
                     </table>
                     <p v-if="!form.blocks.length" class="px-4 py-8 text-center text-muted-foreground">No blocks yet. Add one below.</p>
                 </div>
+
+                <div
+                    v-if="activeBlock && !activeBlock.is_superset"
+                    class="border-t border-border bg-card/40 px-4 py-3"
+                >
+                    <div class="mb-2 flex items-baseline justify-between gap-2">
+                        <h3 class="text-sm font-medium">Dropsets · Block {{ active + 1 }}</h3>
+                        <p v-if="dropsetSummary(activeBlock)" class="truncate font-mono text-xs text-muted-foreground">
+                            {{ dropsetSummary(activeBlock) }}
+                        </p>
+                    </div>
+                    <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                        <div
+                            v-for="setIndex in activeBlock.working.set_count"
+                            :key="setIndex"
+                            class="rounded-lg border border-border bg-background p-3"
+                        >
+                            <div class="mb-2 flex items-center justify-between gap-2">
+                                <span class="text-xs font-medium text-muted-foreground">Set {{ setIndex }}</span>
+                                <select
+                                    class="rounded border border-border bg-card px-2 py-1 text-xs"
+                                    :value="isDropsetSlot(activeBlock, setIndex - 1) ? 'dropset' : 'normal'"
+                                    @change="
+                                        setSlotKind(
+                                            activeBlock,
+                                            setIndex - 1,
+                                            ($event.target as HTMLSelectElement).value as 'normal' | 'dropset',
+                                        )
+                                    "
+                                >
+                                    <option value="normal">Normal</option>
+                                    <option value="dropset">Dropset</option>
+                                </select>
+                            </div>
+                            <template v-if="isDropsetSlot(activeBlock, setIndex - 1)">
+                                <p class="mb-2 text-xs text-muted-foreground">
+                                    Shared reps: {{ activeBlock.exercises[0]?.prescribed_reps ?? '—' }}
+                                </p>
+                                <div
+                                    v-for="(seg, si) in dropsetForIndex(activeBlock, setIndex - 1)!.segments"
+                                    :key="si"
+                                    class="mb-1 flex items-center gap-1"
+                                >
+                                    <input
+                                        v-model.number="seg.weight_kg"
+                                        type="number"
+                                        step="0.5"
+                                        min="0"
+                                        class="w-20 rounded border border-border bg-card px-2 py-1 font-mono text-sm"
+                                    />
+                                    <span class="text-xs text-muted-foreground">kg</span>
+                                    <button
+                                        type="button"
+                                        class="ml-auto text-xs text-muted-foreground hover:text-destructive disabled:opacity-30"
+                                        :disabled="dropsetForIndex(activeBlock, setIndex - 1)!.segments.length <= 2"
+                                        @click="removeDropsetSegment(activeBlock, setIndex - 1, si)"
+                                    >
+                                        −
+                                    </button>
+                                </div>
+                                <div class="mt-2 flex flex-wrap items-center gap-2">
+                                    <button
+                                        type="button"
+                                        class="text-xs text-primary"
+                                        @click="addDropsetSegment(activeBlock, setIndex - 1)"
+                                    >
+                                        + Drop
+                                    </button>
+                                </div>
+                                <div class="mt-3 border-t border-border pt-2">
+                                    <p class="mb-1 text-xs text-muted-foreground">Run the rack</p>
+                                    <div class="flex flex-wrap items-end gap-1">
+                                        <label class="text-[10px] text-muted-foreground">
+                                            Start
+                                            <input
+                                                v-model.number="rackStart"
+                                                type="number"
+                                                step="0.5"
+                                                min="0"
+                                                class="mt-0.5 w-16 rounded border border-border bg-card px-1 py-1 font-mono text-xs"
+                                            />
+                                        </label>
+                                        <label class="text-[10px] text-muted-foreground">
+                                            End
+                                            <input
+                                                v-model.number="rackEnd"
+                                                type="number"
+                                                step="0.5"
+                                                min="0"
+                                                class="mt-0.5 w-16 rounded border border-border bg-card px-1 py-1 font-mono text-xs"
+                                            />
+                                        </label>
+                                        <label class="text-[10px] text-muted-foreground">
+                                            Step
+                                            <input
+                                                v-model.number="rackStep"
+                                                type="number"
+                                                step="0.5"
+                                                min="0.5"
+                                                class="mt-0.5 w-16 rounded border border-border bg-card px-1 py-1 font-mono text-xs"
+                                            />
+                                        </label>
+                                        <button
+                                            type="button"
+                                            class="rounded border border-primary/40 px-2 py-1 text-xs text-primary hover:bg-primary/10"
+                                            @click="applyRunTheRack(activeBlock, setIndex - 1)"
+                                        >
+                                            Fill
+                                        </button>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
                 <footer class="flex gap-2 border-t border-border px-4 py-3">
                     <button type="button" class="rounded border border-border px-3 py-2 text-sm hover:border-primary" @click="addBlock(false)">
                         + Block
@@ -643,6 +896,7 @@ const errorList = computed(() => Object.values(form.errors));
                                     type="number"
                                     min="1"
                                     class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-lg"
+                                    @change="trimDropsetsToSetCount(activeBlock)"
                                 />
                             </label>
                             <label>
@@ -655,6 +909,114 @@ const errorList = computed(() => Object.values(form.errors));
                                     class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-lg"
                                 />
                             </label>
+                        </div>
+
+                        <div
+                            v-if="!activeBlock.is_superset"
+                            class="mt-3 space-y-3 border-t border-border pt-3"
+                        >
+                            <p class="text-xs text-muted-foreground">Dropsets (per working set)</p>
+                            <div
+                                v-for="setIndex in activeBlock.working.set_count"
+                                :key="setIndex"
+                                class="rounded-xl border border-border bg-background p-3"
+                            >
+                                <div class="mb-2 flex items-center justify-between gap-2">
+                                    <span class="text-sm font-medium">Set {{ setIndex }}</span>
+                                    <select
+                                        class="rounded-lg border border-border bg-card px-2 py-1 text-sm"
+                                        :value="isDropsetSlot(activeBlock, setIndex - 1) ? 'dropset' : 'normal'"
+                                        @change="
+                                            setSlotKind(
+                                                activeBlock,
+                                                setIndex - 1,
+                                                ($event.target as HTMLSelectElement).value as 'normal' | 'dropset',
+                                            )
+                                        "
+                                    >
+                                        <option value="normal">Normal</option>
+                                        <option value="dropset">Dropset</option>
+                                    </select>
+                                </div>
+                                <template v-if="isDropsetSlot(activeBlock, setIndex - 1)">
+                                    <p class="mb-2 text-xs text-muted-foreground">
+                                        Shared reps: {{ activeBlock.exercises[0]?.prescribed_reps ?? '—' }}
+                                    </p>
+                                    <div
+                                        v-for="(seg, si) in dropsetForIndex(activeBlock, setIndex - 1)!.segments"
+                                        :key="si"
+                                        class="mb-1.5 flex items-center gap-2"
+                                    >
+                                        <input
+                                            v-model.number="seg.weight_kg"
+                                            type="number"
+                                            step="0.5"
+                                            min="0"
+                                            class="w-24 rounded-lg border border-border bg-card px-2 py-1.5 font-mono text-base"
+                                        />
+                                        <span class="text-xs text-muted-foreground">kg</span>
+                                        <button
+                                            type="button"
+                                            class="ml-auto text-xs text-muted-foreground hover:text-destructive disabled:opacity-30"
+                                            :disabled="
+                                                dropsetForIndex(activeBlock, setIndex - 1)!.segments.length <= 2
+                                            "
+                                            @click="removeDropsetSegment(activeBlock, setIndex - 1, si)"
+                                        >
+                                            −
+                                        </button>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        class="mt-1 text-xs text-primary"
+                                        @click="addDropsetSegment(activeBlock, setIndex - 1)"
+                                    >
+                                        + Drop
+                                    </button>
+                                    <div class="mt-3 border-t border-border pt-2">
+                                        <p class="mb-1 text-xs text-muted-foreground">Run the rack</p>
+                                        <div class="grid grid-cols-3 gap-2">
+                                            <label class="text-[10px] text-muted-foreground">
+                                                Start
+                                                <input
+                                                    v-model.number="rackStart"
+                                                    type="number"
+                                                    step="0.5"
+                                                    min="0"
+                                                    class="mt-0.5 w-full rounded-lg border border-border bg-card px-2 py-1.5 font-mono text-sm"
+                                                />
+                                            </label>
+                                            <label class="text-[10px] text-muted-foreground">
+                                                End
+                                                <input
+                                                    v-model.number="rackEnd"
+                                                    type="number"
+                                                    step="0.5"
+                                                    min="0"
+                                                    class="mt-0.5 w-full rounded-lg border border-border bg-card px-2 py-1.5 font-mono text-sm"
+                                                />
+                                            </label>
+                                            <label class="text-[10px] text-muted-foreground">
+                                                Step
+                                                <input
+                                                    v-model.number="rackStep"
+                                                    type="number"
+                                                    step="0.5"
+                                                    min="0.5"
+                                                    class="mt-0.5 w-full rounded-lg border border-border bg-card px-2 py-1.5 font-mono text-sm"
+                                                />
+                                            </label>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            class="mt-2 w-full rounded-lg border border-primary/40 py-2 text-xs text-primary"
+                                            @click="applyRunTheRack(activeBlock, setIndex - 1)"
+                                        >
+                                            Fill from rack
+                                        </button>
+                                    </div>
+                                </template>
+                            </div>
                         </div>
 
                         <div class="mt-3 border-t border-border pt-3">

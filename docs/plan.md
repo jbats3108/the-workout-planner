@@ -34,7 +34,7 @@ Ordered for the core loop; reshuffle if product priority changes.
 15. **Rest after warm-ups** — ~~make warm-up group rest first-class in editor + Play (rest after warm-up sets / before working)~~ done (editor exposes WU rest; Play already used group rest)
 16. **Clear block warm-up** — ~~one-tap remove all warm-up steps from a block in the editor~~ done
 18. **Warm-up defaults scope** — ~~Settings: seed warm-ups into every new block vs first block only~~ done
-19. **Dropsets** — per working-set-slot multi-segment sets in editor + Play (grill notes below); update `CONTEXT.md` when shipping
+19. **Dropsets** — ~~per working-set-slot multi-segment sets in editor + Play (grill notes below); update `CONTEXT.md` when shipping~~ done
 20. **Finished workout history** — browse/edit finished workouts; re-eval progression when eligible (grill notes below; ADR-0004)
 
 ## Grill: finished workout history

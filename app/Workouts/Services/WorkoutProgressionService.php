@@ -27,6 +27,7 @@ class WorkoutProgressionService
         $workout->load([
             'routine.blocks.blockExercises',
             'blocks.blockExercises.sets.setGroup',
+            'blocks.blockExercises.sets.segments',
         ]);
 
         $proposals = [];
@@ -111,7 +112,8 @@ class WorkoutProgressionService
                 return $set->completed_at !== null
                     && $set->setGroup?->type === SetGroupType::Working
                     && $set->reps !== null
-                    && $set->weight_g !== null;
+                    && $set->weight_g !== null
+                    && ! $set->isDropset();
             })
             ->values();
     }
