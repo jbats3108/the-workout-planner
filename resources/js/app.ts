@@ -1,27 +1,32 @@
 import '../css/app.css';
 
 import { createInertiaApp } from '@inertiajs/vue3';
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import type { DefineComponent } from 'vue';
-import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import { initializeTheme } from './composables/useAppearance';
+import type { AppPageProps } from './types';
 
 const appName = import.meta.env.VITE_APP_NAME || 'OVRLOAD';
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
-    resolve: (name) => resolvePageComponent(`./pages/${name}.vue`, import.meta.glob<DefineComponent>('./pages/**/*.vue')),
-    setup({ el, App, props, plugin }) {
-        createApp({ render: () => h(App, props) })
-            .use(plugin)
-            .use(ZiggyVue)
-            .mount(el);
+    pages: './pages',
+    withApp(app, { ssr, page }) {
+        if (ssr) {
+            const ziggy = (page.props as AppPageProps).ziggy;
+
+            app.use(ZiggyVue, {
+                ...ziggy,
+                location: new URL(ziggy.location),
+            });
+
+            return;
+        }
+
+        app.use(ZiggyVue);
     },
     progress: {
         color: '#c8ff00',
     },
 });
 
-// This will set light / dark mode on page load...
 initializeTheme();

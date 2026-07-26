@@ -2,8 +2,8 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
-        "build:ssr": "vite build && vite build --ssr",
+        "build": "vite build && vite build --ssr",
+        "build:ssr": "npm run build",
         "dev": "vite",
         "format": "prettier --write resources/",
         "format:check": "prettier --check resources/",
@@ -24,7 +24,8 @@
         "vue-tsc": "^2.2.4"
     },
     "dependencies": {
-        "@inertiajs/vue3": "^2.3.27",
+        "@inertiajs/vite": "^3.6.1",
+        "@inertiajs/vue3": "^3.6.1",
         "@tailwindcss/vite": "^4.1.11",
         "@vitejs/plugin-vue": "^6.0.0",
         "@vueuse/core": "^12.8.2",

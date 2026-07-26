@@ -46,7 +46,7 @@
             }
         </style>
 
-        <title inertia>{{ config('app.name', 'OVRLOAD') }}</title>
+        <title data-inertia>{{ config('app.name', 'OVRLOAD') }}</title>
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=space-grotesk:400,500,600,700|jetbrains-mono:400,500,600" rel="stylesheet" />
