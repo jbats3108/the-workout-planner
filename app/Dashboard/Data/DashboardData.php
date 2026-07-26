@@ -24,6 +24,8 @@ final class DashboardData extends Data
 
     public static function fromUser(User $user): DashboardData
     {
+        $user->loadMissing(['routines.blocks.blockExercises']);
+
         $inProgress = $user->workouts()
             ->with('routine')
             ->where('status', WorkoutStatus::InProgress)

@@ -1,11 +1,12 @@
 {
     "schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/vue-starter-kit",
+    "name": "jbats3108/the-workout-planner",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "OVRLOAD — workout planning and logging.",
     "keywords": [
         "laravel",
-        "framework"
+        "inertia",
+        "workout"
     ],
     "license": "MIT",
     "require": {
@@ -47,7 +48,8 @@
             "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
-            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
+            "@php artisan boost:update --ansi"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
