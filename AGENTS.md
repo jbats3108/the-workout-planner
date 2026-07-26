@@ -2,7 +2,7 @@
 
 ## Cursor Cloud specific instructions
 
-This is **OVRLOAD** (repo: the-workout-planner): a Laravel 12 (PHP 8.4) backend with an Inertia + Vue 3 + TypeScript frontend bundled by Vite. It is a single application (one service, split into a PHP server and a Vite dev server). Data is stored in a local SQLite file at `database/database.sqlite`.
+This is **OVRLOAD** (repo: the-workout-planner): a Laravel 13 (PHP 8.5) backend with an Inertia + Vue 3 + TypeScript frontend bundled by Vite. It is a single application (one service, split into a PHP server and a Vite dev server). Data is stored in a local SQLite file at `database/database.sqlite`.
 
 ### Running the app (development)
 - Start everything with `composer run dev`. This runs `php artisan serve` (http://localhost:8000), `queue:listen`, `pail` (logs), and `npm run dev` (Vite on http://localhost:5173) concurrently. Run it in a long-lived tmux session, not as a one-shot command.
@@ -35,4 +35,3 @@ Single-context layout (`CONTEXT.md` + `docs/adr/` at repo root). See `docs/agent
 ### Plan / backlog
 
 Active product backlog: `docs/plan.md`. Prefer updating that file over inventing a parallel todo list in chat.
-
