@@ -9,6 +9,7 @@ This is **OVRLOAD** (repo: the-workout-planner): a Laravel 13 (PHP 8.5) backend 
 - Phone / LAN: set `VITE_DEV_HOST` in `.env` to this machine’s LAN IP (`hostname -I`), then `composer run dev:lan`. Open `http://<that-ip>:8000` on the phone. If the IP changes (new Wi‑Fi), update `VITE_DEV_HOST` and restart.
 - The app requires built or dev-served frontend assets. When using `composer run dev`, Vite serves them in dev mode. Without Vite running, the app expects a production build (`npm run build`, output in `public/build/`).
 - Seeded login (from `database/seeders/UserSeeder.php`): `admin1@test.com` / `password` (admin) and `user1@test.com` / `password` (regular user). Registration is invite-only: leave `REGISTRATION_INVITE` empty locally (no public signup). Admins create one-time links under **Admin → Invites** (copy / mailto). Optional master secret for bootstrap: `php artisan registration:invite-secret --write` (production only).
+- Demo routines (from `RoutineSeeder`, owned by `user1@test.com`): **Barbell Strength** (plates + WU first block only), **Dumbbell Accessories** (DB + 28.75 dip, WU all blocks), **Superset Pump** (supersets, WU on some), **Dropset Finishers** (mixed dropsets). Re-seed with `php artisan db:seed --class=RoutineSeeder`.
 - Larger shared exercise catalog: default `database/data/exercises.json` (~675 strength lifts from yuhonas/free-exercise-db). Import with `php artisan exercises:import`.
 
 ### Testing / linting / building (see `composer.json`, `package.json`, CI in `.github/workflows/`)
