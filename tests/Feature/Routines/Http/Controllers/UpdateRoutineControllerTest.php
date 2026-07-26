@@ -144,8 +144,8 @@ class UpdateRoutineControllerTest extends TestCase
         $response->assertInertia(fn ($page) => $page
             ->component('routines/Edit')
             ->has('routine')
-            ->has('exercises')
             ->has('warm_up_defaults')
-            ->has('warm_up_defaults_scope'));
+            ->has('warm_up_defaults_scope')
+            ->loadDeferredProps(fn ($page) => $page->has('exercises')));
     }
 }

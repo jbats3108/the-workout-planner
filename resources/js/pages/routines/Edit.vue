@@ -4,7 +4,7 @@
  */
 import InputError from '@/components/InputError.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, Link, router, useForm } from '@inertiajs/vue3';
+import { Deferred, Head, Link, router, useForm } from '@inertiajs/vue3';
 import { ChevronDown } from 'lucide-vue-next';
 import { computed, ref, watch } from 'vue';
 
@@ -39,20 +39,22 @@ type RoutinePayload = {
 
 const props = defineProps<{
     routine: RoutinePayload;
-    exercises: ExerciseOption[];
+    exercises?: ExerciseOption[];
     weight_unit: string;
     warm_up_defaults: WarmUpStep[];
     warm_up_defaults_scope?: 'all_blocks' | 'first_block';
 }>();
+
+const catalog = computed(() => props.exercises ?? []);
 
 const exerciseQuery = ref('');
 
 const filteredExercises = computed(() => {
     const q = exerciseQuery.value.trim().toLowerCase();
     if (!q) {
-        return props.exercises;
+        return catalog.value;
     }
-    return props.exercises.filter(
+    return catalog.value.filter(
         (e) =>
             e.name.toLowerCase().includes(q) ||
             (e.primary_muscle_group ?? '').toLowerCase().includes(q),
@@ -73,12 +75,12 @@ const exerciseOptionsFor = (selectedId: number | null) => {
     if (selectedId == null || list.some((e) => e.id === selectedId)) {
         return list;
     }
-    const selected = props.exercises.find((e) => e.id === selectedId);
+    const selected = catalog.value.find((e) => e.id === selectedId);
     return selected ? [selected, ...list] : list;
 };
 
 const emptyExercise = (): BlockExercise => ({
-    exercise_id: props.exercises[0]?.id ?? null,
+    exercise_id: catalog.value[0]?.id ?? null,
     working_weight_kg: 60,
     prescribed_reps: 6,
     achievement_floor: null,
@@ -119,7 +121,7 @@ const normalizeBlock = (raw: Block): Block => {
     };
 };
 
-const form = useForm({
+const form = useForm(`EditRoutine:${props.routine.id}`, {
     name: props.routine.name,
     deload_weight_factor: props.routine.deload_weight_factor,
     deload_reps_factor: props.routine.deload_reps_factor,
@@ -217,7 +219,7 @@ const formatRest = (seconds: number) => {
     return s ? `${m}m ${s}s` : `${m}m`;
 };
 
-const exerciseName = (id: number | null) => props.exercises.find((e) => e.id === id)?.name ?? 'Exercise';
+const exerciseName = (id: number | null) => catalog.value.find((e) => e.id === id)?.name ?? 'Exercise';
 
 const addBlock = (superset = false) => {
     const seedWarmUp =
@@ -323,43 +325,51 @@ const errorList = computed(() => Object.values(form.errors));
             </header>
 
             <div class="hidden border-b border-border px-4 py-3 md:block md:px-6">
-                <label class="flex flex-col gap-1 text-xs text-muted-foreground">
-                    Find exercise
-                    <input
-                        v-model="exerciseQuery"
-                        type="search"
-                        placeholder="Name or muscle group…"
-                        class="w-full max-w-md rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground outline-none focus:border-primary"
-                    />
-                </label>
-                <p class="mt-1 text-xs text-muted-foreground">
-                    Showing {{ filteredExercises.length }} of {{ exercises.length }}
-                    <span v-if="exerciseQuery.trim() && activeBlock"> · tap to set selected exercise</span>
-                </p>
-                <ul
-                    v-if="findMatches.length"
-                    class="mt-2 max-h-48 max-w-md overflow-y-auto divide-y divide-border rounded-xl border border-border"
-                >
-                    <li v-for="exercise in findMatches" :key="exercise.id">
-                        <button
-                            type="button"
-                            class="flex w-full flex-col items-start gap-0.5 px-3 py-2 text-left hover:bg-secondary"
-                            :disabled="!activeBlock"
-                            @click="applyExercisePick(exercise.id)"
-                        >
-                            <span class="text-sm font-medium text-foreground">{{ exercise.name }}</span>
-                            <span class="font-mono text-xs text-muted-foreground">{{
-                                exercise.primary_muscle_group
-                            }}</span>
-                        </button>
-                    </li>
-                </ul>
-                <p
-                    v-else-if="exerciseQuery.trim()"
-                    class="mt-2 text-xs text-muted-foreground"
-                >
-                    No matches.
-                </p>
+                <Deferred data="exercises">
+                    <template #fallback>
+                        <div class="animate-pulse space-y-2">
+                            <div class="h-4 w-40 rounded bg-secondary" />
+                            <div class="h-10 max-w-md rounded-xl bg-secondary" />
+                        </div>
+                    </template>
+                    <label class="flex flex-col gap-1 text-xs text-muted-foreground">
+                        Find exercise
+                        <input
+                            v-model="exerciseQuery"
+                            type="search"
+                            placeholder="Name or muscle group…"
+                            class="w-full max-w-md rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground outline-none focus:border-primary"
+                        />
+                    </label>
+                    <p class="mt-1 text-xs text-muted-foreground">
+                        Showing {{ filteredExercises.length }} of {{ catalog.length }}
+                        <span v-if="exerciseQuery.trim() && activeBlock"> · tap to set selected exercise</span>
+                    </p>
+                    <ul
+                        v-if="findMatches.length"
+                        class="mt-2 max-h-48 max-w-md overflow-y-auto divide-y divide-border rounded-xl border border-border"
+                    >
+                        <li v-for="exercise in findMatches" :key="exercise.id">
+                            <button
+                                type="button"
+                                class="flex w-full flex-col items-start gap-0.5 px-3 py-2 text-left hover:bg-secondary"
+                                :disabled="!activeBlock"
+                                @click="applyExercisePick(exercise.id)"
+                            >
+                                <span class="text-sm font-medium text-foreground">{{ exercise.name }}</span>
+                                <span class="font-mono text-xs text-muted-foreground">{{
+                                    exercise.primary_muscle_group
+                                }}</span>
+                            </button>
+                        </li>
+                    </ul>
+                    <p
+                        v-else-if="exerciseQuery.trim()"
+                        class="mt-2 text-xs text-muted-foreground"
+                    >
+                        No matches.
+                    </p>
+                </Deferred>
             </div>
 
             <!-- Desktop: dense list (A structure) -->

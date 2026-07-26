@@ -280,6 +280,7 @@ const completeSet = () => {
 
     setForm.post(route('workouts.sets.complete', { workout: props.workout.id, set: set.id }), {
         preserveScroll: true,
+        only: ['workout'],
         onSuccess: () => {
             if (restAfter > 0) {
                 startRest(restAfter);
@@ -382,12 +383,18 @@ const canRemoveWorkingSet = computed(() => {
 
 const addWorkingSet = () => {
     if (!current.value) return;
-    router.post(route('workouts.working-sets.add', [props.workout.id, current.value.block.id]));
+    router.post(route('workouts.working-sets.add', [props.workout.id, current.value.block.id]), {}, {
+        preserveScroll: true,
+        only: ['workout'],
+    });
 };
 
 const removeWorkingSet = () => {
     if (!current.value) return;
-    router.delete(route('workouts.sets.remove', [props.workout.id, current.value.set.id]));
+    router.delete(route('workouts.sets.remove', [props.workout.id, current.value.set.id]), {
+        preserveScroll: true,
+        only: ['workout'],
+    });
 };
 
 const groupLabel = (type: string) => (type === 'warm_up' ? 'Warm-up' : 'Working');

@@ -77,6 +77,7 @@ const settingsLinks: NavLink[] = [
         class="mb-6 text-sm font-bold tracking-wide"
         :class="labeled ? 'self-start px-3' : ''"
         aria-label="OVRLOAD home"
+        prefetch
         @click="onNavigate"
     >
         <span class="text-primary">OVR</span>
@@ -90,6 +91,7 @@ const settingsLinks: NavLink[] = [
             :href="link.href"
             :class="itemClass(isActive(link.match))"
             :aria-label="link.label"
+            prefetch
             @click="onNavigate"
         >
             <component :is="link.icon" class="size-4 shrink-0" />

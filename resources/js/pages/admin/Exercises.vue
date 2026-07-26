@@ -4,7 +4,7 @@ import InputError from '@/components/InputError.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import AdminLayout from '@/layouts/admin/Layout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { Head, router, useForm, usePage } from '@inertiajs/vue3';
+import { Deferred, Head, router, useForm, usePage } from '@inertiajs/vue3';
 import { computed, ref, watch } from 'vue';
 
 type MuscleGroupOption = { name: string; slug: string };
@@ -21,7 +21,7 @@ type AdminExercise = {
 };
 
 const props = defineProps<{
-    exercises: AdminExercise[];
+    exercises?: AdminExercise[];
     muscle_groups: MuscleGroupOption[];
     equipment_options: EquipmentOption[];
 }>();
@@ -29,6 +29,7 @@ const props = defineProps<{
 const page = usePage();
 const successMessage = computed(() => page.props.flash?.success ?? null);
 const query = ref('');
+const catalog = computed(() => props.exercises ?? []);
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Admin', href: '/admin' },
@@ -59,8 +60,8 @@ watch(
 
 const filtered = computed(() => {
     const q = query.value.trim().toLowerCase();
-    if (!q) return props.exercises;
-    return props.exercises.filter(
+    if (!q) return catalog.value;
+    return catalog.value.filter(
         (e) =>
             e.name.toLowerCase().includes(q) ||
             e.slug.includes(q) ||
@@ -165,19 +166,26 @@ const remove = (exercise: AdminExercise) => {
             </form>
 
             <div>
-                <input
-                    v-model="query"
-                    type="search"
-                    placeholder="Filter catalog…"
-                    class="mb-3 w-full max-w-md rounded-xl border border-border bg-card px-3 py-2 text-sm"
-                />
-                <p class="mb-2 text-xs text-muted-foreground">{{ filtered.length }} of {{ exercises.length }}</p>
-                <ul class="divide-y divide-border rounded-xl border border-border">
-                    <li
-                        v-for="exercise in filtered"
-                        :key="exercise.id"
-                        class="flex flex-wrap items-center justify-between gap-2 px-4 py-3"
-                    >
+                <Deferred data="exercises">
+                    <template #fallback>
+                        <div class="animate-pulse space-y-3">
+                            <div class="h-10 max-w-md rounded-xl bg-secondary" />
+                            <div class="h-40 rounded-xl bg-secondary" />
+                        </div>
+                    </template>
+                    <input
+                        v-model="query"
+                        type="search"
+                        placeholder="Filter catalog…"
+                        class="mb-3 w-full max-w-md rounded-xl border border-border bg-card px-3 py-2 text-sm"
+                    />
+                    <p class="mb-2 text-xs text-muted-foreground">{{ filtered.length }} of {{ catalog.length }}</p>
+                    <ul class="divide-y divide-border rounded-xl border border-border">
+                        <li
+                            v-for="exercise in filtered"
+                            :key="exercise.id"
+                            class="flex flex-wrap items-center justify-between gap-2 px-4 py-3"
+                        >
                         <div>
                             <p class="font-medium">{{ exercise.name }}</p>
                             <p class="font-mono text-xs text-muted-foreground">
@@ -195,6 +203,7 @@ const remove = (exercise: AdminExercise) => {
                         </button>
                     </li>
                 </ul>
+                </Deferred>
             </div>
         </AdminLayout>
     </AppLayout>

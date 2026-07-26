@@ -13,22 +13,6 @@ class IndexAdminExercisesController extends Controller
 {
     public function __invoke(): Response
     {
-        $exercises = Exercise::query()
-            ->shared()
-            ->with(['primaryMuscleGroup', 'secondaryMuscleGroup'])
-            ->orderBy('name')
-            ->get()
-            ->map(fn (Exercise $exercise): array => [
-                'id' => $exercise->id,
-                'name' => $exercise->getName(),
-                'slug' => $exercise->getSlug(),
-                'equipment' => $exercise->equipment?->value,
-                'primary_muscle_group' => $exercise->primaryMuscleGroup->getName(),
-                'primary_muscle_group_slug' => $exercise->primaryMuscleGroup->getSlug(),
-                'secondary_muscle_group' => $exercise->secondaryMuscleGroup?->getName(),
-                'secondary_muscle_group_slug' => $exercise->secondaryMuscleGroup?->getSlug(),
-            ]);
-
         $muscleGroups = MuscleGroup::query()
             ->orderBy('name')
             ->get()
@@ -46,7 +30,23 @@ class IndexAdminExercisesController extends Controller
         );
 
         return Inertia::render('admin/Exercises', [
-            'exercises' => $exercises,
+            'exercises' => Inertia::defer(fn () => Exercise::query()
+                ->shared()
+                ->with(['primaryMuscleGroup', 'secondaryMuscleGroup'])
+                ->orderBy('name')
+                ->get()
+                ->map(fn (Exercise $exercise): array => [
+                    'id' => $exercise->id,
+                    'name' => $exercise->getName(),
+                    'slug' => $exercise->getSlug(),
+                    'equipment' => $exercise->equipment?->value,
+                    'primary_muscle_group' => $exercise->primaryMuscleGroup->getName(),
+                    'primary_muscle_group_slug' => $exercise->primaryMuscleGroup->getSlug(),
+                    'secondary_muscle_group' => $exercise->secondaryMuscleGroup?->getName(),
+                    'secondary_muscle_group_slug' => $exercise->secondaryMuscleGroup?->getSlug(),
+                ])
+                ->values()
+                ->all()),
             'muscle_groups' => $muscleGroups,
             'equipment_options' => $equipmentOptions,
         ]);

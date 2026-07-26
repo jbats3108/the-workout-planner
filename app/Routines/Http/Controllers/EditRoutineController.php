@@ -22,20 +22,9 @@ class EditRoutineController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        $exerciseOptions = Exercise::query()
-            ->with(['primaryMuscleGroup', 'secondaryMuscleGroup'])
-            ->forUser($user)
-            ->orderBy('name')
-            ->get()
-            ->map(fn (Exercise $exercise) => new RoutineEditorExerciseOptionData(
-                id: $exercise->id,
-                name: $exercise->getName(),
-                primaryMuscleGroup: $exercise->primaryMuscleGroup->getName(),
-            ));
-
         $page = RoutineEditorPageData::fromRoutine(
             $routine,
-            RoutineEditorExerciseOptionData::collect($exerciseOptions, DataCollection::class),
+            RoutineEditorExerciseOptionData::collect([], DataCollection::class),
             $user->weight_unit?->value ?? 'kg',
         );
 
@@ -43,7 +32,18 @@ class EditRoutineController extends Controller
 
         return Inertia::render('routines/Edit', [
             'routine' => Arr::except($payload, ['exercises', 'weight_unit']),
-            'exercises' => $payload['exercises'],
+            'exercises' => Inertia::defer(fn () => Exercise::query()
+                ->with(['primaryMuscleGroup', 'secondaryMuscleGroup'])
+                ->forUser($user)
+                ->orderBy('name')
+                ->get()
+                ->map(fn (Exercise $exercise) => new RoutineEditorExerciseOptionData(
+                    id: $exercise->id,
+                    name: $exercise->getName(),
+                    primaryMuscleGroup: $exercise->primaryMuscleGroup->getName(),
+                ))
+                ->values()
+                ->all()),
             'weight_unit' => $payload['weight_unit'],
             'warm_up_defaults' => $user->resolvedWarmUpStepsDefault(),
             'warm_up_defaults_scope' => ($user->warm_up_defaults_scope ?? WarmUpDefaultsScope::AllBlocks)->value,

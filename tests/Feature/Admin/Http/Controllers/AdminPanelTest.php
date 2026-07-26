@@ -34,8 +34,8 @@ class AdminPanelTest extends TestCase
             ->assertOk()
             ->assertInertia(fn ($page) => $page
                 ->component('admin/Exercises')
-                ->has('exercises')
-                ->has('muscle_groups'));
+                ->has('muscle_groups')
+                ->loadDeferredProps(fn ($page) => $page->has('exercises')));
 
         $this->actingAs($this->adminUser)->get(route('admin.muscle-groups'))
             ->assertOk()
