@@ -36,7 +36,6 @@ Ordered for the core loop; reshuffle if product priority changes.
 18. **Warm-up defaults scope** — ~~Settings: seed warm-ups into every new block vs first block only~~ done
 19. **Dropsets** — per working-set-slot multi-segment sets in editor + Play (grill notes below); update `CONTEXT.md` when shipping
 20. **Finished workout history** — browse/edit finished workouts; re-eval progression when eligible (grill notes below; ADR-0004)
-17. **Flaky-network drafts** — best-effort offline/queue for player logging (postponed)
 
 ## Grill: finished workout history
 
@@ -90,3 +89,4 @@ Deferred: installable PWA, tabbed app shell, haptics.
 - lb display/conversion end-to-end (API still kg-centric like the editor)
 - Dropsets on supersets
 - Gym dumbbell / rack inventory (min, max, step) for run-the-rack helper
+- Flaky-network drafts — best-effort offline/queue for player logging
