@@ -24,7 +24,11 @@ class ApplyProgressionBumpsController extends Controller
         }
 
         $proposals = BumpProposalData::collect($stored, DataCollection::class);
-        $allowedIds = collect($proposals)->map(fn (BumpProposalData $bump) => $bump->routineBlockExerciseId)->all();
+        $allowedIds = [];
+        foreach ($proposals as $bump) {
+            /** @var BumpProposalData $bump */
+            $allowedIds[] = $bump->routineBlockExerciseId;
+        }
         $selected = array_values(array_intersect($data->routineBlockExerciseIds, $allowedIds));
 
         $progressionService->applyConfirmedBumps($proposals, $selected);

@@ -3,10 +3,12 @@
 namespace Tests\Unit\Workouts\Models;
 
 use App\Exercises\Models\Exercise;
+use App\Workouts\Models\Workout;
 use App\Workouts\Models\WorkoutBlock;
 use App\Workouts\Models\WorkoutBlockExercise;
 use App\Workouts\Models\WorkoutSet;
 use App\Workouts\Models\WorkoutSetGroup;
+use App\Workouts\Models\WorkoutSetSegment;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -20,7 +22,7 @@ class WorkoutSetTest extends TestCase
     {
         // Given
         $workoutBlock = WorkoutBlock::create([
-            'workout_id' => \App\Workouts\Models\Workout::factory()->create()->id,
+            'workout_id' => Workout::factory()->create()->id,
             'position' => 1,
         ]);
 
@@ -74,5 +76,41 @@ class WorkoutSetTest extends TestCase
 
         // Then
         $this->assertSame(92500, $workoutSet->weight_g);
+    }
+
+    #[Test]
+    public function it_is_not_a_dropset_with_zero_or_one_segment(): void
+    {
+        $workoutSet = WorkoutSet::factory()->create();
+        $this->assertFalse($workoutSet->isDropset());
+
+        WorkoutSetSegment::create([
+            'workout_set_id' => $workoutSet->id,
+            'position' => 1,
+            'weight_g' => 80000,
+        ]);
+
+        $this->assertFalse($workoutSet->fresh()->isDropset());
+        $this->assertFalse($workoutSet->fresh()->load('segments')->isDropset());
+    }
+
+    #[Test]
+    public function it_is_a_dropset_with_two_or_more_segments(): void
+    {
+        $workoutSet = WorkoutSet::factory()->create();
+
+        WorkoutSetSegment::create([
+            'workout_set_id' => $workoutSet->id,
+            'position' => 1,
+            'weight_g' => 80000,
+        ]);
+        WorkoutSetSegment::create([
+            'workout_set_id' => $workoutSet->id,
+            'position' => 2,
+            'weight_g' => 60000,
+        ]);
+
+        $this->assertTrue($workoutSet->fresh()->isDropset());
+        $this->assertTrue($workoutSet->fresh()->load('segments')->isDropset());
     }
 }

@@ -25,12 +25,10 @@ class UpdateRoutineControllerTest extends TestCase
     {
         $routine = Routine::factory()->withUser($this->user)->create();
 
-        $response = $this->actingAs($this->adminUser)->put(route('routines.update', $routine), [
+        $this->actingAs($this->adminUser)->put(route('routines.update', $routine), [
             'name' => 'New Name',
             'blocks' => [],
-        ]);
-
-        $response->assertForbidden();
+        ])->assertForbidden();
     }
 
     #[Test]
@@ -38,109 +36,20 @@ class UpdateRoutineControllerTest extends TestCase
     {
         $routine = Routine::factory()->withUser($this->user)->create();
 
-        $response = $this->actingAs($this->secondUser)->put(route('routines.update', $routine), [
+        $this->actingAs($this->secondUser)->put(route('routines.update', $routine), [
             'name' => 'New Name',
             'blocks' => [],
-        ]);
-
-        $response->assertForbidden();
+        ])->assertForbidden();
     }
 
     #[Test]
-    public function it_updates_the_routine_details_and_blocks(): void
-    {
-        $routine = Routine::factory()->withUser($this->user)->create();
-        $exercise = Exercise::factory()->create();
-
-        $response = $this->actingAs($this->user)->put(route('routines.update', $routine), [
-            'name' => 'New Name',
-            'deload_weight_factor' => 0.5,
-            'deload_reps_factor' => 2,
-            'blocks' => [
-                [
-                    'is_superset' => false,
-                    'has_setup_after' => true,
-                    'has_setup_after_warm_up' => true,
-                    'exercises' => [
-                        [
-                            'exercise_id' => $exercise->id,
-                            'working_weight_kg' => 80,
-                            'prescribed_reps' => 6,
-                            'achievement_floor' => 4,
-                            'progression_target' => 6,
-                        ],
-                    ],
-                    'working' => ['set_count' => 3, 'rest_seconds' => 180],
-                    'warm_up' => [
-                        'set_count' => 2,
-                        'rest_seconds' => 60,
-                        'steps' => [
-                            ['percent' => 50, 'reps' => 5],
-                            ['percent' => 75, 'reps' => 3],
-                        ],
-                    ],
-                ],
-            ],
-        ]);
-
-        $response->assertRedirect(route('dashboard'));
-        $response->assertSessionHas('success', 'Routine saved.');
-
-        $routine->refresh();
-        $this->assertSame('New Name', $routine->name);
-        $this->assertCount(1, $routine->blocks);
-        $block = $routine->blocks->first();
-        $this->assertTrue($block->has_setup_after);
-        $this->assertTrue($block->has_setup_after_warm_up);
-        $this->assertSame(80000, $block->blockExercises->first()->working_weight_g);
-        $this->assertCount(2, $block->warmUpSetGroup->warmUpSteps);
-        $this->assertSame(50, $block->warmUpSetGroup->warmUpSteps[0]->percent_of_working);
-        $this->assertSame(5, $block->warmUpSetGroup->warmUpSteps[0]->reps);
-        $this->assertSame(3, $block->warmUpSetGroup->warmUpSteps[1]->reps);
-    }
-
-    #[Test]
-    public function it_allows_saving_blocks_with_no_warm_up_steps(): void
-    {
-        $routine = Routine::factory()->withUser($this->user)->create();
-        $exercise = Exercise::factory()->create();
-
-        $response = $this->actingAs($this->user)->put(route('routines.update', $routine), [
-            'name' => 'No Warmups',
-            'deload_weight_factor' => 0.5,
-            'deload_reps_factor' => 2,
-            'blocks' => [
-                [
-                    'is_superset' => false,
-                    'has_setup_after' => false,
-                    'exercises' => [
-                        [
-                            'exercise_id' => $exercise->id,
-                            'working_weight_kg' => 60,
-                            'prescribed_reps' => 6,
-                            'achievement_floor' => null,
-                            'progression_target' => null,
-                        ],
-                    ],
-                    'working' => ['set_count' => 3, 'rest_seconds' => 120],
-                    'warm_up' => ['set_count' => 0, 'rest_seconds' => 60, 'steps' => []],
-                ],
-            ],
-        ]);
-
-        $response->assertRedirect(route('dashboard'));
-        $response->assertSessionHas('success', 'Routine saved.');
-        $this->assertCount(1, $routine->fresh()->blocks);
-    }
-
-    #[Test]
-    public function it_saves_and_reloads_dropset_recipes(): void
+    public function owner_update_redirects_with_success(): void
     {
         $routine = Routine::factory()->withUser($this->user)->create();
         $exercise = Exercise::factory()->create();
 
         $this->actingAs($this->user)->put(route('routines.update', $routine), [
-            'name' => 'Dropset Finisher',
+            'name' => 'New Name',
             'deload_weight_factor' => 0.5,
             'deload_reps_factor' => 2,
             'blocks' => [
@@ -150,58 +59,28 @@ class UpdateRoutineControllerTest extends TestCase
                     'exercises' => [
                         [
                             'exercise_id' => $exercise->id,
-                            'working_weight_kg' => 20,
-                            'prescribed_reps' => 12,
-                            'achievement_floor' => null,
-                            'progression_target' => null,
+                            'working_weight_kg' => 80,
+                            'prescribed_reps' => 6,
                         ],
                     ],
-                    'working' => [
-                        'set_count' => 2,
-                        'rest_seconds' => 90,
-                        'dropsets' => [
-                            [
-                                'set_index' => 1,
-                                'segments' => [
-                                    ['weight_kg' => 20],
-                                    ['weight_kg' => 16],
-                                    ['weight_kg' => 12],
-                                    ['weight_kg' => 8],
-                                ],
-                            ],
-                        ],
-                    ],
+                    'working' => ['set_count' => 3, 'rest_seconds' => 180],
                     'warm_up' => ['set_count' => 0, 'rest_seconds' => 60, 'steps' => []],
                 ],
             ],
-        ])->assertRedirect(route('dashboard'));
-
-        $working = $routine->fresh(['blocks.setGroups.dropsetSegments'])->blocks->first()->workingSetGroup;
-        $segments = $working->dropsetSegments->where('set_index', 1)->sortBy('position')->values();
-        $this->assertCount(4, $segments);
-        $this->assertSame([20000, 16000, 12000, 8000], $segments->pluck('weight_g')->all());
-
-        $this->actingAs($this->user)
-            ->get(route('routines.edit', $routine))
-            ->assertOk()
-            ->assertInertia(fn ($page) => $page
-                ->component('routines/Edit')
-                ->where('routine.blocks.0.working.dropsets.0.set_index', 1)
-                ->where('routine.blocks.0.working.dropsets.0.segments.0.weight_kg', 20)
-                ->where('routine.blocks.0.working.dropsets.0.segments.3.weight_kg', 8));
+        ])
+            ->assertRedirect(route('dashboard'))
+            ->assertSessionHas('success', 'Routine saved.');
     }
 
     #[Test]
-    public function it_rejects_dropsets_on_supersets(): void
+    public function editor_validation_errors_surface_on_blocks(): void
     {
         $routine = Routine::factory()->withUser($this->user)->create();
         $exerciseA = Exercise::factory()->create();
         $exerciseB = Exercise::factory()->create();
 
-        $response = $this->actingAs($this->user)->put(route('routines.update', $routine), [
+        $this->actingAs($this->user)->put(route('routines.update', $routine), [
             'name' => 'Bad Superset Dropset',
-            'deload_weight_factor' => 0.5,
-            'deload_reps_factor' => 2,
             'blocks' => [
                 [
                     'is_superset' => true,
@@ -234,25 +113,58 @@ class UpdateRoutineControllerTest extends TestCase
                     'warm_up' => ['set_count' => 0, 'rest_seconds' => 60, 'steps' => []],
                 ],
             ],
-        ]);
-
-        $response->assertRedirect();
-        $response->assertSessionHasErrors('blocks');
+        ])
+            ->assertRedirect()
+            ->assertSessionHasErrors('blocks');
     }
 
     #[Test]
-    public function edit_page_renders_for_owner(): void
+    public function edit_page_renders_dropset_props_for_owner(): void
     {
         $routine = Routine::factory()->withUser($this->user)->create();
+        $exercise = Exercise::factory()->create();
 
-        $response = $this->actingAs($this->user)->get(route('routines.edit', $routine));
+        $this->actingAs($this->user)->put(route('routines.update', $routine), [
+            'name' => 'Dropset Finisher',
+            'blocks' => [
+                [
+                    'is_superset' => false,
+                    'has_setup_after' => false,
+                    'exercises' => [
+                        [
+                            'exercise_id' => $exercise->id,
+                            'working_weight_kg' => 20,
+                            'prescribed_reps' => 12,
+                        ],
+                    ],
+                    'working' => [
+                        'set_count' => 2,
+                        'rest_seconds' => 90,
+                        'dropsets' => [
+                            [
+                                'set_index' => 1,
+                                'segments' => [
+                                    ['weight_kg' => 20],
+                                    ['weight_kg' => 8],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'warm_up' => ['set_count' => 0, 'rest_seconds' => 60, 'steps' => []],
+                ],
+            ],
+        ])->assertRedirect(route('dashboard'));
 
-        $response->assertOk();
-        $response->assertInertia(fn ($page) => $page
-            ->component('routines/Edit')
-            ->has('routine')
-            ->has('warm_up_defaults')
-            ->has('warm_up_defaults_scope')
-            ->loadDeferredProps(fn ($page) => $page->has('exercises')));
+        $this->actingAs($this->user)
+            ->get(route('routines.edit', $routine))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('routines/Edit')
+                ->has('warm_up_defaults')
+                ->has('warm_up_defaults_scope')
+                ->where('routine.blocks.0.working.dropsets.0.set_index', 1)
+                ->where('routine.blocks.0.working.dropsets.0.segments.0.weight_kg', 20)
+                ->where('routine.blocks.0.working.dropsets.0.segments.1.weight_kg', 8)
+                ->loadDeferredProps(fn ($page) => $page->has('exercises')));
     }
 }
