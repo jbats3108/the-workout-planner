@@ -30,10 +30,12 @@ const settingsActive = computed(() => path.value.startsWith('/settings/profile')
 const itemClass = (active: boolean) =>
     [
         labeled.value
-            ? 'flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors'
-            : 'flex size-9 items-center justify-center rounded-md transition-colors',
+            ? 'flex w-full items-center gap-3 rounded-md px-3 py-3 text-base font-medium transition-colors'
+            : 'flex size-11 items-center justify-center rounded-md transition-colors',
         active ? 'bg-secondary text-primary' : 'text-muted-foreground hover:bg-secondary hover:text-foreground',
     ].join(' ');
+
+const iconClass = computed(() => (labeled.value ? 'size-5 shrink-0' : 'size-6 shrink-0'));
 
 const onNavigate = () => emit('navigate');
 
@@ -66,8 +68,8 @@ const settingsLinks: NavLink[] = [
 <template>
     <Link
         :href="route('dashboard')"
-        class="mb-6 text-sm font-bold tracking-wide"
-        :class="labeled ? 'self-start px-3' : ''"
+        class="mb-6 font-bold tracking-wide"
+        :class="labeled ? 'self-start px-3 text-base' : 'text-sm'"
         aria-label="OVRLOAD home"
         prefetch
         @click="onNavigate"
@@ -76,7 +78,7 @@ const settingsLinks: NavLink[] = [
         <span v-if="labeled" class="text-foreground">LOAD</span>
     </Link>
 
-    <nav class="flex flex-1 flex-col gap-1" :class="labeled ? 'items-stretch' : 'items-center'">
+    <nav class="flex flex-1 flex-col gap-1.5" :class="labeled ? 'items-stretch' : 'items-center'">
         <Link
             v-for="link in primaryLinks"
             :key="link.match"
@@ -86,12 +88,12 @@ const settingsLinks: NavLink[] = [
             prefetch
             @click="onNavigate"
         >
-            <component :is="link.icon" class="size-4 shrink-0" />
+            <component :is="link.icon" :class="iconClass" />
             <span v-if="labeled">{{ link.label }}</span>
         </Link>
     </nav>
 
-    <div class="flex flex-col gap-1" :class="labeled ? 'items-stretch' : 'items-center'">
+    <div class="flex flex-col gap-1.5" :class="labeled ? 'items-stretch' : 'items-center'">
         <template v-if="labeled">
             <p class="mb-1 px-3 text-xs tracking-[0.15em] text-muted-foreground uppercase">Settings</p>
             <Link
@@ -103,17 +105,17 @@ const settingsLinks: NavLink[] = [
                 prefetch
                 @click="onNavigate"
             >
-                <component :is="link.icon" class="size-4 shrink-0" />
+                <component :is="link.icon" :class="iconClass" />
                 <span>{{ link.label }}</span>
             </Link>
         </template>
 
         <Link v-else :href="route('profile.edit')" :class="itemClass(settingsActive)" aria-label="Settings" prefetch @click="onNavigate">
-            <Settings class="size-4" />
+            <Settings :class="iconClass" />
         </Link>
 
         <button type="button" :class="[itemClass(false), labeled ? 'justify-start' : '']" aria-label="Log out" @click="logout">
-            <LogOut class="size-4 shrink-0" />
+            <LogOut :class="iconClass" />
             <span v-if="labeled">Log out</span>
         </button>
     </div>

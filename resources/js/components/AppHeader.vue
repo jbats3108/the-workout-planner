@@ -17,12 +17,12 @@ const mobileOpen = ref(false);
 </script>
 
 <template>
-    <header class="flex h-12 shrink-0 items-center gap-3 border-b border-border px-3 text-muted-foreground md:px-4">
+    <header class="flex h-14 shrink-0 items-center gap-3 border-b border-border px-3 text-muted-foreground md:h-12 md:px-4">
         <Sheet v-model:open="mobileOpen">
             <SheetTrigger as-child>
                 <button
                     type="button"
-                    class="flex size-9 items-center justify-center rounded-md border border-border bg-secondary/40 text-xs font-bold tracking-wide md:hidden"
+                    class="flex size-11 items-center justify-center rounded-md border border-border bg-secondary/40 text-sm font-bold tracking-wide md:hidden"
                     aria-label="Open menu"
                 >
                     <span class="text-primary">OVR</span>
