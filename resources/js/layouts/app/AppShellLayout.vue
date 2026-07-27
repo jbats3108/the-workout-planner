@@ -1,0 +1,29 @@
+<script setup lang="ts">
+import AppContent from '@/components/AppContent.vue';
+import AppHeader from '@/components/AppHeader.vue';
+import AppShell from '@/components/AppShell.vue';
+import AppSidebar from '@/components/AppSidebar.vue';
+import type { BreadcrumbItemType } from '@/types';
+
+interface Props {
+    breadcrumbs?: BreadcrumbItemType[];
+}
+
+withDefaults(defineProps<Props>(), {
+    breadcrumbs: () => [],
+});
+</script>
+
+<template>
+    <AppShell variant="header">
+        <div class="flex min-h-svh w-full flex-col md:flex-row">
+            <AppSidebar />
+            <div class="flex min-w-0 flex-1 flex-col">
+                <AppHeader :breadcrumbs="breadcrumbs" />
+                <AppContent>
+                    <slot />
+                </AppContent>
+            </div>
+        </div>
+    </AppShell>
+</template>

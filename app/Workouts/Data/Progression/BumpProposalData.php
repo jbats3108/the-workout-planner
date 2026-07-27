@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Workouts\Data\Progression;
+
+use Spatie\LaravelData\Attributes\MapName;
+use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Mappers\SnakeCaseMapper;
+
+#[MapName(SnakeCaseMapper::class)]
+class BumpProposalData extends Data
+{
+    public function __construct(
+        public int $routineBlockExerciseId,
+        public string $exerciseName,
+        public int $fromWeightG,
+        public int $toWeightG,
+    ) {}
+}

@@ -1,0 +1,48 @@
+<?php
+
+namespace Tests\Feature\Dashboard;
+
+use App\Dashboard\Services\DashboardService;
+use App\Routines\Data\RoutineData;
+use App\Routines\Models\Routine;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\Helpers\UserHelper;
+use Tests\TestCase;
+
+class DashboardServiceTest extends TestCase
+{
+    use RefreshDatabase;
+    use UserHelper;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->seedUsers();
+
+        // Drop seeded routines
+        Routine::truncate();
+    }
+
+    #[Test]
+    public function it_returns_the_users_routines(): void
+    {
+        // Given
+        $routines = Routine::factory(5)->withUser($this->user)->create();
+
+        $dashboardService = new DashboardService;
+
+        // When
+        $dashboardData = $dashboardService->getDashboardData($this->user);
+
+        // Then
+        $dashboardRoutines = $dashboardData->routines;
+
+        $this->assertCount(5, $dashboardRoutines);
+
+        $routineData = $routines->map(fn (Routine $routine) => RoutineData::fromRoutine($routine));
+
+        $this->assertEquals($routineData, $dashboardRoutines);
+
+    }
+}

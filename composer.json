@@ -1,31 +1,34 @@
 {
     "schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/vue-starter-kit",
+    "name": "jbats3108/the-workout-planner",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "OVRLOAD — workout planning and logging.",
     "keywords": [
         "laravel",
-        "framework"
+        "inertia",
+        "workout"
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.2",
-        "inertiajs/inertia-laravel": "^2.0",
-        "laravel/framework": "^12.0",
-        "laravel/tinker": "^2.10.1",
+        "php": "^8.5",
+        "inertiajs/inertia-laravel": "^3.0",
+        "laravel/framework": "^13.0",
+        "laravel/tinker": "^3.0",
+        "sentry/sentry-laravel": "^4.27",
         "spatie/laravel-data": "^4.17",
-        "spatie/laravel-permission": "^6.21",
+        "spatie/laravel-permission": "^6.25",
         "tightenco/ziggy": "^2.4"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
-        "larastan/larastan": "*",
+        "larastan/larastan": "^3.9",
+        "laravel/boost": "^2.0",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.18",
         "laravel/sail": "^1.41",
         "mockery/mockery": "^1.6",
-        "nunomaduro/collision": "^8.6",
-        "phpunit/phpunit": "^11.5",
+        "nunomaduro/collision": "^8.8",
+        "phpunit/phpunit": "^13.0",
         "rector/rector": "^2.1"
     },
     "autoload": {
@@ -43,10 +46,12 @@
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php -r \"if (is_dir('.git') && is_dir('.githooks')) { @mkdir('.git/hooks', 0755, true); foreach (glob('.githooks/*') ?: [] as \\$hook) { if (!is_file(\\$hook)) continue; \\$name = basename(\\$hook); copy(\\$hook, '.git/hooks/' . \\$name); chmod('.git/hooks/' . \\$name, 0755); } }\""
         ],
         "post-update-cmd": [
-            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
+            "@php artisan boost:update --ansi"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
@@ -59,6 +64,10 @@
         "dev": [
             "Composer\\Config::disableProcessTimeout",
             "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite --kill-others"
+        ],
+        "dev:lan": [
+            "Composer\\Config::disableProcessTimeout",
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve --host=0.0.0.0 --port=8000\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite --kill-others"
         ],
         "dev:ssr": [
             "npm run build:ssr",

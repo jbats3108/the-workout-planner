@@ -1,28 +1,37 @@
 <?php
 
-use App\Http\Controllers\Exercises\DeleteExerciseController;
-use App\Http\Controllers\Exercises\IndexExerciseController;
-use App\Http\Controllers\Exercises\ShowExerciseController;
-use App\Http\Controllers\Exercises\StoreExerciseController;
-use App\Http\Controllers\MuscleGroups\DeleteMuscleGroupController;
-use App\Http\Controllers\MuscleGroups\IndexMuscleGroupsController;
-use App\Http\Controllers\MuscleGroups\StoreMuscleGroupController;
-use App\Http\Controllers\MuscleGroups\UpdateMuscleGroupController;
-use App\Http\Controllers\RoutineExercise\AddRoutineExerciseController;
-use App\Http\Controllers\Routines\DeleteRoutineController;
-use App\Http\Controllers\Routines\IndexRoutineController;
-use App\Http\Controllers\Routines\ShowRoutineController;
-use App\Http\Controllers\Routines\StoreRoutineController;
-use App\Http\Controllers\Routines\UpdateRoutineController;
-use App\Http\Controllers\RoutineTypes\DeleteRoutineTypeController;
-use App\Http\Controllers\RoutineTypes\IndexRoutineTypesController;
-use App\Http\Controllers\RoutineTypes\StoreRoutineTypeController;
-use App\Http\Controllers\ShowDashboardController;
-use App\Http\Controllers\Workouts\StoreWorkoutController;
-use App\Models\Exercise;
-use App\Models\MuscleGroup;
-use App\Models\RoutineType;
-use App\Models\Workouts\Workout;
+use App\Admin\Http\Controllers\IndexAdminExercisesController;
+use App\Admin\Http\Controllers\IndexAdminInvitesController;
+use App\Admin\Http\Controllers\IndexAdminMuscleGroupsController;
+use App\Admin\Http\Controllers\IndexAdminUsersController;
+use App\Admin\Http\Controllers\RevokeAdminInviteController;
+use App\Admin\Http\Controllers\ShowAdminController;
+use App\Admin\Http\Controllers\StoreAdminInviteController;
+use App\Dashboard\Http\Controllers\ShowDashboardController;
+use App\Exercises\Http\Controllers\DeleteExerciseController;
+use App\Exercises\Http\Controllers\StoreExerciseController;
+use App\Exercises\Models\Exercise;
+use App\MuscleGroups\Http\Controllers\DeleteMuscleGroupController;
+use App\MuscleGroups\Http\Controllers\StoreMuscleGroupController;
+use App\MuscleGroups\Models\MuscleGroup;
+use App\Routines\Http\Controllers\CreateRoutineController;
+use App\Routines\Http\Controllers\DeleteRoutineController;
+use App\Routines\Http\Controllers\EditRoutineController;
+use App\Routines\Http\Controllers\ShowRoutineController;
+use App\Routines\Http\Controllers\StoreRoutineController;
+use App\Routines\Http\Controllers\UpdateRoutineController;
+use App\Workouts\Http\Controllers\AddWorkingSetController;
+use App\Workouts\Http\Controllers\ApplyProgressionBumpsController;
+use App\Workouts\Http\Controllers\CompleteWorkoutSetController;
+use App\Workouts\Http\Controllers\DiscardWorkoutController;
+use App\Workouts\Http\Controllers\FinishWorkoutController;
+use App\Workouts\Http\Controllers\PlayWorkoutController;
+use App\Workouts\Http\Controllers\PromoteWorkoutSetToDropsetController;
+use App\Workouts\Http\Controllers\RemoveWorkingSetController;
+use App\Workouts\Http\Controllers\ShowProgressionController;
+use App\Workouts\Http\Controllers\SkipProgressionController;
+use App\Workouts\Http\Controllers\StoreWorkoutController;
+use App\Workouts\Models\Workout;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -33,13 +42,6 @@ Route::middleware('auth')->group(function (): void {
     Route::get('dashboard', ShowDashboardController::class)->name('dashboard');
 
     Route::prefix('exercises')->group(function (): void {
-
-        Route::get('/', IndexExerciseController::class)
-            ->name('exercises.index');
-
-        Route::get('/{exercise}', ShowExerciseController::class)
-            ->name('exercises.show');
-
         Route::post('/create', StoreExerciseController::class)
             ->can('create', Exercise::class)
             ->name('exercises.store');
@@ -50,12 +52,15 @@ Route::middleware('auth')->group(function (): void {
     });
 
     Route::prefix('routines')->group(function (): void {
-
-        Route::get('/', IndexRoutineController::class)
-            ->name('routines.index');
+        Route::get('/create', CreateRoutineController::class)
+            ->name('routines.create');
 
         Route::post('/create', StoreRoutineController::class)
-            ->name('routines.create');
+            ->name('routines.store');
+
+        Route::get('/{routine}/edit', EditRoutineController::class)
+            ->can('view', 'routine')
+            ->name('routines.edit');
 
         Route::get('/{routine}', ShowRoutineController::class)
             ->can('view', 'routine')
@@ -68,51 +73,72 @@ Route::middleware('auth')->group(function (): void {
         Route::put('/{routine}', UpdateRoutineController::class)
             ->can('update', 'routine')
             ->name('routines.update');
-
-        Route::post('/{routine}/add-exercise/{exercise}', AddRoutineExerciseController::class)
-            ->can('addExercise', 'routine')
-            ->name('routines.add-exercise');
-    });
-
-    Route::prefix('/routine-types')->group(function (): void {
-
-        Route::post('/create', StoreRoutineTypeController::class)
-            ->can('create', RoutineType::class)
-            ->name('routine-types.store');
-
-        Route::get('/', IndexRoutineTypesController::class)
-            ->name('routine-types.index');
-
-        Route::delete('/{routineType}', DeleteRoutineTypeController::class)
-            ->can('delete', RoutineType::class)
-            ->name('routine-types.delete');
-
     });
 
     Route::prefix('/muscle-groups')->group(function (): void {
-
         Route::post('/create', StoreMuscleGroupController::class)
             ->can('create', MuscleGroup::class)
             ->name('muscle-groups.store');
 
-        Route::get('/', IndexMuscleGroupsController::class)
-            ->name('muscle-groups.index');
-
         Route::delete('/{muscleGroup}', DeleteMuscleGroupController::class)
             ->can('delete', MuscleGroup::class)
             ->name('muscle-groups.delete');
-
-        Route::put('/{muscleGroup}', UpdateMuscleGroupController::class)
-            ->can('update', MuscleGroup::class)
-            ->name('muscle-groups.update');
     });
 
-    Route::prefix('/workout')->group(function (): void {
-
+    Route::prefix('/workouts')->group(function (): void {
         Route::post('/create/{routine}', StoreWorkoutController::class)
             ->can('create', [Workout::class, 'routine'])
-            ->name('workout.store');
+            ->name('workouts.store');
 
+        Route::get('/{workout}/play', PlayWorkoutController::class)
+            ->can('view', 'workout')
+            ->name('workouts.play');
+
+        Route::post('/{workout}/sets/{set}', CompleteWorkoutSetController::class)
+            ->can('update', 'workout')
+            ->name('workouts.sets.complete');
+
+        Route::post('/{workout}/sets/{set}/promote-dropset', PromoteWorkoutSetToDropsetController::class)
+            ->can('update', 'workout')
+            ->name('workouts.sets.promote-dropset');
+
+        Route::post('/{workout}/blocks/{block}/working-sets', AddWorkingSetController::class)
+            ->can('update', 'workout')
+            ->name('workouts.working-sets.add');
+
+        Route::delete('/{workout}/sets/{set}', RemoveWorkingSetController::class)
+            ->can('update', 'workout')
+            ->name('workouts.sets.remove');
+
+        Route::post('/{workout}/finish', FinishWorkoutController::class)
+            ->can('update', 'workout')
+            ->name('workouts.finish');
+
+        Route::post('/{workout}/discard', DiscardWorkoutController::class)
+            ->can('update', 'workout')
+            ->name('workouts.discard');
+
+        Route::get('/{workout}/progression', ShowProgressionController::class)
+            ->can('view', 'workout')
+            ->name('workouts.progression');
+
+        Route::post('/{workout}/progression', ApplyProgressionBumpsController::class)
+            ->can('applyProgression', 'workout')
+            ->name('workouts.progression.apply');
+
+        Route::post('/{workout}/progression/skip', SkipProgressionController::class)
+            ->can('applyProgression', 'workout')
+            ->name('workouts.progression.skip');
+    });
+
+    Route::prefix('admin')->middleware('role:admin')->group(function (): void {
+        Route::get('/', ShowAdminController::class)->name('admin.index');
+        Route::get('/exercises', IndexAdminExercisesController::class)->name('admin.exercises');
+        Route::get('/muscle-groups', IndexAdminMuscleGroupsController::class)->name('admin.muscle-groups');
+        Route::get('/users', IndexAdminUsersController::class)->name('admin.users');
+        Route::get('/invites', IndexAdminInvitesController::class)->name('admin.invites');
+        Route::post('/invites', StoreAdminInviteController::class)->name('admin.invites.store');
+        Route::post('/invites/{invite}/revoke', RevokeAdminInviteController::class)->name('admin.invites.revoke');
     });
 });
 

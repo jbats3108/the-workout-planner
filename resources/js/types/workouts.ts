@@ -1,10 +1,2 @@
-export type Routine = {
-    name: string;
-    owner_name: string;
-    routine_type: string;
-};
-
-export type RoutineType = {
-    name: string;
-    slug: string;
-};
+/** @deprecated Import from `@/routines/types` instead. */
+export type { Routine } from '@/routines/types';

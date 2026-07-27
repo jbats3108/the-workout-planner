@@ -2,8 +2,11 @@
 
 namespace Database\Factories\Workouts;
 
-use App\Models\Routine;
-use App\Models\Workouts\Workout;
+use App\Routines\Models\Routine;
+use App\Users\Models\User;
+use App\Workouts\Enums\WorkoutMode;
+use App\Workouts\Enums\WorkoutStatus;
+use App\Workouts\Models\Workout;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 
@@ -15,7 +18,10 @@ class WorkoutFactory extends Factory
     public function definition(): array
     {
         return [
+            'user_id' => User::factory(),
             'routine_id' => Routine::factory(),
+            'mode' => WorkoutMode::Normal,
+            'status' => WorkoutStatus::InProgress,
             'notes' => null,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),

@@ -19,8 +19,10 @@ export interface NavItem {
 
 export type AppPageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
     name: string;
-    quote: { message: string; author: string };
     auth: Auth;
+    flash: {
+        success: string | null;
+    };
     ziggy: Config & { location: string };
     sidebarOpen: boolean;
 };
@@ -33,6 +35,7 @@ export interface User {
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;
+    is_admin: boolean;
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;

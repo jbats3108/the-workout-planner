@@ -2,9 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\Routine;
-use App\Models\RoutineType;
-use App\Models\User;
+use App\Routines\Models\Routine;
+use App\Users\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 
@@ -19,15 +18,16 @@ class RoutineFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-            'routine_type_id' => RoutineType::factory(),
-            'owner_id' => User::factory(),
+            'user_id' => User::factory(),
+            'deload_weight_factor' => 0.5,
+            'deload_reps_factor' => 2,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];
     }
 
-    public function withOwner(User $user): RoutineFactory
+    public function withUser(User $user): RoutineFactory
     {
-        return $this->state(fn (array $attributes) => ['owner_id' => $user->id]);
+        return $this->state(fn (array $attributes) => ['user_id' => $user->id]);
     }
 }

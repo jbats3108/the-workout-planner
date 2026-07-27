@@ -1,0 +1,17 @@
+{
+    "agents": [
+        "cursor",
+        "copilot",
+        "zed"
+    ],
+    "cloud": false,
+    "guidelines": true,
+    "mcp": true,
+    "nightwatch": false,
+    "sail": false,
+    "skills": [
+        "laravel-best-practices",
+        "inertia-vue-development",
+        "tailwindcss-development"
+    ]
+}

@@ -2,10 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Enums\Difficulty;
-use App\Enums\MovementType;
-use App\Models\Exercise;
-use App\Models\MuscleGroup;
+use App\Exercises\Enums\ExerciseEquipment;
+use App\Exercises\Models\Exercise;
+use App\MuscleGroups\Models\MuscleGroup;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 
@@ -23,10 +22,23 @@ class ExerciseFactory extends Factory
             'slug' => $this->faker->slug(),
             'primary_muscle_group_id' => MuscleGroup::factory(),
             'secondary_muscle_group_id' => null,
-            'movement_type' => MovementType::PULL,
-            'difficulty' => Difficulty::BEGINNER,
+            'equipment' => null,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];
+    }
+
+    public function barbell(): static
+    {
+        return $this->state(fn (): array => [
+            'equipment' => ExerciseEquipment::Barbell,
+        ]);
+    }
+
+    public function dumbbell(): static
+    {
+        return $this->state(fn (): array => [
+            'equipment' => ExerciseEquipment::Dumbbell,
+        ]);
     }
 }

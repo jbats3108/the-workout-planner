@@ -1,7 +1,9 @@
 <?php
 
-use App\Http\Controllers\Settings\PasswordController;
-use App\Http\Controllers\Settings\ProfileController;
+use App\Settings\Http\Controllers\PasswordController;
+use App\Settings\Http\Controllers\ProfileController;
+use App\Settings\Http\Controllers\TrainingDefaultsController;
+use App\Settings\Http\Controllers\UpdatePlateProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -19,4 +21,9 @@ Route::middleware('auth')->group(function (): void {
         ->name('password.update');
 
     Route::get('settings/appearance', fn () => Inertia::render('settings/Appearance'))->name('appearance');
+
+    Route::get('settings/training', [TrainingDefaultsController::class, 'edit'])->name('training.edit');
+    Route::put('settings/training', [TrainingDefaultsController::class, 'update'])->name('training.update');
+    Route::post('settings/training/reset', [TrainingDefaultsController::class, 'reset'])->name('training.reset');
+    Route::put('settings/training/plates', UpdatePlateProfileController::class)->name('training.plates.update');
 });

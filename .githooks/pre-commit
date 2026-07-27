@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT"
+
+if [[ ! -x vendor/bin/pint ]]; then
+    echo "pre-commit: vendor/bin/pint missing — run composer install" >&2
+    exit 1
+fi
+
+# Format only dirty PHP files; re-stage any Pint rewrites.
+vendor/bin/pint --dirty --format agent
+
+mapfile -t staged_php < <(git diff --cached --name-only --diff-filter=ACMR -- '*.php' || true)
+if ((${#staged_php[@]} > 0)); then
+    git add -- "${staged_php[@]}"
+fi
+
+if [[ ! -d node_modules ]]; then
+    echo "pre-commit: node_modules missing — run npm install" >&2
+    exit 1
+fi
+
+mapfile -t staged_fe < <(git diff --cached --name-only --diff-filter=ACMR -- \
+    '*.js' '*.ts' '*.vue' '*.css' '*.mjs' '*.cjs' || true)
+
+if ((${#staged_fe[@]} > 0)); then
+    npx eslint --fix "${staged_fe[@]}"
+    npx prettier --write "${staged_fe[@]}"
+    git add -- "${staged_fe[@]}"
+fi
+
+npm run lint:check
+npm run format:check
