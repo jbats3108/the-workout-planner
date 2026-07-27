@@ -9,18 +9,21 @@ use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 
 #[MapName(SnakeCaseMapper::class)]
-class ProgressionPageData extends Data
+class ProgressionSessionData extends Data
 {
     /**
      * @param  DataCollection<int, BumpProposalData>  $bumps
      * @param  DataCollection<int, UndoBumpProposalData>  $undos
      */
     public function __construct(
-        public int $workoutId,
-        public string $routineName,
         #[DataCollectionOf(BumpProposalData::class)]
         public DataCollection $bumps,
         #[DataCollectionOf(UndoBumpProposalData::class)]
-        public DataCollection $undos = new DataCollection(UndoBumpProposalData::class, []),
+        public DataCollection $undos,
     ) {}
+
+    public function hasActions(): bool
+    {
+        return $this->bumps->count() > 0 || $this->undos->count() > 0;
+    }
 }
