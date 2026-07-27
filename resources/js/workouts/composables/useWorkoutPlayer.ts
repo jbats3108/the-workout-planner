@@ -2,6 +2,9 @@ import { gramsToKg } from '@/lib/plateCalculator';
 import { formatRestSeconds, groupLabel, setupHintText, workoutProgressLabel } from '@/workouts/lib/labels';
 import { findFirstIncompleteFocus, flattenPlayerSets, setupKey, type FlatSetEntry } from '@/workouts/lib/focus';
 import { formatLoadStack, formatPlateStackLabel, resolvePlateLoad } from '@/workouts/lib/plates';
+import { preparePlayerInteraction } from '@/workouts/lib/playerInteraction';
+import { notifyRestEnded } from '@/workouts/lib/restAlert';
+import { releaseScreenWake, requestScreenWake } from '@/workouts/lib/screenWake';
 import {
     defaultPromoteSegments,
     finishesWarmUpGroup,
@@ -35,9 +38,10 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
     const leaveConfirmed = ref(false);
 
     let restTimer: ReturnType<typeof setInterval> | null = null;
-    let wakeLock: WakeLockSentinel | null = null;
+    let restEndsAt = 0;
     let removeBeforeListener: (() => void) | undefined;
     let removeVisibilityListener: (() => void) | undefined;
+    let removeRestVisibilityListener: (() => void) | undefined;
 
     const flatSets = computed(() => flattenPlayerSets(props.workout.blocks));
 
@@ -57,7 +61,30 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
             clearInterval(restTimer);
             restTimer = null;
         }
+        restEndsAt = 0;
         restSecondsLeft.value = 0;
+        removeRestVisibilityListener?.();
+        removeRestVisibilityListener = undefined;
+    };
+
+    const finishRest = () => {
+        clearRest();
+        notifyRestEnded();
+        focus.value = firstIncomplete();
+    };
+
+    const syncRestFromClock = () => {
+        if (restEndsAt <= 0) {
+            return;
+        }
+
+        const remaining = Math.ceil((restEndsAt - Date.now()) / 1000);
+        if (remaining <= 0) {
+            finishRest();
+            return;
+        }
+
+        restSecondsLeft.value = remaining;
     };
 
     const startRest = (seconds: number) => {
@@ -67,14 +94,19 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
             focus.value = firstIncomplete();
             return;
         }
+
+        restEndsAt = Date.now() + seconds * 1000;
         restSecondsLeft.value = seconds;
-        restTimer = setInterval(() => {
-            restSecondsLeft.value -= 1;
-            if (restSecondsLeft.value <= 0) {
-                clearRest();
-                focus.value = firstIncomplete();
+        syncRestFromClock();
+        restTimer = setInterval(syncRestFromClock, 1000);
+
+        const onRestVisibility = () => {
+            if (restEndsAt > 0) {
+                syncRestFromClock();
             }
-        }, 1000);
+        };
+        document.addEventListener('visibilitychange', onRestVisibility);
+        removeRestVisibilityListener = () => document.removeEventListener('visibilitychange', onRestVisibility);
     };
 
     watch(
@@ -148,26 +180,11 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
     };
 
     const requestWakeLock = async () => {
-        if (!('wakeLock' in navigator)) {
-            return;
-        }
-        try {
-            wakeLock = await navigator.wakeLock.request('screen');
-            wakeLock.addEventListener('release', () => {
-                wakeLock = null;
-            });
-        } catch {
-            // Browser may deny (battery saver, permissions policy, etc.)
-        }
+        await requestScreenWake();
     };
 
     const releaseWakeLock = async () => {
-        try {
-            await wakeLock?.release();
-        } catch {
-            // already released
-        }
-        wakeLock = null;
+        await releaseScreenWake();
     };
 
     onBeforeUnmount(() => {
@@ -219,6 +236,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         if (!current.value || props.workout.status !== 'in_progress') {
             return;
         }
+        preparePlayerInteraction();
         const { block, set } = current.value;
         let restAfter = shouldRestAfter(block, set) ? set.rest_seconds : 0;
         if (restAfter > 0 && block.has_setup_after_warm_up && finishesWarmUpGroup(block, set)) {
@@ -297,6 +315,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
     };
 
     const skipRest = () => {
+        preparePlayerInteraction();
         clearRest();
         focus.value = firstIncomplete();
     };
@@ -305,6 +324,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         if (focus.value.kind !== 'setup') {
             return;
         }
+        preparePlayerInteraction();
         const phase = focus.value.phase;
         const block = props.workout.blocks[focus.value.blockIndex];
         setupDone.value[setupKey(block.id, phase)] = true;

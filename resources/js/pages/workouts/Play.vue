@@ -12,8 +12,9 @@ import {
     workoutPlayerKey,
     type PlayWorkoutProps,
 } from '@/workouts/composables/useWorkoutPlayer';
+import { preparePlayerInteraction } from '@/workouts/lib/playerInteraction';
 import { Head } from '@inertiajs/vue3';
-import { provide } from 'vue';
+import { provide, ref } from 'vue';
 
 const props = defineProps<PlayWorkoutProps>();
 
@@ -21,11 +22,22 @@ const player = createWorkoutPlayer(props);
 provide(workoutPlayerKey, player);
 
 const { workout, focus, current, currentBlock, restSecondsLeft } = player;
+
+const primedInteraction = ref(false);
+
+const primeOnFirstInteraction = () => {
+    if (primedInteraction.value) {
+        return;
+    }
+    primedInteraction.value = true;
+    preparePlayerInteraction();
+};
 </script>
 
 <template>
     <div
         class="safe-pt safe-pb safe-px mx-auto flex min-h-dvh w-full max-w-lg flex-col overscroll-none bg-background text-foreground"
+        @pointerdown="primeOnFirstInteraction"
     >
         <Head :title="`Play · ${workout.routine_name}`" />
 

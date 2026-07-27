@@ -17,12 +17,11 @@ Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domai
 Active queue ordered **easiest → hardest** (gym-test 2026-07-26 + remaining product). Shipped items stay below for history.
 
 1. **Complete-then-log UX** — Done → confirm sheet → **Log set** (grill notes below). Main stage display-only; edit in sheet.
-2. **Rest-end alert + leave-during-rest** — Sound/vibration when rest hits zero; persistent (or at least background) notification so users can leave the app during Rest and still get pinged. Likely needs Notification permission; full background reliability may touch PWA / service worker (deferred in app-like grill).
-3. **Finished workout history** — browse/edit finished workouts; re-eval progression when eligible (grill notes below; ADR-0004)
+2. **Finished workout history** — browse/edit finished workouts; re-eval progression when eligible (grill notes below; ADR-0004)
 
 ### Shipped (recent)
 
-1. **Weight entry 2dp** — ~~Play/editor weight `step="0.01"` + `inputmode="decimal"`; `28.75` accepted~~ done
+1. **Rest-end alert + leave-during-rest** — sound/vibration when rest hits zero in foreground; notification permission on first rest + background notification when tab is hidden; clock-based rest sync on visibility return
 2. **Prev set weight → next** — ~~pending-rest blocks focus race; client `lastWorkingWeightKg` + prior logged weight~~ done
 3. **Keep screen awake in Play** — ~~Screen Wake Lock while player mounted; re-request on visibility~~ done
 4. **Preview next during rest / setup** — ~~Up next card: exercise, set, weight/reps, plate stack when barbell~~ done

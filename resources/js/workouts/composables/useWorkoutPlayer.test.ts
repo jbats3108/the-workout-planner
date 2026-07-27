@@ -2,6 +2,8 @@ import { defineComponent, h } from 'vue';
 import { mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createWorkoutPlayer, useWorkoutPlayer, workoutPlayerKey } from '@/workouts/composables/useWorkoutPlayer';
+import * as playerInteraction from '@/workouts/lib/playerInteraction';
+import * as restAlert from '@/workouts/lib/restAlert';
 import { inertiaMocks } from '@/test/inertiaMocks';
 import { plateProfile, playerBlock, playerSet, workoutPayload } from '@/test/factories';
 
@@ -23,6 +25,8 @@ function mountPlayer(overrides: Parameters<typeof workoutPayload>[0] = {}) {
 describe('createWorkoutPlayer', () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        vi.spyOn(playerInteraction, 'preparePlayerInteraction').mockImplementation(() => {});
+        vi.spyOn(restAlert, 'notifyRestEnded').mockImplementation(() => {});
         vi.stubGlobal(
             'route',
             vi.fn((name: string, _params?: unknown) => `/${String(name)}`),
@@ -142,9 +146,32 @@ describe('createWorkoutPlayer', () => {
         });
         player.completeSet();
         expect(player.restSecondsLeft.value).toBe(90);
+        expect(playerInteraction.preparePlayerInteraction).toHaveBeenCalled();
         player.skipRest();
         expect(player.restSecondsLeft.value).toBe(0);
         expect(player.focus.value).toEqual({ kind: 'set', blockIndex: 0, setId: 1 });
+    });
+
+    it('alerts when rest timer completes', () => {
+        vi.useFakeTimers();
+        vi.setSystemTime(new Date('2026-01-01T12:00:00Z'));
+        inertiaMocks().inertiaFormPost.mockImplementation((_url, options) => {
+            options?.onSuccess?.();
+        });
+        const player = mountPlayer({
+            blocks: [
+                playerBlock({
+                    sets: [
+                        playerSet({ id: 1, completed: false, rest_seconds: 3 }),
+                        playerSet({ id: 2, set_index: 1, completed: false }),
+                    ],
+                }),
+            ],
+        });
+        player.completeSet();
+        vi.advanceTimersByTime(3000);
+        expect(restAlert.notifyRestEnded).toHaveBeenCalled();
+        expect(player.restSecondsLeft.value).toBe(0);
     });
 
     it('acknowledges setup after warm-up', () => {
