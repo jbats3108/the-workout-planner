@@ -3,7 +3,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import type { Routine } from '@/routines/types';
 import { useFlashSuccess } from '@/shared/composables/useFlashSuccess';
 import { type BreadcrumbItem } from '@/types';
-import type { InProgressWorkout } from '@/workouts/types';
+import type { InProgressWorkout, RecentFinishedWorkout } from '@/workouts/types';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { Pencil, Trash2 } from 'lucide-vue-next';
 import { computed } from 'vue';
@@ -12,6 +12,7 @@ const props = defineProps<{
     data: {
         routines: Routine[];
         in_progress_workout: InProgressWorkout | null;
+        recent_finished_workouts: RecentFinishedWorkout[];
     };
 }>();
 
@@ -51,6 +52,11 @@ const deleteRoutine = (routine: Routine) => {
         return;
     }
     router.delete(route('routines.delete', routine.id));
+};
+
+const formatFinishedAt = (iso: string) => {
+    if (!iso) return '';
+    return new Date(iso).toLocaleDateString(undefined, { dateStyle: 'medium' });
 };
 </script>
 
@@ -93,6 +99,24 @@ const deleteRoutine = (routine: Routine) => {
                     >
                         Abandon
                     </button>
+                </div>
+            </div>
+
+            <div v-if="data.recent_finished_workouts.length" class="space-y-3">
+                <div class="flex items-center justify-between gap-3">
+                    <h2 class="text-xl font-semibold">Recent</h2>
+                    <Link :href="route('history.index')" class="text-sm text-primary hover:underline">All history</Link>
+                </div>
+                <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    <Link
+                        v-for="workout in data.recent_finished_workouts"
+                        :key="workout.id"
+                        :href="route('history.show', workout.id)"
+                        class="rounded-xl border border-border bg-card px-4 py-3 transition-colors hover:border-primary/40"
+                    >
+                        <p class="font-medium">{{ workout.routine_name }}</p>
+                        <p class="mt-1 font-mono text-xs text-muted-foreground">{{ workout.mode }} · {{ formatFinishedAt(workout.finished_at) }}</p>
+                    </Link>
                 </div>
             </div>
 

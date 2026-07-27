@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link, router, usePage } from '@inertiajs/vue3';
-import { Dumbbell, LayoutGrid, LogOut, Palette, Settings, Shield, UserRound } from 'lucide-vue-next';
+import { Dumbbell, History, LayoutGrid, LogOut, Palette, Settings, Shield, UserRound } from 'lucide-vue-next';
 import { computed, type Component } from 'vue';
 import { route as ziggyRoute } from 'ziggy-js';
 
@@ -48,6 +48,7 @@ type NavLink = { href: string; label: string; icon: Component; match: string };
 const primaryLinks = computed((): NavLink[] => {
     const links: NavLink[] = [
         { href: route('dashboard'), label: 'Dashboard', icon: LayoutGrid, match: '/dashboard' },
+        { href: route('history.index'), label: 'History', icon: History, match: '/history' },
         { href: route('training.edit'), label: 'Training', icon: Dumbbell, match: '/settings/training' },
     ];
     if (isAdmin.value) {
