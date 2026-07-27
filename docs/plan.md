@@ -2,6 +2,10 @@
 
 Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domain language stays in `CONTEXT.md`; hard decisions stay in `docs/adr/`.
 
+**Grill cleanup:** when a grilled feature ships, delete its `## Grill: …` section. Move any still-open deferred bullets into **Parking lot** (or **Next**); do not keep decided implementation notes here.
+
+**Notion inbox:** after pulling bullets from Notion [Ovrload](https://app.notion.com/p/3aae5dd99f0c80ad928ade1a5c6b0749) into this file, clear **only** the list items under `## Backlog:` — leave that header and a single empty bullet (`-`). Do not replace the whole page or delete child pages / other sections.
+
 ## Now (recently shipped)
 
 - [x] v2 schema + domain models (grams, set-group `type`, mirror workout snapshots)
