@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import InputError from '@/components/InputError.vue';
+import PasswordInput from '@/components/PasswordInput.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -59,9 +60,8 @@ const submit = () => {
                             Forgot password?
                         </TextLink>
                     </div>
-                    <Input
+                    <PasswordInput
                         id="password"
-                        type="password"
                         required
                         :tabindex="2"
                         autocomplete="current-password"
