@@ -111,6 +111,7 @@ Deferred: sheet swipe/backdrop dismiss; auto-focus weight/reps; redesign **+ Set
 
 ## Parking lot
 
+- **Ko-Fi on landing page** — optional tip link when beta-launching at the gym; target ~$25/mo to cover Laravel Cloud at ~200 active users (no mandatory subs yet)
 - Per-exercise strength-over-time (charts / PR timeline) — needs its own grill
 - Ad-hoc setup from player (beyond planned `has_setup_after`)
 - Transition duration as a stored preference (today client-side for supersets)
