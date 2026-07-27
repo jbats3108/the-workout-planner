@@ -38,6 +38,12 @@ jobs:
       - name: Lint Frontend
         run: npm run lint
 
+      - name: Typecheck Frontend
+        run: npm run typecheck
+
+      - name: Frontend Unit Tests
+        run: npm run test:coverage
+
       - name: Commit Changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:

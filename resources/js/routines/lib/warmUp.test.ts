@@ -1,0 +1,47 @@
+import { describe, expect, it } from 'vitest';
+import {
+    addWarmUpStep,
+    clearWarmUp,
+    removeWarmUpStep,
+    setWarmUpText,
+    warmUpText,
+} from '@/routines/lib/warmUp';
+import { block } from '@/test/factories';
+
+describe('warmUpText', () => {
+    it('formats compact steps', () => {
+        const b = block({
+            warm_up: { set_count: 2, rest_seconds: 60, steps: [{ percent: 40, reps: 5 }, { percent: 60, reps: 3 }] },
+        });
+        expect(warmUpText(b)).toBe('40x5, 60x3');
+    });
+});
+
+describe('setWarmUpText', () => {
+    it('parses percent×reps and legacy percent-only', () => {
+        const b = block();
+        setWarmUpText(b, '40x5, 60, 80x1');
+        expect(b.warm_up.steps).toEqual([
+            { percent: 40, reps: 5 },
+            { percent: 60, reps: 5 },
+            { percent: 80, reps: 1 },
+        ]);
+        expect(b.warm_up.set_count).toBe(3);
+    });
+
+    it('clears setup-after-warm-up when cleared', () => {
+        const b = block({ has_setup_after_warm_up: true });
+        clearWarmUp(b);
+        expect(b.has_setup_after_warm_up).toBe(false);
+    });
+});
+
+describe('warm-up step helpers', () => {
+    it('adds and removes steps', () => {
+        const b = block({ warm_up: { set_count: 0, rest_seconds: 60, steps: [] } });
+        addWarmUpStep(b);
+        expect(b.warm_up.steps).toHaveLength(1);
+        removeWarmUpStep(b, 0);
+        expect(b.warm_up.steps).toHaveLength(0);
+    });
+});

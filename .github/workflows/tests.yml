@@ -49,5 +49,14 @@ jobs:
       - name: Build Assets
         run: npm run build
 
+      - name: Frontend Unit Tests
+        run: npm run test
+
+      - name: Install Playwright Browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: End-to-End Tests
+        run: npm run test:e2e
+
       - name: Tests
         run: ./vendor/bin/phpunit
