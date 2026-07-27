@@ -31,4 +31,9 @@ class WorkoutPolicy
     {
         return $workout->user->is($user) && $workout->status === WorkoutStatus::Finished;
     }
+
+    public function editHistory(User $user, Workout $workout): bool
+    {
+        return $workout->user->is($user) && $workout->status === WorkoutStatus::Finished;
+    }
 }

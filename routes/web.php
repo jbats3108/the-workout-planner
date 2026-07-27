@@ -25,12 +25,15 @@ use App\Workouts\Http\Controllers\ApplyProgressionBumpsController;
 use App\Workouts\Http\Controllers\CompleteWorkoutSetController;
 use App\Workouts\Http\Controllers\DiscardWorkoutController;
 use App\Workouts\Http\Controllers\FinishWorkoutController;
+use App\Workouts\Http\Controllers\IndexWorkoutHistoryController;
 use App\Workouts\Http\Controllers\PlayWorkoutController;
 use App\Workouts\Http\Controllers\PromoteWorkoutSetToDropsetController;
 use App\Workouts\Http\Controllers\RemoveWorkingSetController;
 use App\Workouts\Http\Controllers\ShowProgressionController;
+use App\Workouts\Http\Controllers\ShowWorkoutHistoryController;
 use App\Workouts\Http\Controllers\SkipProgressionController;
 use App\Workouts\Http\Controllers\StoreWorkoutController;
+use App\Workouts\Http\Controllers\UpdateWorkoutHistorySetController;
 use App\Workouts\Models\Workout;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -83,6 +86,18 @@ Route::middleware('auth')->group(function (): void {
         Route::delete('/{muscleGroup}', DeleteMuscleGroupController::class)
             ->can('delete', MuscleGroup::class)
             ->name('muscle-groups.delete');
+    });
+
+    Route::prefix('/history')->group(function (): void {
+        Route::get('/', IndexWorkoutHistoryController::class)->name('history.index');
+
+        Route::get('/{workout}', ShowWorkoutHistoryController::class)
+            ->can('view', 'workout')
+            ->name('history.show');
+
+        Route::put('/{workout}/sets/{set}', UpdateWorkoutHistorySetController::class)
+            ->can('editHistory', 'workout')
+            ->name('history.sets.update');
     });
 
     Route::prefix('/workouts')->group(function (): void {
