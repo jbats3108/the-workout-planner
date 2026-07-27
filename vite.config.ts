@@ -2,8 +2,29 @@ import inertia from '@inertiajs/vite';
 import vue from '@vitejs/plugin-vue';
 import laravel from 'laravel-vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig, loadEnv, type Plugin } from 'vite';
 import vueDevtools from 'vite-plugin-vue-devtools';
+
+/**
+ * @inertiajs/vite SSR dev mode injects CSS via resolvedUrls.local (localhost), ignoring
+ * server.origin. Rewrite local to the LAN origin so phones can load SSR stylesheets.
+ */
+function lanSsrDevOrigin(): Plugin {
+    return {
+        name: 'lan-ssr-dev-origin',
+        configureServer(server) {
+            server.httpServer?.once('listening', () => {
+                const origin = server.config.server.origin?.replace(/\/$/, '');
+
+                if (!origin || !server.resolvedUrls?.local?.length) {
+                    return;
+                }
+
+                server.resolvedUrls.local[0] = new URL(server.config.base, `${origin}/`).href;
+            });
+        },
+    };
+}
 
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd(), '');
@@ -37,6 +58,7 @@ export default defineConfig(({ mode }) => {
                 },
             }),
             vueDevtools(),
+            ...(shareOnLan ? [lanSsrDevOrigin()] : []),
         ],
         server: shareOnLan
             ? {
