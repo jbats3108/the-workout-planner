@@ -122,7 +122,7 @@ const formatFinishedAt = (iso: string) => {
             </div>
 
             <div class="grid auto-rows-min gap-3 md:grid-cols-3">
-                <div v-for="routine in props.data.routines" :key="routine.id" class="relative rounded-xl border border-border bg-card p-4 pb-10">
+                <div v-for="routine in props.data.routines" :key="routine.id" class="rounded-xl border border-border bg-card p-4">
                     <div>
                         <h3 class="text-lg font-semibold">{{ routine.name }}</h3>
                         <p class="mt-1 font-mono text-xs text-muted-foreground">
@@ -130,56 +130,58 @@ const formatFinishedAt = (iso: string) => {
                         </p>
                     </div>
                     <p v-if="!routine.can_start" class="mt-3 text-xs text-muted-foreground">Add exercises in the editor before starting.</p>
-                    <div class="mt-4 flex flex-wrap gap-2">
-                        <button
-                            type="button"
-                            class="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground disabled:opacity-40"
-                            :disabled="!canStart(routine)"
-                            :title="
-                                !routine.can_start
-                                    ? 'Add exercises first'
-                                    : data.in_progress_workout
-                                      ? 'Finish or resume the current workout'
-                                      : 'Start workout'
-                            "
-                            @click="startWorkout(routine.id, 'normal')"
-                        >
-                            Start
-                        </button>
-                        <button
-                            type="button"
-                            class="rounded-full border border-border px-4 py-2 text-xs text-foreground/80 disabled:opacity-40"
-                            :disabled="!canStart(routine)"
-                            :title="
-                                !routine.can_start
-                                    ? 'Add exercises first'
-                                    : data.in_progress_workout
-                                      ? 'Finish or resume the current workout'
-                                      : 'Start deload'
-                            "
-                            @click="startWorkout(routine.id, 'deload')"
-                        >
-                            Deload
-                        </button>
-                    </div>
-                    <div class="absolute right-3 bottom-3 flex items-center gap-1">
-                        <Link
-                            :href="route('routines.edit', routine.id)"
-                            class="rounded p-2 text-muted-foreground transition-colors hover:text-primary"
-                            title="Edit routine"
-                            aria-label="Edit routine"
-                        >
-                            <Pencil class="size-5" />
-                        </Link>
-                        <button
-                            type="button"
-                            class="rounded p-2 text-destructive transition-opacity hover:opacity-80"
-                            title="Delete routine"
-                            aria-label="Delete routine"
-                            @click="deleteRoutine(routine)"
-                        >
-                            <Trash2 class="size-5" />
-                        </button>
+                    <div class="mt-4 flex flex-wrap items-center justify-between gap-2">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button
+                                type="button"
+                                class="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-40"
+                                :disabled="!canStart(routine)"
+                                :title="
+                                    !routine.can_start
+                                        ? 'Add exercises first'
+                                        : data.in_progress_workout
+                                          ? 'Finish or resume the current workout'
+                                          : 'Start workout'
+                                "
+                                @click="startWorkout(routine.id, 'normal')"
+                            >
+                                Start
+                            </button>
+                            <button
+                                type="button"
+                                class="rounded-full border border-border px-5 py-2.5 text-sm text-foreground/80 disabled:opacity-40"
+                                :disabled="!canStart(routine)"
+                                :title="
+                                    !routine.can_start
+                                        ? 'Add exercises first'
+                                        : data.in_progress_workout
+                                          ? 'Finish or resume the current workout'
+                                          : 'Start deload'
+                                "
+                                @click="startWorkout(routine.id, 'deload')"
+                            >
+                                Deload
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <Link
+                                :href="route('routines.edit', routine.id)"
+                                class="rounded p-2 text-muted-foreground transition-colors hover:text-primary"
+                                title="Edit routine"
+                                aria-label="Edit routine"
+                            >
+                                <Pencil class="size-5" />
+                            </Link>
+                            <button
+                                type="button"
+                                class="rounded p-2 text-destructive transition-opacity hover:opacity-80"
+                                title="Delete routine"
+                                aria-label="Delete routine"
+                                @click="deleteRoutine(routine)"
+                            >
+                                <Trash2 class="size-5" />
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
