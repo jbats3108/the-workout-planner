@@ -165,20 +165,20 @@ const formatFinishedAt = (iso: string) => {
                     <div class="absolute right-3 bottom-3 flex items-center gap-1">
                         <Link
                             :href="route('routines.edit', routine.id)"
-                            class="rounded p-1 text-muted-foreground transition-colors hover:text-primary"
+                            class="rounded p-2 text-muted-foreground transition-colors hover:text-primary"
                             title="Edit routine"
                             aria-label="Edit routine"
                         >
-                            <Pencil class="size-3.5" />
+                            <Pencil class="size-5" />
                         </Link>
                         <button
                             type="button"
-                            class="rounded p-1 text-destructive transition-opacity hover:opacity-80"
+                            class="rounded p-2 text-destructive transition-opacity hover:opacity-80"
                             title="Delete routine"
                             aria-label="Delete routine"
                             @click="deleteRoutine(routine)"
                         >
-                            <Trash2 class="size-3.5" />
+                            <Trash2 class="size-5" />
                         </button>
                     </div>
                 </div>
