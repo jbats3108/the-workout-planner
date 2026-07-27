@@ -182,6 +182,82 @@ describe('createWorkoutPlayer', () => {
         const player = mountPlayer();
         expect(player.canPromoteToDropset.value).toBe(true);
     });
+
+    it('promotes working set to dropset', () => {
+        const player = mountPlayer();
+        player.promoteToDropset();
+        expect(inertiaMocks().routerMocks.post).toHaveBeenCalledWith(
+            '/workouts.sets.promote-dropset',
+            expect.objectContaining({ segments: expect.any(Array) }),
+            expect.objectContaining({ preserveScroll: true, only: ['workout'] }),
+        );
+    });
+
+    it('finishes workout when confirmed', () => {
+        const player = mountPlayer();
+        player.finishWorkout();
+        expect(inertiaMocks().routerMocks.post).toHaveBeenCalledWith(
+            '/workouts.finish',
+            {},
+            expect.any(Object),
+        );
+    });
+
+    it('abandons workout when confirmed', () => {
+        const player = mountPlayer();
+        player.abandonWorkout();
+        expect(inertiaMocks().routerMocks.post).toHaveBeenCalledWith(
+            '/workouts.discard',
+            {},
+            expect.any(Object),
+        );
+    });
+
+    it('leaves workout via dashboard visit', () => {
+        const player = mountPlayer();
+        player.leaveWorkout();
+        expect(inertiaMocks().routerMocks.visit).toHaveBeenCalledWith('/dashboard');
+    });
+
+    it('cancels leave when confirm is declined', () => {
+        vi.mocked(globalThis.confirm).mockReturnValueOnce(false);
+        const player = mountPlayer();
+        player.leaveWorkout();
+        expect(inertiaMocks().routerMocks.visit).not.toHaveBeenCalled();
+    });
+
+    it('adds and removes working sets', () => {
+        const player = mountPlayer({
+            blocks: [
+                playerBlock({
+                    id: 5,
+                    sets: [
+                        playerSet({ id: 1, set_index: 0, completed: false }),
+                        playerSet({ id: 2, set_index: 1, completed: false }),
+                    ],
+                }),
+            ],
+        });
+        expect(player.canAddWorkingSet.value).toBe(true);
+        expect(player.canRemoveWorkingSet.value).toBe(true);
+        player.addWorkingSet();
+        expect(inertiaMocks().routerMocks.post).toHaveBeenCalledWith(
+            '/workouts.working-sets.add',
+            {},
+            expect.objectContaining({ preserveScroll: true, only: ['workout'] }),
+        );
+        player.removeWorkingSet();
+        expect(inertiaMocks().routerMocks.delete).toHaveBeenCalledWith(
+            '/workouts.sets.remove',
+            expect.objectContaining({ preserveScroll: true, only: ['workout'] }),
+        );
+    });
+
+    it('ignores completeSet when workout is not in progress', () => {
+        const player = mountPlayer({ status: 'finished' });
+        player.completeSet();
+        expect(inertiaMocks().inertiaFormPost).not.toHaveBeenCalled();
+    });
 });
 
 describe('useWorkoutPlayer', () => {
