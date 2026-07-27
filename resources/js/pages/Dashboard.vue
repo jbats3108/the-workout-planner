@@ -123,12 +123,12 @@ const formatFinishedAt = (iso: string) => {
 
             <div class="grid auto-rows-min gap-3 md:grid-cols-3">
                 <div v-for="routine in props.data.routines" :key="routine.id" class="relative rounded-xl border border-border bg-card p-4 pb-10">
-                    <Link :href="route('routines.edit', routine.id)" class="block transition hover:text-primary">
+                    <div>
                         <h3 class="text-lg font-semibold">{{ routine.name }}</h3>
                         <p class="mt-1 font-mono text-xs text-muted-foreground">
                             Deload {{ routine.deload_weight_factor }}w / {{ routine.deload_reps_factor }}r
                         </p>
-                    </Link>
+                    </div>
                     <p v-if="!routine.can_start" class="mt-3 text-xs text-muted-foreground">Add exercises in the editor before starting.</p>
                     <div class="mt-4 flex flex-wrap gap-2">
                         <button
