@@ -2,6 +2,7 @@
 import { Link, router, usePage } from '@inertiajs/vue3';
 import { Dumbbell, LayoutGrid, LogOut, Palette, Settings, Shield, UserRound } from 'lucide-vue-next';
 import { computed, type Component } from 'vue';
+import { route as ziggyRoute } from 'ziggy-js';
 
 const props = withDefaults(
     defineProps<{
@@ -19,6 +20,8 @@ const page = usePage();
 const path = computed(() => page.url.split('?')[0]);
 const isAdmin = computed(() => Boolean(page.props.auth.user?.is_admin));
 const labeled = computed(() => props.variant === 'drawer');
+
+const route = (name: string, params?: Record<string, unknown>, absolute?: boolean) => ziggyRoute(name, params, absolute, page.props.ziggy);
 
 const isActive = (href: string) => path.value === href || path.value.startsWith(`${href}/`);
 

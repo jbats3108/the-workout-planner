@@ -5,6 +5,7 @@
         "build": "vite build && vite build --ssr",
         "build:ssr": "npm run build",
         "dev": "vite",
+        "dev:lan": "LAN_DEV=1 vite",
         "format": "prettier --write resources/",
         "format:check": "prettier --check resources/",
         "lint": "eslint . --fix",
