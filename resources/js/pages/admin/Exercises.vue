@@ -3,22 +3,13 @@ import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import AdminLayout from '@/layouts/admin/Layout.vue';
+import { slugify } from '@/admin/lib/slugify';
+import type { AdminExercise, EquipmentOption, MuscleGroupOption } from '@/admin/types';
+import { useCatalogFilter } from '@/shared/composables/useCatalogFilter';
+import { useFlashSuccess } from '@/shared/composables/useFlashSuccess';
 import { type BreadcrumbItem } from '@/types';
-import { Deferred, Head, router, useForm, usePage } from '@inertiajs/vue3';
-import { computed, ref, watch } from 'vue';
-
-type MuscleGroupOption = { name: string; slug: string };
-type EquipmentOption = { value: string; label: string };
-type AdminExercise = {
-    id: number;
-    name: string;
-    slug: string;
-    equipment: string | null;
-    primary_muscle_group: string;
-    primary_muscle_group_slug: string;
-    secondary_muscle_group: string | null;
-    secondary_muscle_group_slug: string | null;
-};
+import { Deferred, Head, router, useForm } from '@inertiajs/vue3';
+import { computed, watch } from 'vue';
 
 const props = defineProps<{
     exercises?: AdminExercise[];
@@ -26,22 +17,18 @@ const props = defineProps<{
     equipment_options: EquipmentOption[];
 }>();
 
-const page = usePage();
-const successMessage = computed(() => page.props.flash?.success ?? null);
-const query = ref('');
+const successMessage = useFlashSuccess();
 const catalog = computed(() => props.exercises ?? []);
+const { query, filtered } = useCatalogFilter(catalog, (e) => [
+    e.name,
+    e.slug,
+    e.primary_muscle_group,
+]);
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Admin', href: '/admin' },
     { title: 'Exercises', href: '/admin/exercises' },
 ];
-
-const slugify = (value: string) =>
-    value
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-|-$/g, '');
 
 const form = useForm({
     name: '',
@@ -57,17 +44,6 @@ watch(
         form.slug = slugify(name);
     },
 );
-
-const filtered = computed(() => {
-    const q = query.value.trim().toLowerCase();
-    if (!q) return catalog.value;
-    return catalog.value.filter(
-        (e) =>
-            e.name.toLowerCase().includes(q) ||
-            e.slug.includes(q) ||
-            e.primary_muscle_group.toLowerCase().includes(q),
-    );
-});
 
 const submit = () => {
     form.transform((data) => ({

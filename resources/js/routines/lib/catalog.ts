@@ -1,15 +1,8 @@
 import type { ExerciseOption } from '@/routines/types';
+import { filterByQuery } from '@/shared/lib/catalogFilter';
 
 export function filterExercises(catalog: ExerciseOption[], query: string): ExerciseOption[] {
-    const q = query.trim().toLowerCase();
-    if (!q) {
-        return catalog;
-    }
-    return catalog.filter(
-        (e) =>
-            e.name.toLowerCase().includes(q) ||
-            (e.primary_muscle_group ?? '').toLowerCase().includes(q),
-    );
+    return filterByQuery(catalog, query, (e) => [e.name, e.primary_muscle_group ?? '']);
 }
 
 /** Keep the current selection visible even when it falls outside the filter. */

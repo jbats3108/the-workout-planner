@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { Routine } from '@/routines/types';
+import { useFlashSuccess } from '@/shared/composables/useFlashSuccess';
 import { type BreadcrumbItem } from '@/types';
 import type { InProgressWorkout } from '@/workouts/types';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
@@ -16,7 +17,7 @@ const props = defineProps<{
 
 const page = usePage();
 const formErrors = computed(() => Object.values(page.props.errors ?? {}));
-const successMessage = computed(() => page.props.flash?.success ?? null);
+const successMessage = useFlashSuccess();
 
 const breadcrumbs: BreadcrumbItem[] = [
     {

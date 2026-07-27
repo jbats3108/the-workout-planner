@@ -142,6 +142,11 @@ export function gramsToKg(g: number): number {
     return Math.round(g) / 1000
 }
 
+/** Display grams as kg with 0–1 decimal places (e.g. progression bumps). */
+export function formatGramsToKg(g: number): string {
+    return (g / 1000).toFixed(g % 1000 === 0 ? 0 : 1)
+}
+
 /** Barbell plate stacks apply to barbell / E-Z curl bar work only. */
 export function usesBarbellPlates(equipment: string | null | undefined): boolean {
     return equipment === 'barbell' || equipment === 'ez_curl_bar'

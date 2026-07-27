@@ -2,16 +2,9 @@
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import AdminLayout from '@/layouts/admin/Layout.vue';
+import type { AdminUser } from '@/admin/types';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
-
-type AdminUser = {
-    id: number;
-    name: string;
-    email: string;
-    roles: string[];
-    created_at: string | null;
-};
 
 defineProps<{
     users: AdminUser[];

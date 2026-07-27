@@ -3,25 +3,12 @@ import HeadingSmall from '@/components/HeadingSmall.vue';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/AppLayout.vue';
 import AdminLayout from '@/layouts/admin/Layout.vue';
+import type { InviteRow } from '@/admin/types';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router, useForm, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
-type InviteRow = {
-    id: number;
-    note: string | null;
-    role: string;
-    url: string;
-    created_by: string | null;
-    created_at: string | null;
-    expires_at: string | null;
-    used_at: string | null;
-    used_by: string | null;
-    revoked_at: string | null;
-    usable: boolean;
-};
-
-const props = defineProps<{
+defineProps<{
     invites: InviteRow[];
     master_enabled: boolean;
 }>();
@@ -137,7 +124,7 @@ const revoke = (id: number) => {
             </form>
 
             <ul class="divide-y divide-border rounded-xl border border-border">
-                <li v-for="invite in props.invites" :key="invite.id" class="space-y-2 px-4 py-3">
+                <li v-for="invite in invites" :key="invite.id" class="space-y-2 px-4 py-3">
                     <div class="flex flex-wrap items-start justify-between gap-2">
                         <div>
                             <p class="font-medium">
@@ -170,7 +157,7 @@ const revoke = (id: number) => {
                         </div>
                     </div>
                 </li>
-                <li v-if="!props.invites.length" class="px-4 py-8 text-center text-sm text-muted-foreground">
+                <li v-if="!invites.length" class="px-4 py-8 text-center text-sm text-muted-foreground">
                     No invites yet.
                 </li>
             </ul>

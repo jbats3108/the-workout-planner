@@ -3,30 +3,23 @@ import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import AdminLayout from '@/layouts/admin/Layout.vue';
+import { slugify } from '@/admin/lib/slugify';
+import type { MuscleGroupRow } from '@/admin/types';
+import { useFlashSuccess } from '@/shared/composables/useFlashSuccess';
 import { type BreadcrumbItem } from '@/types';
-import { Head, router, useForm, usePage } from '@inertiajs/vue3';
-import { computed, watch } from 'vue';
+import { Head, router, useForm } from '@inertiajs/vue3';
+import { watch } from 'vue';
 
-type MuscleGroupRow = { id: number; name: string; slug: string };
-
-const props = defineProps<{
+defineProps<{
     muscle_groups: MuscleGroupRow[];
 }>();
 
-const page = usePage();
-const successMessage = computed(() => page.props.flash?.success ?? null);
+const successMessage = useFlashSuccess();
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Admin', href: '/admin' },
     { title: 'Muscle groups', href: '/admin/muscle-groups' },
 ];
-
-const slugify = (value: string) =>
-    value
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-|-$/g, '');
 
 const form = useForm({
     name: '',

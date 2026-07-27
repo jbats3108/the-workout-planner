@@ -2,10 +2,11 @@
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { gramsToKg } from '@/lib/plateCalculator';
 import type { PlateProfile, WarmUpDefaultsScope, WarmUpStep } from '@/settings/types';
+import { useFlashSuccess } from '@/shared/composables/useFlashSuccess';
 import { type BreadcrumbItem } from '@/types';
-import { Head, router, useForm, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { Head, router, useForm } from '@inertiajs/vue3';
 
 const props = defineProps<{
     warm_up_steps_default: WarmUpStep[];
@@ -14,8 +15,7 @@ const props = defineProps<{
     plate_profile: PlateProfile;
 }>();
 
-const page = usePage();
-const successMessage = computed(() => page.props.flash?.success ?? null);
+const successMessage = useFlashSuccess();
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
@@ -76,8 +76,6 @@ const removePlate = (index: number) => {
 const savePlates = () => {
     plateForm.put(route('training.plates.update'));
 };
-
-const gToKg = (g: number) => g / 1000;
 </script>
 
 <template>
@@ -218,7 +216,7 @@ const gToKg = (g: number) => g / 1000;
                             <label class="flex flex-col gap-1 text-xs text-muted-foreground">
                                 kg
                                 <input
-                                    :value="gToKg(bar.weight_g)"
+                                    :value="gramsToKg(bar.weight_g)"
                                     type="number"
                                     step="0.5"
                                     min="0"
@@ -255,7 +253,7 @@ const gToKg = (g: number) => g / 1000;
                             <label class="flex flex-col gap-1 text-xs text-muted-foreground">
                                 kg
                                 <input
-                                    :value="gToKg(plate.denomination_g)"
+                                    :value="gramsToKg(plate.denomination_g)"
                                     type="number"
                                     step="0.25"
                                     min="0.25"

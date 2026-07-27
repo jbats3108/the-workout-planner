@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import { formatGramsToKg } from '@/lib/plateCalculator';
 import type { Bump } from '@/workouts/types';
 import { Head, router, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
@@ -17,8 +18,6 @@ const selected = ref<number[]>(props.progression.bumps.map((b) => b.routine_bloc
 const form = useForm({
     routine_block_exercise_ids: selected.value,
 });
-
-const gramsToKg = (g: number) => (g / 1000).toFixed(g % 1000 === 0 ? 0 : 1);
 
 const toggle = (id: number) => {
     if (selected.value.includes(id)) {
@@ -68,7 +67,7 @@ const skip = () => {
                     <label :for="`bump-${bump.routine_block_exercise_id}`" class="flex min-w-0 flex-1 flex-col gap-0.5">
                         <span class="truncate font-medium">{{ bump.exercise_name }}</span>
                         <span class="font-mono text-xs text-muted-foreground">
-                            {{ gramsToKg(bump.from_weight_g) }} → {{ gramsToKg(bump.to_weight_g) }} kg
+                            {{ formatGramsToKg(bump.from_weight_g) }} → {{ formatGramsToKg(bump.to_weight_g) }} kg
                         </span>
                     </label>
                 </li>
