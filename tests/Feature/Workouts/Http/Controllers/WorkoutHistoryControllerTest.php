@@ -145,6 +145,22 @@ class WorkoutHistoryControllerTest extends TestCase
             ->assertForbidden();
     }
 
+    #[Test]
+    public function history_set_edit_accepts_two_decimal_kg(): void
+    {
+        [$workout] = $this->createFinishedWorkout(reps: 5, weightGrams: 28000);
+        $set = $this->firstWorkingSet($workout->id);
+
+        $this->actingAs($this->user)
+            ->put(route('history.sets.update', [$workout, $set]), [
+                'reps' => 5,
+                'weight_kg' => 28.75,
+            ])
+            ->assertRedirect();
+
+        $this->assertSame(28750, $set->fresh()->weight_g);
+    }
+
     /**
      * @return array{0: Workout, 1: RoutineBlockExercise, 2: Routine}
      */
