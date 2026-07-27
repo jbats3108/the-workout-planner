@@ -11,6 +11,7 @@ use App\Shared\Enums\SetGroupType;
 use App\Workouts\Enums\WorkoutStatus;
 use App\Workouts\Models\Workout;
 use App\Workouts\Models\WorkoutSet;
+use App\Workouts\Services\WorkoutProgressionService;
 use App\Workouts\Services\WorkoutService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -61,6 +62,30 @@ class ProgressionControllerTest extends TestCase
                 ->component('workouts/Progression')
                 ->where('progression.workout_id', $workout->id)
                 ->has('progression.bumps', 1));
+    }
+
+    #[Test]
+    public function show_renders_undo_proposals_when_present(): void
+    {
+        [$workout, $routineExercise] = $this->createFinishedEligibleWorkout();
+        $workoutService = app(WorkoutService::class);
+        $progressionService = app(WorkoutProgressionService::class);
+        $bumps = $workoutService->finishWorkout($workout);
+        $progressionService->applyConfirmedBumps($workout, $bumps, [$routineExercise->id]);
+
+        $set = WorkoutSet::query()
+            ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workout->id))
+            ->firstOrFail();
+        $set->update(['reps' => 4]);
+
+        $reEval = $progressionService->reEvaluateProgression($workout->fresh());
+        $progressionService->storeProgressionSession($workout, $reEval);
+
+        $this->actingAs($this->user)
+            ->get(route('workouts.progression', $workout))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->has('progression.undos', 1));
     }
 
     #[Test]
