@@ -8,7 +8,7 @@ describe('PlateGuideCard', () => {
             props: {
                 plateLoad: {
                     bar_g: 20_000,
-                    per_side: [{ denomination_g: 20_000, count: 1 }],
+                    per_side: [{ denomination_g: 20_000, count: 1, colour: null }],
                     total_g: 60_000,
                     exact: false,
                     delta_g: -2500,
@@ -28,7 +28,7 @@ describe('PlateGuideCard', () => {
             props: {
                 plateLoad: {
                     bar_g: 20_000,
-                    per_side: [{ denomination_g: 20_000, count: 1 }],
+                    per_side: [{ denomination_g: 20_000, count: 1, colour: null }],
                     total_g: 60_000,
                     exact: true,
                     delta_g: 0,

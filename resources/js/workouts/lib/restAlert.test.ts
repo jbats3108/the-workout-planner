@@ -22,8 +22,14 @@ function mockNotification(permission: NotificationPermission): void {
         this.options = options;
     }) as unknown as typeof Notification;
 
-    NotificationCtor.permission = permission;
-    NotificationCtor.requestPermission = requestPermission;
+    Object.defineProperty(NotificationCtor, 'permission', {
+        configurable: true,
+        value: permission,
+    });
+    Object.defineProperty(NotificationCtor, 'requestPermission', {
+        configurable: true,
+        value: requestPermission,
+    });
 
     vi.stubGlobal('Notification', NotificationCtor);
 }
