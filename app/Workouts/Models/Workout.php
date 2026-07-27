@@ -7,6 +7,7 @@ use App\Users\Models\User;
 use App\Workouts\Enums\WorkoutMode;
 use App\Workouts\Enums\WorkoutStatus;
 use Database\Factories\Workouts\WorkoutFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -57,6 +58,40 @@ class Workout extends Model
     public function blocks(): HasMany
     {
         return $this->hasMany(WorkoutBlock::class)->orderBy('position');
+    }
+
+    /** @return HasMany<BumpRecord, $this> */
+    public function bumpRecords(): HasMany
+    {
+        return $this->hasMany(BumpRecord::class);
+    }
+
+    /** @param  Builder<Workout>  $query */
+    public function scopeFinished(Builder $query): Builder
+    {
+        return $query->where('status', WorkoutStatus::Finished);
+    }
+
+    public static function latestNonDeloadFinishedForRoutine(User $user, int $routineId): ?self
+    {
+        return self::query()
+            ->where('user_id', $user->id)
+            ->where('routine_id', $routineId)
+            ->finished()
+            ->where('mode', '!=', WorkoutMode::Deload)
+            ->orderByDesc('finished_at')
+            ->first();
+    }
+
+    public function isEligibleForProgressionReEval(): bool
+    {
+        if ($this->status !== WorkoutStatus::Finished || $this->mode === WorkoutMode::Deload) {
+            return false;
+        }
+
+        $latest = self::latestNonDeloadFinishedForRoutine($this->user, $this->routine_id);
+
+        return $latest?->id === $this->id;
     }
 
     protected static function newFactory(): WorkoutFactory
