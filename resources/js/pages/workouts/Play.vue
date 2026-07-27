@@ -3,73 +3,14 @@
  * Workout player — chrome-minimal full-bleed stage.
  */
 import { defaultBarG, gramsToKg, nearestPlateLoad, usesBarbellPlates } from '@/lib/plateCalculator';
+import type { Focus, PlayerBlock, PlayerSet, PlateProfile, SetupPhase, WorkoutPayload } from '@/workouts/types';
 import { Head, router, useForm } from '@inertiajs/vue3';
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-
-type PlayerSetSegment = {
-    position: number;
-    weight_kg: number;
-};
-
-type PlayerSet = {
-    id: number;
-    workout_block_exercise_id: number;
-    exercise_name: string;
-    equipment: string | null;
-    set_index: number;
-    group_type: 'warm_up' | 'working';
-    target_weight_kg: number | null;
-    target_reps: number | null;
-    logged_weight_kg: number | null;
-    logged_reps: number | null;
-    completed: boolean;
-    rest_seconds: number;
-    is_dropset: boolean;
-    segments: PlayerSetSegment[];
-};
-
-type PlayerBlock = {
-    id: number;
-    position: number;
-    is_superset: boolean;
-    has_setup_after: boolean;
-    has_setup_after_warm_up: boolean;
-    exercises: Array<{
-        id: number;
-        name: string;
-        working_weight_kg: number;
-        prescribed_reps: number;
-        position: number;
-    }>;
-    sets: PlayerSet[];
-};
-
-type WorkoutPayload = {
-    id: number;
-    routine_name: string;
-    mode: string;
-    status: string;
-    weight_unit: string;
-    blocks: PlayerBlock[];
-};
-
-type PlateProfile = {
-    name: string;
-    bars: Array<{ name: string; weight_g: number; is_default: boolean }>;
-    plates: Array<{ denomination_g: number; count: number; colour: string | null }>;
-};
 
 const props = defineProps<{
     workout: WorkoutPayload;
     plate_profile: PlateProfile;
 }>();
-
-type SetupPhase = 'after_warm_up' | 'after_block';
-
-type Focus =
-    | { kind: 'set'; blockIndex: number; setId: number }
-    | { kind: 'setup'; blockIndex: number; phase: SetupPhase }
-    | { kind: 'done' };
 
 const setupKey = (blockId: number, phase: SetupPhase) => `${blockId}:${phase}`;
 

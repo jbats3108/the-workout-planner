@@ -2,18 +2,14 @@
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
+import type { PlateProfile, WarmUpDefaultsScope, WarmUpStep } from '@/settings/types';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router, useForm, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
-type WarmUpStep = { percent: number; reps: number };
-type PlateBar = { name: string; weight_g: number; is_default: boolean };
-type PlateRow = { denomination_g: number; count: number; colour: string | null };
-type PlateProfile = { name: string; bars: PlateBar[]; plates: PlateRow[] };
-
 const props = defineProps<{
     warm_up_steps_default: WarmUpStep[];
-    warm_up_defaults_scope: 'all_blocks' | 'first_block';
+    warm_up_defaults_scope: WarmUpDefaultsScope;
     using_app_fallback: boolean;
     plate_profile: PlateProfile;
 }>();

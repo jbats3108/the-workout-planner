@@ -1,14 +1,8 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import type { Bump } from '@/workouts/types';
 import { Head, router, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
-
-type Bump = {
-    routine_block_exercise_id: number;
-    exercise_name: string;
-    from_weight_g: number;
-    to_weight_g: number;
-};
 
 const props = defineProps<{
     progression: {

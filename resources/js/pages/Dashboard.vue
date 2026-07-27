@@ -1,24 +1,15 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import type { Routine } from '@/routines/types';
 import { type BreadcrumbItem } from '@/types';
-import { Routine } from '@/types/workouts';
+import type { InProgressWorkout } from '@/workouts/types';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { Pencil, Trash2 } from 'lucide-vue-next';
 import { computed } from 'vue';
 
-type InProgressWorkout = {
-    id: number;
-    routine_name: string;
-    mode: string;
-};
-
-type DashboardRoutine = Routine & {
-    can_start?: boolean;
-};
-
 const props = defineProps<{
     data: {
-        routines: DashboardRoutine[];
+        routines: Routine[];
         in_progress_workout: InProgressWorkout | null;
     };
 }>();
@@ -38,7 +29,7 @@ const startWorkout = (routineId: number, mode: 'normal' | 'deload' = 'normal') =
     router.post(route('workouts.store', { routine: routineId }), { mode });
 };
 
-const canStart = (routine: DashboardRoutine) => !props.data.in_progress_workout && routine.can_start === true;
+const canStart = (routine: Routine) => !props.data.in_progress_workout && routine.can_start === true;
 
 const finishInProgress = () => {
     const workout = props.data.in_progress_workout;
@@ -54,7 +45,7 @@ const abandonInProgress = () => {
     router.post(route('workouts.discard', workout.id));
 };
 
-const deleteRoutine = (routine: DashboardRoutine) => {
+const deleteRoutine = (routine: Routine) => {
     if (!confirm(`Delete “${routine.name}”? It will be archived and removed from your list.`)) {
         return;
     }

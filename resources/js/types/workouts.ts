@@ -1,7 +1,2 @@
-export type Routine = {
-    id: number;
-    name: string;
-    deload_weight_factor?: number | null;
-    deload_reps_factor?: number | null;
-    can_start?: boolean;
-};
+/** @deprecated Import from `@/routines/types` instead. */
+export type { Routine } from '@/routines/types';

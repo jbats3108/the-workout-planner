@@ -4,49 +4,26 @@
  */
 import InputError from '@/components/InputError.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
+import type {
+    Block,
+    BlockExercise,
+    DropsetRecipe,
+    DropsetSegment,
+    ExerciseOption,
+    RoutinePayload,
+    WarmUpStep,
+} from '@/routines/types';
+import type { WarmUpDefaultsScope } from '@/settings/types';
 import { Deferred, Head, Link, router, useForm } from '@inertiajs/vue3';
 import { ChevronDown } from 'lucide-vue-next';
 import { computed, ref, watch } from 'vue';
-
-type ExerciseOption = { id: number; name: string; primary_muscle_group: string };
-
-type BlockExercise = {
-    exercise_id: number | null;
-    working_weight_kg: number;
-    prescribed_reps: number;
-    achievement_floor: number | null;
-    progression_target: number | null;
-};
-
-type WarmUpStep = { percent: number; reps: number };
-
-type DropsetSegment = { weight_kg: number };
-
-type DropsetRecipe = { set_index: number; segments: DropsetSegment[] };
-
-type Block = {
-    is_superset: boolean;
-    has_setup_after: boolean;
-    has_setup_after_warm_up: boolean;
-    exercises: BlockExercise[];
-    working: { set_count: number; rest_seconds: number; dropsets: DropsetRecipe[] };
-    warm_up: { set_count: number; rest_seconds: number; steps: WarmUpStep[] };
-};
-
-type RoutinePayload = {
-    id: number;
-    name: string;
-    deload_weight_factor: number;
-    deload_reps_factor: number;
-    blocks: Block[];
-};
 
 const props = defineProps<{
     routine: RoutinePayload;
     exercises?: ExerciseOption[];
     weight_unit: string;
     warm_up_defaults: WarmUpStep[];
-    warm_up_defaults_scope?: 'all_blocks' | 'first_block';
+    warm_up_defaults_scope?: WarmUpDefaultsScope;
 }>();
 
 const catalog = computed(() => props.exercises ?? []);
