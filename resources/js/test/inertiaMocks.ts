@@ -2,7 +2,7 @@ type InertiaMocks = {
     inertiaFormPut: ReturnType<typeof import('vitest').vi.fn>;
     inertiaFormPost: ReturnType<typeof import('vitest').vi.fn>;
     pageProps: {
-        flash: { success: string | null };
+        flash: { success: string | null; error: string | null };
         errors: Record<string, string>;
     };
     routerMocks: {

@@ -5,7 +5,6 @@ import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import AdminLayout from '@/layouts/admin/Layout.vue';
-import { useFlashSuccess } from '@/shared/composables/useFlashSuccess';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router, useForm } from '@inertiajs/vue3';
 import { watch } from 'vue';
@@ -13,8 +12,6 @@ import { watch } from 'vue';
 defineProps<{
     muscle_groups: MuscleGroupRow[];
 }>();
-
-const successMessage = useFlashSuccess();
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Admin', href: '/admin' },
@@ -50,10 +47,6 @@ const remove = (group: MuscleGroupRow) => {
         <Head title="Admin · Muscle groups" />
         <AdminLayout>
             <HeadingSmall title="Muscle groups" description="Labels used when tagging shared exercises." />
-
-            <div v-if="successMessage" class="rounded-xl border border-primary/40 bg-primary/10 px-4 py-3 text-sm text-primary" role="status">
-                {{ successMessage }}
-            </div>
 
             <form class="space-y-3 rounded-xl border border-border bg-card p-4" @submit.prevent="submit">
                 <p class="text-sm font-medium">Add muscle group</p>

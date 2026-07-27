@@ -46,6 +46,8 @@ class ShowRoutineControllerTest extends TestCase
 
         $response = $this->actingAs($this->secondUser)->get(route('routines.show', $routine));
 
-        $response->assertForbidden();
+        $response
+            ->assertRedirect(route('dashboard'))
+            ->assertSessionHas('error', 'You do not have access to that routine.');
     }
 }

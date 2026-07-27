@@ -97,7 +97,8 @@ class ProgressionControllerTest extends TestCase
 
         $this->actingAs($this->user)
             ->get(route('workouts.progression', $workout))
-            ->assertRedirect(route('dashboard'));
+            ->assertRedirect(route('dashboard'))
+            ->assertSessionHas('error', 'No progression to review for that workout.');
     }
 
     #[Test]
@@ -115,7 +116,8 @@ class ProgressionControllerTest extends TestCase
                 ],
             ]])
             ->get(route('workouts.progression', $workout))
-            ->assertRedirect(route('dashboard'));
+            ->assertRedirect(route('dashboard'))
+            ->assertSessionHas('error', 'Progression is only available for finished workouts.');
     }
 
     #[Test]

@@ -16,7 +16,9 @@ class ShowWorkoutHistoryController extends Controller
     public function __invoke(Request $request, Workout $workout): Response|RedirectResponse
     {
         if ($workout->status !== WorkoutStatus::Finished) {
-            return redirect()->route('history.index');
+            return redirect()
+                ->route('history.index')
+                ->with('error', 'That workout is not in history yet.');
         }
 
         return Inertia::render('history/Show', [
