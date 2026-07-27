@@ -1,6 +1,6 @@
+import PlateGuideCard from '@/workouts/components/PlateGuideCard.vue';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
-import PlateGuideCard from '@/workouts/components/PlateGuideCard.vue';
 
 describe('PlateGuideCard', () => {
     it('emits applyNearest when the target weight is not loadable', async () => {

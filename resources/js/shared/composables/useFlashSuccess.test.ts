@@ -1,8 +1,8 @@
-import { defineComponent, h } from 'vue';
-import { mount } from '@vue/test-utils';
-import { beforeEach, describe, expect, it } from 'vitest';
 import { useFlashSuccess } from '@/shared/composables/useFlashSuccess';
 import { inertiaMocks } from '@/test/inertiaMocks';
+import { mount } from '@vue/test-utils';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { defineComponent, h } from 'vue';
 
 describe('useFlashSuccess', () => {
     beforeEach(() => {

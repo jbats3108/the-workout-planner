@@ -16,11 +16,7 @@ export function resetRestAlertsForTests(): void {
 }
 
 export function canUseRestNotifications(): boolean {
-    return (
-        typeof window !== 'undefined' &&
-        window.isSecureContext &&
-        'Notification' in window
-    );
+    return typeof window !== 'undefined' && window.isSecureContext && 'Notification' in window;
 }
 
 export async function ensureRestNotificationPermission(): Promise<boolean> {

@@ -1,17 +1,18 @@
-import { describe, expect, it } from 'vitest';
-import {
-    addWarmUpStep,
-    clearWarmUp,
-    removeWarmUpStep,
-    setWarmUpText,
-    warmUpText,
-} from '@/routines/lib/warmUp';
+import { addWarmUpStep, clearWarmUp, removeWarmUpStep, setWarmUpText, warmUpText } from '@/routines/lib/warmUp';
 import { block } from '@/test/factories';
+import { describe, expect, it } from 'vitest';
 
 describe('warmUpText', () => {
     it('formats compact steps', () => {
         const b = block({
-            warm_up: { set_count: 2, rest_seconds: 60, steps: [{ percent: 40, reps: 5 }, { percent: 60, reps: 3 }] },
+            warm_up: {
+                set_count: 2,
+                rest_seconds: 60,
+                steps: [
+                    { percent: 40, reps: 5 },
+                    { percent: 60, reps: 3 },
+                ],
+            },
         });
         expect(warmUpText(b)).toBe('40x5, 60x3');
     });

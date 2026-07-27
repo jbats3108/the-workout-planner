@@ -1,5 +1,5 @@
-import type { PlayerBlock, PlayerSet } from '@/workouts/types';
 import type { FlatSetEntry } from '@/workouts/lib/focus';
+import type { PlayerBlock, PlayerSet } from '@/workouts/types';
 
 export function previousSetWeightKg(entry: FlatSetEntry): number | null {
     const prior = entry.block.sets
@@ -25,9 +25,7 @@ export function shouldRestAfter(block: PlayerBlock, set: PlayerSet): boolean {
     if (!block.is_superset) {
         return true;
     }
-    const sameIndex = block.sets.filter(
-        (s) => s.set_index === set.set_index && s.group_type === set.group_type,
-    );
+    const sameIndex = block.sets.filter((s) => s.set_index === set.set_index && s.group_type === set.group_type);
     return sameIndex.every((s) => s.completed || s.id === set.id);
 }
 
@@ -35,9 +33,7 @@ export function finishesWarmUpGroup(block: PlayerBlock, set: PlayerSet): boolean
     if (set.group_type !== 'warm_up') {
         return false;
     }
-    return block.sets
-        .filter((s) => s.group_type === 'warm_up')
-        .every((s) => s.completed || s.id === set.id);
+    return block.sets.filter((s) => s.group_type === 'warm_up').every((s) => s.completed || s.id === set.id);
 }
 
 export function workingRestSeconds(block: PlayerBlock): number {
@@ -45,9 +41,7 @@ export function workingRestSeconds(block: PlayerBlock): number {
 }
 
 export function workingRoundsInBlock(block: PlayerBlock): number {
-    const indexes = new Set(
-        block.sets.filter((s) => s.group_type === 'working').map((s) => s.set_index),
-    );
+    const indexes = new Set(block.sets.filter((s) => s.group_type === 'working').map((s) => s.set_index));
     return indexes.size;
 }
 
@@ -56,16 +50,10 @@ export function nextDropSegmentWeight(lastKg: number): number {
 }
 
 export function defaultPromoteSegments(workingKg: number): Array<{ weight_kg: number }> {
-    return [
-        { weight_kg: workingKg },
-        { weight_kg: nextDropSegmentWeight(workingKg) },
-    ];
+    return [{ weight_kg: workingKg }, { weight_kg: nextDropSegmentWeight(workingKg) }];
 }
 
-export function visitLeavesWorkout(
-    visit: { url: string | URL },
-    workoutId: number,
-): boolean {
+export function visitLeavesWorkout(visit: { url: string | URL }, workoutId: number): boolean {
     const url = typeof visit.url === 'string' ? new URL(visit.url, window.location.origin) : visit.url;
     return !url.pathname.startsWith(`/workouts/${workoutId}`);
 }

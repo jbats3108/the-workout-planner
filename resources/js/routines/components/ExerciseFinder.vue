@@ -11,15 +11,7 @@ withDefaults(
     { deferred: false, compact: false },
 );
 
-const {
-    exerciseQuery,
-    filteredExercises,
-    findMatches,
-    catalog,
-    activeBlock,
-    activeExerciseIndex,
-    applyExercisePick,
-} = useRoutineEditor();
+const { exerciseQuery, filteredExercises, findMatches, catalog, activeBlock, activeExerciseIndex, applyExercisePick } = useRoutineEditor();
 </script>
 
 <template>
@@ -43,10 +35,7 @@ const {
             Showing {{ filteredExercises.length }} of {{ catalog.length }}
             <span v-if="exerciseQuery.trim() && activeBlock"> · tap to set selected exercise</span>
         </p>
-        <ul
-            v-if="findMatches.length"
-            class="mt-2 max-h-48 max-w-md overflow-y-auto divide-y divide-border rounded-xl border border-border"
-        >
+        <ul v-if="findMatches.length" class="mt-2 max-h-48 max-w-md divide-y divide-border overflow-y-auto rounded-xl border border-border">
             <li v-for="exercise in findMatches" :key="exercise.id">
                 <button
                     type="button"
@@ -55,9 +44,7 @@ const {
                     @click="applyExercisePick(exercise.id)"
                 >
                     <span class="text-sm font-medium text-foreground">{{ exercise.name }}</span>
-                    <span class="font-mono text-xs text-muted-foreground">{{
-                        exercise.primary_muscle_group
-                    }}</span>
+                    <span class="font-mono text-xs text-muted-foreground">{{ exercise.primary_muscle_group }}</span>
                 </button>
             </li>
         </ul>
@@ -76,10 +63,7 @@ const {
         <p v-if="compact && activeBlock?.is_superset" class="mt-1 text-xs text-muted-foreground">
             Sets {{ activeExerciseIndex === 0 ? 'A' : 'B' }} · tap a match or focus a slot below
         </p>
-        <ul
-            v-if="findMatches.length"
-            class="mt-2 max-h-40 overflow-y-auto divide-y divide-border rounded-xl border border-border"
-        >
+        <ul v-if="findMatches.length" class="mt-2 max-h-40 divide-y divide-border overflow-y-auto rounded-xl border border-border">
             <li v-for="exercise in findMatches" :key="exercise.id">
                 <button
                     type="button"
@@ -87,9 +71,7 @@ const {
                     @click="applyExercisePick(exercise.id)"
                 >
                     <span class="text-sm font-medium text-foreground">{{ exercise.name }}</span>
-                    <span class="font-mono text-xs text-muted-foreground">{{
-                        exercise.primary_muscle_group
-                    }}</span>
+                    <span class="font-mono text-xs text-muted-foreground">{{ exercise.primary_muscle_group }}</span>
                 </button>
             </li>
         </ul>

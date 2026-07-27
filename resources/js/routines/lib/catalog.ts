@@ -6,11 +6,7 @@ export function filterExercises(catalog: ExerciseOption[], query: string): Exerc
 }
 
 /** Keep the current selection visible even when it falls outside the filter. */
-export function exerciseOptionsFor(
-    catalog: ExerciseOption[],
-    filtered: ExerciseOption[],
-    selectedId: number | null,
-): ExerciseOption[] {
+export function exerciseOptionsFor(catalog: ExerciseOption[], filtered: ExerciseOption[], selectedId: number | null): ExerciseOption[] {
     if (selectedId == null || filtered.some((e) => e.id === selectedId)) {
         return filtered;
     }

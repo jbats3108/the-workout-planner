@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
 import { filterByQuery } from '@/shared/lib/catalogFilter';
+import { describe, expect, it } from 'vitest';
 
 describe('filterByQuery', () => {
     const items = [

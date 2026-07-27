@@ -11,23 +11,11 @@ import {
     trimDropsetsToSetCount,
 } from '@/routines/lib/dropsets';
 import { formatRest } from '@/routines/lib/formatRest';
-import {
-    addWarmUpStep,
-    clearWarmUp,
-    removeWarmUpStep,
-    setWarmUpText,
-    warmUpText,
-} from '@/routines/lib/warmUp';
-import type {
-    Block,
-    ExerciseOption,
-    RoutinePayload,
-    WarmUpStep,
-} from '@/routines/types';
+import { addWarmUpStep, clearWarmUp, removeWarmUpStep, setWarmUpText, warmUpText } from '@/routines/lib/warmUp';
+import type { Block, ExerciseOption, RoutinePayload, WarmUpStep } from '@/routines/types';
 import type { WarmUpDefaultsScope } from '@/settings/types';
 import { router, useForm } from '@inertiajs/vue3';
 import { computed, inject, ref, watch, type InjectionKey } from 'vue';
-
 
 export type EditRoutineProps = {
     routine: RoutinePayload;
@@ -55,8 +43,7 @@ export function createRoutineEditor(props: EditRoutineProps) {
         return filteredExercises.value.slice(0, 40);
     });
 
-    const optionsFor = (selectedId: number | null) =>
-        exerciseOptionsFor(catalog.value, filteredExercises.value, selectedId);
+    const optionsFor = (selectedId: number | null) => exerciseOptionsFor(catalog.value, filteredExercises.value, selectedId);
 
     const defaultWarmUpSteps = (): WarmUpStep[] =>
         (props.warm_up_defaults?.length ? props.warm_up_defaults : []).map((s) => ({
@@ -71,9 +58,7 @@ export function createRoutineEditor(props: EditRoutineProps) {
         deload_weight_factor: props.routine.deload_weight_factor,
         deload_reps_factor: props.routine.deload_reps_factor,
         // Inertia props are nested reactive proxies — structuredClone cannot clone them
-        blocks: props.routine.blocks.length
-            ? (JSON.parse(JSON.stringify(props.routine.blocks)) as Block[]).map(normalizeBlock)
-            : ([] as Block[]),
+        blocks: props.routine.blocks.length ? (JSON.parse(JSON.stringify(props.routine.blocks)) as Block[]).map(normalizeBlock) : ([] as Block[]),
     });
 
     const active = ref(0);
@@ -116,12 +101,10 @@ export function createRoutineEditor(props: EditRoutineProps) {
         exerciseQuery.value = '';
     };
 
-    const exerciseName = (id: number | null) =>
-        catalog.value.find((e) => e.id === id)?.name ?? 'Exercise';
+    const exerciseName = (id: number | null) => catalog.value.find((e) => e.id === id)?.name ?? 'Exercise';
 
     const addBlock = (superset = false) => {
-        const seedWarmUp =
-            (props.warm_up_defaults_scope ?? 'all_blocks') === 'all_blocks' || form.blocks.length === 0;
+        const seedWarmUp = (props.warm_up_defaults_scope ?? 'all_blocks') === 'all_blocks' || form.blocks.length === 0;
         form.blocks.push(
             emptyBlock({
                 superset,
@@ -161,37 +144,28 @@ export function createRoutineEditor(props: EditRoutineProps) {
     );
 
     const save = () => {
-        form
-            .transform((data) => ({
-                ...data,
-                blocks: data.blocks.map((block) => ({
-                    ...block,
-                    working: {
-                        set_count: block.working.set_count,
-                        rest_seconds: block.working.rest_seconds,
-                        dropsets: block.is_superset
-                            ? []
-                            : block.working.dropsets
-                                  .filter(
-                                      (d) =>
-                                          d.set_index < block.working.set_count && d.segments.length >= 2,
-                                  )
-                                  .map((d) => ({
-                                      set_index: d.set_index,
-                                      segments: d.segments.map((s) => ({ weight_kg: s.weight_kg })),
-                                  })),
-                    },
-                })),
-            }))
-            .put(route('routines.update', props.routine.id));
+        form.transform((data) => ({
+            ...data,
+            blocks: data.blocks.map((block) => ({
+                ...block,
+                working: {
+                    set_count: block.working.set_count,
+                    rest_seconds: block.working.rest_seconds,
+                    dropsets: block.is_superset
+                        ? []
+                        : block.working.dropsets
+                              .filter((d) => d.set_index < block.working.set_count && d.segments.length >= 2)
+                              .map((d) => ({
+                                  set_index: d.set_index,
+                                  segments: d.segments.map((s) => ({ weight_kg: s.weight_kg })),
+                              })),
+                },
+            })),
+        })).put(route('routines.update', props.routine.id));
     };
 
     const deleteRoutine = () => {
-        if (
-            !confirm(
-                `Delete “${form.name || 'this routine'}”? It will be archived and removed from your list.`,
-            )
-        ) {
+        if (!confirm(`Delete “${form.name || 'this routine'}”? It will be archived and removed from your list.`)) {
             return;
         }
         router.delete(route('routines.delete', props.routine.id));

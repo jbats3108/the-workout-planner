@@ -1,17 +1,7 @@
-import {
-    defaultBarG,
-    gramsToKg,
-    nearestPlateLoad,
-    usesBarbellPlates,
-    type PlateLoadResult,
-} from '@/lib/plateCalculator';
+import { defaultBarG, gramsToKg, nearestPlateLoad, usesBarbellPlates, type PlateLoadResult } from '@/lib/plateCalculator';
 import type { PlateProfile } from '@/settings/types';
 
-export function resolvePlateLoad(
-    weightKg: number | null | undefined,
-    equipment: string | null,
-    plateProfile: PlateProfile,
-): PlateLoadResult | null {
+export function resolvePlateLoad(weightKg: number | null | undefined, equipment: string | null, plateProfile: PlateProfile): PlateLoadResult | null {
     if (weightKg == null || Number.isNaN(weightKg) || !usesBarbellPlates(equipment)) {
         return null;
     }

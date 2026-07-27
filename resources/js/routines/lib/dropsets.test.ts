@@ -1,4 +1,3 @@
-import { describe, expect, it } from 'vitest';
 import {
     addDropsetSegment,
     applyRunTheRack,
@@ -10,6 +9,7 @@ import {
     trimDropsetsToSetCount,
 } from '@/routines/lib/dropsets';
 import { block } from '@/test/factories';
+import { describe, expect, it } from 'vitest';
 
 describe('dropsets', () => {
     it('creates dropset slot with at least two segments', () => {

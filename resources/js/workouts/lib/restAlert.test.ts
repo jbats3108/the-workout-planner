@@ -1,4 +1,3 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
     canUseRestNotifications,
     ensureRestNotificationPermission,
@@ -10,6 +9,7 @@ import {
     showRestEndNotification,
     vibrateRestEnd,
 } from '@/workouts/lib/restAlert';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 function mockNotification(permission: NotificationPermission): void {
     const requestPermission = vi.fn().mockResolvedValue('granted' as NotificationPermission);

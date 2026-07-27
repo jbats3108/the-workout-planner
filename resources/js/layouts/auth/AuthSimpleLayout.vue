@@ -13,9 +13,7 @@ defineProps<{
             <div class="flex flex-col gap-8">
                 <div class="flex flex-col items-center gap-4">
                     <Link :href="route('home')" class="font-semibold tracking-wide">
-                        <span class="text-lg">
-                            <span class="text-primary">OVR</span><span class="text-foreground">LOAD</span>
-                        </span>
+                        <span class="text-lg"> <span class="text-primary">OVR</span><span class="text-foreground">LOAD</span> </span>
                         <span class="sr-only">{{ title }}</span>
                     </Link>
                     <div class="space-y-2 text-center">

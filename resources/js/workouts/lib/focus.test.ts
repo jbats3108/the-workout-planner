@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest';
-import { findFirstIncompleteFocus, flattenPlayerSets, setupKey } from '@/workouts/lib/focus';
 import { playerBlock, playerSet } from '@/test/factories';
+import { findFirstIncompleteFocus, flattenPlayerSets, setupKey } from '@/workouts/lib/focus';
+import { describe, expect, it } from 'vitest';
 
 describe('setupKey', () => {
     it('combines block id and phase', () => {
@@ -23,10 +23,7 @@ describe('findFirstIncompleteFocus', () => {
     it('returns first incomplete warm-up', () => {
         const blocks = [
             playerBlock({
-                sets: [
-                    playerSet({ id: 1, group_type: 'warm_up', completed: false }),
-                    playerSet({ id: 2, group_type: 'working', completed: false }),
-                ],
+                sets: [playerSet({ id: 1, group_type: 'warm_up', completed: false }), playerSet({ id: 2, group_type: 'working', completed: false })],
             }),
         ];
         expect(findFirstIncompleteFocus(blocks, {})).toEqual({ kind: 'set', blockIndex: 0, setId: 1 });
@@ -36,10 +33,7 @@ describe('findFirstIncompleteFocus', () => {
         const blocks = [
             playerBlock({
                 has_setup_after_warm_up: true,
-                sets: [
-                    playerSet({ id: 1, group_type: 'warm_up', completed: true }),
-                    playerSet({ id: 2, group_type: 'working', completed: false }),
-                ],
+                sets: [playerSet({ id: 1, group_type: 'warm_up', completed: true }), playerSet({ id: 2, group_type: 'working', completed: false })],
             }),
         ];
         expect(findFirstIncompleteFocus(blocks, {})).toEqual({

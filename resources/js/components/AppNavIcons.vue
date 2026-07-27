@@ -1,14 +1,6 @@
 <script setup lang="ts">
 import { Link, router, usePage } from '@inertiajs/vue3';
-import {
-    Dumbbell,
-    LayoutGrid,
-    LogOut,
-    Palette,
-    Settings,
-    Shield,
-    UserRound,
-} from 'lucide-vue-next';
+import { Dumbbell, LayoutGrid, LogOut, Palette, Settings, Shield, UserRound } from 'lucide-vue-next';
 import { computed, type Component } from 'vue';
 
 const props = withDefaults(
@@ -30,18 +22,14 @@ const labeled = computed(() => props.variant === 'drawer');
 
 const isActive = (href: string) => path.value === href || path.value.startsWith(`${href}/`);
 
-const settingsActive = computed(
-    () => path.value.startsWith('/settings/profile') || path.value.startsWith('/settings/appearance'),
-);
+const settingsActive = computed(() => path.value.startsWith('/settings/profile') || path.value.startsWith('/settings/appearance'));
 
 const itemClass = (active: boolean) =>
     [
         labeled.value
             ? 'flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors'
             : 'flex size-9 items-center justify-center rounded-md transition-colors',
-        active
-            ? 'bg-secondary text-primary'
-            : 'text-muted-foreground hover:bg-secondary hover:text-foreground',
+        active ? 'bg-secondary text-primary' : 'text-muted-foreground hover:bg-secondary hover:text-foreground',
     ].join(' ');
 
 const onNavigate = () => emit('navigate');
@@ -116,23 +104,11 @@ const settingsLinks: NavLink[] = [
             </Link>
         </template>
 
-        <Link
-            v-else
-            :href="route('profile.edit')"
-            :class="itemClass(settingsActive)"
-            aria-label="Settings"
-            prefetch
-            @click="onNavigate"
-        >
+        <Link v-else :href="route('profile.edit')" :class="itemClass(settingsActive)" aria-label="Settings" prefetch @click="onNavigate">
             <Settings class="size-4" />
         </Link>
 
-        <button
-            type="button"
-            :class="[itemClass(false), labeled ? 'justify-start' : '']"
-            aria-label="Log out"
-            @click="logout"
-        >
+        <button type="button" :class="[itemClass(false), labeled ? 'justify-start' : '']" aria-label="Log out" @click="logout">
             <LogOut class="size-4 shrink-0" />
             <span v-if="labeled">Log out</span>
         </button>

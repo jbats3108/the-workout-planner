@@ -13,7 +13,12 @@ const submit = () => {
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="[{ title: 'Dashboard', href: '/dashboard' }, { title: 'New routine', href: '#' }]">
+    <AppLayout
+        :breadcrumbs="[
+            { title: 'Dashboard', href: '/dashboard' },
+            { title: 'New routine', href: '#' },
+        ]"
+    >
         <Head title="New routine" />
 
         <div class="mx-auto flex w-full max-w-lg flex-1 flex-col px-4 py-10 text-foreground">

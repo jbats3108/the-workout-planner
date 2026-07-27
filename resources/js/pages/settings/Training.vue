@@ -83,11 +83,7 @@ const savePlates = () => {
         <Head title="Training" />
 
         <div class="mx-auto w-full max-w-xl space-y-10 px-4 py-6">
-            <div
-                v-if="successMessage"
-                class="rounded-xl border border-primary/40 bg-primary/10 px-4 py-3 text-sm text-primary"
-                role="status"
-            >
+            <div v-if="successMessage" class="rounded-xl border border-primary/40 bg-primary/10 px-4 py-3 text-sm text-primary" role="status">
                 {{ successMessage }}
             </div>
 
@@ -97,9 +93,7 @@ const savePlates = () => {
                     description="Seeded into new routine blocks. Each step is a percent of working weight and its own reps."
                 />
 
-                <p v-if="using_app_fallback" class="text-sm text-muted-foreground">
-                    Using the app fallback ladder until you save your own.
-                </p>
+                <p v-if="using_app_fallback" class="text-sm text-muted-foreground">Using the app fallback ladder until you save your own.</p>
 
                 <form class="space-y-4" @submit.prevent="submit">
                     <fieldset class="space-y-2">
@@ -114,11 +108,7 @@ const savePlates = () => {
                         </label>
                     </fieldset>
 
-                    <div
-                        v-for="(step, index) in form.warm_up_steps_default"
-                        :key="index"
-                        class="flex flex-wrap items-end gap-3"
-                    >
+                    <div v-for="(step, index) in form.warm_up_steps_default" :key="index" class="flex flex-wrap items-end gap-3">
                         <label class="flex flex-col gap-1 text-sm text-muted-foreground">
                             % of working
                             <input
@@ -179,19 +169,12 @@ const savePlates = () => {
             </section>
 
             <section class="space-y-6 border-t border-border pt-10">
-                <HeadingSmall
-                    title="Plate profile"
-                    description="Bars and plates for the calculator. Counts are total plates (both sides)."
-                />
+                <HeadingSmall title="Plate profile" description="Bars and plates for the calculator. Counts are total plates (both sides)." />
 
                 <form class="space-y-6" @submit.prevent="savePlates">
                     <label class="flex flex-col gap-1 text-sm text-muted-foreground">
                         Profile name
-                        <input
-                            v-model="plateForm.name"
-                            class="rounded border border-border bg-card px-3 py-2 text-foreground"
-                            required
-                        />
+                        <input v-model="plateForm.name" class="rounded border border-border bg-card px-3 py-2 text-foreground" required />
                         <InputError :message="plateForm.errors.name" />
                     </label>
 
@@ -200,18 +183,10 @@ const savePlates = () => {
                             <p class="text-sm font-medium">Bars</p>
                             <button type="button" class="text-xs text-primary" @click="addBar">+ Bar</button>
                         </div>
-                        <div
-                            v-for="(bar, index) in plateForm.bars"
-                            :key="index"
-                            class="flex flex-wrap items-end gap-2"
-                        >
+                        <div v-for="(bar, index) in plateForm.bars" :key="index" class="flex flex-wrap items-end gap-2">
                             <label class="flex flex-col gap-1 text-xs text-muted-foreground">
                                 Name
-                                <input
-                                    v-model="bar.name"
-                                    class="w-28 rounded border border-border bg-card px-2 py-1.5 text-sm"
-                                    required
-                                />
+                                <input v-model="bar.name" class="w-28 rounded border border-border bg-card px-2 py-1.5 text-sm" required />
                             </label>
                             <label class="flex flex-col gap-1 text-xs text-muted-foreground">
                                 kg
@@ -229,11 +204,7 @@ const savePlates = () => {
                                 <input type="radio" name="default_bar" :checked="bar.is_default" @change="setDefaultBar(index)" />
                                 Default
                             </label>
-                            <button
-                                type="button"
-                                class="pb-2 text-xs text-muted-foreground hover:text-destructive"
-                                @click="removeBar(index)"
-                            >
+                            <button type="button" class="pb-2 text-xs text-muted-foreground hover:text-destructive" @click="removeBar(index)">
                                 Remove
                             </button>
                         </div>
@@ -245,11 +216,7 @@ const savePlates = () => {
                             <p class="text-sm font-medium">Plates</p>
                             <button type="button" class="text-xs text-primary" @click="addPlate">+ Plate</button>
                         </div>
-                        <div
-                            v-for="(plate, index) in plateForm.plates"
-                            :key="index"
-                            class="flex flex-wrap items-end gap-2"
-                        >
+                        <div v-for="(plate, index) in plateForm.plates" :key="index" class="flex flex-wrap items-end gap-2">
                             <label class="flex flex-col gap-1 text-xs text-muted-foreground">
                                 kg
                                 <input
@@ -259,11 +226,7 @@ const savePlates = () => {
                                     min="0.25"
                                     class="w-20 rounded border border-border bg-card px-2 py-1.5 font-mono text-sm"
                                     required
-                                    @input="
-                                        plate.denomination_g = Math.round(
-                                            Number(($event.target as HTMLInputElement).value) * 1000,
-                                        )
-                                    "
+                                    @input="plate.denomination_g = Math.round(Number(($event.target as HTMLInputElement).value) * 1000)"
                                 />
                             </label>
                             <label class="flex flex-col gap-1 text-xs text-muted-foreground">
@@ -285,11 +248,7 @@ const savePlates = () => {
                                     placeholder="optional"
                                 />
                             </label>
-                            <button
-                                type="button"
-                                class="pb-2 text-xs text-muted-foreground hover:text-destructive"
-                                @click="removePlate(index)"
-                            >
+                            <button type="button" class="pb-2 text-xs text-muted-foreground hover:text-destructive" @click="removePlate(index)">
                                 Remove
                             </button>
                         </div>

@@ -1,6 +1,6 @@
-import { ref } from 'vue';
-import { describe, expect, it } from 'vitest';
 import { useCatalogFilter } from '@/shared/composables/useCatalogFilter';
+import { describe, expect, it } from 'vitest';
+import { ref } from 'vue';
 
 describe('useCatalogFilter', () => {
     it('filters reactive catalog', () => {

@@ -1,11 +1,5 @@
+import { defaultBarG, formatGramsToKg, gramsToKg, nearestPlateLoad, usesBarbellPlates } from '@/lib/plateCalculator';
 import { describe, expect, it } from 'vitest';
-import {
-    defaultBarG,
-    formatGramsToKg,
-    gramsToKg,
-    nearestPlateLoad,
-    usesBarbellPlates,
-} from '@/lib/plateCalculator';
 
 describe('plateCalculator', () => {
     const plates = [
@@ -27,9 +21,12 @@ describe('plateCalculator', () => {
     });
 
     it('picks default bar', () => {
-        expect(defaultBarG([{ weight_g: 15000, is_default: false }, { weight_g: 20000, is_default: true }])).toBe(
-            20000,
-        );
+        expect(
+            defaultBarG([
+                { weight_g: 15000, is_default: false },
+                { weight_g: 20000, is_default: true },
+            ]),
+        ).toBe(20000);
     });
 
     it('converts grams to kg', () => {

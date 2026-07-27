@@ -22,10 +22,7 @@ defineProps<{
             Block {{ upcoming.blockPosition }} · {{ upcoming.groupLabel }} · Set {{ upcoming.setNumber }}
             <span v-if="upcoming.isDropset"> · Dropset</span>
         </p>
-        <p
-            v-if="upcoming.weightLabel != null || upcoming.reps != null"
-            class="mt-1 font-mono text-sm text-foreground"
-        >
+        <p v-if="upcoming.weightLabel != null || upcoming.reps != null" class="mt-1 font-mono text-sm text-foreground">
             <span v-if="upcoming.weightLabel != null">{{ upcoming.weightLabel }}{{ weightUnit }}</span>
             <span v-if="upcoming.reps != null"> × {{ upcoming.reps }}</span>
         </p>

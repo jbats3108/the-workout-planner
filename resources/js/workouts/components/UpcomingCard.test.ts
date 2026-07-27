@@ -1,6 +1,6 @@
+import UpcomingCard from '@/workouts/components/UpcomingCard.vue';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
-import UpcomingCard from '@/workouts/components/UpcomingCard.vue';
 
 describe('UpcomingCard', () => {
     it('renders next set details', () => {

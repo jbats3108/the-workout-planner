@@ -41,10 +41,15 @@ const skip = () => {
 <template>
     <Head title="Progression" />
 
-    <AppLayout :breadcrumbs="[{ title: 'Dashboard', href: '/dashboard' }, { title: 'Progression', href: '#' }]">
+    <AppLayout
+        :breadcrumbs="[
+            { title: 'Dashboard', href: '/dashboard' },
+            { title: 'Progression', href: '#' },
+        ]"
+    >
         <div class="flex flex-1 flex-col gap-6 p-4 text-foreground">
             <div>
-                <p class="font-mono text-xs uppercase tracking-wide text-primary">Progression</p>
+                <p class="font-mono text-xs tracking-wide text-primary uppercase">Progression</p>
                 <h1 class="mt-1 text-2xl font-semibold tracking-tight">{{ progression.routine_name }}</h1>
                 <p class="mt-2 max-w-lg text-sm text-muted-foreground">
                     You hit the progression target. Confirm which working weights to bump — nothing increases until you confirm.
@@ -52,11 +57,7 @@ const skip = () => {
             </div>
 
             <ul class="divide-y divide-border border border-border">
-                <li
-                    v-for="bump in progression.bumps"
-                    :key="bump.routine_block_exercise_id"
-                    class="flex items-center gap-3 px-4 py-3"
-                >
+                <li v-for="bump in progression.bumps" :key="bump.routine_block_exercise_id" class="flex items-center gap-3 px-4 py-3">
                     <input
                         :id="`bump-${bump.routine_block_exercise_id}`"
                         type="checkbox"

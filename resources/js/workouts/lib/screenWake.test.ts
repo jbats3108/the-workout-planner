@@ -1,11 +1,5 @@
+import { canUseScreenWake, primeScreenWake, releaseScreenWake, requestScreenWake, resetScreenWakeForTests } from '@/workouts/lib/screenWake';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-    canUseScreenWake,
-    primeScreenWake,
-    releaseScreenWake,
-    requestScreenWake,
-    resetScreenWakeForTests,
-} from '@/workouts/lib/screenWake';
 
 describe('screenWake', () => {
     beforeEach(() => {

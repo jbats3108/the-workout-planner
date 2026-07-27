@@ -1,10 +1,10 @@
-import { defineComponent, h, provide } from 'vue';
-import { mount } from '@vue/test-utils';
-import { beforeEach, describe, expect, it } from 'vitest';
 import ExerciseFinder from '@/routines/components/ExerciseFinder.vue';
 import { createRoutineEditor, routineEditorKey } from '@/routines/composables/useRoutineEditor';
 import { exerciseOption, routinePayload } from '@/test/factories';
 import { inertiaMocks } from '@/test/inertiaMocks';
+import { mount } from '@vue/test-utils';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { defineComponent, h, provide } from 'vue';
 
 function mountFinder() {
     let editor!: ReturnType<typeof createRoutineEditor>;

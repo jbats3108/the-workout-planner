@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest';
 import { exerciseOptionsFor, filterExercises } from '@/routines/lib/catalog';
 import { exerciseOption } from '@/test/factories';
+import { describe, expect, it } from 'vitest';
 
 describe('filterExercises', () => {
     const catalog = [
@@ -15,10 +15,7 @@ describe('filterExercises', () => {
 });
 
 describe('exerciseOptionsFor', () => {
-    const catalog = [
-        exerciseOption({ id: 1, name: 'A' }),
-        exerciseOption({ id: 2, name: 'B' }),
-    ];
+    const catalog = [exerciseOption({ id: 1, name: 'A' }), exerciseOption({ id: 2, name: 'B' })];
 
     it('prepends selected exercise when filtered out', () => {
         const filtered = [catalog[1]];

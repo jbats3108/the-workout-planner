@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import { slugify } from '@/admin/lib/slugify';
+import type { AdminExercise, EquipmentOption, MuscleGroupOption } from '@/admin/types';
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import AdminLayout from '@/layouts/admin/Layout.vue';
-import { slugify } from '@/admin/lib/slugify';
-import type { AdminExercise, EquipmentOption, MuscleGroupOption } from '@/admin/types';
 import { useCatalogFilter } from '@/shared/composables/useCatalogFilter';
 import { useFlashSuccess } from '@/shared/composables/useFlashSuccess';
 import { type BreadcrumbItem } from '@/types';
@@ -19,11 +19,7 @@ const props = defineProps<{
 
 const successMessage = useFlashSuccess();
 const catalog = computed(() => props.exercises ?? []);
-const { query, filtered } = useCatalogFilter(catalog, (e) => [
-    e.name,
-    e.slug,
-    e.primary_muscle_group,
-]);
+const { query, filtered } = useCatalogFilter(catalog, (e) => [e.name, e.slug, e.primary_muscle_group]);
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Admin', href: '/admin' },
@@ -67,11 +63,7 @@ const remove = (exercise: AdminExercise) => {
         <AdminLayout>
             <HeadingSmall title="Shared exercises" description="Catalog lifts available to every user." />
 
-            <div
-                v-if="successMessage"
-                class="rounded-xl border border-primary/40 bg-primary/10 px-4 py-3 text-sm text-primary"
-                role="status"
-            >
+            <div v-if="successMessage" class="rounded-xl border border-primary/40 bg-primary/10 px-4 py-3 text-sm text-primary" role="status">
                 {{ successMessage }}
             </div>
 
@@ -80,11 +72,7 @@ const remove = (exercise: AdminExercise) => {
                 <div class="grid gap-3 sm:grid-cols-2">
                     <label class="flex flex-col gap-1 text-xs text-muted-foreground">
                         Name
-                        <input
-                            v-model="form.name"
-                            class="rounded border border-border bg-background px-3 py-2 text-sm text-foreground"
-                            required
-                        />
+                        <input v-model="form.name" class="rounded border border-border bg-background px-3 py-2 text-sm text-foreground" required />
                         <InputError :message="form.errors.name" />
                     </label>
                     <label class="flex flex-col gap-1 text-xs text-muted-foreground">
@@ -120,10 +108,7 @@ const remove = (exercise: AdminExercise) => {
                     </label>
                     <label class="flex flex-col gap-1 text-xs text-muted-foreground">
                         Equipment (optional)
-                        <select
-                            v-model="form.equipment"
-                            class="rounded border border-border bg-background px-3 py-2 text-sm text-foreground"
-                        >
+                        <select v-model="form.equipment" class="rounded border border-border bg-background px-3 py-2 text-sm text-foreground">
                             <option :value="null">Unspecified</option>
                             <option v-for="opt in equipment_options" :key="opt.value" :value="opt.value">
                                 {{ opt.label }}
@@ -157,28 +142,18 @@ const remove = (exercise: AdminExercise) => {
                     />
                     <p class="mb-2 text-xs text-muted-foreground">{{ filtered.length }} of {{ catalog.length }}</p>
                     <ul class="divide-y divide-border rounded-xl border border-border">
-                        <li
-                            v-for="exercise in filtered"
-                            :key="exercise.id"
-                            class="flex flex-wrap items-center justify-between gap-2 px-4 py-3"
-                        >
-                        <div>
-                            <p class="font-medium">{{ exercise.name }}</p>
-                            <p class="font-mono text-xs text-muted-foreground">
-                                {{ exercise.slug }} · {{ exercise.primary_muscle_group }}
-                                <span v-if="exercise.secondary_muscle_group"> / {{ exercise.secondary_muscle_group }}</span>
-                                <span v-if="exercise.equipment"> · {{ exercise.equipment }}</span>
-                            </p>
-                        </div>
-                        <button
-                            type="button"
-                            class="text-sm text-destructive hover:underline"
-                            @click="remove(exercise)"
-                        >
-                            Delete
-                        </button>
-                    </li>
-                </ul>
+                        <li v-for="exercise in filtered" :key="exercise.id" class="flex flex-wrap items-center justify-between gap-2 px-4 py-3">
+                            <div>
+                                <p class="font-medium">{{ exercise.name }}</p>
+                                <p class="font-mono text-xs text-muted-foreground">
+                                    {{ exercise.slug }} · {{ exercise.primary_muscle_group }}
+                                    <span v-if="exercise.secondary_muscle_group"> / {{ exercise.secondary_muscle_group }}</span>
+                                    <span v-if="exercise.equipment"> · {{ exercise.equipment }}</span>
+                                </p>
+                            </div>
+                            <button type="button" class="text-sm text-destructive hover:underline" @click="remove(exercise)">Delete</button>
+                        </li>
+                    </ul>
                 </Deferred>
             </div>
         </AdminLayout>

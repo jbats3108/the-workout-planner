@@ -1,6 +1,6 @@
 import { gramsToKg } from '@/lib/plateCalculator';
-import { formatRestSeconds, groupLabel, setupHintText, workoutProgressLabel } from '@/workouts/lib/labels';
 import { findFirstIncompleteFocus, flattenPlayerSets, setupKey, type FlatSetEntry } from '@/workouts/lib/focus';
+import { formatRestSeconds, groupLabel, setupHintText, workoutProgressLabel } from '@/workouts/lib/labels';
 import { formatLoadStack, formatPlateStackLabel, resolvePlateLoad } from '@/workouts/lib/plates';
 import { preparePlayerInteraction } from '@/workouts/lib/playerInteraction';
 import { notifyRestEnded } from '@/workouts/lib/restAlert';
@@ -48,8 +48,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
 
     const flatSets = computed(() => flattenPlayerSets(props.workout.blocks));
 
-    const firstIncomplete = (): Focus =>
-        findFirstIncompleteFocus(props.workout.blocks, setupDone.value);
+    const firstIncomplete = (): Focus => findFirstIncompleteFocus(props.workout.blocks, setupDone.value);
 
     const focus = ref<Focus>(firstIncomplete());
 
@@ -387,10 +386,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
             weightKg = entry.set.target_weight_kg;
             weightLabel = weightKg != null ? String(weightKg) : null;
         } else {
-            weightKg =
-                previousSetWeightKg(entry) ??
-                lastWorkingWeightKg.value[entry.set.workout_block_exercise_id] ??
-                entry.set.target_weight_kg;
+            weightKg = previousSetWeightKg(entry) ?? lastWorkingWeightKg.value[entry.set.workout_block_exercise_id] ?? entry.set.target_weight_kg;
             weightLabel = weightKg != null ? String(weightKg) : null;
         }
 
@@ -402,12 +398,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
             weightLabel,
             reps: entry.set.target_reps,
             isDropset: entry.set.is_dropset,
-            plateStack: formatLoadStack(
-                entry.set.equipment,
-                weightKg,
-                props.plate_profile,
-                props.workout.weight_unit,
-            ),
+            plateStack: formatLoadStack(entry.set.equipment, weightKg, props.plate_profile, props.workout.weight_unit),
         };
     });
 
@@ -450,15 +441,10 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         );
     };
 
-    const roundsInBlock = computed(() =>
-        current.value ? workingRoundsInBlock(current.value.block) : 0,
-    );
+    const roundsInBlock = computed(() => (current.value ? workingRoundsInBlock(current.value.block) : 0));
 
     const canAddWorkingSet = computed(
-        () =>
-            props.workout.status === 'in_progress' &&
-            current.value !== null &&
-            current.value.set.group_type === 'working',
+        () => props.workout.status === 'in_progress' && current.value !== null && current.value.set.group_type === 'working',
     );
 
     const canRemoveWorkingSet = computed(() => {
@@ -473,9 +459,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         }
 
         const index = current.value.set.set_index;
-        const round = current.value.block.sets.filter(
-            (s) => s.group_type === 'working' && s.set_index === index,
-        );
+        const round = current.value.block.sets.filter((s) => s.group_type === 'working' && s.set_index === index);
         return round.every((s) => !s.completed);
     });
 
@@ -483,10 +467,14 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         if (!current.value) {
             return;
         }
-        router.post(route('workouts.working-sets.add', [props.workout.id, current.value.block.id]), {}, {
-            preserveScroll: true,
-            only: ['workout'],
-        });
+        router.post(
+            route('workouts.working-sets.add', [props.workout.id, current.value.block.id]),
+            {},
+            {
+                preserveScroll: true,
+                only: ['workout'],
+            },
+        );
     };
 
     const removeWorkingSet = () => {

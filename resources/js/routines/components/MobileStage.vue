@@ -38,11 +38,7 @@ const {
                 :key="i"
                 type="button"
                 class="shrink-0 rounded-lg border px-3 py-2 text-left text-sm"
-                :class="
-                    i === active
-                        ? 'border-primary bg-primary/10 text-primary'
-                        : 'border-border text-muted-foreground'
-                "
+                :class="i === active ? 'border-primary bg-primary/10 text-primary' : 'border-border text-muted-foreground'"
                 @click="selectBlockExercise(i, 0)"
             >
                 <div class="font-mono text-xs">{{ i + 1 }}{{ b.is_superset ? ' SS' : '' }}</div>
@@ -55,13 +51,9 @@ const {
                 <div class="mb-3 flex items-center justify-between">
                     <h2 class="text-base font-semibold">
                         Block {{ active + 1 }}
-                        <span v-if="activeBlock.is_superset" class="ml-2 text-sm font-normal text-primary"
-                            >Superset</span
-                        >
+                        <span v-if="activeBlock.is_superset" class="ml-2 text-sm font-normal text-primary">Superset</span>
                     </h2>
-                    <button type="button" class="text-xs text-destructive" @click="removeBlock(active)">
-                        Remove
-                    </button>
+                    <button type="button" class="text-xs text-destructive" @click="removeBlock(active)">Remove</button>
                 </div>
 
                 <div class="mb-4">
@@ -78,11 +70,7 @@ const {
                         :class="ei === activeExerciseIndex ? 'border-primary' : ''"
                         @focus="selectBlockExercise(active, ei)"
                     >
-                        <option
-                            v-for="opt in exerciseOptionsFor(ex.exercise_id)"
-                            :key="opt.id"
-                            :value="opt.id"
-                        >
+                        <option v-for="opt in exerciseOptionsFor(ex.exercise_id)" :key="opt.id" :value="opt.id">
                             {{ opt.name }}
                         </option>
                     </select>
@@ -122,9 +110,7 @@ const {
                         />
                     </label>
                     <label>
-                        <span class="text-xs text-muted-foreground"
-                            >Rest ({{ formatRest(activeBlock.working.rest_seconds) }})</span
-                        >
+                        <span class="text-xs text-muted-foreground">Rest ({{ formatRest(activeBlock.working.rest_seconds) }})</span>
                         <input
                             v-model.number="activeBlock.working.rest_seconds"
                             type="number"
@@ -153,10 +139,7 @@ const {
                                 {{ activeBlock.warm_up.steps.length ? warmUpText(activeBlock) : 'None' }}
                             </span>
                         </span>
-                        <ChevronDown
-                            class="size-4 shrink-0 text-muted-foreground transition-transform"
-                            :class="warmUpExpanded ? 'rotate-180' : ''"
-                        />
+                        <ChevronDown class="size-4 shrink-0 text-muted-foreground transition-transform" :class="warmUpExpanded ? 'rotate-180' : ''" />
                     </button>
                     <div v-if="warmUpExpanded" class="mt-3 space-y-2">
                         <label class="block">
@@ -164,15 +147,11 @@ const {
                             <input
                                 :value="warmUpText(activeBlock)"
                                 class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-sm text-primary/90"
-                                @change="
-                                    setWarmUpText(activeBlock, ($event.target as HTMLInputElement).value)
-                                "
+                                @change="setWarmUpText(activeBlock, ($event.target as HTMLInputElement).value)"
                             />
                         </label>
                         <label class="block">
-                            <span class="text-xs text-muted-foreground"
-                                >Warm-up rest ({{ formatRest(activeBlock.warm_up.rest_seconds) }})</span
-                            >
+                            <span class="text-xs text-muted-foreground">Warm-up rest ({{ formatRest(activeBlock.warm_up.rest_seconds) }})</span>
                             <input
                                 v-model.number="activeBlock.warm_up.rest_seconds"
                                 type="number"
@@ -181,11 +160,7 @@ const {
                                 class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-lg"
                             />
                         </label>
-                        <div
-                            v-for="(step, si) in activeBlock.warm_up.steps"
-                            :key="si"
-                            class="flex items-center gap-1.5"
-                        >
+                        <div v-for="(step, si) in activeBlock.warm_up.steps" :key="si" class="flex items-center gap-1.5">
                             <input
                                 v-model.number="step.percent"
                                 type="number"
@@ -212,13 +187,7 @@ const {
                             </button>
                         </div>
                         <div class="flex items-center gap-3">
-                            <button
-                                type="button"
-                                class="text-xs text-primary"
-                                @click="addWarmUpStep(activeBlock)"
-                            >
-                                + Step
-                            </button>
+                            <button type="button" class="text-xs text-primary" @click="addWarmUpStep(activeBlock)">+ Step</button>
                             <button
                                 v-if="activeBlock.warm_up.steps.length"
                                 type="button"
@@ -233,25 +202,15 @@ const {
 
                 <div class="mt-3 flex flex-wrap gap-4 border-t border-border pt-3 text-sm">
                     <label class="flex items-center gap-2">
-                        <input
-                            type="checkbox"
-                            :checked="activeBlock.is_superset"
-                            @change="toggleSuperset(activeBlock)"
-                        />
+                        <input type="checkbox" :checked="activeBlock.is_superset" @change="toggleSuperset(activeBlock)" />
                         Superset
                     </label>
                     <label
                         class="flex items-center gap-2"
                         :class="activeBlock.warm_up.steps.length ? '' : 'opacity-40'"
-                        :title="
-                            activeBlock.warm_up.steps.length ? undefined : 'Add warm-up steps first'
-                        "
+                        :title="activeBlock.warm_up.steps.length ? undefined : 'Add warm-up steps first'"
                     >
-                        <input
-                            v-model="activeBlock.has_setup_after_warm_up"
-                            type="checkbox"
-                            :disabled="!activeBlock.warm_up.steps.length"
-                        />
+                        <input v-model="activeBlock.has_setup_after_warm_up" type="checkbox" :disabled="!activeBlock.warm_up.steps.length" />
                         Setup before working
                     </label>
                     <label class="flex items-center gap-2">
@@ -299,13 +258,8 @@ const {
             </div>
         </div>
 
-        <div
-            class="fixed right-0 bottom-0 left-0 flex justify-center gap-2 px-4 pt-2 pb-[max(1rem,env(safe-area-inset-bottom,0px))]"
-        >
-            <Link
-                :href="route('dashboard')"
-                class="rounded-full border border-border bg-background px-4 py-3 text-sm text-muted-foreground"
-            >
+        <div class="fixed right-0 bottom-0 left-0 flex justify-center gap-2 px-4 pt-2 pb-[max(1rem,env(safe-area-inset-bottom,0px))]">
+            <Link :href="route('dashboard')" class="rounded-full border border-border bg-background px-4 py-3 text-sm text-muted-foreground">
                 Cancel
             </Link>
             <button

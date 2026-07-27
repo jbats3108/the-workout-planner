@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'vitest';
-import { formatRestSeconds, groupLabel, setupHintText, workoutProgressLabel } from '@/workouts/lib/labels';
-import { flattenPlayerSets } from '@/workouts/lib/focus';
 import { playerBlock, playerSet } from '@/test/factories';
+import { flattenPlayerSets } from '@/workouts/lib/focus';
+import { formatRestSeconds, groupLabel, setupHintText, workoutProgressLabel } from '@/workouts/lib/labels';
+import { describe, expect, it } from 'vitest';
 
 describe('labels', () => {
     it('formats group labels', () => {
@@ -25,8 +25,6 @@ describe('labels', () => {
 
     it('describes setup hints', () => {
         const block = playerBlock({ position: 2 });
-        expect(setupHintText({ kind: 'setup', blockIndex: 0, phase: 'after_warm_up' }, block)).toContain(
-            'Block 2',
-        );
+        expect(setupHintText({ kind: 'setup', blockIndex: 0, phase: 'after_warm_up' }, block)).toContain('Block 2');
     });
 });

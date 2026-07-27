@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest';
+import { playerBlock, playerSet } from '@/test/factories';
+import { flattenPlayerSets } from '@/workouts/lib/focus';
 import {
     defaultPromoteSegments,
     finishesWarmUpGroup,
@@ -8,16 +9,12 @@ import {
     visitLeavesWorkout,
     workingWeightForSet,
 } from '@/workouts/lib/sets';
-import { flattenPlayerSets } from '@/workouts/lib/focus';
-import { playerBlock, playerSet } from '@/test/factories';
+import { describe, expect, it } from 'vitest';
 
 describe('previousSetWeightKg', () => {
     it('returns last completed weight for same exercise', () => {
         const block = playerBlock({
-            sets: [
-                playerSet({ id: 1, set_index: 0, completed: true, logged_weight_kg: 80 }),
-                playerSet({ id: 2, set_index: 1, completed: false }),
-            ],
+            sets: [playerSet({ id: 1, set_index: 0, completed: true, logged_weight_kg: 80 }), playerSet({ id: 2, set_index: 1, completed: false })],
         });
         const entry = flattenPlayerSets([block])[1];
         expect(previousSetWeightKg(entry)).toBe(80);

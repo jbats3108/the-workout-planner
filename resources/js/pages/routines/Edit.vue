@@ -7,11 +7,7 @@ import DesktopBlockList from '@/routines/components/DesktopBlockList.vue';
 import ExerciseFinder from '@/routines/components/ExerciseFinder.vue';
 import MobileStage from '@/routines/components/MobileStage.vue';
 import RoutineEditorHeader from '@/routines/components/RoutineEditorHeader.vue';
-import {
-    createRoutineEditor,
-    routineEditorKey,
-    type EditRoutineProps,
-} from '@/routines/composables/useRoutineEditor';
+import { createRoutineEditor, routineEditorKey, type EditRoutineProps } from '@/routines/composables/useRoutineEditor';
 import { Head } from '@inertiajs/vue3';
 import { provide } from 'vue';
 

@@ -1,9 +1,9 @@
-import { defineComponent, h } from 'vue';
-import { mount } from '@vue/test-utils';
-import { beforeEach, describe, expect, it } from 'vitest';
 import { createRoutineEditor } from '@/routines/composables/useRoutineEditor';
 import { exerciseOption, routinePayload } from '@/test/factories';
 import { inertiaMocks } from '@/test/inertiaMocks';
+import { mount } from '@vue/test-utils';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { defineComponent, h } from 'vue';
 
 function mountEditor(props = {}) {
     let editor!: ReturnType<typeof createRoutineEditor>;

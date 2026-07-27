@@ -59,18 +59,11 @@ const deleteRoutine = (routine: Routine) => {
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl bg-background p-4 text-foreground">
-            <div
-                v-if="successMessage"
-                class="rounded-xl border border-primary/40 bg-primary/10 px-4 py-3 text-sm text-primary"
-                role="status"
-            >
+            <div v-if="successMessage" class="rounded-xl border border-primary/40 bg-primary/10 px-4 py-3 text-sm text-primary" role="status">
                 {{ successMessage }}
             </div>
 
-            <div
-                v-if="formErrors.length"
-                class="rounded-xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive"
-            >
+            <div v-if="formErrors.length" class="rounded-xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
                 <p v-for="(error, index) in formErrors" :key="index">{{ error }}</p>
             </div>
 
@@ -79,7 +72,7 @@ const deleteRoutine = (routine: Routine) => {
                 class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-primary/40 bg-card px-4 py-3"
             >
                 <div>
-                    <p class="text-xs uppercase tracking-wide text-primary">In progress</p>
+                    <p class="text-xs tracking-wide text-primary uppercase">In progress</p>
                     <p class="text-lg font-semibold">{{ data.in_progress_workout.routine_name }}</p>
                     <p class="font-mono text-xs text-muted-foreground">{{ data.in_progress_workout.mode }}</p>
                 </div>
@@ -90,11 +83,7 @@ const deleteRoutine = (routine: Routine) => {
                     >
                         Resume
                     </Link>
-                    <button
-                        type="button"
-                        class="rounded-full border border-border px-4 py-2 text-sm text-foreground"
-                        @click="finishInProgress"
-                    >
+                    <button type="button" class="rounded-full border border-border px-4 py-2 text-sm text-foreground" @click="finishInProgress">
                         Finish
                     </button>
                     <button
@@ -109,35 +98,32 @@ const deleteRoutine = (routine: Routine) => {
 
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <h2 class="text-xl font-semibold">My Routines</h2>
-                <Link
-                    :href="route('routines.create')"
-                    class="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
-                >
+                <Link :href="route('routines.create')" class="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
                     Create
                 </Link>
             </div>
 
             <div class="grid auto-rows-min gap-3 md:grid-cols-3">
-                <div
-                    v-for="routine in props.data.routines"
-                    :key="routine.id"
-                    class="relative rounded-xl border border-border bg-card p-4 pb-10"
-                >
+                <div v-for="routine in props.data.routines" :key="routine.id" class="relative rounded-xl border border-border bg-card p-4 pb-10">
                     <Link :href="route('routines.edit', routine.id)" class="block transition hover:text-primary">
                         <h3 class="text-lg font-semibold">{{ routine.name }}</h3>
                         <p class="mt-1 font-mono text-xs text-muted-foreground">
                             Deload {{ routine.deload_weight_factor }}w / {{ routine.deload_reps_factor }}r
                         </p>
                     </Link>
-                    <p v-if="!routine.can_start" class="mt-3 text-xs text-muted-foreground">
-                        Add exercises in the editor before starting.
-                    </p>
+                    <p v-if="!routine.can_start" class="mt-3 text-xs text-muted-foreground">Add exercises in the editor before starting.</p>
                     <div class="mt-4 flex flex-wrap gap-2">
                         <button
                             type="button"
                             class="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground disabled:opacity-40"
                             :disabled="!canStart(routine)"
-                            :title="!routine.can_start ? 'Add exercises first' : data.in_progress_workout ? 'Finish or resume the current workout' : 'Start workout'"
+                            :title="
+                                !routine.can_start
+                                    ? 'Add exercises first'
+                                    : data.in_progress_workout
+                                      ? 'Finish or resume the current workout'
+                                      : 'Start workout'
+                            "
                             @click="startWorkout(routine.id, 'normal')"
                         >
                             Start
@@ -146,7 +132,13 @@ const deleteRoutine = (routine: Routine) => {
                             type="button"
                             class="rounded-full border border-border px-4 py-2 text-xs text-foreground/80 disabled:opacity-40"
                             :disabled="!canStart(routine)"
-                            :title="!routine.can_start ? 'Add exercises first' : data.in_progress_workout ? 'Finish or resume the current workout' : 'Start deload'"
+                            :title="
+                                !routine.can_start
+                                    ? 'Add exercises first'
+                                    : data.in_progress_workout
+                                      ? 'Finish or resume the current workout'
+                                      : 'Start deload'
+                            "
                             @click="startWorkout(routine.id, 'deload')"
                         >
                             Deload

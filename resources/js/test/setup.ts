@@ -1,5 +1,5 @@
-import { reactive } from 'vue';
 import { vi } from 'vitest';
+import { reactive } from 'vue';
 
 const inertia = vi.hoisted(() => {
     const inertiaFormPut = vi.fn();
@@ -42,15 +42,12 @@ const inertia = vi.hoisted(() => {
 
 vi.mock('@inertiajs/vue3', () => ({
     useForm: (keyOrInitial: string | object, maybeInitial?: object) =>
-        inertia.createForm(
-            typeof keyOrInitial === 'string' ? (maybeInitial ?? {}) : keyOrInitial,
-        ),
+        inertia.createForm(typeof keyOrInitial === 'string' ? (maybeInitial ?? {}) : keyOrInitial),
     usePage: () => ({ props: inertia.pageProps }),
     router: inertia.routerMocks,
 }));
 
-(globalThis as typeof globalThis & { __inertiaMocks: typeof inertia }).__inertiaMocks =
-    inertia;
+(globalThis as typeof globalThis & { __inertiaMocks: typeof inertia }).__inertiaMocks = inertia;
 
 vi.stubGlobal(
     'route',

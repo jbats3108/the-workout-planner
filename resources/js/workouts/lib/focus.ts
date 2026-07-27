@@ -11,15 +11,10 @@ export type FlatSetEntry = {
 };
 
 export function flattenPlayerSets(blocks: PlayerBlock[]): FlatSetEntry[] {
-    return blocks.flatMap((block, blockIndex) =>
-        block.sets.map((set) => ({ blockIndex, block, set })),
-    );
+    return blocks.flatMap((block, blockIndex) => block.sets.map((set) => ({ blockIndex, block, set })));
 }
 
-export function findFirstIncompleteFocus(
-    blocks: PlayerBlock[],
-    setupDone: Record<string, boolean>,
-): Focus {
+export function findFirstIncompleteFocus(blocks: PlayerBlock[], setupDone: Record<string, boolean>): Focus {
     for (let blockIndex = 0; blockIndex < blocks.length; blockIndex++) {
         const block = blocks[blockIndex];
         const warmUps = block.sets.filter((s) => s.group_type === 'warm_up');
@@ -31,12 +26,7 @@ export function findFirstIncompleteFocus(
         }
 
         const hasIncompleteWorking = working.some((s) => !s.completed);
-        if (
-            block.has_setup_after_warm_up &&
-            warmUps.length > 0 &&
-            hasIncompleteWorking &&
-            !setupDone[setupKey(block.id, 'after_warm_up')]
-        ) {
+        if (block.has_setup_after_warm_up && warmUps.length > 0 && hasIncompleteWorking && !setupDone[setupKey(block.id, 'after_warm_up')]) {
             return { kind: 'setup', blockIndex, phase: 'after_warm_up' };
         }
 

@@ -7,11 +7,7 @@ import PlayerHeader from '@/workouts/components/PlayerHeader.vue';
 import RestStage from '@/workouts/components/RestStage.vue';
 import SetStage from '@/workouts/components/SetStage.vue';
 import SetupStage from '@/workouts/components/SetupStage.vue';
-import {
-    createWorkoutPlayer,
-    workoutPlayerKey,
-    type PlayWorkoutProps,
-} from '@/workouts/composables/useWorkoutPlayer';
+import { createWorkoutPlayer, workoutPlayerKey, type PlayWorkoutProps } from '@/workouts/composables/useWorkoutPlayer';
 import { preparePlayerInteraction } from '@/workouts/lib/playerInteraction';
 import { Head } from '@inertiajs/vue3';
 import { provide, ref } from 'vue';

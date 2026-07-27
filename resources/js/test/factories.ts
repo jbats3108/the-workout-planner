@@ -1,7 +1,7 @@
 import { emptyBlock } from '@/routines/lib/blocks';
 import type { Block, ExerciseOption, RoutinePayload } from '@/routines/types';
-import type { PlayerBlock, PlayerSet, WorkoutPayload } from '@/workouts/types';
 import type { PlateProfile } from '@/settings/types';
+import type { PlayerBlock, PlayerSet, WorkoutPayload } from '@/workouts/types';
 
 export function exerciseOption(overrides: Partial<ExerciseOption> = {}): ExerciseOption {
     return {

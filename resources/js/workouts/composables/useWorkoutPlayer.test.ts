@@ -1,11 +1,11 @@
-import { defineComponent, h } from 'vue';
-import { mount } from '@vue/test-utils';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { plateProfile, playerBlock, playerSet, workoutPayload } from '@/test/factories';
+import { inertiaMocks } from '@/test/inertiaMocks';
 import { createWorkoutPlayer, useWorkoutPlayer, workoutPlayerKey } from '@/workouts/composables/useWorkoutPlayer';
 import * as playerInteraction from '@/workouts/lib/playerInteraction';
 import * as restAlert from '@/workouts/lib/restAlert';
-import { inertiaMocks } from '@/test/inertiaMocks';
-import { plateProfile, playerBlock, playerSet, workoutPayload } from '@/test/factories';
+import { mount } from '@vue/test-utils';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { defineComponent, h } from 'vue';
 
 function mountPlayer(overrides: Parameters<typeof workoutPayload>[0] = {}) {
     let player!: ReturnType<typeof createWorkoutPlayer>;
@@ -31,7 +31,10 @@ describe('createWorkoutPlayer', () => {
             'route',
             vi.fn((name: string, _params?: unknown) => `/${String(name)}`),
         );
-        vi.stubGlobal('confirm', vi.fn(() => true));
+        vi.stubGlobal(
+            'confirm',
+            vi.fn(() => true),
+        );
         Object.defineProperty(navigator, 'wakeLock', {
             configurable: true,
             value: { request: vi.fn().mockRejectedValue(new Error('unsupported')) },
@@ -57,10 +60,7 @@ describe('createWorkoutPlayer', () => {
         const player = mountPlayer({
             blocks: [
                 playerBlock({
-                    sets: [
-                        playerSet({ id: 1, completed: true, logged_weight_kg: 90 }),
-                        playerSet({ id: 2, set_index: 1, completed: false }),
-                    ],
+                    sets: [playerSet({ id: 1, completed: true, logged_weight_kg: 90 }), playerSet({ id: 2, set_index: 1, completed: false })],
                 }),
             ],
         });
@@ -138,10 +138,7 @@ describe('createWorkoutPlayer', () => {
         const player = mountPlayer({
             blocks: [
                 playerBlock({
-                    sets: [
-                        playerSet({ id: 1, completed: false, rest_seconds: 90 }),
-                        playerSet({ id: 2, set_index: 1, completed: false }),
-                    ],
+                    sets: [playerSet({ id: 1, completed: false, rest_seconds: 90 }), playerSet({ id: 2, set_index: 1, completed: false })],
                 }),
             ],
         });
@@ -163,10 +160,7 @@ describe('createWorkoutPlayer', () => {
         const player = mountPlayer({
             blocks: [
                 playerBlock({
-                    sets: [
-                        playerSet({ id: 1, completed: false, rest_seconds: 3 }),
-                        playerSet({ id: 2, set_index: 1, completed: false }),
-                    ],
+                    sets: [playerSet({ id: 1, completed: false, rest_seconds: 3 }), playerSet({ id: 2, set_index: 1, completed: false })],
                 }),
             ],
         });
@@ -259,21 +253,13 @@ describe('createWorkoutPlayer', () => {
     it('finishes workout when confirmed', () => {
         const player = mountPlayer();
         player.finishWorkout();
-        expect(inertiaMocks().routerMocks.post).toHaveBeenCalledWith(
-            '/workouts.finish',
-            {},
-            expect.any(Object),
-        );
+        expect(inertiaMocks().routerMocks.post).toHaveBeenCalledWith('/workouts.finish', {}, expect.any(Object));
     });
 
     it('abandons workout when confirmed', () => {
         const player = mountPlayer();
         player.abandonWorkout();
-        expect(inertiaMocks().routerMocks.post).toHaveBeenCalledWith(
-            '/workouts.discard',
-            {},
-            expect.any(Object),
-        );
+        expect(inertiaMocks().routerMocks.post).toHaveBeenCalledWith('/workouts.discard', {}, expect.any(Object));
     });
 
     it('leaves workout via dashboard visit', () => {
@@ -294,10 +280,7 @@ describe('createWorkoutPlayer', () => {
             blocks: [
                 playerBlock({
                     id: 5,
-                    sets: [
-                        playerSet({ id: 1, set_index: 0, completed: false }),
-                        playerSet({ id: 2, set_index: 1, completed: false }),
-                    ],
+                    sets: [playerSet({ id: 1, set_index: 0, completed: false }), playerSet({ id: 2, set_index: 1, completed: false })],
                 }),
             ],
         });

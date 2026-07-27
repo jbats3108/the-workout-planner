@@ -18,22 +18,13 @@ export function emptyBlock(
         firstCatalogId?: number | null;
     } = {},
 ): Block {
-    const {
-        superset = false,
-        seedWarmUp = true,
-        warmUpDefaults = [],
-        firstCatalogId = null,
-    } = options;
-    const steps = seedWarmUp
-        ? warmUpDefaults.map((s) => ({ percent: s.percent, reps: s.reps }))
-        : [];
+    const { superset = false, seedWarmUp = true, warmUpDefaults = [], firstCatalogId = null } = options;
+    const steps = seedWarmUp ? warmUpDefaults.map((s) => ({ percent: s.percent, reps: s.reps })) : [];
     return {
         is_superset: superset,
         has_setup_after: false,
         has_setup_after_warm_up: false,
-        exercises: superset
-            ? [emptyExercise(firstCatalogId), emptyExercise(firstCatalogId)]
-            : [emptyExercise(firstCatalogId)],
+        exercises: superset ? [emptyExercise(firstCatalogId), emptyExercise(firstCatalogId)] : [emptyExercise(firstCatalogId)],
         working: { set_count: 3, rest_seconds: 120, dropsets: [] },
         warm_up: { set_count: steps.length, rest_seconds: 60, steps },
     };

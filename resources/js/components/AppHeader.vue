@@ -29,10 +29,7 @@ const mobileOpen = ref(false);
                 </button>
             </SheetTrigger>
 
-            <SheetContent
-                side="left"
-                class="w-[min(20rem,85vw)] border-border p-0 sm:max-w-sm [&>button]:right-3 [&>button]:top-3"
-            >
+            <SheetContent side="left" class="w-[min(20rem,85vw)] border-border p-0 sm:max-w-sm [&>button]:top-3 [&>button]:right-3">
                 <SheetTitle class="sr-only">Navigation</SheetTitle>
                 <SheetDescription class="sr-only">Main app navigation</SheetDescription>
                 <div class="flex h-full flex-col px-2 py-4 pt-12">

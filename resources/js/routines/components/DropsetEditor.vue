@@ -10,38 +10,18 @@ withDefaults(
     { variant: 'desktop' },
 );
 
-const {
-    isDropsetSlot,
-    setSlotKind,
-    dropsetForIndex,
-    removeDropsetSegment,
-    addDropsetSegment,
-    rackStart,
-    rackEnd,
-    rackStep,
-    applyRunTheRack,
-} = useRoutineEditor();
+const { isDropsetSlot, setSlotKind, dropsetForIndex, removeDropsetSegment, addDropsetSegment, rackStart, rackEnd, rackStep, applyRunTheRack } =
+    useRoutineEditor();
 </script>
 
 <template>
     <div
         v-for="setIndex in block.working.set_count"
         :key="setIndex"
-        :class="
-            variant === 'desktop'
-                ? 'rounded-lg border border-border bg-background p-3'
-                : 'rounded-xl border border-border bg-background p-3'
-        "
+        :class="variant === 'desktop' ? 'rounded-lg border border-border bg-background p-3' : 'rounded-xl border border-border bg-background p-3'"
     >
         <div class="mb-2 flex items-center justify-between gap-2">
-            <span
-                :class="
-                    variant === 'desktop'
-                        ? 'text-xs font-medium text-muted-foreground'
-                        : 'text-sm font-medium'
-                "
-                >Set {{ setIndex }}</span
-            >
+            <span :class="variant === 'desktop' ? 'text-xs font-medium text-muted-foreground' : 'text-sm font-medium'">Set {{ setIndex }}</span>
             <select
                 :class="
                     variant === 'desktop'
@@ -49,22 +29,14 @@ const {
                         : 'rounded-lg border border-border bg-card px-2 py-1 text-sm'
                 "
                 :value="isDropsetSlot(block, setIndex - 1) ? 'dropset' : 'normal'"
-                @change="
-                    setSlotKind(
-                        block,
-                        setIndex - 1,
-                        ($event.target as HTMLSelectElement).value as 'normal' | 'dropset',
-                    )
-                "
+                @change="setSlotKind(block, setIndex - 1, ($event.target as HTMLSelectElement).value as 'normal' | 'dropset')"
             >
                 <option value="normal">Normal</option>
                 <option value="dropset">Dropset</option>
             </select>
         </div>
         <template v-if="isDropsetSlot(block, setIndex - 1)">
-            <p class="mb-2 text-xs text-muted-foreground">
-                Shared reps: {{ block.exercises[0]?.prescribed_reps ?? '—' }}
-            </p>
+            <p class="mb-2 text-xs text-muted-foreground">Shared reps: {{ block.exercises[0]?.prescribed_reps ?? '—' }}</p>
             <div
                 v-for="(seg, si) in dropsetForIndex(block, setIndex - 1)!.segments"
                 :key="si"
@@ -93,22 +65,9 @@ const {
                 </button>
             </div>
             <div v-if="variant === 'desktop'" class="mt-2 flex flex-wrap items-center gap-2">
-                <button
-                    type="button"
-                    class="text-xs text-primary"
-                    @click="addDropsetSegment(block, setIndex - 1)"
-                >
-                    + Drop
-                </button>
+                <button type="button" class="text-xs text-primary" @click="addDropsetSegment(block, setIndex - 1)">+ Drop</button>
             </div>
-            <button
-                v-else
-                type="button"
-                class="mt-1 text-xs text-primary"
-                @click="addDropsetSegment(block, setIndex - 1)"
-            >
-                + Drop
-            </button>
+            <button v-else type="button" class="mt-1 text-xs text-primary" @click="addDropsetSegment(block, setIndex - 1)">+ Drop</button>
             <div class="mt-3 border-t border-border pt-2">
                 <p class="mb-1 text-xs text-muted-foreground">Run the rack</p>
                 <div v-if="variant === 'desktop'" class="flex flex-wrap items-end gap-1">

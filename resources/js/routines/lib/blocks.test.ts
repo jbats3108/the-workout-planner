@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest';
 import { emptyBlock, emptyExercise, normalizeBlock, toggleSuperset } from '@/routines/lib/blocks';
 import { block } from '@/test/factories';
+import { describe, expect, it } from 'vitest';
 
 describe('emptyExercise', () => {
     it('uses catalog id when provided', () => {

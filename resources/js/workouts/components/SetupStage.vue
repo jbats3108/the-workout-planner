@@ -11,11 +11,7 @@ const { setupHint, upcoming, workout, acknowledgeSetup } = useWorkoutPlayer();
         <p class="text-center text-2xl font-semibold">Change equipment, then continue</p>
         <p class="text-sm text-muted-foreground">{{ setupHint }}</p>
         <UpcomingCard v-if="upcoming" :upcoming="upcoming" :weight-unit="workout.weight_unit" />
-        <button
-            type="button"
-            class="rounded-full bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground"
-            @click="acknowledgeSetup"
-        >
+        <button type="button" class="rounded-full bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground" @click="acknowledgeSetup">
             Setup done
         </button>
     </div>

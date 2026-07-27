@@ -11,10 +11,7 @@ export function isDropsetSlot(block: Block, setIndex: number): boolean {
 export function defaultDropsetSegments(block: Block): DropsetSegment[] {
     const working = block.exercises[0]?.working_weight_kg ?? 20;
     const step = Math.max(2.5, Math.round(working * 0.1 * 2) / 2);
-    return [
-        { weight_kg: working },
-        { weight_kg: Math.max(0, Math.round((working - step) * 2) / 2) },
-    ];
+    return [{ weight_kg: working }, { weight_kg: Math.max(0, Math.round((working - step) * 2) / 2) }];
 }
 
 export function setSlotKind(block: Block, setIndex: number, kind: 'normal' | 'dropset'): void {
@@ -53,11 +50,7 @@ export function removeDropsetSegment(block: Block, setIndex: number, segmentInde
     recipe.segments.splice(segmentIndex, 1);
 }
 
-export function applyRunTheRack(
-    block: Block,
-    setIndex: number,
-    rack: { start: number; end: number; step: number },
-): void {
+export function applyRunTheRack(block: Block, setIndex: number, rack: { start: number; end: number; step: number }): void {
     const start = Number(rack.start);
     const end = Number(rack.end);
     const step = Number(rack.step);
@@ -89,7 +82,5 @@ export function dropsetSummary(block: Block): string {
     if (block.is_superset || !block.working.dropsets.length) {
         return '';
     }
-    return block.working.dropsets
-        .map((d) => `S${d.set_index + 1}:${d.segments.map((s) => s.weight_kg).join('→')}`)
-        .join(' · ');
+    return block.working.dropsets.map((d) => `S${d.set_index + 1}:${d.segments.map((s) => s.weight_kg).join('→')}`).join(' · ');
 }

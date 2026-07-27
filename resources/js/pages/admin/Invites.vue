@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import type { InviteRow } from '@/admin/types';
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/AppLayout.vue';
 import AdminLayout from '@/layouts/admin/Layout.vue';
-import type { InviteRow } from '@/admin/types';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router, useForm, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
@@ -71,12 +71,9 @@ const revoke = (id: number) => {
                 Master env invite is off (good for local). Only admin-created links below can register.
             </p>
 
-            <div
-                v-if="flashUrl"
-                class="rounded-xl border border-primary/40 bg-primary/5 px-4 py-3"
-            >
+            <div v-if="flashUrl" class="rounded-xl border border-primary/40 bg-primary/5 px-4 py-3">
                 <p class="text-sm font-medium">New invite link</p>
-                <p class="mt-1 break-all font-mono text-xs text-muted-foreground">{{ flashUrl }}</p>
+                <p class="mt-1 font-mono text-xs break-all text-muted-foreground">{{ flashUrl }}</p>
                 <div class="mt-3 flex flex-wrap gap-2">
                     <Button type="button" size="sm" @click="copyUrl(flashUrl, 'flash')">
                         {{ copiedId === 'flash' ? 'Copied' : 'Copy' }}
@@ -140,9 +137,7 @@ const revoke = (id: number) => {
                                 used {{ invite.used_at }}
                                 <span v-if="invite.used_by"> by {{ invite.used_by }}</span>
                             </p>
-                            <p v-else-if="invite.revoked_at" class="text-xs text-destructive">
-                                revoked {{ invite.revoked_at }}
-                            </p>
+                            <p v-else-if="invite.revoked_at" class="text-xs text-destructive">revoked {{ invite.revoked_at }}</p>
                             <p v-else-if="invite.usable" class="text-xs text-primary">usable</p>
                             <p v-else class="text-xs text-muted-foreground">expired</p>
                         </div>
@@ -157,9 +152,7 @@ const revoke = (id: number) => {
                         </div>
                     </div>
                 </li>
-                <li v-if="!invites.length" class="px-4 py-8 text-center text-sm text-muted-foreground">
-                    No invites yet.
-                </li>
+                <li v-if="!invites.length" class="px-4 py-8 text-center text-sm text-muted-foreground">No invites yet.</li>
             </ul>
         </AdminLayout>
     </AppLayout>

@@ -52,19 +52,13 @@ const {
                             </td>
                             <td class="px-2 py-2">
                                 <div class="flex items-center gap-2">
-                                    <span v-if="block.is_superset" class="font-mono text-xs text-primary">{{
-                                        ei === 0 ? 'A' : 'B'
-                                    }}</span>
+                                    <span v-if="block.is_superset" class="font-mono text-xs text-primary">{{ ei === 0 ? 'A' : 'B' }}</span>
                                     <select
                                         v-model.number="ex.exercise_id"
                                         class="max-w-xs rounded border border-border bg-card px-2 py-1"
                                         @focus="selectBlockExercise(bi, ei)"
                                     >
-                                        <option
-                                            v-for="opt in exerciseOptionsFor(ex.exercise_id)"
-                                            :key="opt.id"
-                                            :value="opt.id"
-                                        >
+                                        <option v-for="opt in exerciseOptionsFor(ex.exercise_id)" :key="opt.id" :value="opt.id">
                                             {{ opt.name }}
                                         </option>
                                     </select>
@@ -114,9 +108,7 @@ const {
                                         :value="warmUpText(block)"
                                         class="w-32 rounded border border-border bg-card px-2 py-1 font-mono text-primary/90"
                                         placeholder="40x5, 60x3, 80x1"
-                                        @input="
-                                            setWarmUpText(block, ($event.target as HTMLInputElement).value)
-                                        "
+                                        @input="setWarmUpText(block, ($event.target as HTMLInputElement).value)"
                                     />
                                     <button
                                         v-if="block.warm_up.steps.length"
@@ -142,27 +134,15 @@ const {
                             <td class="px-2 py-2">
                                 <div v-if="ei === 0" class="flex flex-col gap-1 text-xs">
                                     <label class="flex items-center gap-1">
-                                        <input
-                                            type="checkbox"
-                                            :checked="block.is_superset"
-                                            @change="toggleSuperset(block)"
-                                        />
+                                        <input type="checkbox" :checked="block.is_superset" @change="toggleSuperset(block)" />
                                         SS
                                     </label>
                                     <label
                                         class="flex items-center gap-1"
                                         :class="block.warm_up.steps.length ? '' : 'opacity-40'"
-                                        :title="
-                                            block.warm_up.steps.length
-                                                ? undefined
-                                                : 'Add warm-up steps first'
-                                        "
+                                        :title="block.warm_up.steps.length ? undefined : 'Add warm-up steps first'"
                                     >
-                                        <input
-                                            v-model="block.has_setup_after_warm_up"
-                                            type="checkbox"
-                                            :disabled="!block.warm_up.steps.length"
-                                        />
+                                        <input v-model="block.has_setup_after_warm_up" type="checkbox" :disabled="!block.warm_up.steps.length" />
                                         Setup→work
                                     </label>
                                     <label class="flex items-center gap-1">
@@ -185,21 +165,13 @@ const {
                     </template>
                 </tbody>
             </table>
-            <p v-if="!form.blocks.length" class="px-4 py-8 text-center text-muted-foreground">
-                No blocks yet. Add one below.
-            </p>
+            <p v-if="!form.blocks.length" class="px-4 py-8 text-center text-muted-foreground">No blocks yet. Add one below.</p>
         </div>
 
-        <div
-            v-if="activeBlock && !activeBlock.is_superset"
-            class="border-t border-border bg-card/40 px-4 py-3"
-        >
+        <div v-if="activeBlock && !activeBlock.is_superset" class="border-t border-border bg-card/40 px-4 py-3">
             <div class="mb-2 flex items-baseline justify-between gap-2">
                 <h3 class="text-sm font-medium">Dropsets · Block {{ active + 1 }}</h3>
-                <p
-                    v-if="dropsetSummary(activeBlock)"
-                    class="truncate font-mono text-xs text-muted-foreground"
-                >
+                <p v-if="dropsetSummary(activeBlock)" class="truncate font-mono text-xs text-muted-foreground">
                     {{ dropsetSummary(activeBlock) }}
                 </p>
             </div>
@@ -209,18 +181,10 @@ const {
         </div>
 
         <footer class="flex gap-2 border-t border-border px-4 py-3">
-            <button
-                type="button"
-                class="rounded border border-border px-3 py-2 text-sm hover:border-primary"
-                @click="addBlock(false)"
-            >
+            <button type="button" class="rounded border border-border px-3 py-2 text-sm hover:border-primary" @click="addBlock(false)">
                 + Block
             </button>
-            <button
-                type="button"
-                class="rounded border border-border px-3 py-2 text-sm hover:border-primary"
-                @click="addBlock(true)"
-            >
+            <button type="button" class="rounded border border-border px-3 py-2 text-sm hover:border-primary" @click="addBlock(true)">
                 + Superset
             </button>
         </footer>

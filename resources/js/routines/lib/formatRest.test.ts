@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
 import { formatRest } from '@/routines/lib/formatRest';
+import { describe, expect, it } from 'vitest';
 
 describe('formatRest', () => {
     it('formats seconds under a minute', () => {

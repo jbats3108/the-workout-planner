@@ -18,9 +18,7 @@ import { Head, Link } from '@inertiajs/vue3';
                 <span class="text-primary">OVR</span><span>LOAD</span>
             </h1>
 
-            <p class="home-line mt-6 max-w-md text-base text-muted-foreground sm:text-lg">
-                Progressive strength. Planned, logged, overloaded.
-            </p>
+            <p class="home-line mt-6 max-w-md text-base text-muted-foreground sm:text-lg">Progressive strength. Planned, logged, overloaded.</p>
 
             <div class="home-cta mt-10 flex w-full max-w-sm flex-col gap-3 sm:max-w-none sm:flex-row sm:justify-center">
                 <Link

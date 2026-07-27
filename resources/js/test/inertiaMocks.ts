@@ -14,6 +14,5 @@ type InertiaMocks = {
 };
 
 export function inertiaMocks(): InertiaMocks {
-    return (globalThis as typeof globalThis & { __inertiaMocks: InertiaMocks })
-        .__inertiaMocks;
+    return (globalThis as typeof globalThis & { __inertiaMocks: InertiaMocks }).__inertiaMocks;
 }

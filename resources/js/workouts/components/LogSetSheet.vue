@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import SheetOverlay from '@/components/ui/sheet/SheetOverlay.vue';
 import { cn } from '@/lib/utils';
 import { DialogContent, DialogPortal, DialogRoot } from 'reka-ui';
-import SheetOverlay from '@/components/ui/sheet/SheetOverlay.vue';
 import { onBeforeUnmount, ref, watch } from 'vue';
 
 const open = defineModel<boolean>('open', { required: true });
@@ -52,9 +52,9 @@ onBeforeUnmount(() => {
             <DialogContent
                 :class="
                     cn(
-                        'bg-background fixed inset-x-0 z-50 flex max-h-[55dvh] flex-col gap-4 rounded-t-2xl border-t p-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-lg',
-                        'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
-                        'data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom duration-300',
+                        'fixed inset-x-0 z-50 flex max-h-[55dvh] flex-col gap-4 rounded-t-2xl border-t bg-background p-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-lg',
+                        'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0',
+                        'duration-300 data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom',
                     )
                 "
                 :style="{ bottom: `${keyboardInset}px` }"

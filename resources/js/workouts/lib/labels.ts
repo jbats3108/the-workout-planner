@@ -1,5 +1,5 @@
-import type { Focus, PlayerBlock } from '@/workouts/types';
 import type { FlatSetEntry } from '@/workouts/lib/focus';
+import type { Focus, PlayerBlock } from '@/workouts/types';
 
 export function groupLabel(type: string): string {
     return type === 'warm_up' ? 'Warm-up' : 'Working';

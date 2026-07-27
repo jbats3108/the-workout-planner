@@ -51,10 +51,7 @@ export type WorkoutPayload = {
 
 export type SetupPhase = 'after_warm_up' | 'after_block';
 
-export type Focus =
-    | { kind: 'set'; blockIndex: number; setId: number }
-    | { kind: 'setup'; blockIndex: number; phase: SetupPhase }
-    | { kind: 'done' };
+export type Focus = { kind: 'set'; blockIndex: number; setId: number } | { kind: 'setup'; blockIndex: number; phase: SetupPhase } | { kind: 'done' };
 
 export type Bump = {
     routine_block_exercise_id: number;
