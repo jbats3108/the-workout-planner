@@ -22,6 +22,11 @@ Active queue ordered **easiest → hardest** (gym-test 2026-07-26 + remaining pr
 
 1. **Soft-fail not-found / errors** — no raw error pages for expected misses or domain failures; redirect (or back) with a flash/toast instead. Apply across player, history, progression, and similar Inertia surfaces.
 2. **Audit agent guidance for duplication** — Spatie Data DTO rules (and likely other conventions) are repeated across `AGENTS.md`, ADRs, and `.cursor/skills/...`; consolidate so agents load one source of truth and keep context light.
+3. **Bigger edit/delete icons** — increase affordance size for edit/delete controls in the UI.
+4. **Remove clickable titles** — titles should not navigate; use explicit buttons only.
+5. **Admin nav order** — push Admin to the bottom of the top-nav items.
+6. **Login screen on every open?** — investigate why the app often shows login on open (session, PWA/tab restore, cookie, redirect).
+7. **Bump confirmation timing** — grill: when (if at all) the bump confirmation screen should appear (finish only? history re-eval? skip entirely?).
 
 ### Shipped (recent)
 
@@ -34,7 +39,7 @@ Active queue ordered **easiest → hardest** (gym-test 2026-07-26 + remaining pr
 5. **Plate guide visibility in Play** — ~~works for barbell/EZ; missing equipment on pre-import orphans~~ done (audit + merge original short-name catalog)
 6. **Progression on finish** — ~~carry-forward highest achieved top weight; confirm bumps when progression target hit; skip both for deload workouts~~ done
 5. **Mid-session structure edits** — ~~mutate the in-progress workout snapshot (not the routine) from the player~~ done (add/remove incomplete working sets)
-6. **More app-like mobile behaviour** — ~~chrome polish: safe areas, player full-bleed (no AppLayout), leave confirm, overscroll off on player+editor~~ done (grill notes below; no PWA / bottom nav)
+6. **More app-like mobile behaviour** — ~~chrome polish: safe areas, player full-bleed (no AppLayout), leave confirm, overscroll off on player+editor~~ done (no PWA / bottom nav)
 7. **User default warm-up %s and reps** — ~~prefs on the user; per-step %×reps on warm-up steps; seed into new blocks; Settings → Training~~ done
 8. **Restyle whole app to match Overload branding** — ~~zinc + lime~~ done: dark-first near-black + neon yellow primary + cyan accent (`docs/branding.md`, `resources/css/app.css`)
 9. **Find and import exercises** — ~~shared catalog JSON + `exercises:import` + seeder; editor find filter; index scoped to `forUser`~~ done (~80 lifts)
@@ -50,80 +55,21 @@ Active queue ordered **easiest → hardest** (gym-test 2026-07-26 + remaining pr
 18. **Rest after warm-ups** — ~~make warm-up group rest first-class in editor + Play (rest after warm-up sets / before working)~~ done (editor exposes WU rest; Play already used group rest)
 19. **Clear block warm-up** — ~~one-tap remove all warm-up steps from a block in the editor~~ done
 20. **Warm-up defaults scope** — ~~Settings: seed warm-ups into every new block vs first block only~~ done
-21. **Dropsets** — ~~per working-set-slot multi-segment sets in editor + Play (grill notes below); update `CONTEXT.md` when shipping~~ done
-
-## Grill: finished workout history
-
-Decisions (2026-07-25):
-
-- **Job (v1):** browse finished **Workouts** (list → compact detail). Not per-exercise strength-over-time.
-- **Entry:** nav **History** + dashboard recent strip
-- **List:** finished only (no discarded); chronological; filter by routine
-- **Detail:** compact log; warm-ups read-only; edit working weight + reps only; do not surface `completed_at`
-- **Re-eval eligibility:** latest **non-deload** finished workout for that routine; a deload finished after it does **not** block. Older finished workouts: log edit only, no routine change
-- **On eligible save:** silent upward **Carry-forward**; then same **Progression** page for new **Bump**s and **undo bump**s
-- **Undo:** use persisted **Bump Record**s (ADR-0004), not inference
-- **Language:** UI label History = list of finished Workouts; not a new domain type. Avoid session/log/activity
-
-Deferred: exercise strength-over-time charts; warm-up edits on history; discarded in list; structure edits on finished workouts; step-by-step impl plan (separate pass)
-
-## Grill: dropsets
-
-Decisions (2026-07-25):
-
-- **Shape:** one working-set *slot* with ≥2 absolute-weight segments; one shared reps target; no rest timer between segments; working-group rest after the whole slot
-- **Scope:** per-set kind inside the working group (mix normal + dropset); **not on supersets** in v1
-- **Standard vs run-the-rack:** same stored segment list; “Run the rack” is an editor helper only (start / end / typed step → fill list); no separate persisted type; no gym DB inventory settings in v1
-- **Working weight:** first segment may default from working weight, then editable absolutes
-- **Progression:** dropsets ignored for achievement floor / bump / carry-forward
-- **Deload:** scale every segment weight + the shared reps by the deload recipe
-- **Play:** finish early or add extra drops (still ≥2 to count as a dropset); can **promote** a normal set to dropset mid-workout
-- **Editor:** ≥2 segments required to save a dropset; shrinking `set_count` trims high-index recipes; new indexes default to normal
-- **Language:** term **Dropset**; Set Group must still not be called a dropset
-
-Deferred: dropsets on supersets; user gym DB inventory (min/max/step); demote dropset → normal in Play.
-
-## Grill: app-like mobile behaviour
-
-Decisions (2026-07-24), chrome-polish pass only:
-
-- **Scope:** A — safe areas / full-bleed / leave guard / overscroll; not bottom nav, not PWA
-- **Surfaces:** player + editor
-- **Leave:** soft confirm on player (`beforeunload` + Inertia `before` when leaving `/workouts/{id}/*`); no history trap
-- **Overscroll:** disabled on player + editor
-- **Motion/haptics:** none this pass
-- **Top chrome:** player chrome-minimal (no AppLayout); editor keeps AppLayout
-
-Deferred: installable PWA, tabbed app shell, haptics.
-
-## Grill: complete-then-log UX
-
-Decisions (2026-07-27):
-
-- **Happy path:** **Done** on main stage → bottom-sheet confirm → **Log set** (prefilled weight/reps; editable). Not one-tap commit without the sheet.
-- **Main stage:** display-only target (+ plate guide on barbell / E-Z only). No weight/reps inputs before **Done**.
-- **Sheet:** ~half-screen bottom sheet; primary **Log set**; dismiss via **Cancel** only (no swipe / backdrop). No auto-keyboard on open — user taps a field to edit.
-- **Cancel:** abort only — set stays incomplete; no server write; no Rest started.
-- **After Log set:** auto Rest when the Set Group has rest (same as today); **Skip rest** unchanged.
-- **Re-log:** completed sets use the same flow; **Log set** overwrites the logged set.
-- **Warm-ups:** same Done → sheet → Log set (prefill from `% × working`).
-- **Dropsets:** same flow; sheet holds shared reps + segment weights (+/− drops).
-- **Supersets:** one sheet per exercise — A → Log set → transition → B → Log set → working Rest.
-- **Promote to dropset:** stays on main stage (below **Done**), before lifting.
-- **v1 scope:** logging flow only; **+ Set** / **− Set** unchanged.
-
-Deferred: sheet swipe/backdrop dismiss; auto-focus weight/reps; redesign **+ Set** / **− Set** placement.
+21. **Dropsets** — ~~per working-set-slot multi-segment sets in editor + Play; update `CONTEXT.md` when shipping~~ done
 
 ## Parking lot
 
-- **Ko-Fi on landing page** — optional tip link when beta-launching at the gym; target ~$25/mo to cover Laravel Cloud at ~200 active users (no mandatory subs yet)
-- **FAQ page** — public/help FAQ; draft content lives in Obsidian (pull notes in when starting)
+- **FAQ page** — public/help FAQ; draft bullets on Notion [FAQ Page](https://app.notion.com/p/3aae5dd99f0c8006a6cbf6df379661a8) (early-adopter forever-free, Ko-fi, what app is/isn't, beta, no AI/ad data sale, not a training app, backlog link)
 - Investigate **slugs instead of IDs** in routes (routines, workouts, exercises, etc.)
 - **Policy audit** — verify every route/action has the right ability and policies stay complete as surfaces grow
 - **Facilitate full code review** — make a thorough review of the app tractable (scope, tooling, or staged passes)
 - **Security sweep** — hunt for authz holes, mass-assignment, IDOR, CSRF/session gaps, and similar
 - **GDPR compliance?** — clarify whether/what is required (privacy policy, data export/delete, retention, cookies); grill before building
 - Per-exercise strength-over-time (charts / PR timeline) — needs its own grill
+- History: warm-up edits; discarded workouts in list; structure edits on finished workouts
+- Demote dropset → normal in Play
+- Installable PWA; tabbed app shell; haptics
+- Complete-then-log follow-ups: sheet swipe/backdrop dismiss; auto-focus weight/reps; redesign **+ Set** / **− Set** placement
 - Ad-hoc setup from player (beyond planned `has_setup_after`)
 - Transition duration as a stored preference (today client-side for supersets)
 - lb display/conversion end-to-end (API still kg-centric like the editor)
