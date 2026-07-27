@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
+import { formatKg } from '@/workouts/lib/historyDisplay';
 import type { WorkoutPayload } from '@/workouts/types';
 import { Head, useForm } from '@inertiajs/vue3';
 
@@ -51,7 +52,7 @@ const saveSet = (setId: number) => {
 
                     <template v-if="set.group_type === 'warm_up'">
                         <p class="mt-2 text-sm text-muted-foreground">
-                            {{ set.logged_reps ?? '—' }} × {{ set.logged_weight_kg ?? set.target_weight_kg ?? '—' }} kg
+                            {{ set.logged_reps ?? '—' }} × {{ formatKg(set.logged_weight_kg ?? set.target_weight_kg) }} kg
                         </p>
                     </template>
 
@@ -71,7 +72,8 @@ const saveSet = (setId: number) => {
                                 v-model.number="forms[set.id].weight_kg"
                                 type="number"
                                 min="0"
-                                step="0.5"
+                                step="0.01"
+                                inputmode="decimal"
                                 class="w-24 rounded border border-border bg-background px-2 py-1.5 text-sm"
                             />
                         </label>
