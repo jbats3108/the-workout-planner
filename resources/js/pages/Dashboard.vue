@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/AppLayout.vue';
+import RoutineCard from '@/routines/components/RoutineCard.vue';
 import type { Routine } from '@/routines/types';
 import { type BreadcrumbItem } from '@/types';
 import type { HistoryWorkout, InProgressWorkout } from '@/workouts/types';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import { Pencil, Trash2 } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -30,6 +31,16 @@ const startWorkout = (routineId: number, mode: 'normal' | 'deload' = 'normal') =
 };
 
 const canStart = (routine: Routine) => !props.data.in_progress_workout && routine.can_start === true;
+
+const startBlockedReason = (routine: Routine) => {
+    if (!routine.can_start) {
+        return 'Add exercises first';
+    }
+    if (props.data.in_progress_workout) {
+        return 'Finish or resume the current workout';
+    }
+    return null;
+};
 
 const finishInProgress = () => {
     const workout = props.data.in_progress_workout;
@@ -77,22 +88,13 @@ const formatFinishedAt = (iso: string) => {
                     <p class="font-mono text-xs text-muted-foreground">{{ data.in_progress_workout.mode }}</p>
                 </div>
                 <div class="flex flex-wrap gap-2">
-                    <Link
-                        :href="route('workouts.play', data.in_progress_workout.id)"
-                        class="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground"
-                    >
-                        Resume
-                    </Link>
-                    <button type="button" class="rounded-full border border-border px-4 py-2 text-sm text-foreground" @click="finishInProgress">
-                        Finish
-                    </button>
-                    <button
-                        type="button"
-                        class="rounded-full border border-destructive/40 px-4 py-2 text-sm text-destructive"
-                        @click="abandonInProgress"
-                    >
+                    <Button size="pill" as-child>
+                        <Link :href="route('workouts.play', data.in_progress_workout.id)">Resume</Link>
+                    </Button>
+                    <Button type="button" variant="outline" size="pill" @click="finishInProgress">Finish</Button>
+                    <Button type="button" variant="outline" size="pill" class="border-destructive/40 text-destructive" @click="abandonInProgress">
                         Abandon
-                    </button>
+                    </Button>
                 </div>
             </div>
 
@@ -116,74 +118,21 @@ const formatFinishedAt = (iso: string) => {
 
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <h2 class="text-xl font-semibold">My Routines</h2>
-                <Link :href="route('routines.create')" class="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
-                    Create
-                </Link>
+                <Button size="pill" as-child>
+                    <Link :href="route('routines.create')">Create</Link>
+                </Button>
             </div>
 
             <div class="grid auto-rows-min gap-3 md:grid-cols-3">
-                <div v-for="routine in props.data.routines" :key="routine.id" class="rounded-xl border border-border bg-card p-4">
-                    <div>
-                        <h3 class="text-lg font-semibold">{{ routine.name }}</h3>
-                        <p class="mt-1 font-mono text-xs text-muted-foreground">
-                            Deload {{ routine.deload_weight_factor }}w / {{ routine.deload_reps_factor }}r
-                        </p>
-                    </div>
-                    <p v-if="!routine.can_start" class="mt-3 text-xs text-muted-foreground">Add exercises in the editor before starting.</p>
-                    <div class="mt-4 flex flex-wrap items-center justify-between gap-2">
-                        <div class="flex flex-wrap items-center gap-2">
-                            <button
-                                type="button"
-                                class="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-40"
-                                :disabled="!canStart(routine)"
-                                :title="
-                                    !routine.can_start
-                                        ? 'Add exercises first'
-                                        : data.in_progress_workout
-                                          ? 'Finish or resume the current workout'
-                                          : 'Start workout'
-                                "
-                                @click="startWorkout(routine.id, 'normal')"
-                            >
-                                Start
-                            </button>
-                            <button
-                                type="button"
-                                class="rounded-full border border-border px-5 py-2.5 text-sm text-foreground/80 disabled:opacity-40"
-                                :disabled="!canStart(routine)"
-                                :title="
-                                    !routine.can_start
-                                        ? 'Add exercises first'
-                                        : data.in_progress_workout
-                                          ? 'Finish or resume the current workout'
-                                          : 'Start deload'
-                                "
-                                @click="startWorkout(routine.id, 'deload')"
-                            >
-                                Deload
-                            </button>
-                        </div>
-                        <div class="flex items-center gap-1">
-                            <Link
-                                :href="route('routines.edit', routine.id)"
-                                class="rounded p-2 text-muted-foreground transition-colors hover:text-primary"
-                                title="Edit routine"
-                                aria-label="Edit routine"
-                            >
-                                <Pencil class="size-5" />
-                            </Link>
-                            <button
-                                type="button"
-                                class="rounded p-2 text-destructive transition-opacity hover:opacity-80"
-                                title="Delete routine"
-                                aria-label="Delete routine"
-                                @click="deleteRoutine(routine)"
-                            >
-                                <Trash2 class="size-5" />
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <RoutineCard
+                    v-for="routine in props.data.routines"
+                    :key="routine.id"
+                    :routine="routine"
+                    :can-start="canStart(routine)"
+                    :start-blocked-reason="startBlockedReason(routine)"
+                    @start="(mode) => startWorkout(routine.id, mode)"
+                    @delete="deleteRoutine(routine)"
+                />
             </div>
             <p v-if="!props.data.routines.length" class="text-sm text-muted-foreground">No routines yet. Tap Create to start one.</p>
         </div>
