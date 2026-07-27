@@ -1,8 +1,16 @@
 # Validation & Forms Best Practices
 
+## Spatie Laravel Data (this app)
+
+HTTP boundaries use Spatie Data DTOs (`App\{Domain}\Data\...`), not Form Requests. See `docs/adr/0001-spatie-laravel-data-http-boundaries.md`.
+
+- Constructor properties: always `public readonly`.
+- Prefer PHP types over redundant attributes — do not add `#[Present]` / `#[ArrayType]` just because a property is an `array`. Optional empty lists: default `= []` and omit the key when empty (inferred `required` rejects `[]`).
+- Use validation attributes only for constraints the type system cannot express (`#[Min]`, `#[Max]`, `#[Exists]`, `#[RequiredWithout]`, …). Prefer attributes over `rules()`; reserve `rules()` for nested/`*` cases.
+
 ## Use Form Request Classes
 
-Extract validation from controllers into dedicated Form Request classes.
+Extract validation from controllers into dedicated Form Request classes when Form Requests are used (rare here — prefer Spatie Data above).
 
 Incorrect:
 ```php

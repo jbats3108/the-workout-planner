@@ -86,9 +86,46 @@ class WorkoutProgressionServiceTest extends TestCase
         $this->workoutService->completeSet($set, reps: 6, weightGrams: 80000);
         $bumps = $this->workoutService->finishWorkout($workout);
 
-        $this->progressionService->applyConfirmedBumps($bumps, [$routineExercise->id]);
+        $this->progressionService->applyConfirmedBumps($workout, $bumps, [$routineExercise->id]);
 
         $this->assertSame(82500, $routineExercise->fresh()->working_weight_g);
+    }
+
+    #[Test]
+    public function confirmed_bumps_create_bump_records(): void
+    {
+        [$routine, $routineExercise] = $this->seedRoutine(workingWeightG: 80000, progressionTarget: 6, achievementFloor: 4);
+        $workout = $this->workoutService->createWorkout($routine);
+        $set = $this->firstSet($workout->id);
+        $this->workoutService->completeSet($set, reps: 6, weightGrams: 80000);
+        $bumps = $this->workoutService->finishWorkout($workout);
+
+        $this->progressionService->applyConfirmedBumps($workout, $bumps, [$routineExercise->id]);
+
+        $this->assertDatabaseHas('bump_records', [
+            'workout_id' => $workout->id,
+            'routine_block_exercise_id' => $routineExercise->id,
+            'from_weight_g' => 80000,
+            'to_weight_g' => 82500,
+            'undone_at' => null,
+        ]);
+    }
+
+    #[Test]
+    public function confirmed_undos_revert_bump_and_mark_record_undone(): void
+    {
+        [$routine, $routineExercise] = $this->seedRoutine(workingWeightG: 80000, progressionTarget: 6, achievementFloor: 4);
+        $workout = $this->workoutService->createWorkout($routine);
+        $set = $this->firstSet($workout->id);
+        $this->workoutService->completeSet($set, reps: 6, weightGrams: 80000);
+        $bumps = $this->workoutService->finishWorkout($workout);
+        $this->progressionService->applyConfirmedBumps($workout, $bumps, [$routineExercise->id]);
+
+        $recordId = $workout->fresh()->bumpRecords->first()->id;
+        $this->progressionService->applyConfirmedUndos($workout, [$recordId]);
+
+        $this->assertSame(80000, $routineExercise->fresh()->working_weight_g);
+        $this->assertNotNull($workout->fresh()->bumpRecords->first()->undone_at);
     }
 
     #[Test]

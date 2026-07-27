@@ -5,7 +5,10 @@ namespace App\Workouts\Services;
 use App\Routines\Models\RoutineBlockExercise;
 use App\Shared\Enums\SetGroupType;
 use App\Workouts\Data\Progression\BumpProposalData;
+use App\Workouts\Data\Progression\ProgressionSessionData;
+use App\Workouts\Data\Progression\UndoBumpProposalData;
 use App\Workouts\Enums\WorkoutMode;
+use App\Workouts\Models\BumpRecord;
 use App\Workouts\Models\Workout;
 use App\Workouts\Models\WorkoutBlockExercise;
 use App\Workouts\Models\WorkoutSet;
@@ -20,17 +23,32 @@ class WorkoutProgressionService
 
     public function applyCarryForwardAndCollectBumps(Workout $workout): DataCollection
     {
+        return $this->reEvaluateProgression($workout, collectNewBumps: true)->bumps;
+    }
+
+    public function reEvaluateProgression(Workout $workout, bool $collectNewBumps = true): ProgressionSessionData
+    {
         if ($workout->mode === WorkoutMode::Deload) {
-            return BumpProposalData::collect([], DataCollection::class);
+            return new ProgressionSessionData(
+                bumps: BumpProposalData::collect([], DataCollection::class),
+                undos: UndoBumpProposalData::collect([], DataCollection::class),
+            );
         }
 
         $workout->load([
             'routine.blocks.blockExercises',
             'blocks.blockExercises.sets.setGroup',
             'blocks.blockExercises.sets.segments',
+            'bumpRecords',
         ]);
 
-        $proposals = [];
+        $activeBumpExerciseIds = $workout->bumpRecords
+            ->filter(fn (BumpRecord $record): bool => $record->isActive())
+            ->pluck('routine_block_exercise_id')
+            ->all();
+
+        $bumps = [];
+        $exerciseNamesByRoutineId = [];
 
         foreach ($workout->blocks as $workoutBlock) {
             $routineBlock = $workout->routine->blocks->firstWhere('position', $workoutBlock->position);
@@ -46,14 +64,19 @@ class WorkoutProgressionService
                     continue;
                 }
 
+                $exerciseNamesByRoutineId[$routineExercise->id] = $workoutExercise->exercise_name;
                 $workingSets = $this->completedWorkingSets($workoutExercise);
 
                 $this->carryForward($routineExercise, $workoutExercise, $workingSets);
 
-                if ($this->hitProgressionTarget($workoutExercise, $workingSets)) {
+                if (
+                    $collectNewBumps
+                    && $this->hitProgressionTarget($workoutExercise, $workingSets)
+                    && ! in_array($routineExercise->id, $activeBumpExerciseIds, true)
+                ) {
                     $routineExercise->refresh();
                     $from = $routineExercise->working_weight_g;
-                    $proposals[] = new BumpProposalData(
+                    $bumps[] = new BumpProposalData(
                         routineBlockExerciseId: $routineExercise->id,
                         exerciseName: $workoutExercise->exercise_name,
                         fromWeightG: $from,
@@ -63,18 +86,23 @@ class WorkoutProgressionService
             }
         }
 
-        return BumpProposalData::collect($proposals, DataCollection::class);
+        $undos = $this->collectUndoProposals($workout, $exerciseNamesByRoutineId);
+
+        return new ProgressionSessionData(
+            bumps: BumpProposalData::collect($bumps, DataCollection::class),
+            undos: UndoBumpProposalData::collect($undos, DataCollection::class),
+        );
     }
 
     /**
      * @param  list<int>  $routineBlockExerciseIds
      * @param  DataCollection<int, BumpProposalData>  $proposals
      */
-    public function applyConfirmedBumps(DataCollection $proposals, array $routineBlockExerciseIds): void
+    public function applyConfirmedBumps(Workout $workout, DataCollection $proposals, array $routineBlockExerciseIds): void
     {
         $selected = collect($routineBlockExerciseIds)->unique()->all();
 
-        DB::transaction(function () use ($proposals, $selected): void {
+        DB::transaction(function () use ($workout, $proposals, $selected): void {
             foreach ($proposals as $proposal) {
                 /** @var BumpProposalData $proposal */
                 if (! in_array($proposal->routineBlockExerciseId, $selected, true)) {
@@ -89,8 +117,152 @@ class WorkoutProgressionService
 
                 $exercise->working_weight_g = $proposal->toWeightG;
                 $exercise->save();
+
+                BumpRecord::query()->updateOrCreate(
+                    [
+                        'workout_id' => $workout->id,
+                        'routine_block_exercise_id' => $proposal->routineBlockExerciseId,
+                    ],
+                    [
+                        'from_weight_g' => $proposal->fromWeightG,
+                        'to_weight_g' => $proposal->toWeightG,
+                        'undone_at' => null,
+                    ],
+                );
             }
         });
+    }
+
+    /**
+     * @param  list<int>  $bumpRecordIds
+     */
+    public function applyConfirmedUndos(Workout $workout, array $bumpRecordIds): void
+    {
+        $selected = collect($bumpRecordIds)->unique()->all();
+
+        if ($selected === []) {
+            return;
+        }
+
+        DB::transaction(function () use ($workout, $selected): void {
+            $records = BumpRecord::query()
+                ->where('workout_id', $workout->id)
+                ->whereNull('undone_at')
+                ->whereIn('id', $selected)
+                ->with('routineBlockExercise')
+                ->get();
+
+            foreach ($records as $record) {
+                $exercise = $record->routineBlockExercise;
+
+                if ($exercise !== null) {
+                    $exercise->working_weight_g = $record->from_weight_g;
+                    $exercise->save();
+                }
+
+                $record->undone_at = now();
+                $record->save();
+            }
+        });
+    }
+
+    public function storeProgressionSession(Workout $workout, ProgressionSessionData $session): void
+    {
+        session([
+            "workout_progression.{$workout->id}" => $session->bumps->toArray(),
+            "workout_progression_undos.{$workout->id}" => $session->undos->toArray(),
+        ]);
+    }
+
+    public function pullProgressionSession(Workout $workout): ?ProgressionSessionData
+    {
+        $storedBumps = session()->pull("workout_progression.{$workout->id}");
+        $storedUndos = session()->pull("workout_progression_undos.{$workout->id}");
+
+        $hasBumps = is_array($storedBumps) && $storedBumps !== [];
+        $hasUndos = is_array($storedUndos) && $storedUndos !== [];
+
+        if (! $hasBumps && ! $hasUndos) {
+            return null;
+        }
+
+        return new ProgressionSessionData(
+            bumps: BumpProposalData::collect($hasBumps ? $storedBumps : [], DataCollection::class),
+            undos: UndoBumpProposalData::collect($hasUndos ? $storedUndos : [], DataCollection::class),
+        );
+    }
+
+    public function forgetProgressionSession(Workout $workout): void
+    {
+        session()->forget([
+            "workout_progression.{$workout->id}",
+            "workout_progression_undos.{$workout->id}",
+        ]);
+    }
+
+    public function hasProgressionSession(Workout $workout): bool
+    {
+        $storedBumps = session("workout_progression.{$workout->id}");
+        $storedUndos = session("workout_progression_undos.{$workout->id}");
+
+        return (is_array($storedBumps) && $storedBumps !== [])
+            || (is_array($storedUndos) && $storedUndos !== []);
+    }
+
+    /**
+     * @param  array<int, string>  $exerciseNamesByRoutineId
+     * @return list<UndoBumpProposalData>
+     */
+    private function collectUndoProposals(Workout $workout, array $exerciseNamesByRoutineId): array
+    {
+        $undos = [];
+
+        foreach ($workout->bumpRecords->filter(fn (BumpRecord $record): bool => $record->isActive()) as $record) {
+            $workoutExercise = $this->findWorkoutExerciseForRoutineExercise($workout, $record->routine_block_exercise_id);
+
+            if ($workoutExercise === null) {
+                continue;
+            }
+
+            $workingSets = $this->completedWorkingSets($workoutExercise);
+
+            if ($this->hitProgressionTarget($workoutExercise, $workingSets)) {
+                continue;
+            }
+
+            $undos[] = new UndoBumpProposalData(
+                bumpRecordId: $record->id,
+                routineBlockExerciseId: $record->routine_block_exercise_id,
+                exerciseName: $exerciseNamesByRoutineId[$record->routine_block_exercise_id] ?? 'Exercise',
+                fromWeightG: $record->to_weight_g,
+                toWeightG: $record->from_weight_g,
+            );
+        }
+
+        return $undos;
+    }
+
+    private function findWorkoutExerciseForRoutineExercise(Workout $workout, int $routineBlockExerciseId): ?WorkoutBlockExercise
+    {
+        $routineExercise = RoutineBlockExercise::query()->find($routineBlockExerciseId);
+
+        if ($routineExercise === null) {
+            return null;
+        }
+
+        foreach ($workout->blocks as $workoutBlock) {
+            $routineBlock = $workout->routine->blocks->firstWhere('position', $workoutBlock->position);
+
+            if ($routineBlock === null || $routineBlock->id !== $routineExercise->routine_block_id) {
+                continue;
+            }
+
+            return $workoutBlock->blockExercises
+                ->first(fn (WorkoutBlockExercise $exercise): bool => $exercise->exercise_id === $routineExercise->exercise_id
+                    || $exercise->position === $routineExercise->position);
+        }
+
+        return null;
     }
 
     /**

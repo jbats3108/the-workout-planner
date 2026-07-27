@@ -11,17 +11,10 @@ class ApplyBumpsData extends Data
 {
     /**
      * @param  list<int>  $routineBlockExerciseIds
+     * @param  list<int>  $undoBumpRecordIds
      */
     public function __construct(
-        public array $routineBlockExerciseIds,
+        public readonly array $routineBlockExerciseIds = [],
+        public readonly array $undoBumpRecordIds = [],
     ) {}
-
-    /** @return array<string, mixed> */
-    public static function rules(): array
-    {
-        return [
-            'routine_block_exercise_ids' => ['present', 'array'],
-            'routine_block_exercise_ids.*' => ['integer', 'exists:routine_block_exercises,id'],
-        ];
-    }
 }

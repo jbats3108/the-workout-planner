@@ -1,0 +1,217 @@
+<?php
+
+namespace Tests\Feature\Workouts\Http\Controllers;
+
+use App\Exercises\Models\Exercise;
+use App\Routines\Models\Routine;
+use App\Routines\Models\RoutineBlock;
+use App\Routines\Models\RoutineBlockExercise;
+use App\Routines\Models\RoutineSetGroup;
+use App\Shared\Enums\SetGroupType;
+use App\Workouts\Models\Workout;
+use App\Workouts\Models\WorkoutSet;
+use App\Workouts\Services\WorkoutProgressionService;
+use App\Workouts\Services\WorkoutService;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia as Assert;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\Helpers\UserHelper;
+use Tests\TestCase;
+
+class WorkoutHistoryControllerTest extends TestCase
+{
+    use RefreshDatabase;
+    use UserHelper;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->seedUsers();
+    }
+
+    #[Test]
+    public function index_lists_finished_workouts_only(): void
+    {
+        [$finished] = $this->createFinishedWorkout();
+        $discarded = $this->createInProgressWorkout();
+        app(WorkoutService::class)->discardWorkout($discarded);
+
+        $this->actingAs($this->user)
+            ->get(route('history.index'))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('history/Index')
+                ->has('history.workouts', 1)
+                ->where('history.workouts.0.id', $finished->id));
+    }
+
+    #[Test]
+    public function index_filters_by_routine(): void
+    {
+        [$workoutA] = $this->createFinishedWorkout();
+        [$workoutB, , $routineB] = $this->createFinishedWorkout();
+
+        $this->actingAs($this->user)
+            ->get(route('history.index', ['routine' => $routineB->id]))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->has('history.workouts', 1)
+                ->where('history.workouts.0.id', $workoutB->id)
+                ->where('history.routine_id', $routineB->id));
+
+        $this->assertNotSame($workoutA->routine_id, $routineB->id);
+    }
+
+    #[Test]
+    public function show_renders_finished_workout_detail(): void
+    {
+        [$workout] = $this->createFinishedWorkout();
+
+        $this->actingAs($this->user)
+            ->get(route('history.show', $workout))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('history/Show')
+                ->where('history.workout.id', $workout->id)
+                ->where('history.can_re_evaluate', true));
+    }
+
+    #[Test]
+    public function show_redirects_for_in_progress_workout(): void
+    {
+        $workout = $this->createInProgressWorkout();
+
+        $this->actingAs($this->user)
+            ->get(route('history.show', $workout))
+            ->assertRedirect(route('history.index'));
+    }
+
+    #[Test]
+    public function eligible_set_edit_triggers_re_eval_and_progression_redirect(): void
+    {
+        [$workout, $routineExercise] = $this->createFinishedWorkout(reps: 6, weightGrams: 80000);
+        $progressionService = app(WorkoutProgressionService::class);
+        $session = $progressionService->reEvaluateProgression($workout);
+        $progressionService->applyConfirmedBumps($workout, $session->bumps, [$routineExercise->id]);
+
+        $set = $this->firstWorkingSet($workout->id);
+
+        $this->actingAs($this->user)
+            ->put(route('history.sets.update', [$workout, $set]), [
+                'reps' => 4,
+                'weight_kg' => 80,
+            ])
+            ->assertRedirect(route('workouts.progression', $workout));
+
+        $this->assertNotEmpty(session("workout_progression_undos.{$workout->id}"));
+    }
+
+    #[Test]
+    public function older_finished_workout_edit_does_not_re_evaluate(): void
+    {
+        [$older, $routineExercise, $routine] = $this->createFinishedWorkout(reps: 6, weightGrams: 80000);
+        $older->update(['finished_at' => now()->subDay()]);
+
+        $newer = app(WorkoutService::class)->createWorkout($routine);
+        $newerSet = $this->firstWorkingSet($newer->id);
+        app(WorkoutService::class)->completeSet($newerSet, reps: 5, weightGrams: 80000);
+        app(WorkoutService::class)->finishWorkout($newer);
+
+        $olderSet = $this->firstWorkingSet($older->id);
+
+        $this->actingAs($this->user)
+            ->put(route('history.sets.update', [$older, $olderSet]), [
+                'reps' => 3,
+                'weight_kg' => 80,
+            ])
+            ->assertRedirect();
+
+        $this->assertNull(session("workout_progression.{$older->id}"));
+        $this->assertSame(80000, $routineExercise->fresh()->working_weight_g);
+    }
+
+    #[Test]
+    public function non_owner_cannot_edit_history(): void
+    {
+        [$workout] = $this->createFinishedWorkout();
+        $set = $this->firstWorkingSet($workout->id);
+
+        $this->actingAs($this->secondUser)
+            ->put(route('history.sets.update', [$workout, $set]), [
+                'reps' => 5,
+                'weight_kg' => 80,
+            ])
+            ->assertForbidden();
+    }
+
+    /**
+     * @return array{0: Workout, 1: RoutineBlockExercise, 2: Routine}
+     */
+    private function createFinishedWorkout(int $reps = 6, int $weightGrams = 80000): array
+    {
+        $this->user->update([
+            'progression_target_default' => 6,
+            'achievement_floor_default' => 4,
+        ]);
+
+        $routine = Routine::factory()->withUser($this->user)->create();
+        $block = RoutineBlock::create([
+            'routine_id' => $routine->id,
+            'position' => 1,
+        ]);
+        $routineExercise = RoutineBlockExercise::create([
+            'routine_block_id' => $block->id,
+            'exercise_id' => Exercise::factory()->create()->id,
+            'position' => 1,
+            'working_weight_g' => 80000,
+            'prescribed_reps' => 6,
+            'progression_target_override' => 6,
+            'achievement_floor_override' => 4,
+        ]);
+        RoutineSetGroup::create([
+            'routine_block_id' => $block->id,
+            'type' => SetGroupType::Working,
+            'set_count' => 1,
+            'rest_seconds' => 90,
+        ]);
+
+        $workout = app(WorkoutService::class)->createWorkout($routine);
+        $set = $this->firstWorkingSet($workout->id);
+        app(WorkoutService::class)->completeSet($set, reps: $reps, weightGrams: $weightGrams);
+        app(WorkoutService::class)->finishWorkout($workout);
+
+        return [$workout->fresh(), $routineExercise, $routine];
+    }
+
+    private function createInProgressWorkout(): Workout
+    {
+        $routine = Routine::factory()->withUser($this->user)->create();
+        $block = RoutineBlock::create([
+            'routine_id' => $routine->id,
+            'position' => 1,
+        ]);
+        RoutineBlockExercise::create([
+            'routine_block_id' => $block->id,
+            'exercise_id' => Exercise::factory()->create()->id,
+            'position' => 1,
+            'working_weight_g' => 80000,
+            'prescribed_reps' => 6,
+        ]);
+        RoutineSetGroup::create([
+            'routine_block_id' => $block->id,
+            'type' => SetGroupType::Working,
+            'set_count' => 1,
+            'rest_seconds' => 90,
+        ]);
+
+        return app(WorkoutService::class)->createWorkout($routine);
+    }
+
+    private function firstWorkingSet(int $workoutId): WorkoutSet
+    {
+        return WorkoutSet::query()
+            ->whereHas('setGroup', fn ($q) => $q->where('type', SetGroupType::Working))
+            ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workoutId))
+            ->firstOrFail();
+    }
+}

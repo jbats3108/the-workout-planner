@@ -60,6 +60,22 @@ export type Bump = {
     to_weight_g: number;
 };
 
+export type UndoBump = {
+    bump_record_id: number;
+    routine_block_exercise_id: number;
+    exercise_name: string;
+    from_weight_g: number;
+    to_weight_g: number;
+};
+
+export type HistoryWorkout = {
+    id: number;
+    routine_name: string;
+    routine_id: number;
+    mode: string;
+    finished_at: string;
+};
+
 export type InProgressWorkout = {
     id: number;
     routine_name: string;

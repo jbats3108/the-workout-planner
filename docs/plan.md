@@ -16,11 +16,13 @@ Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domai
 
 Active queue ordered **easiest → hardest** (gym-test 2026-07-26 + remaining product). Shipped items stay below for history.
 
-1. **Finished workout history** — browse/edit finished workouts; re-eval progression when eligible (grill notes below; ADR-0004)
+1. **Soft-fail not-found / errors** — no raw error pages for expected misses or domain failures; redirect (or back) with a flash/toast instead. Apply across player, history, progression, and similar Inertia surfaces.
+2. **Audit agent guidance for duplication** — Spatie Data DTO rules (and likely other conventions) are repeated across `AGENTS.md`, ADRs, and `.cursor/skills/...`; consolidate so agents load one source of truth and keep context light.
 
 ### Shipped (recent)
 
-1. **Complete-then-log UX** — Done on main stage opens bottom sheet; Log set commits; Cancel aborts without server write; main stage is display-only with plate guide
+1. **Finished workout history** — browse/edit finished workouts at `/history`; dashboard recent strip + nav; warm-ups read-only; working weight + reps editable; re-eval progression on latest non-deload finish (carry-forward, bumps, undo via Bump Records; ADR-0004)
+2. **Complete-then-log UX** — Done on main stage opens bottom sheet; Log set commits; Cancel aborts without server write; main stage is display-only with plate guide
 2. **Rest-end alert + leave-during-rest** — sound/vibration when rest hits zero in foreground; notification permission on first rest + background notification when tab is hidden; clock-based rest sync on visibility return
 2. **Prev set weight → next** — ~~pending-rest blocks focus race; client `lastWorkingWeightKg` + prior logged weight~~ done
 3. **Keep screen awake in Play** — ~~Screen Wake Lock while player mounted; re-request on visibility~~ done
@@ -111,6 +113,12 @@ Deferred: sheet swipe/backdrop dismiss; auto-focus weight/reps; redesign **+ Set
 ## Parking lot
 
 - **Ko-Fi on landing page** — optional tip link when beta-launching at the gym; target ~$25/mo to cover Laravel Cloud at ~200 active users (no mandatory subs yet)
+- **FAQ page** — public/help FAQ; draft content lives in Obsidian (pull notes in when starting)
+- Investigate **slugs instead of IDs** in routes (routines, workouts, exercises, etc.)
+- **Policy audit** — verify every route/action has the right ability and policies stay complete as surfaces grow
+- **Facilitate full code review** — make a thorough review of the app tractable (scope, tooling, or staged passes)
+- **Security sweep** — hunt for authz holes, mass-assignment, IDOR, CSRF/session gaps, and similar
+- **GDPR compliance?** — clarify whether/what is required (privacy policy, data export/delete, retention, cookies); grill before building
 - Per-exercise strength-over-time (charts / PR timeline) — needs its own grill
 - Ad-hoc setup from player (beyond planned `has_setup_after`)
 - Transition duration as a stored preference (today client-side for supersets)
