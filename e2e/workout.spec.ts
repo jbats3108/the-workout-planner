@@ -25,6 +25,16 @@ async function startBarbellStrength(page: Page): Promise<void> {
     await expect(page).toHaveURL(/\/workouts\/\d+/);
 }
 
+async function completeCurrentSet(page: Page): Promise<void> {
+    await page.getByRole('button', { name: 'Complete set' }).click();
+    await expect(page.locator('header .font-mono')).toHaveText(/\d+\/\d+/, { timeout: 15_000 });
+}
+
+async function skipRest(page: Page): Promise<void> {
+    await expect(page.getByRole('button', { name: 'Skip' })).toBeVisible({ timeout: 15_000 });
+    await page.getByRole('button', { name: 'Skip' }).click();
+}
+
 test.describe('workout player', () => {
     test.describe.configure({ mode: 'serial' });
 
@@ -42,7 +52,30 @@ test.describe('workout player', () => {
     test('completes a warm-up set', async ({ page }) => {
         await startBarbellStrength(page);
         await expect(page.getByText(/warm-up/i)).toBeVisible();
-        await page.getByRole('button', { name: 'Complete set' }).click();
-        await expect(page.locator('header .font-mono')).toHaveText(/1\/\d+/, { timeout: 15_000 });
+        await completeCurrentSet(page);
+        await expect(page.locator('header .font-mono')).toHaveText(/1\/\d+/);
+    });
+
+    test('shows rest timer and can skip', async ({ page }) => {
+        await startBarbellStrength(page);
+        await completeCurrentSet(page);
+        await expect(page.getByText('Rest', { exact: true })).toBeVisible();
+        await skipRest(page);
+        await expect(page.getByText(/warm-up/i)).toBeVisible();
+        await expect(page.getByRole('button', { name: 'Complete set' })).toBeVisible();
+    });
+
+    test('prompts setup after warm-up block', async ({ page }) => {
+        await startBarbellStrength(page);
+        for (let i = 0; i < 2; i++) {
+            await completeCurrentSet(page);
+            await skipRest(page);
+        }
+        await completeCurrentSet(page);
+        await expect(page.getByRole('button', { name: 'Setup done' })).toBeVisible();
+        await expect(page.getByText(/before working sets/i)).toBeVisible();
+        await page.getByRole('button', { name: 'Setup done' }).click();
+        await skipRest(page);
+        await expect(page.getByText(/working/i)).toBeVisible();
     });
 });
