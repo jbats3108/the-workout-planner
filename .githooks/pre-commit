@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT"
+
+if [[ ! -x vendor/bin/pint ]]; then
+    echo "pre-commit: vendor/bin/pint missing — run composer install" >&2
+    exit 1
+fi
+
+# Format only dirty PHP files; re-stage any Pint rewrites.
+vendor/bin/pint --dirty --format agent
+
+# If Pint fixed files that were already staged, keep the commit contents in sync.
+mapfile -t staged_php < <(git diff --cached --name-only --diff-filter=ACMR -- '*.php' || true)
+if ((${#staged_php[@]} > 0)); then
+    git add -- "${staged_php[@]}"
+fi

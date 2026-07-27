@@ -2,8 +2,8 @@
 
 namespace Database\Factories\Workouts;
 
-use App\Shared\Enums\SetGroupType;
 use App\Exercises\Models\Exercise;
+use App\Shared\Enums\SetGroupType;
 use App\Workouts\Models\Workout;
 use App\Workouts\Models\WorkoutBlock;
 use App\Workouts\Models\WorkoutBlockExercise;

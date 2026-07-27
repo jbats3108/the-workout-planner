@@ -2,8 +2,8 @@
 
 namespace App\Auth\Http\Controllers;
 
-use App\Shared\Http\Controllers\Controller;
 use App\Auth\Http\Requests\LoginRequest;
+use App\Shared\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

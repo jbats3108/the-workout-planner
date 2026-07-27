@@ -4,6 +4,7 @@ namespace Tests\Unit\Workouts\Models;
 
 use App\Routines\Models\Routine;
 use App\Workouts\Models\Workout;
+use App\Workouts\Models\WorkoutBlock;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -47,7 +48,7 @@ class WorkoutTest extends TestCase
         // Given
         $workout = Workout::factory()->create();
 
-        \App\Workouts\Models\WorkoutBlock::create([
+        WorkoutBlock::create([
             'workout_id' => $workout->id,
             'position' => 1,
         ]);

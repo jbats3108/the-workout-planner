@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin\Http\Controllers;
 
+use App\Auth\Models\RegistrationInvite;
 use App\Exercises\Models\Exercise;
 use App\MuscleGroups\Models\MuscleGroup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -68,13 +69,13 @@ class AdminPanelTest extends TestCase
             ->assertRedirect(route('admin.invites'))
             ->assertSessionHas('invite_url');
 
-        $inviteId = \App\Auth\Models\RegistrationInvite::query()->firstOrFail()->id;
+        $inviteId = RegistrationInvite::query()->firstOrFail()->id;
 
         $this->actingAs($this->adminUser)
             ->post(route('admin.invites.revoke', $inviteId))
             ->assertRedirect(route('admin.invites'));
 
-        $this->assertNotNull(\App\Auth\Models\RegistrationInvite::query()->find($inviteId)?->revoked_at);
+        $this->assertNotNull(RegistrationInvite::query()->find($inviteId)?->revoked_at);
     }
 
     #[Test]

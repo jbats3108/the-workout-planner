@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Dashboard;
 
+use App\Dashboard\Services\DashboardService;
 use App\Routines\Data\RoutineData;
 use App\Routines\Models\Routine;
-use App\Dashboard\Services\DashboardService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Helpers\UserHelper;

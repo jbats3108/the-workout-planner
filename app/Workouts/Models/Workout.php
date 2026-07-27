@@ -2,10 +2,10 @@
 
 namespace App\Workouts\Models;
 
-use App\Workouts\Enums\WorkoutMode;
-use App\Workouts\Enums\WorkoutStatus;
 use App\Routines\Models\Routine;
 use App\Users\Models\User;
+use App\Workouts\Enums\WorkoutMode;
+use App\Workouts\Enums\WorkoutStatus;
 use Database\Factories\Workouts\WorkoutFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
