@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Tests\Helpers;
 
 use App\Users\Models\User;
+use Database\Seeders\RoleSeeder;
+use Database\Seeders\UserSeeder;
 
 trait UserHelper
 {
@@ -14,9 +16,16 @@ trait UserHelper
 
     private User $secondUser;
 
-    public function seedUsers(): void
+    public function seedUsers(bool $withCatalogAndRoutines = true): void
     {
-        $this->seed();
+        if ($withCatalogAndRoutines) {
+            $this->seed();
+        } else {
+            $this->seed([
+                RoleSeeder::class,
+                UserSeeder::class,
+            ]);
+        }
 
         $this->adminUser = User::whereHas('roles', function ($query): void {
             $query->where('name', 'admin');

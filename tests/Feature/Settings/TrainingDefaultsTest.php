@@ -17,7 +17,7 @@ class TrainingDefaultsTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seedUsers();
+        $this->seedUsers(withCatalogAndRoutines: false);
     }
 
     #[Test]
