@@ -3,7 +3,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import type { Routine } from '@/routines/types';
 import { useFlashSuccess } from '@/shared/composables/useFlashSuccess';
 import { type BreadcrumbItem } from '@/types';
-import type { InProgressWorkout, RecentFinishedWorkout } from '@/workouts/types';
+import type { HistoryWorkout, InProgressWorkout } from '@/workouts/types';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { Pencil, Trash2 } from 'lucide-vue-next';
 import { computed } from 'vue';
@@ -12,7 +12,7 @@ const props = defineProps<{
     data: {
         routines: Routine[];
         in_progress_workout: InProgressWorkout | null;
-        recent_finished_workouts: RecentFinishedWorkout[];
+        recent_finished_workouts: HistoryWorkout[];
     };
 }>();
 

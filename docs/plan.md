@@ -16,7 +16,8 @@ Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domai
 
 Active queue ordered **easiest → hardest** (gym-test 2026-07-26 + remaining product). Shipped items stay below for history.
 
-_No active items — see Parking lot for deferred work._
+1. **Soft-fail not-found / errors** — no raw error pages for expected misses or domain failures; redirect (or back) with a flash/toast instead. Apply across player, history, progression, and similar Inertia surfaces.
+2. **Audit agent guidance for duplication** — Spatie Data DTO rules (and likely other conventions) are repeated across `AGENTS.md`, ADRs, and `.cursor/skills/...`; consolidate so agents load one source of truth and keep context light.
 
 ### Shipped (recent)
 

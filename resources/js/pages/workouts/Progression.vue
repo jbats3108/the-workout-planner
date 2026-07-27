@@ -17,10 +17,7 @@ const props = defineProps<{
 const selectedBumps = ref<number[]>(props.progression.bumps.map((b) => b.routine_block_exercise_id));
 const selectedUndos = ref<number[]>(props.progression.undos.map((u) => u.bump_record_id));
 
-const form = useForm({
-    routine_block_exercise_ids: selectedBumps.value,
-    undo_bump_record_ids: selectedUndos.value,
-});
+const form = useForm({});
 
 const hasActions = computed(() => props.progression.bumps.length > 0 || props.progression.undos.length > 0);
 
@@ -30,7 +27,6 @@ const toggleBump = (id: number) => {
     } else {
         selectedBumps.value = [...selectedBumps.value, id];
     }
-    form.routine_block_exercise_ids = selectedBumps.value;
 };
 
 const toggleUndo = (id: number) => {
@@ -39,13 +35,14 @@ const toggleUndo = (id: number) => {
     } else {
         selectedUndos.value = [...selectedUndos.value, id];
     }
-    form.undo_bump_record_ids = selectedUndos.value;
 };
 
 const confirm = () => {
-    form.routine_block_exercise_ids = selectedBumps.value;
-    form.undo_bump_record_ids = selectedUndos.value;
-    form.post(route('workouts.progression.apply', props.progression.workout_id));
+    // Omit empty lists — Spatie infers `required`, and Laravel treats [] as empty.
+    form.transform(() => ({
+        ...(selectedBumps.value.length > 0 ? { routine_block_exercise_ids: selectedBumps.value } : {}),
+        ...(selectedUndos.value.length > 0 ? { undo_bump_record_ids: selectedUndos.value } : {}),
+    })).post(route('workouts.progression.apply', props.progression.workout_id));
 };
 
 const skip = () => {

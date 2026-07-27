@@ -127,7 +127,6 @@ class ProgressionControllerTest extends TestCase
         $this->actingAs($this->user)
             ->post(route('workouts.progression.apply', $workout), [
                 'routine_block_exercise_ids' => [$routineExercise->id],
-                'undo_bump_record_ids' => [],
             ])
             ->assertRedirect(route('dashboard'));
 
@@ -156,7 +155,6 @@ class ProgressionControllerTest extends TestCase
         $this->actingAs($this->secondUser)
             ->post(route('workouts.progression.apply', $workout), [
                 'routine_block_exercise_ids' => [$routineExercise->id],
-                'undo_bump_record_ids' => [],
             ])
             ->assertForbidden();
     }
@@ -169,7 +167,6 @@ class ProgressionControllerTest extends TestCase
         $this->actingAs($this->user)
             ->post(route('workouts.progression.apply', $workout), [
                 'routine_block_exercise_ids' => [1],
-                'undo_bump_record_ids' => [],
             ])
             ->assertForbidden();
     }

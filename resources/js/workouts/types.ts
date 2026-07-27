@@ -68,7 +68,7 @@ export type UndoBump = {
     to_weight_g: number;
 };
 
-export type RecentFinishedWorkout = {
+export type HistoryWorkout = {
     id: number;
     routine_name: string;
     routine_id: number;

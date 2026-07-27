@@ -1,15 +1,8 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
+import type { HistoryWorkout } from '@/workouts/types';
 import { Head, Link, router } from '@inertiajs/vue3';
-
-type HistoryWorkout = {
-    id: number;
-    routine_name: string;
-    routine_id: number;
-    mode: string;
-    finished_at: string;
-};
 
 defineProps<{
     history: {

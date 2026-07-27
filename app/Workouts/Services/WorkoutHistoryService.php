@@ -43,34 +43,9 @@ class WorkoutHistoryService
 
         DB::transaction(function () use ($set, $data): void {
             if ($set->isDropset() || $data->segments !== null) {
-                $segmentWeights = $data->segmentWeightGrams();
-
-                if ($segmentWeights === null || count($segmentWeights) < 2) {
-                    throw new WorkoutServiceException(WorkoutService::DROPSET_REQUIRES_SEGMENTS_ERROR);
-                }
-
-                $set->segments()->delete();
-
-                foreach (array_values($segmentWeights) as $index => $weightGrams) {
-                    WorkoutSetSegment::create([
-                        'workout_set_id' => $set->id,
-                        'position' => $index + 1,
-                        'weight_g' => $weightGrams,
-                    ]);
-                }
-
-                $set->reps = $data->reps;
-                $set->weight_g = null;
+                $this->updateDropset($set, $data);
             } else {
-                $weightGrams = $data->weightGrams();
-
-                if ($weightGrams === null) {
-                    throw new WorkoutServiceException(WorkoutService::PLANNED_DROPSET_REQUIRES_SEGMENTS_ERROR);
-                }
-
-                $set->segments()->delete();
-                $set->reps = $data->reps;
-                $set->weight_g = $weightGrams;
+                $this->updateNormalSet($set, $data);
             }
 
             if ($set->completed_at === null) {
@@ -91,5 +66,46 @@ class WorkoutHistoryService
         }
 
         return $session->hasActions() ? $session : null;
+    }
+
+    /**
+     * @throws WorkoutServiceException
+     */
+    private function updateDropset(WorkoutSet $set, CompleteWorkoutSetData $data): void
+    {
+        $segmentWeights = $data->segmentWeightGrams();
+
+        if ($segmentWeights === null || count($segmentWeights) < 2) {
+            throw new WorkoutServiceException(WorkoutService::DROPSET_REQUIRES_SEGMENTS_ERROR);
+        }
+
+        $set->segments()->delete();
+
+        foreach (array_values($segmentWeights) as $index => $weightGrams) {
+            WorkoutSetSegment::create([
+                'workout_set_id' => $set->id,
+                'position' => $index + 1,
+                'weight_g' => $weightGrams,
+            ]);
+        }
+
+        $set->reps = $data->reps;
+        $set->weight_g = null;
+    }
+
+    /**
+     * @throws WorkoutServiceException
+     */
+    private function updateNormalSet(WorkoutSet $set, CompleteWorkoutSetData $data): void
+    {
+        $weightGrams = $data->weightGrams();
+
+        if ($weightGrams === null) {
+            throw new WorkoutServiceException(WorkoutService::PLANNED_DROPSET_REQUIRES_SEGMENTS_ERROR);
+        }
+
+        $set->segments()->delete();
+        $set->reps = $data->reps;
+        $set->weight_g = $weightGrams;
     }
 }
