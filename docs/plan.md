@@ -113,6 +113,12 @@ Deferred: sheet swipe/backdrop dismiss; auto-focus weight/reps; redesign **+ Set
 ## Parking lot
 
 - **Ko-Fi on landing page** — optional tip link when beta-launching at the gym; target ~$25/mo to cover Laravel Cloud at ~200 active users (no mandatory subs yet)
+- **FAQ page** — public/help FAQ; draft content lives in Obsidian (pull notes in when starting)
+- Investigate **slugs instead of IDs** in routes (routines, workouts, exercises, etc.)
+- **Policy audit** — verify every route/action has the right ability and policies stay complete as surfaces grow
+- **Facilitate full code review** — make a thorough review of the app tractable (scope, tooling, or staged passes)
+- **Security sweep** — hunt for authz holes, mass-assignment, IDOR, CSRF/session gaps, and similar
+- **GDPR compliance?** — clarify whether/what is required (privacy policy, data export/delete, retention, cookies); grill before building
 - Per-exercise strength-over-time (charts / PR timeline) — needs its own grill
 - Ad-hoc setup from player (beyond planned `has_setup_after`)
 - Transition duration as a stored preference (today client-side for supersets)
