@@ -54,7 +54,7 @@ const primaryLinks = computed((): NavLink[] => {
         { href: route('training.edit'), label: 'Training', icon: Dumbbell, match: '/settings/training' },
     ];
     if (isAdmin.value) {
-        links.splice(1, 0, { href: route('admin.index'), label: 'Admin', icon: Shield, match: '/admin' });
+        links.push({ href: route('admin.index'), label: 'Admin', icon: Shield, match: '/admin' });
     }
     return links;
 });
