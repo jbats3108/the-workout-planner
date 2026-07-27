@@ -37,6 +37,8 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
     const restSecondsLeft = ref(0);
     const leaveConfirmed = ref(false);
     const logSheetOpen = ref(false);
+    /** Stage "Use nearest" override; cleared when focus moves to another set. */
+    const stageWeightOverrideKg = ref<number | null>(null);
 
     let restTimer: ReturnType<typeof setInterval> | null = null;
     let restEndsAt = 0;
@@ -146,6 +148,10 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
             return;
         }
         draftSegments.value = [];
+        if (stageWeightOverrideKg.value != null) {
+            setForm.weight_kg = stageWeightOverrideKg.value;
+            return;
+        }
         if (entry.set.group_type === 'warm_up') {
             setForm.weight_kg = entry.set.logged_weight_kg ?? entry.set.target_weight_kg ?? 0;
             return;
@@ -160,8 +166,11 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
 
     watch(
         current,
-        (entry) => {
+        (entry, previous) => {
             logSheetOpen.value = false;
+            if (entry?.set.id !== previous?.set.id) {
+                stageWeightOverrideKg.value = null;
+            }
             if (!entry) {
                 return;
             }
@@ -505,6 +514,9 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         if (entry.set.is_dropset) {
             return null;
         }
+        if (stageWeightOverrideKg.value != null) {
+            return stageWeightOverrideKg.value;
+        }
         if (entry.set.group_type === 'warm_up') {
             return entry.set.logged_weight_kg ?? entry.set.target_weight_kg ?? null;
         }
@@ -551,7 +563,9 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         if (!stagePlateLoad.value) {
             return;
         }
-        setForm.weight_kg = gramsToKg(stagePlateLoad.value.total_g);
+        const nearestKg = gramsToKg(stagePlateLoad.value.total_g);
+        stageWeightOverrideKg.value = nearestKg;
+        setForm.weight_kg = nearestKg;
     };
 
     const formatPlateStack = computed(() => {

@@ -216,8 +216,29 @@ describe('createWorkoutPlayer', () => {
                 }),
             ],
         });
+        expect(player.stageWeightKg.value).toBe(97.5);
+        expect(player.stagePlateLoad.value?.exact).toBe(false);
+
         player.applyStageNearestLoad();
+
+        expect(player.stageWeightKg.value).toBe(95);
         expect(player.setForm.weight_kg).toBe(95);
+        expect(player.stagePlateLoad.value?.exact).toBe(true);
+    });
+
+    it('keeps stage nearest weight when opening the log sheet', () => {
+        const player = mountPlayer({
+            blocks: [
+                playerBlock({
+                    sets: [playerSet({ equipment: 'barbell', target_weight_kg: 97.5 })],
+                }),
+            ],
+        });
+        player.applyStageNearestLoad();
+        player.openLogSheet();
+
+        expect(player.setForm.weight_kg).toBe(95);
+        expect(player.stageWeightKg.value).toBe(95);
     });
 
     it('exposes canPromoteToDropset for working sets', () => {
