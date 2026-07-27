@@ -26,7 +26,8 @@ async function startBarbellStrength(page: Page): Promise<void> {
 }
 
 async function completeCurrentSet(page: Page): Promise<void> {
-    await page.getByRole('button', { name: 'Complete set' }).click();
+    await page.getByRole('button', { name: 'Done', exact: true }).click();
+    await page.getByRole('button', { name: 'Log set' }).click();
     await expect(page.locator('header .font-mono')).toHaveText(/\d+\/\d+/, { timeout: 15_000 });
 }
 
@@ -62,7 +63,7 @@ test.describe('workout player', () => {
         await expect(page.getByText('Rest', { exact: true })).toBeVisible();
         await skipRest(page);
         await expect(page.getByText(/warm-up/i)).toBeVisible();
-        await expect(page.getByRole('button', { name: 'Complete set' })).toBeVisible();
+        await expect(page.getByRole('button', { name: 'Done', exact: true })).toBeVisible();
     });
 
     test('prompts setup after warm-up block', async ({ page }) => {

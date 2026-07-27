@@ -99,6 +99,7 @@ describe('createWorkoutPlayer', () => {
         const player = mountPlayer();
         player.setForm.reps = 5;
         player.setForm.weight_kg = 100;
+        player.logSheetOpen.value = true;
         player.completeSet();
         expect(inertiaMocks().inertiaFormPost).toHaveBeenCalledWith(
             '/workouts.sets.complete',
@@ -144,6 +145,7 @@ describe('createWorkoutPlayer', () => {
                 }),
             ],
         });
+        player.logSheetOpen.value = true;
         player.completeSet();
         expect(player.restSecondsLeft.value).toBe(90);
         expect(playerInteraction.preparePlayerInteraction).toHaveBeenCalled();
@@ -168,6 +170,7 @@ describe('createWorkoutPlayer', () => {
                 }),
             ],
         });
+        player.logSheetOpen.value = true;
         player.completeSet();
         vi.advanceTimersByTime(3000);
         expect(restAlert.notifyRestEnded).toHaveBeenCalled();
@@ -202,6 +205,18 @@ describe('createWorkoutPlayer', () => {
         });
         player.setForm.weight_kg = 97.5;
         player.applyNearestLoad();
+        expect(player.setForm.weight_kg).toBe(95);
+    });
+
+    it('applies nearest plate load from the main stage target', () => {
+        const player = mountPlayer({
+            blocks: [
+                playerBlock({
+                    sets: [playerSet({ equipment: 'barbell', target_weight_kg: 97.5 })],
+                }),
+            ],
+        });
+        player.applyStageNearestLoad();
         expect(player.setForm.weight_kg).toBe(95);
     });
 
@@ -280,8 +295,24 @@ describe('createWorkoutPlayer', () => {
         );
     });
 
+    it('opens and cancels the log sheet without posting', () => {
+        const player = mountPlayer();
+        player.openLogSheet();
+        expect(player.logSheetOpen.value).toBe(true);
+        player.cancelLogSheet();
+        expect(player.logSheetOpen.value).toBe(false);
+        expect(inertiaMocks().inertiaFormPost).not.toHaveBeenCalled();
+    });
+
+    it('ignores completeSet when the log sheet is closed', () => {
+        const player = mountPlayer();
+        player.completeSet();
+        expect(inertiaMocks().inertiaFormPost).not.toHaveBeenCalled();
+    });
+
     it('ignores completeSet when workout is not in progress', () => {
         const player = mountPlayer({ status: 'finished' });
+        player.logSheetOpen.value = true;
         player.completeSet();
         expect(inertiaMocks().inertiaFormPost).not.toHaveBeenCalled();
     });

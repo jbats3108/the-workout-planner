@@ -36,6 +36,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
     const draftSegments = ref<Array<{ weight_kg: number }>>([]);
     const restSecondsLeft = ref(0);
     const leaveConfirmed = ref(false);
+    const logSheetOpen = ref(false);
 
     let restTimer: ReturnType<typeof setInterval> | null = null;
     let restEndsAt = 0;
@@ -160,6 +161,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
     watch(
         current,
         (entry) => {
+            logSheetOpen.value = false;
             if (!entry) {
                 return;
             }
@@ -232,11 +234,25 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         router.visit(route('dashboard'));
     };
 
-    const completeSet = () => {
+    const openLogSheet = () => {
         if (!current.value || props.workout.status !== 'in_progress') {
             return;
         }
         preparePlayerInteraction();
+        syncDraftFromSet(current.value);
+        logSheetOpen.value = true;
+    };
+
+    const cancelLogSheet = () => {
+        logSheetOpen.value = false;
+    };
+
+    const completeSet = () => {
+        if (!current.value || props.workout.status !== 'in_progress' || !logSheetOpen.value) {
+            return;
+        }
+        preparePlayerInteraction();
+        logSheetOpen.value = false;
         const { block, set } = current.value;
         let restAfter = shouldRestAfter(block, set) ? set.rest_seconds : 0;
         if (restAfter > 0 && block.has_setup_after_warm_up && finishesWarmUpGroup(block, set)) {
@@ -481,15 +497,73 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         return resolvePlateLoad(setForm.weight_kg, current.value.set.equipment, props.plate_profile);
     });
 
+    const stageWeightKg = computed(() => {
+        if (!current.value) {
+            return null;
+        }
+        const entry = current.value;
+        if (entry.set.is_dropset) {
+            return null;
+        }
+        if (entry.set.group_type === 'warm_up') {
+            return entry.set.logged_weight_kg ?? entry.set.target_weight_kg ?? null;
+        }
+        return (
+            entry.set.logged_weight_kg ??
+            previousSetWeightKg(entry) ??
+            lastWorkingWeightKg.value[entry.set.workout_block_exercise_id] ??
+            entry.set.target_weight_kg ??
+            null
+        );
+    });
+
+    const stageDropsetWeights = computed(() => {
+        if (!current.value?.set.is_dropset) {
+            return [] as number[];
+        }
+        const entry = current.value;
+        if (entry.set.segments.length >= 2) {
+            return entry.set.segments.map((segment) => segment.weight_kg);
+        }
+        return defaultPromoteSegments(workingWeightForSet(entry)).map((segment) => segment.weight_kg);
+    });
+
+    const stagePlateLoad = computed(() => {
+        if (!current.value || current.value.set.is_dropset) {
+            return null;
+        }
+        const weight = stageWeightKg.value;
+        if (weight == null) {
+            return null;
+        }
+        return resolvePlateLoad(weight, current.value.set.equipment, props.plate_profile);
+    });
+
     const applyNearestLoad = () => {
-        if (!plateLoad.value) {
+        const load = plateLoad.value ?? stagePlateLoad.value;
+        if (!load) {
             return;
         }
-        setForm.weight_kg = gramsToKg(plateLoad.value.total_g);
+        setForm.weight_kg = gramsToKg(load.total_g);
+    };
+
+    const applyStageNearestLoad = () => {
+        if (!stagePlateLoad.value) {
+            return;
+        }
+        setForm.weight_kg = gramsToKg(stagePlateLoad.value.total_g);
     };
 
     const formatPlateStack = computed(() => {
         const load = plateLoad.value;
+        if (!load) {
+            return null;
+        }
+        return formatPlateStackLabel(load, props.workout.weight_unit);
+    });
+
+    const stageFormatPlateStack = computed(() => {
+        const load = stagePlateLoad.value;
         if (!load) {
             return null;
         }
@@ -506,6 +580,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         draftSegments,
         restSecondsLeft,
         restLabel,
+        logSheetOpen,
         progressLabel,
         upcoming,
         setupHint,
@@ -513,9 +588,15 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         canAddWorkingSet,
         canRemoveWorkingSet,
         plateLoad,
+        stagePlateLoad,
+        stageWeightKg,
+        stageDropsetWeights,
         formatPlateStack,
+        stageFormatPlateStack,
         groupLabel,
         gramsToKg,
+        openLogSheet,
+        cancelLogSheet,
         completeSet,
         addDropSegment,
         removeDropSegment,
@@ -528,6 +609,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         addWorkingSet,
         removeWorkingSet,
         applyNearestLoad,
+        applyStageNearestLoad,
     };
 }
 
