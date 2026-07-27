@@ -16,7 +16,7 @@ Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domai
 
 Active queue ordered **easiest → hardest** (gym-test 2026-07-26 + remaining product). Shipped items stay below for history.
 
-1. **Complete-then-log UX** — Instinct was tap Complete first, then enter weight/reps. Today: fill fields → Complete. Redesign Play logging so Complete leads into (or opens) recording, without slowing the happy path.
+1. **Complete-then-log UX** — Done → confirm sheet → **Log set** (grill notes below). Main stage display-only; edit in sheet.
 2. **Rest-end alert + leave-during-rest** — Sound/vibration when rest hits zero; persistent (or at least background) notification so users can leave the app during Rest and still get pinged. Likely needs Notification permission; full background reliability may touch PWA / service worker (deferred in app-like grill).
 3. **Finished workout history** — browse/edit finished workouts; re-eval progression when eligible (grill notes below; ADR-0004)
 
@@ -90,6 +90,24 @@ Decisions (2026-07-24), chrome-polish pass only:
 - **Top chrome:** player chrome-minimal (no AppLayout); editor keeps AppLayout
 
 Deferred: installable PWA, tabbed app shell, haptics.
+
+## Grill: complete-then-log UX
+
+Decisions (2026-07-27):
+
+- **Happy path:** **Done** on main stage → bottom-sheet confirm → **Log set** (prefilled weight/reps; editable). Not one-tap commit without the sheet.
+- **Main stage:** display-only target (+ plate guide on barbell / E-Z only). No weight/reps inputs before **Done**.
+- **Sheet:** ~half-screen bottom sheet; primary **Log set**; dismiss via **Cancel** only (no swipe / backdrop). No auto-keyboard on open — user taps a field to edit.
+- **Cancel:** abort only — set stays incomplete; no server write; no Rest started.
+- **After Log set:** auto Rest when the Set Group has rest (same as today); **Skip rest** unchanged.
+- **Re-log:** completed sets use the same flow; **Log set** overwrites the logged set.
+- **Warm-ups:** same Done → sheet → Log set (prefill from `% × working`).
+- **Dropsets:** same flow; sheet holds shared reps + segment weights (+/− drops).
+- **Supersets:** one sheet per exercise — A → Log set → transition → B → Log set → working Rest.
+- **Promote to dropset:** stays on main stage (below **Done**), before lifting.
+- **v1 scope:** logging flow only; **+ Set** / **− Set** unchanged.
+
+Deferred: sheet swipe/backdrop dismiss; auto-focus weight/reps; redesign **+ Set** / **− Set** placement.
 
 ## Parking lot
 
