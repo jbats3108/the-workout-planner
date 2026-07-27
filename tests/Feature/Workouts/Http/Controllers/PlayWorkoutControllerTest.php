@@ -48,13 +48,14 @@ class PlayWorkoutControllerTest extends TestCase
     }
 
     #[Test]
-    public function it_forbids_other_users(): void
+    public function it_soft_fails_other_users(): void
     {
         $workout = $this->createWorkoutForUser();
 
         $this->actingAs($this->secondUser)
             ->get(route('workouts.play', $workout))
-            ->assertForbidden();
+            ->assertRedirect(route('dashboard'))
+            ->assertSessionHas('error', 'You do not have access to that workout.');
     }
 
     #[Test]

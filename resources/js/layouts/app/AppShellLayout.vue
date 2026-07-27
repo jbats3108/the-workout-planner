@@ -3,6 +3,7 @@ import AppContent from '@/components/AppContent.vue';
 import AppHeader from '@/components/AppHeader.vue';
 import AppShell from '@/components/AppShell.vue';
 import AppSidebar from '@/components/AppSidebar.vue';
+import FlashAlerts from '@/shared/components/FlashAlerts.vue';
 import type { BreadcrumbItemType } from '@/types';
 
 interface Props {
@@ -21,6 +22,7 @@ withDefaults(defineProps<Props>(), {
             <div class="flex min-w-0 flex-1 flex-col">
                 <AppHeader :breadcrumbs="breadcrumbs" />
                 <AppContent>
+                    <FlashAlerts class="px-4 pt-4 sm:px-6 lg:px-8" />
                     <slot />
                 </AppContent>
             </div>

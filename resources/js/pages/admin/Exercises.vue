@@ -6,7 +6,6 @@ import InputError from '@/components/InputError.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import AdminLayout from '@/layouts/admin/Layout.vue';
 import { useCatalogFilter } from '@/shared/composables/useCatalogFilter';
-import { useFlashSuccess } from '@/shared/composables/useFlashSuccess';
 import { type BreadcrumbItem } from '@/types';
 import { Deferred, Head, router, useForm } from '@inertiajs/vue3';
 import { computed, watch } from 'vue';
@@ -17,7 +16,6 @@ const props = defineProps<{
     equipment_options: EquipmentOption[];
 }>();
 
-const successMessage = useFlashSuccess();
 const catalog = computed(() => props.exercises ?? []);
 const { query, filtered } = useCatalogFilter(catalog, (e) => [e.name, e.slug, e.primary_muscle_group]);
 
@@ -62,10 +60,6 @@ const remove = (exercise: AdminExercise) => {
         <Head title="Admin · Exercises" />
         <AdminLayout>
             <HeadingSmall title="Shared exercises" description="Catalog lifts available to every user." />
-
-            <div v-if="successMessage" class="rounded-xl border border-primary/40 bg-primary/10 px-4 py-3 text-sm text-primary" role="status">
-                {{ successMessage }}
-            </div>
 
             <form class="space-y-3 rounded-xl border border-border bg-card p-4" @submit.prevent="submit">
                 <p class="text-sm font-medium">Add exercise</p>

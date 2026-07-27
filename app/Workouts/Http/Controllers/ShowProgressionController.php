@@ -19,11 +19,15 @@ class ShowProgressionController extends Controller
     public function __invoke(Workout $workout, WorkoutProgressionService $progressionService): Response|RedirectResponse
     {
         if ($workout->status !== WorkoutStatus::Finished) {
-            return redirect()->route('dashboard');
+            return redirect()
+                ->route('dashboard')
+                ->with('error', 'Progression is only available for finished workouts.');
         }
 
         if (! $progressionService->hasProgressionSession($workout)) {
-            return redirect()->route('dashboard');
+            return redirect()
+                ->route('dashboard')
+                ->with('error', 'No progression to review for that workout.');
         }
 
         $storedBumps = session("workout_progression.{$workout->id}");

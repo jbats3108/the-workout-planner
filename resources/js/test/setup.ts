@@ -5,7 +5,7 @@ const inertia = vi.hoisted(() => {
     const inertiaFormPut = vi.fn();
     const inertiaFormPost = vi.fn();
     const pageProps = {
-        flash: { success: null as string | null },
+        flash: { success: null as string | null, error: null as string | null },
         errors: {} as Record<string, string>,
     };
     const routerMocks = {

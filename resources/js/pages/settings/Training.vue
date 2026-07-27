@@ -4,7 +4,6 @@ import InputError from '@/components/InputError.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { gramsToKg } from '@/lib/plateCalculator';
 import type { PlateProfile, WarmUpDefaultsScope, WarmUpStep } from '@/settings/types';
-import { useFlashSuccess } from '@/shared/composables/useFlashSuccess';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router, useForm } from '@inertiajs/vue3';
 
@@ -14,8 +13,6 @@ const props = defineProps<{
     using_app_fallback: boolean;
     plate_profile: PlateProfile;
 }>();
-
-const successMessage = useFlashSuccess();
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
@@ -83,10 +80,6 @@ const savePlates = () => {
         <Head title="Training" />
 
         <div class="mx-auto w-full max-w-xl space-y-10 px-4 py-6">
-            <div v-if="successMessage" class="rounded-xl border border-primary/40 bg-primary/10 px-4 py-3 text-sm text-primary" role="status">
-                {{ successMessage }}
-            </div>
-
             <section class="space-y-6">
                 <HeadingSmall
                     title="Warm-up defaults"

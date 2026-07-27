@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { Routine } from '@/routines/types';
-import { useFlashSuccess } from '@/shared/composables/useFlashSuccess';
 import { type BreadcrumbItem } from '@/types';
 import type { HistoryWorkout, InProgressWorkout } from '@/workouts/types';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
@@ -18,7 +17,6 @@ const props = defineProps<{
 
 const page = usePage();
 const formErrors = computed(() => Object.values(page.props.errors ?? {}));
-const successMessage = useFlashSuccess();
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -65,10 +63,6 @@ const formatFinishedAt = (iso: string) => {
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl bg-background p-4 text-foreground">
-            <div v-if="successMessage" class="rounded-xl border border-primary/40 bg-primary/10 px-4 py-3 text-sm text-primary" role="status">
-                {{ successMessage }}
-            </div>
-
             <div v-if="formErrors.length" class="rounded-xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
                 <p v-for="(error, index) in formErrors" :key="index">{{ error }}</p>
             </div>

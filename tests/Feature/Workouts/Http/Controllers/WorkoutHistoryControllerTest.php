@@ -83,7 +83,8 @@ class WorkoutHistoryControllerTest extends TestCase
 
         $this->actingAs($this->user)
             ->get(route('history.show', $workout))
-            ->assertRedirect(route('history.index'));
+            ->assertRedirect(route('history.index'))
+            ->assertSessionHas('error', 'That workout is not in history yet.');
     }
 
     #[Test]

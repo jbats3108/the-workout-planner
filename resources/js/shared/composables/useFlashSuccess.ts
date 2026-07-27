@@ -6,3 +6,9 @@ export function useFlashSuccess() {
 
     return computed(() => page.props.flash?.success ?? null);
 }
+
+export function useFlashError() {
+    const page = usePage();
+
+    return computed(() => page.props.flash?.error ?? null);
+}
