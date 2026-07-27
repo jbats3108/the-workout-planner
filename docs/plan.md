@@ -21,14 +21,14 @@ Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domai
 Active queue ordered **easiest → hardest** (gym-test 2026-07-26 + remaining product). Shipped items stay below for history.
 
 1. **Audit agent guidance for duplication** — Spatie Data DTO rules (and likely other conventions) are repeated across `AGENTS.md`, ADRs, and `.cursor/skills/...`; consolidate so agents load one source of truth and keep context light.
-2. **Bigger edit/delete icons** — increase affordance size for edit/delete controls in the UI.
-3. **Remove clickable titles** — titles should not navigate; use explicit buttons only.
-4. **Admin nav order** — push Admin to the bottom of the top-nav items.
-5. **Login screen on every open?** — investigate why the app often shows login on open (session, PWA/tab restore, cookie, redirect).
-6. **Bump confirmation timing** — grill: when (if at all) the bump confirmation screen should appear (finish only? history re-eval? skip entirely?).
+2. **Login screen on every open?** — investigate why the app often shows login on open (session, PWA/tab restore, cookie, redirect).
+3. **Bump confirmation timing** — grill: when (if at all) the bump confirmation screen should appear (finish only? history re-eval? skip entirely?).
 
 ### Shipped (recent)
 
+1. **Admin nav order** — ~~push Admin to the bottom of the top-nav items~~ done (after Training in primary rail/drawer)
+1. **Remove clickable titles** — ~~titles should not navigate; use explicit buttons only~~ done (dashboard routine name is plain text; edit via icon)
+1. **Bigger edit/delete icons** — ~~increase affordance size for edit/delete controls in the UI~~ done (dashboard routine cards: `size-5` + larger hit target)
 1. **Soft-fail not-found / errors** — ~~no raw error pages for expected GET misses/forbids; redirect + flash/toast~~ done (authenticated web; guests/admin/mutations stay hard)
 1. **Finished workout history** — browse/edit finished workouts at `/history`; dashboard recent strip + nav; warm-ups read-only; working weight + reps editable; re-eval progression on latest non-deload finish (carry-forward, bumps, undo via Bump Records; ADR-0004)
 2. **Complete-then-log UX** — Done on main stage opens bottom sheet; Log set commits; Cancel aborts without server write; main stage is display-only with plate guide
