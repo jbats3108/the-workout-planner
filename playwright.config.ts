@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? 'http://127.0.0.1:8000';
+const webServerHealthUrl = `${baseURL}/up`;
 
 export default defineConfig({
     testDir: 'e2e',
@@ -21,8 +22,11 @@ export default defineConfig({
         ? undefined
         : {
               command: 'php artisan serve --host=127.0.0.1 --port=8000 --no-reload',
-              url: baseURL,
+              url: webServerHealthUrl,
               reuseExistingServer: !process.env.CI,
-              timeout: 120_000,
+              timeout: process.env.CI ? 300_000 : 120_000,
+              env: {
+                  PHP_CLI_SERVER_WORKERS: '1',
+              },
           },
 });

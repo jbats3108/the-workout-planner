@@ -96,7 +96,13 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install chromium --with-deps
 
+      - name: Prepare e2e database
+        run: php artisan migrate:fresh --seed --seeder=E2eSeeder --force
+
       - name: End-to-end tests
+        env:
+          PHP_CLI_SERVER_WORKERS: 1
+          PLAYWRIGHT_SKIP_DB_SETUP: 1
         run: npm run test:e2e
 
       - name: PHPUnit

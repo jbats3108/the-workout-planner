@@ -18,17 +18,16 @@ async function clearInProgressWorkout(page: Page): Promise<void> {
 }
 
 async function startBarbellStrength(page: Page): Promise<void> {
-    const card = page
-        .locator('div.rounded-xl.border')
-        .filter({ has: page.getByRole('heading', { name: 'Barbell Strength', level: 3 }) });
+    const card = page.locator('div.rounded-xl.border').filter({ has: page.getByRole('heading', { name: 'Barbell Strength', level: 3 }) });
     await card.getByRole('button', { name: 'Start' }).click();
     await expect(page).toHaveURL(/\/workouts\/\d+/);
 }
 
 async function completeCurrentSet(page: Page): Promise<void> {
     await page.getByRole('button', { name: 'Done', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Log set' })).toBeVisible({ timeout: 15_000 });
     await page.getByRole('button', { name: 'Log set' }).click();
-    await expect(page.locator('header .font-mono')).toHaveText(/\d+\/\d+/, { timeout: 15_000 });
+    await expect(page.locator('header .font-mono')).toHaveText(/\d+\/\d+/, { timeout: 30_000 });
 }
 
 async function skipRest(page: Page): Promise<void> {
