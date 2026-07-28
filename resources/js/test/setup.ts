@@ -45,6 +45,11 @@ vi.mock('@inertiajs/vue3', () => ({
         inertia.createForm(typeof keyOrInitial === 'string' ? (maybeInitial ?? {}) : keyOrInitial),
     usePage: () => ({ props: inertia.pageProps }),
     router: inertia.routerMocks,
+    Head: {
+        name: 'Head',
+        props: ['title'],
+        setup: () => () => null,
+    },
 }));
 
 (globalThis as typeof globalThis & { __inertiaMocks: typeof inertia }).__inertiaMocks = inertia;

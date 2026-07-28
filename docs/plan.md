@@ -10,11 +10,9 @@ Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domai
 
 Gym-test 2026-07-28 — numbered priority within this batch.
 
-1. **Countdown beeps** — ~~rest/timer countdown audio cues~~ done (ticks at 5…1 + long end tone; vibrate mirrors when available)
-2. **Complete screen full-page** — finish/complete UI should cover the whole page
-2. **Set x/n on setup** — show set progress (x of n) during setup
-2. **Stronger set-of-x highlight** — clearer which set of the planned count you're on
-3. **Setup between warm-ups** — allow planned setup pauses between warm-up steps (not only after WU / after block)
+1. **Set x/n on setup** — show set progress (x of n) during setup
+1. **Stronger set-of-x highlight** — clearer which set of the planned count you're on
+2. **Setup between warm-ups** — allow planned setup pauses between warm-up steps (not only after WU / after block)
 
 ## Recently shipped (foundation)
 
@@ -28,14 +26,16 @@ Gym-test 2026-07-28 — numbered priority within this batch.
 
 ## Shipped (recent)
 
-Gym-test 2026-07-26 + remaining product history. Newest first within each batch where noted.
+Gym-test 2026-07-28 + 2026-07-26 + remaining product history. Newest first within each batch where noted.
 
+1. **Complete screen full-page** — ~~log-set complete UI should cover the whole page~~ done (full-screen log sheet; keyboard overlays content so Log/Cancel stay put; finish Complete stage hides player header)
+1. **Countdown beeps** — ~~rest/timer countdown audio cues~~ done (ticks at 5…1 + long end tone; vibrate mirrors when available)
 1. **Admin nav order** — ~~push Admin to the bottom of the top-nav items~~ done (after Training in primary rail/drawer)
 1. **Remove clickable titles** — ~~titles should not navigate; use explicit buttons only~~ done (dashboard routine name is plain text; edit via icon)
 1. **Bigger edit/delete icons** — ~~increase affordance size for edit/delete controls in the UI~~ done (dashboard routine cards: `size-5` + larger hit target)
 1. **Soft-fail not-found / errors** — ~~no raw error pages for expected GET misses/forbids; redirect + flash/toast~~ done (authenticated web; guests/admin/mutations stay hard)
 1. **Finished workout history** — browse/edit finished workouts at `/history`; dashboard recent strip + nav; warm-ups read-only; working weight + reps editable; re-eval progression on latest non-deload finish (carry-forward, bumps, undo via Bump Records; ADR-0004)
-2. **Complete-then-log UX** — Done on main stage opens bottom sheet; Log set commits; Cancel aborts without server write; main stage is display-only with plate guide
+2. **Complete-then-log UX** — ~~Done on main stage opens full-page log sheet; Log set commits; Cancel aborts without server write; main stage is display-only with plate guide~~ done
 2. **Rest-end alert + leave-during-rest** — sound/vibration when rest hits zero in foreground; notification permission on first rest + background notification when tab is hidden; clock-based rest sync on visibility return
 2. **Prev set weight → next** — ~~pending-rest blocks focus race; client `lastWorkingWeightKg` + prior logged weight~~ done
 3. **Keep screen awake in Play** — ~~Screen Wake Lock while player mounted; re-request on visibility~~ done
