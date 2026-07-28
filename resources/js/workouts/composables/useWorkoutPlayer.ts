@@ -9,6 +9,7 @@ import {
     defaultPromoteSegments,
     finishesWarmUpGroup,
     nextDropSegmentWeight,
+    nextSupersetSet,
     plannedSetCount,
     previousSetWeightKg,
     shouldRestAfter,
@@ -375,6 +376,40 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
 
     const setupHint = computed(() => setupHintText(focus.value, currentBlock.value));
 
+    const supersetNext = computed(() => {
+        if (!current.value) {
+            return null;
+        }
+
+        const nextSet = nextSupersetSet(current.value.block, current.value.set);
+        if (!nextSet) {
+            return null;
+        }
+
+        const entry = { blockIndex: current.value.blockIndex, block: current.value.block, set: nextSet };
+        let weightKg: number | null = null;
+
+        if (nextSet.group_type === 'warm_up') {
+            weightKg = nextSet.target_weight_kg;
+        } else {
+            weightKg = previousSetWeightKg(entry) ?? lastWorkingWeightKg.value[nextSet.workout_block_exercise_id] ?? nextSet.target_weight_kg;
+        }
+
+        const targetParts: string[] = [];
+        if (weightKg != null) {
+            targetParts.push(`${weightKg}${props.workout.weight_unit}`);
+        }
+        if (nextSet.target_reps != null) {
+            targetParts.push(`× ${nextSet.target_reps}`);
+        }
+
+        return {
+            exerciseName: nextSet.exercise_name,
+            targetLabel: targetParts.length > 0 ? targetParts.join(' ') : null,
+            label: targetParts.length > 0 ? `Then: ${nextSet.exercise_name} (${targetParts.join(' ')})` : `Then: ${nextSet.exercise_name}`,
+        };
+    });
+
     const upcoming = computed(() => {
         const entry = flatSets.value.find(({ set }) => !set.completed) ?? null;
         if (!entry) {
@@ -596,6 +631,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         progressLabel,
         upcoming,
         setupHint,
+        supersetNext,
         canPromoteToDropset,
         canAddWorkingSet,
         canRemoveWorkingSet,
