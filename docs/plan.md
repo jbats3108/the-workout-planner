@@ -6,7 +6,17 @@ Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domai
 
 **Notion inbox:** after pulling bullets from Notion [Ovrload](https://app.notion.com/p/3aae5dd99f0c80ad928ade1a5c6b0749) into this file, clear **only** the list items under `## Backlog:` — leave that header and a single empty bullet (`-`). Do not replace the whole page or delete child pages / other sections.
 
-## Now (recently shipped)
+## Now
+
+Gym-test 2026-07-28 — numbered priority within this batch.
+
+1. **Countdown beeps** — ~~rest/timer countdown audio cues~~ done (ticks at 5…1 + long end tone; vibrate mirrors when available)
+2. **Complete screen full-page** — finish/complete UI should cover the whole page
+2. **Set x/n on setup** — show set progress (x of n) during setup
+2. **Stronger set-of-x highlight** — clearer which set of the planned count you're on
+3. **Setup between warm-ups** — allow planned setup pauses between warm-up steps (not only after WU / after block)
+
+## Recently shipped (foundation)
 
 - [x] v2 schema + domain models (grams, set-group `type`, mirror workout snapshots)
 - [x] Domain-oriented `App\{Domain}\...` layout + mirrored tests
@@ -64,6 +74,7 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 - **Post-hoc workout record** — log a full finished workout in one pass (no Play); pick routine or ad-hoc structure; assign `finished_at` to a past date; grill scope (progression re-eval, warm-ups, deload flag)
 - **Bump confirmation timing** — grill: when (if at all) the bump confirmation screen should appear (finish only? history re-eval? skip entirely?)
 - **Strava integration** — connect account; export finished workouts (and/or sync activity metadata); grill scope (OAuth, fields, privacy)
+- **Garmin sync** — long-term; watch functionality too; prefer after Strava
 - **Per-exercise strength-over-time** — charts / PR timeline; needs its own grill
 - **History extensions** — warm-up edits; discarded workouts in list; structure edits on finished workouts
 - **Demote dropset → normal in Play**

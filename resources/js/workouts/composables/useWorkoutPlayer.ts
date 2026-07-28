@@ -3,7 +3,7 @@ import { findFirstIncompleteFocus, flattenPlayerSets, setupKey, type FlatSetEntr
 import { formatRestSeconds, groupLabel, setupHintText, workoutProgressLabel } from '@/workouts/lib/labels';
 import { formatLoadStack, formatPlateStackLabel, resolvePlateLoad } from '@/workouts/lib/plates';
 import { preparePlayerInteraction } from '@/workouts/lib/playerInteraction';
-import { notifyRestEnded } from '@/workouts/lib/restAlert';
+import { notifyRestCountdown, notifyRestEnded, shouldBeepRestCountdown } from '@/workouts/lib/restAlert';
 import { releaseScreenWake, requestScreenWake } from '@/workouts/lib/screenWake';
 import {
     defaultPromoteSegments,
@@ -42,6 +42,8 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
 
     let restTimer: ReturnType<typeof setInterval> | null = null;
     let restEndsAt = 0;
+    /** Last whole second that already got a countdown beep (avoids double-fire on visibility sync). */
+    let lastCountdownBeepSecond: number | null = null;
     let removeBeforeListener: (() => void) | undefined;
     let removeVisibilityListener: (() => void) | undefined;
     let removeRestVisibilityListener: (() => void) | undefined;
@@ -65,6 +67,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         }
         restEndsAt = 0;
         restSecondsLeft.value = 0;
+        lastCountdownBeepSecond = null;
         removeRestVisibilityListener?.();
         removeRestVisibilityListener = undefined;
     };
@@ -87,6 +90,11 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         }
 
         restSecondsLeft.value = remaining;
+
+        if (shouldBeepRestCountdown(remaining) && lastCountdownBeepSecond !== remaining) {
+            lastCountdownBeepSecond = remaining;
+            notifyRestCountdown(remaining);
+        }
     };
 
     const startRest = (seconds: number) => {
