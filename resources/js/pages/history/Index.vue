@@ -3,6 +3,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import type { HistoryWorkout } from '@/workouts/types';
 import { Head, Link, router } from '@inertiajs/vue3';
+import { Trash2 } from 'lucide-vue-next';
 
 defineProps<{
     history: {
@@ -25,6 +26,13 @@ const filterByRoutine = (routineId: number | null) => {
 const formatDate = (iso: string) => {
     if (!iso) return '';
     return new Date(iso).toLocaleDateString(undefined, { dateStyle: 'medium' });
+};
+
+const deleteWorkout = (workout: HistoryWorkout) => {
+    if (!confirm(`Remove “${workout.routine_name}” from history? This cannot be undone.`)) {
+        return;
+    }
+    router.delete(route('history.destroy', workout.id));
 };
 </script>
 
@@ -56,10 +64,10 @@ const formatDate = (iso: string) => {
             </div>
 
             <ul v-if="history.workouts.length" class="divide-y divide-border rounded-xl border border-border">
-                <li v-for="workout in history.workouts" :key="workout.id">
+                <li v-for="workout in history.workouts" :key="workout.id" class="flex items-center">
                     <Link
                         :href="route('history.show', workout.id)"
-                        class="flex items-center justify-between gap-3 px-4 py-3 transition-colors hover:bg-card"
+                        class="flex min-w-0 flex-1 items-center justify-between gap-3 px-4 py-3 transition-colors hover:bg-card"
                     >
                         <div>
                             <p class="font-medium">{{ workout.routine_name }}</p>
@@ -67,6 +75,14 @@ const formatDate = (iso: string) => {
                         </div>
                         <p class="text-sm text-muted-foreground">{{ formatDate(workout.finished_at) }}</p>
                     </Link>
+                    <button
+                        type="button"
+                        class="mr-3 shrink-0 rounded-md p-2 text-destructive transition-opacity hover:opacity-80"
+                        :aria-label="`Delete ${workout.routine_name}`"
+                        @click="deleteWorkout(workout)"
+                    >
+                        <Trash2 class="size-4" />
+                    </button>
                 </li>
             </ul>
             <p v-else class="text-sm text-muted-foreground">No finished workouts yet.</p>

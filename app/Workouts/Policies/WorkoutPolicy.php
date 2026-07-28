@@ -36,4 +36,9 @@ class WorkoutPolicy
     {
         return $workout->user->is($user) && $workout->status === WorkoutStatus::Finished;
     }
+
+    public function deleteHistory(User $user, Workout $workout): bool
+    {
+        return $workout->user->is($user) && $workout->status === WorkoutStatus::Finished;
+    }
 }
