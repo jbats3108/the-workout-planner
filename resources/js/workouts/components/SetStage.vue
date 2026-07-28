@@ -18,7 +18,6 @@ const {
     promoteToDropset,
     addWorkingSet,
     removeWorkingSet,
-    finishWorkout,
     applyNearestLoad,
     applyStageNearestLoad,
     groupLabel,
@@ -83,6 +82,34 @@ const unlockInput = (event: PointerEvent) => {
         </div>
 
         <div class="mt-6 flex w-full flex-col gap-3 pb-4">
+            <div v-if="canPromoteToDropset || canAddWorkingSet || canRemoveWorkingSet" class="flex flex-wrap items-center justify-center gap-3">
+                <button
+                    v-if="canAddWorkingSet"
+                    type="button"
+                    class="inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 px-3.5 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
+                    @click="addWorkingSet"
+                >
+                    <span class="text-xl leading-none font-semibold">+</span>
+                    Set
+                </button>
+                <button
+                    v-if="canPromoteToDropset"
+                    type="button"
+                    class="rounded-full border border-border px-3.5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
+                    @click="promoteToDropset"
+                >
+                    Promote to dropset
+                </button>
+                <button
+                    v-if="canRemoveWorkingSet"
+                    type="button"
+                    class="inline-flex items-center gap-1.5 rounded-full border border-destructive/40 bg-destructive/10 px-3.5 py-2.5 text-sm font-medium text-destructive transition-colors hover:bg-destructive/20"
+                    @click="removeWorkingSet"
+                >
+                    <span class="text-xl leading-none font-semibold">−</span>
+                    Set
+                </button>
+            </div>
             <button
                 type="button"
                 class="rounded-full bg-primary px-6 py-4 text-base font-semibold text-primary-foreground disabled:opacity-50"
@@ -90,40 +117,6 @@ const unlockInput = (event: PointerEvent) => {
                 @click="openLogSheet"
             >
                 Done
-            </button>
-            <button
-                v-if="canPromoteToDropset"
-                type="button"
-                class="rounded-md border border-border px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
-                @click="promoteToDropset"
-            >
-                Promote to dropset
-            </button>
-            <div v-if="canAddWorkingSet || canRemoveWorkingSet" class="flex gap-2">
-                <button
-                    v-if="canAddWorkingSet"
-                    type="button"
-                    class="flex-1 rounded-md border border-border px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
-                    @click="addWorkingSet"
-                >
-                    + Set
-                </button>
-                <button
-                    v-if="canRemoveWorkingSet"
-                    type="button"
-                    class="flex-1 rounded-md border border-border px-4 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-                    @click="removeWorkingSet"
-                >
-                    − Set
-                </button>
-            </div>
-            <button
-                type="button"
-                class="rounded-full border border-border px-6 py-3 text-sm"
-                :disabled="workout.status !== 'in_progress'"
-                @click="finishWorkout"
-            >
-                Finish workout
             </button>
         </div>
 
