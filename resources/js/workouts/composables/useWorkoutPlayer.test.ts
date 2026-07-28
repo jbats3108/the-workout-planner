@@ -5,7 +5,7 @@ import * as playerInteraction from '@/workouts/lib/playerInteraction';
 import * as restAlert from '@/workouts/lib/restAlert';
 import { mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { defineComponent, h } from 'vue';
+import { defineComponent, h, nextTick, reactive } from 'vue';
 
 function mountPlayer(overrides: Parameters<typeof workoutPayload>[0] = {}) {
     let player!: ReturnType<typeof createWorkoutPlayer>;
@@ -359,6 +359,98 @@ describe('createWorkoutPlayer', () => {
             '/workouts.sets.remove',
             expect.objectContaining({ preserveScroll: true, only: ['workout'] }),
         );
+    });
+
+    it('hides remove on the last working set so it cannot skip the block', () => {
+        const player = mountPlayer({
+            blocks: [
+                playerBlock({
+                    id: 5,
+                    sets: [
+                        playerSet({ id: 1, set_index: 0, completed: true, logged_weight_kg: 100 }),
+                        playerSet({ id: 2, set_index: 1, completed: false }),
+                    ],
+                }),
+            ],
+        });
+        expect(player.focus.value).toEqual({ kind: 'set', blockIndex: 0, setId: 2 });
+        expect(player.canRemoveWorkingSet.value).toBe(false);
+        player.removeWorkingSet();
+        expect(inertiaMocks().routerMocks.delete).not.toHaveBeenCalled();
+    });
+
+    it('keeps focus on the current set when an extra set is added to the workout payload', async () => {
+        const props = reactive({
+            workout: workoutPayload({
+                blocks: [
+                    playerBlock({
+                        id: 5,
+                        sets: [playerSet({ id: 1, set_index: 0, completed: false }), playerSet({ id: 2, set_index: 1, completed: false })],
+                    }),
+                ],
+            }),
+            plate_profile: plateProfile(),
+        });
+        let player!: ReturnType<typeof createWorkoutPlayer>;
+        mount(
+            defineComponent({
+                setup() {
+                    player = createWorkoutPlayer(props);
+                    return () => h('div');
+                },
+            }),
+        );
+        expect(player.focus.value).toEqual({ kind: 'set', blockIndex: 0, setId: 1 });
+
+        props.workout = workoutPayload({
+            blocks: [
+                playerBlock({
+                    id: 5,
+                    sets: [
+                        playerSet({ id: 1, set_index: 0, completed: false }),
+                        playerSet({ id: 2, set_index: 1, completed: false }),
+                        playerSet({ id: 3, set_index: 2, completed: false }),
+                    ],
+                }),
+            ],
+        });
+        await nextTick();
+        expect(player.focus.value).toEqual({ kind: 'set', blockIndex: 0, setId: 1 });
+    });
+
+    it('refocuses when the focused set is removed from the workout payload', async () => {
+        const props = reactive({
+            workout: workoutPayload({
+                blocks: [
+                    playerBlock({
+                        id: 5,
+                        sets: [playerSet({ id: 1, set_index: 0, completed: false }), playerSet({ id: 2, set_index: 1, completed: false })],
+                    }),
+                ],
+            }),
+            plate_profile: plateProfile(),
+        });
+        let player!: ReturnType<typeof createWorkoutPlayer>;
+        mount(
+            defineComponent({
+                setup() {
+                    player = createWorkoutPlayer(props);
+                    return () => h('div');
+                },
+            }),
+        );
+        expect(player.focus.value).toEqual({ kind: 'set', blockIndex: 0, setId: 1 });
+
+        props.workout = workoutPayload({
+            blocks: [
+                playerBlock({
+                    id: 5,
+                    sets: [playerSet({ id: 2, set_index: 0, completed: false })],
+                }),
+            ],
+        });
+        await nextTick();
+        expect(player.focus.value).toEqual({ kind: 'set', blockIndex: 0, setId: 2 });
     });
 
     it('opens and cancels the log sheet without posting', () => {

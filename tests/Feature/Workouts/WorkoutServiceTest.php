@@ -166,6 +166,29 @@ class WorkoutServiceTest extends TestCase
     }
 
     #[Test]
+    public function it_reindexes_remaining_sets_after_removing_an_earlier_round(): void
+    {
+        $routine = Routine::factory()->create();
+        $this->seedRoutineBlockWithExercise($routine, setCount: 3);
+        $workout = $this->workoutService->createWorkout($routine);
+        $first = WorkoutSet::query()
+            ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workout->id))
+            ->where('set_index', 0)
+            ->firstOrFail();
+
+        $this->workoutService->removeWorkingSetRound($first);
+
+        $indexes = WorkoutSet::query()
+            ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workout->id))
+            ->orderBy('set_index')
+            ->pluck('set_index')
+            ->all();
+
+        $this->assertSame([0, 1], $indexes);
+        $this->assertSame(2, $workout->blocks->first()->fresh()->workingSetGroup->set_count);
+    }
+
+    #[Test]
     public function it_does_not_remove_the_last_working_set(): void
     {
         $routine = Routine::factory()->create();
