@@ -45,6 +45,11 @@ export function workingRoundsInBlock(block: PlayerBlock): number {
     return indexes.size;
 }
 
+/** Planned sets in the same group for this exercise (x of n). */
+export function plannedSetCount(block: PlayerBlock, set: PlayerSet): number {
+    return block.sets.filter((s) => s.group_type === set.group_type && s.workout_block_exercise_id === set.workout_block_exercise_id).length;
+}
+
 export function nextDropSegmentWeight(lastKg: number): number {
     return Math.max(0, Math.round((lastKg - 2.5) * 2) / 2);
 }

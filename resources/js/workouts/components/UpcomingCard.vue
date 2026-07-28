@@ -4,6 +4,7 @@ defineProps<{
         exerciseName: string;
         groupLabel: string;
         setNumber: number;
+        setCount: number;
         blockPosition: number;
         weightLabel: string | null;
         reps: number | null;
@@ -19,7 +20,7 @@ defineProps<{
         <p class="text-xs tracking-wide text-muted-foreground uppercase">Up next</p>
         <p class="mt-1 text-lg font-semibold">{{ upcoming.exerciseName }}</p>
         <p class="mt-1 text-sm text-muted-foreground">
-            Block {{ upcoming.blockPosition }} · {{ upcoming.groupLabel }} · Set {{ upcoming.setNumber }}
+            Block {{ upcoming.blockPosition }} · {{ upcoming.groupLabel }} · Set {{ upcoming.setNumber }}/{{ upcoming.setCount }}
             <span v-if="upcoming.isDropset"> · Dropset</span>
         </p>
         <p v-if="upcoming.weightLabel != null || upcoming.reps != null" class="mt-1 font-mono text-sm text-foreground">

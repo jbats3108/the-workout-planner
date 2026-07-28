@@ -10,6 +10,7 @@ describe('UpcomingCard', () => {
                     exerciseName: 'Squat',
                     groupLabel: 'Working',
                     setNumber: 2,
+                    setCount: 4,
                     blockPosition: 1,
                     weightLabel: '100',
                     reps: 5,
@@ -20,6 +21,7 @@ describe('UpcomingCard', () => {
             },
         });
         expect(wrapper.text()).toContain('Squat');
+        expect(wrapper.text()).toContain('Set 2/4');
         expect(wrapper.text()).toContain('100kg');
         expect(wrapper.text()).toContain('× 5');
         expect(wrapper.text()).toContain('20 bar');
