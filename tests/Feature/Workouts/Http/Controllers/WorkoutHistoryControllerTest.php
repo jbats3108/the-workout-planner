@@ -161,6 +161,83 @@ class WorkoutHistoryControllerTest extends TestCase
         $this->assertSame(28750, $set->fresh()->weight_g);
     }
 
+    #[Test]
+    public function user_can_delete_finished_workout_from_history(): void
+    {
+        [$workout] = $this->createFinishedWorkout();
+
+        $this->actingAs($this->user)
+            ->delete(route('history.destroy', $workout))
+            ->assertRedirect(route('history.index'))
+            ->assertSessionHas('success');
+
+        $this->assertSoftDeleted($workout);
+    }
+
+    #[Test]
+    public function deleted_workout_no_longer_appears_in_history_index(): void
+    {
+        [$workout] = $this->createFinishedWorkout();
+
+        $this->actingAs($this->user)
+            ->delete(route('history.destroy', $workout))
+            ->assertRedirect();
+
+        $this->actingAs($this->user)
+            ->get(route('history.index'))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page->has('history.workouts', 0));
+    }
+
+    #[Test]
+    public function non_owner_cannot_delete_history(): void
+    {
+        [$workout] = $this->createFinishedWorkout();
+
+        $this->actingAs($this->secondUser)
+            ->delete(route('history.destroy', $workout))
+            ->assertForbidden();
+
+        $this->assertNotSoftDeleted($workout);
+    }
+
+    #[Test]
+    public function in_progress_workout_cannot_be_deleted_from_history(): void
+    {
+        $workout = $this->createInProgressWorkout();
+
+        $this->actingAs($this->user)
+            ->delete(route('history.destroy', $workout))
+            ->assertForbidden();
+
+        $this->assertNotSoftDeleted($workout);
+    }
+
+    #[Test]
+    public function deleting_finished_workout_does_not_undo_progression_bumps(): void
+    {
+        [$workout, $routineExercise] = $this->createFinishedWorkout(reps: 6, weightGrams: 80000);
+        $progressionService = app(WorkoutProgressionService::class);
+        $session = $progressionService->reEvaluateProgression($workout);
+        $progressionService->applyConfirmedBumps($workout, $session->bumps, [$routineExercise->id]);
+
+        $this->assertSame(82500, $routineExercise->fresh()->working_weight_g);
+
+        $this->actingAs($this->user)
+            ->delete(route('history.destroy', $workout))
+            ->assertRedirect(route('history.index'));
+
+        $this->assertSoftDeleted($workout);
+        $this->assertSame(82500, $routineExercise->fresh()->working_weight_g);
+        $this->assertDatabaseHas('bump_records', [
+            'workout_id' => $workout->id,
+            'routine_block_exercise_id' => $routineExercise->id,
+            'from_weight_g' => 80000,
+            'to_weight_g' => 82500,
+            'undone_at' => null,
+        ]);
+    }
+
     /**
      * @return array{0: Workout, 1: RoutineBlockExercise, 2: Routine}
      */

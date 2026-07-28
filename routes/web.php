@@ -23,6 +23,7 @@ use App\Routines\Http\Controllers\UpdateRoutineController;
 use App\Workouts\Http\Controllers\AddWorkingSetController;
 use App\Workouts\Http\Controllers\ApplyProgressionBumpsController;
 use App\Workouts\Http\Controllers\CompleteWorkoutSetController;
+use App\Workouts\Http\Controllers\DeleteWorkoutHistoryController;
 use App\Workouts\Http\Controllers\DiscardWorkoutController;
 use App\Workouts\Http\Controllers\FinishWorkoutController;
 use App\Workouts\Http\Controllers\IndexWorkoutHistoryController;
@@ -98,6 +99,10 @@ Route::middleware('auth')->group(function (): void {
         Route::put('/{workout}/sets/{set}', UpdateWorkoutHistorySetController::class)
             ->can('editHistory', 'workout')
             ->name('history.sets.update');
+
+        Route::delete('/{workout}', DeleteWorkoutHistoryController::class)
+            ->can('deleteHistory', 'workout')
+            ->name('history.destroy');
     });
 
     Route::prefix('/workouts')->group(function (): void {

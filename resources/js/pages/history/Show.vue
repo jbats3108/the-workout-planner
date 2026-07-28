@@ -3,7 +3,8 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { formatKg, historyRowsForBlock } from '@/workouts/lib/historyDisplay';
 import type { PlayerSet, WorkoutPayload } from '@/workouts/types';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, router, useForm } from '@inertiajs/vue3';
+import { Trash2 } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -45,6 +46,14 @@ const warmUpTitle = (sets: PlayerSet[]) => {
 const saveSet = (setId: number) => {
     forms[setId].put(route('history.sets.update', [props.history.workout.id, setId]));
 };
+
+const deleteWorkout = () => {
+    const name = props.history.workout.routine_name;
+    if (!confirm(`Remove “${name}” from history? This cannot be undone.`)) {
+        return;
+    }
+    router.delete(route('history.destroy', props.history.workout.id));
+};
 </script>
 
 <template>
@@ -52,10 +61,20 @@ const saveSet = (setId: number) => {
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-1 flex-col gap-6 p-4 text-foreground">
-            <div>
-                <p class="font-mono text-xs tracking-wide text-primary uppercase">History</p>
-                <h1 class="mt-1 text-2xl font-semibold tracking-tight">{{ history.workout.routine_name }}</h1>
-                <p class="mt-1 font-mono text-xs text-muted-foreground">{{ history.workout.mode }}</p>
+            <div class="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                    <p class="font-mono text-xs tracking-wide text-primary uppercase">History</p>
+                    <h1 class="mt-1 text-2xl font-semibold tracking-tight">{{ history.workout.routine_name }}</h1>
+                    <p class="mt-1 font-mono text-xs text-muted-foreground">{{ history.workout.mode }}</p>
+                </div>
+                <button
+                    type="button"
+                    class="inline-flex items-center gap-1.5 rounded-md bg-destructive px-3 py-2 text-sm font-semibold text-destructive-foreground transition-colors hover:bg-destructive/90"
+                    @click="deleteWorkout"
+                >
+                    <Trash2 class="size-4" />
+                    Delete
+                </button>
             </div>
 
             <div v-for="{ block, rows } in blockRows" :key="block.id" class="space-y-4">
