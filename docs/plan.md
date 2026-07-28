@@ -2,7 +2,7 @@
 
 Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domain language stays in `CONTEXT.md`; hard decisions stay in `docs/adr/`.
 
-**Grill cleanup:** when a grilled feature ships, delete its `## Grill: …` section. Move any still-open deferred bullets into **Parking lot** (or **Next**); do not keep decided implementation notes here.
+**Grill cleanup:** when a grilled feature ships, delete its `## Grill: …` section. Move any still-open deferred bullets into **Backlog**; do not keep decided implementation notes here.
 
 **Notion inbox:** after pulling bullets from Notion [Ovrload](https://app.notion.com/p/3aae5dd99f0c80ad928ade1a5c6b0749) into this file, clear **only** the list items under `## Backlog:` — leave that header and a single empty bullet (`-`). Do not replace the whole page or delete child pages / other sections.
 
@@ -16,15 +16,9 @@ Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domai
 - [x] Dashboard start/resume + empty-routine guards
 - [x] Editor save: allow empty warm-up percents
 
-## Next
+## Shipped (recent)
 
-Active queue ordered **easiest → hardest** (gym-test 2026-07-26 + remaining product). Shipped items stay below for history.
-
-1. **Audit agent guidance for duplication** — Spatie Data DTO rules (and likely other conventions) are repeated across `AGENTS.md`, ADRs, and `.cursor/skills/...`; consolidate so agents load one source of truth and keep context light.
-2. **Login screen on every open?** — investigate why the app often shows login on open (session, PWA/tab restore, cookie, redirect).
-3. **Bump confirmation timing** — grill: when (if at all) the bump confirmation screen should appear (finish only? history re-eval? skip entirely?).
-
-### Shipped (recent)
+Gym-test 2026-07-26 + remaining product history. Newest first within each batch where noted.
 
 1. **Admin nav order** — ~~push Admin to the bottom of the top-nav items~~ done (after Training in primary rail/drawer)
 1. **Remove clickable titles** — ~~titles should not navigate; use explicit buttons only~~ done (dashboard routine name is plain text; edit via icon)
@@ -57,22 +51,42 @@ Active queue ordered **easiest → hardest** (gym-test 2026-07-26 + remaining pr
 20. **Warm-up defaults scope** — ~~Settings: seed warm-ups into every new block vs first block only~~ done
 21. **Dropsets** — ~~per working-set-slot multi-segment sets in editor + Play; update `CONTEXT.md` when shipping~~ done
 
-## Parking lot
+## Backlog
+
+Single triage list — reprioritize across buckets as needed. **Features (FAQ)** are listed on the public help/FAQ page for beta testers. **Polish & mobile integration** is shipped-flow UX, not net-new capability. Notion [inbox](https://app.notion.com/p/3aae5dd99f0c80ad928ade1a5c6b0749) → pull new bullets into the right bucket below.
+
+-
+
+### Features (FAQ)
 
 - **FAQ page** — public/help FAQ; draft bullets on Notion [FAQ Page](https://app.notion.com/p/3aae5dd99f0c8006a6cbf6df379661a8) (early-adopter forever-free, Ko-fi, what app is/isn't, beta, no AI/ad data sale, not a training app, backlog link)
-- Investigate **slugs instead of IDs** in routes (routines, workouts, exercises, etc.)
+- **Post-hoc workout record** — log a full finished workout in one pass (no Play); pick routine or ad-hoc structure; assign `finished_at` to a past date; grill scope (progression re-eval, warm-ups, deload flag)
+- **Bump confirmation timing** — grill: when (if at all) the bump confirmation screen should appear (finish only? history re-eval? skip entirely?)
+- **Strava integration** — connect account; export finished workouts (and/or sync activity metadata); grill scope (OAuth, fields, privacy)
+- **Per-exercise strength-over-time** — charts / PR timeline; needs its own grill
+- **History extensions** — warm-up edits; discarded workouts in list; structure edits on finished workouts
+- **Demote dropset → normal in Play**
+- **Ad-hoc setup from player** — beyond planned `has_setup_after`
+- **Transition duration preference** — stored user pref (today client-side for supersets)
+- **lb display/conversion** — end-to-end (API still kg-centric like the editor)
+- **Dropsets on supersets**
+- **Gym dumbbell / rack inventory** — min, max, step for run-the-rack helper
+- **Flaky-network drafts** — best-effort offline/queue for player logging
+
+### Polish & mobile integration
+
+- **Log sheet polish** — mobile UX on shipped complete-then-log: sheet swipe/backdrop dismiss; auto-focus weight/reps; redesign **+ Set** / **− Set** placement
+- **PWA & app shell** — installable PWA; tabbed app shell; haptics
+
+### Bugfixes
+
+- **Login screen on every open?** — investigate why the app often shows login on open (session, PWA/tab restore, cookie, redirect)
+
+### Code quality & security
+
+- **Audit agent guidance for duplication** — Spatie Data DTO rules (and likely other conventions) are repeated across `AGENTS.md`, ADRs, and `.cursor/skills/...`; consolidate so agents load one source of truth and keep context light
+- **Slugs instead of IDs** — investigate in routes (routines, workouts, exercises, etc.)
 - **Policy audit** — verify every route/action has the right ability and policies stay complete as surfaces grow
 - **Facilitate full code review** — make a thorough review of the app tractable (scope, tooling, or staged passes)
 - **Security sweep** — hunt for authz holes, mass-assignment, IDOR, CSRF/session gaps, and similar
 - **GDPR compliance?** — clarify whether/what is required (privacy policy, data export/delete, retention, cookies); grill before building
-- Per-exercise strength-over-time (charts / PR timeline) — needs its own grill
-- History: warm-up edits; discarded workouts in list; structure edits on finished workouts
-- Demote dropset → normal in Play
-- Installable PWA; tabbed app shell; haptics
-- Complete-then-log follow-ups: sheet swipe/backdrop dismiss; auto-focus weight/reps; redesign **+ Set** / **− Set** placement
-- Ad-hoc setup from player (beyond planned `has_setup_after`)
-- Transition duration as a stored preference (today client-side for supersets)
-- lb display/conversion end-to-end (API still kg-centric like the editor)
-- Dropsets on supersets
-- Gym dumbbell / rack inventory (min, max, step) for run-the-rack helper
-- Flaky-network drafts — best-effort offline/queue for player logging
