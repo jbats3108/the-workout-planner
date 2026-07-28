@@ -44,7 +44,7 @@ const unlockInput = (event: PointerEvent) => {
 </script>
 
 <template>
-    <div v-if="current" class="flex flex-1 flex-col px-4 py-6">
+    <div v-if="current" class="flex flex-1 flex-col items-center px-4 py-6 text-center">
         <p class="text-xs tracking-widest text-muted-foreground uppercase">
             Block {{ current.block.position }} · {{ groupLabel(current.set.group_type) }} · Set
             {{ current.set.set_index + 1 }}
@@ -66,14 +66,14 @@ const unlockInput = (event: PointerEvent) => {
 
         <PlateGuideCard
             v-if="stagePlateLoad && stageFormatPlateStack"
-            class="mt-6"
+            class="mt-6 w-full"
             :plate-load="stagePlateLoad"
             :format-plate-stack="stageFormatPlateStack"
             :weight-unit="workout.weight_unit"
             @apply-nearest="applyStageNearestLoad"
         />
 
-        <div class="mt-auto flex flex-col gap-3 pb-4">
+        <div class="mt-auto flex w-full flex-col gap-3 pb-4">
             <button
                 type="button"
                 class="rounded-full bg-primary px-6 py-4 text-base font-semibold text-primary-foreground disabled:opacity-50"
