@@ -67,6 +67,8 @@ describe('createWorkoutPlayer', () => {
         });
         expect(player.upcoming.value?.exerciseName).toBe('Squat');
         expect(player.upcoming.value?.weightLabel).toBe('90');
+        expect(player.upcoming.value?.setNumber).toBe(2);
+        expect(player.upcoming.value?.setCount).toBe(2);
     });
 
     it('syncs draft weight from previous logged set', async () => {

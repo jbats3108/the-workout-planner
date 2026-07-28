@@ -4,6 +4,7 @@ import {
     defaultPromoteSegments,
     finishesWarmUpGroup,
     nextDropSegmentWeight,
+    plannedSetCount,
     previousSetWeightKg,
     shouldRestAfter,
     visitLeavesWorkout,
@@ -56,6 +57,20 @@ describe('finishesWarmUpGroup', () => {
             ],
         });
         expect(finishesWarmUpGroup(block, block.sets[1])).toBe(true);
+    });
+});
+
+describe('plannedSetCount', () => {
+    it('counts sets in the same group for the exercise', () => {
+        const block = playerBlock({
+            sets: [
+                playerSet({ id: 1, set_index: 0 }),
+                playerSet({ id: 2, set_index: 1 }),
+                playerSet({ id: 3, set_index: 2 }),
+                playerSet({ id: 4, group_type: 'warm_up', set_index: 0 }),
+            ],
+        });
+        expect(plannedSetCount(block, block.sets[1])).toBe(3);
     });
 });
 
