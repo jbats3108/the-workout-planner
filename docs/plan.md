@@ -10,8 +10,7 @@ Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domai
 
 Gym-test 2026-07-28 — numbered priority within this batch.
 
-1. **Set x/n on setup** — show set progress (x of n) during setup
-1. **Stronger set-of-x highlight** — clearer which set of the planned count you're on
+1. **Player layout tweaks** — centralise text, clearer section separation, bigger elements; stronger set-of-x highlight (which set of the planned count you're on)
 2. **Setup between warm-ups** — allow planned setup pauses between warm-up steps (not only after WU / after block)
 
 ## Recently shipped (foundation)
@@ -28,6 +27,7 @@ Gym-test 2026-07-28 — numbered priority within this batch.
 
 Gym-test 2026-07-28 + 2026-07-26 + remaining product history. Newest first within each batch where noted.
 
+1. **Set x/n on setup** — ~~show set progress (x of n) during setup~~ done (Up next on setup/rest: `Set x/n` from planned group count)
 1. **Complete screen full-page** — ~~log-set complete UI should cover the whole page~~ done (full-screen log sheet; keyboard overlays content so Log/Cancel stay put; finish Complete stage hides player header)
 1. **Countdown beeps** — ~~rest/timer countdown audio cues~~ done (ticks at 5…1 + long end tone; vibrate mirrors when available)
 1. **Admin nav order** — ~~push Admin to the bottom of the top-nav items~~ done (after Training in primary rail/drawer)
@@ -70,6 +70,7 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 
 ### Features (FAQ)
 
+- **Type-ahead exercise search** — faster find-as-you-type in editor / catalog pickers
 - **FAQ page** — public/help FAQ; draft bullets on Notion [FAQ Page](https://app.notion.com/p/3aae5dd99f0c8006a6cbf6df379661a8) (early-adopter forever-free, Ko-fi, what app is/isn't, beta, no AI/ad data sale, not a training app, backlog link)
 - **Post-hoc workout record** — log a full finished workout in one pass (no Play); pick routine or ad-hoc structure; assign `finished_at` to a past date; grill scope (progression re-eval, warm-ups, deload flag)
 - **Bump confirmation timing** — grill: when (if at all) the bump confirmation screen should appear (finish only? history re-eval? skip entirely?)
@@ -92,7 +93,7 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 
 ### Bugfixes
 
--
+- **Rest skip confirm missing?** — “are you sure?” on Skip rest disappeared; confirm whether intentional and restore if not
 
 ### Code quality & security
 
