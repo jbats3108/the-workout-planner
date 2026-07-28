@@ -4,6 +4,7 @@ import {
     defaultPromoteSegments,
     finishesWarmUpGroup,
     nextDropSegmentWeight,
+    nextSupersetSet,
     plannedSetCount,
     previousSetWeightKg,
     shouldRestAfter,
@@ -45,6 +46,29 @@ describe('shouldRestAfter', () => {
         });
         const current = block.sets[1];
         expect(shouldRestAfter(block, current)).toBe(true);
+    });
+});
+
+describe('nextSupersetSet', () => {
+    it('returns the partner exercise later in the round', () => {
+        const block = playerBlock({
+            is_superset: true,
+            exercises: [
+                { id: 10, name: 'Press', working_weight_kg: 50, prescribed_reps: 8, position: 0 },
+                { id: 11, name: 'Row', working_weight_kg: 50, prescribed_reps: 8, position: 1 },
+            ],
+            sets: [
+                playerSet({ id: 1, workout_block_exercise_id: 10, exercise_name: 'Press', set_index: 0 }),
+                playerSet({ id: 2, workout_block_exercise_id: 11, exercise_name: 'Row', set_index: 0 }),
+            ],
+        });
+        expect(nextSupersetSet(block, block.sets[0])?.exercise_name).toBe('Row');
+        expect(nextSupersetSet(block, block.sets[1])).toBeNull();
+    });
+
+    it('returns null outside supersets', () => {
+        const block = playerBlock();
+        expect(nextSupersetSet(block, block.sets[0])).toBeNull();
     });
 });
 

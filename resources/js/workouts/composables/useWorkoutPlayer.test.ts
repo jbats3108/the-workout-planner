@@ -71,6 +71,36 @@ describe('createWorkoutPlayer', () => {
         expect(player.upcoming.value?.setCount).toBe(2);
     });
 
+    it('names the next exercise in a superset round with its target', () => {
+        const player = mountPlayer({
+            blocks: [
+                playerBlock({
+                    is_superset: true,
+                    exercises: [
+                        { id: 10, name: 'Press', working_weight_kg: 50, prescribed_reps: 8, position: 0 },
+                        { id: 11, name: 'Row', working_weight_kg: 60, prescribed_reps: 10, position: 1 },
+                    ],
+                    sets: [
+                        playerSet({ id: 1, workout_block_exercise_id: 10, exercise_name: 'Press', set_index: 0 }),
+                        playerSet({
+                            id: 2,
+                            workout_block_exercise_id: 11,
+                            exercise_name: 'Row',
+                            set_index: 0,
+                            target_weight_kg: 60,
+                            target_reps: 10,
+                        }),
+                    ],
+                }),
+            ],
+        });
+        expect(player.supersetNext.value).toEqual({
+            exerciseName: 'Row',
+            targetLabel: '60kg × 10',
+            label: 'Then: Row (60kg × 10)',
+        });
+    });
+
     it('syncs draft weight from previous logged set', async () => {
         const player = mountPlayer({
             blocks: [

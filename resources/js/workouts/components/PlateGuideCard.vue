@@ -13,10 +13,10 @@ defineEmits<{
 </script>
 
 <template>
-    <div class="rounded-xl border border-border bg-card/60 px-4 py-3 text-sm">
+    <div class="rounded-xl border border-border bg-card/60 px-4 py-4 text-center">
         <p class="text-xs tracking-wide text-muted-foreground uppercase">Plates</p>
-        <p class="mt-1 font-mono text-foreground">{{ formatPlateStack }}</p>
-        <p v-if="!plateLoad.exact" class="mt-1 text-xs text-muted-foreground">
+        <p class="mt-2 font-mono text-lg text-foreground">{{ formatPlateStack }}</p>
+        <p v-if="!plateLoad.exact" class="mt-2 text-sm text-muted-foreground">
             Nearest loadable:
             {{ gramsToKg(plateLoad.total_g) }}{{ weightUnit }}
             <span v-if="plateLoad.delta_g > 0">(+{{ gramsToKg(plateLoad.delta_g) }})</span>

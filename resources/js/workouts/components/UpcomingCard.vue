@@ -16,18 +16,18 @@ defineProps<{
 </script>
 
 <template>
-    <div class="w-full max-w-sm rounded-xl border border-border bg-card/60 px-4 py-3 text-center">
-        <p class="text-xs tracking-wide text-muted-foreground uppercase">Up next</p>
-        <p class="mt-1 text-lg font-semibold">{{ upcoming.exerciseName }}</p>
-        <p class="mt-1 text-sm text-muted-foreground">
+    <div class="w-full max-w-md rounded-xl border border-border bg-card/60 px-5 py-4 text-center">
+        <p class="text-base font-medium text-muted-foreground">Up Next:</p>
+        <p class="mt-2 text-xl font-semibold">{{ upcoming.exerciseName }}</p>
+        <p class="mt-2 text-base text-muted-foreground">
             Block {{ upcoming.blockPosition }} · {{ upcoming.groupLabel }} · Set {{ upcoming.setNumber }}/{{ upcoming.setCount }}
             <span v-if="upcoming.isDropset"> · Dropset</span>
         </p>
-        <p v-if="upcoming.weightLabel != null || upcoming.reps != null" class="mt-1 font-mono text-sm text-foreground">
+        <p v-if="upcoming.weightLabel != null || upcoming.reps != null" class="mt-3 font-mono text-2xl font-semibold text-foreground">
             <span v-if="upcoming.weightLabel != null">{{ upcoming.weightLabel }}{{ weightUnit }}</span>
             <span v-if="upcoming.reps != null"> × {{ upcoming.reps }}</span>
         </p>
-        <p v-if="upcoming.plateStack" class="mt-2 font-mono text-xs text-muted-foreground">
+        <p v-if="upcoming.plateStack" class="mt-3 font-mono text-base text-muted-foreground">
             {{ upcoming.plateStack }}
         </p>
     </div>
