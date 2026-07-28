@@ -127,6 +127,13 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
             if (restSecondsLeft.value > 0 || pendingRestSeconds.value > 0) {
                 return;
             }
+            // Keep focus when add/remove only changes set count — don't jump to another set.
+            if (focus.value.kind === 'set') {
+                const focused = flatSets.value.find(({ set }) => set.id === (focus.value as { setId: number }).setId);
+                if (focused && !focused.set.completed) {
+                    return;
+                }
+            }
             focus.value = firstIncomplete();
         },
         { deep: true },
@@ -504,6 +511,12 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         }
 
         const index = current.value.set.set_index;
+        const hasLaterRound = current.value.block.sets.some((s) => s.group_type === 'working' && s.set_index > index);
+        if (!hasLaterRound) {
+            // Last round: removing it would skip straight to the next block/setup.
+            return false;
+        }
+
         const round = current.value.block.sets.filter((s) => s.group_type === 'working' && s.set_index === index);
         return round.every((s) => !s.completed);
     });
@@ -523,7 +536,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
     };
 
     const removeWorkingSet = () => {
-        if (!current.value) {
+        if (!current.value || !canRemoveWorkingSet.value) {
             return;
         }
         router.delete(route('workouts.sets.remove', [props.workout.id, current.value.set.id]), {
