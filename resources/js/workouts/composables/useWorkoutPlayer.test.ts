@@ -27,6 +27,7 @@ describe('createWorkoutPlayer', () => {
         vi.clearAllMocks();
         vi.spyOn(playerInteraction, 'preparePlayerInteraction').mockImplementation(() => {});
         vi.spyOn(restAlert, 'notifyRestEnded').mockImplementation(() => {});
+        vi.spyOn(restAlert, 'notifyRestCountdown').mockImplementation(() => {});
         vi.stubGlobal(
             'route',
             vi.fn((name: string, _params?: unknown) => `/${String(name)}`),
@@ -169,6 +170,35 @@ describe('createWorkoutPlayer', () => {
         vi.advanceTimersByTime(3000);
         expect(restAlert.notifyRestEnded).toHaveBeenCalled();
         expect(player.restSecondsLeft.value).toBe(0);
+    });
+
+    it('beeps once per remaining second in the last five seconds of rest', () => {
+        vi.useFakeTimers();
+        vi.setSystemTime(new Date('2026-01-01T12:00:00Z'));
+        inertiaMocks().inertiaFormPost.mockImplementation((_url, options) => {
+            options?.onSuccess?.();
+        });
+        const player = mountPlayer({
+            blocks: [
+                playerBlock({
+                    sets: [playerSet({ id: 1, completed: false, rest_seconds: 7 }), playerSet({ id: 2, set_index: 1, completed: false })],
+                }),
+            ],
+        });
+        player.logSheetOpen.value = true;
+        player.completeSet();
+
+        expect(restAlert.notifyRestCountdown).not.toHaveBeenCalled();
+
+        vi.advanceTimersByTime(2000);
+        expect(restAlert.notifyRestCountdown).toHaveBeenCalledWith(5);
+
+        vi.advanceTimersByTime(1000);
+        expect(restAlert.notifyRestCountdown).toHaveBeenCalledWith(4);
+
+        vi.advanceTimersByTime(3000);
+        expect(restAlert.notifyRestCountdown).toHaveBeenCalledWith(1);
+        expect(restAlert.notifyRestCountdown).toHaveBeenCalledTimes(5);
     });
 
     it('acknowledges setup after warm-up', () => {

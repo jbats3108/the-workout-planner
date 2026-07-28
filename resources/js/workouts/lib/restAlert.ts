@@ -1,4 +1,10 @@
 const REST_NOTIFICATION_TAG = 'ovrload-rest-end';
+/** Whole seconds that get a short countdown tick (inclusive). */
+export const REST_COUNTDOWN_FROM = 5;
+const COUNTDOWN_BEEP_MS = 90;
+const COUNTDOWN_VIBRATE_MS = 40;
+const END_BEEP_MS = 480;
+const END_VIBRATE_MS = 480;
 
 let sharedAudioContext: AudioContext | null = null;
 
@@ -59,7 +65,7 @@ export function primeRestAlerts(): void {
     }
 }
 
-export function playRestEndSound(): boolean {
+function playTone(frequencyHz: number, durationMs: number, gainValue = 0.08): boolean {
     const AudioContextCtor = audioContextCtor();
     if (!AudioContextCtor) {
         return false;
@@ -74,8 +80,8 @@ export function playRestEndSound(): boolean {
     const gain = context.createGain();
 
     oscillator.type = 'sine';
-    oscillator.frequency.value = 880;
-    gain.gain.value = 0.08;
+    oscillator.frequency.value = frequencyHz;
+    gain.gain.value = gainValue;
 
     oscillator.connect(gain);
     gain.connect(context.destination);
@@ -83,15 +89,50 @@ export function playRestEndSound(): boolean {
 
     window.setTimeout(() => {
         oscillator.stop();
-    }, 180);
+    }, durationMs);
 
     return true;
 }
 
-export function vibrateRestEnd(): void {
+function vibratePattern(pattern: number | number[]): void {
     if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
-        navigator.vibrate([180, 90, 180]);
+        navigator.vibrate(pattern);
     }
+}
+
+export function playRestEndSound(): boolean {
+    return playTone(880, END_BEEP_MS);
+}
+
+/** Short tick for seconds 5…1 before rest ends. */
+export function playRestCountdownBeep(secondsLeft: number): boolean {
+    if (!shouldBeepRestCountdown(secondsLeft)) {
+        return false;
+    }
+
+    return playTone(760, COUNTDOWN_BEEP_MS, 0.06);
+}
+
+export function shouldBeepRestCountdown(secondsLeft: number): boolean {
+    return secondsLeft >= 1 && secondsLeft <= REST_COUNTDOWN_FROM;
+}
+
+export function vibrateRestCountdown(): void {
+    vibratePattern(COUNTDOWN_VIBRATE_MS);
+}
+
+export function vibrateRestEnd(): void {
+    vibratePattern(END_VIBRATE_MS);
+}
+
+/** Short beep + haptic for one countdown second (no-op outside 5…1). */
+export function notifyRestCountdown(secondsLeft: number): void {
+    if (!shouldBeepRestCountdown(secondsLeft)) {
+        return;
+    }
+
+    playRestCountdownBeep(secondsLeft);
+    vibrateRestCountdown();
 }
 
 export function showRestEndNotification(options: RestAlertOptions = {}): void {
