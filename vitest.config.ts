@@ -12,11 +12,11 @@ export default defineConfig({
     test: {
         environment: 'happy-dom',
         setupFiles: ['resources/js/test/setup.ts'],
-        include: ['resources/js/**/*.test.ts'],
+        include: ['resources/js/**/*.test.ts', 'vite/**/*.test.ts'],
         coverage: {
             provider: 'v8',
             reporter: ['text', 'lcov'],
-            include: ['resources/js/**/*.ts'],
+            include: ['resources/js/**/*.ts', 'vite/**/*.ts'],
             exclude: [
                 'resources/js/**/*.test.ts',
                 'resources/js/**/*.d.ts',
@@ -24,6 +24,7 @@ export default defineConfig({
                 'resources/js/ziggy.js',
                 'resources/js/pages/**',
                 'resources/js/components/ui/**',
+                'vite/**/*.test.ts',
             ],
         },
     },

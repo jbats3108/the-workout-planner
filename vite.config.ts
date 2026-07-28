@@ -2,21 +2,9 @@ import inertia from '@inertiajs/vite';
 import tailwindcss from '@tailwindcss/vite';
 import vue from '@vitejs/plugin-vue';
 import laravel from 'laravel-vite-plugin';
-import { networkInterfaces } from 'node:os';
 import { defineConfig, loadEnv, type Plugin } from 'vite';
 import vueDevtools from 'vite-plugin-vue-devtools';
-
-function detectLanIpv4(): string | null {
-    for (const ifaces of Object.values(networkInterfaces())) {
-        for (const iface of ifaces ?? []) {
-            if (iface.family === 'IPv4' && !iface.internal) {
-                return iface.address;
-            }
-        }
-    }
-
-    return null;
-}
+import { detectLanIpv4 } from './vite/detectLanHost';
 
 /**
  * @inertiajs/vite SSR dev mode injects CSS via resolvedUrls.local (localhost), ignoring
@@ -49,9 +37,10 @@ export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd(), '');
     const ddevUrl = env.DDEV_PRIMARY_URL || null;
     const lanDev = env.LAN_DEV === '1' || env.LAN_DEV === 'true';
+    // Phone / LAN: composer run dev:lan auto-detects wifi/ethernet (skips docker).
+    // Optional override: VITE_DEV_HOST=192.168.x.x when detection is wrong.
     const lanHost = env.VITE_DEV_HOST || (lanDev ? detectLanIpv4() : null);
 
-    // Phone / LAN: set VITE_DEV_HOST to this machine's LAN IP (e.g. 192.168.0.131).
     // DDEV: DDEV_PRIMARY_URL is set automatically.
     const publicHost = lanHost || (ddevUrl ? new URL(ddevUrl).hostname : null);
     const shareOnLan = Boolean(publicHost);
