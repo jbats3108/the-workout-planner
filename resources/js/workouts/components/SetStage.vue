@@ -119,13 +119,13 @@ const unlockInput = (event: PointerEvent) => {
         </div>
 
         <LogSetSheet v-model:open="logSheetOpen">
-            <div class="flex flex-1 flex-col gap-4 overflow-y-auto">
-                <div>
-                    <p class="text-xs tracking-widest text-muted-foreground uppercase">Log set</p>
-                    <h3 class="mt-1 text-xl font-semibold">{{ current.set.exercise_name }}</h3>
-                </div>
+            <form class="flex min-h-0 flex-1 flex-col gap-4" @submit.prevent="completeSet">
+                <div class="min-h-0 flex-1 space-y-4 overflow-y-auto">
+                    <div>
+                        <p class="text-xs tracking-widest text-muted-foreground uppercase">Log set</p>
+                        <h3 class="mt-1 text-xl font-semibold">{{ current.set.exercise_name }}</h3>
+                    </div>
 
-                <form class="flex flex-col gap-4" @submit.prevent="completeSet">
                     <template v-if="current.set.is_dropset">
                         <label class="flex flex-col gap-1 text-sm text-muted-foreground">
                             Reps (shared)
@@ -204,26 +204,26 @@ const unlockInput = (event: PointerEvent) => {
                             />
                         </label>
                     </template>
+                </div>
 
-                    <div class="flex flex-col gap-2 pt-2">
-                        <button
-                            type="submit"
-                            class="rounded-full bg-primary px-6 py-4 text-base font-semibold text-primary-foreground disabled:opacity-50"
-                            :disabled="setForm.processing || workout.status !== 'in_progress'"
-                        >
-                            Log set
-                        </button>
-                        <button
-                            type="button"
-                            class="rounded-full border border-border px-6 py-3 text-sm"
-                            :disabled="setForm.processing"
-                            @click="cancelLogSheet"
-                        >
-                            Cancel
-                        </button>
-                    </div>
-                </form>
-            </div>
+                <div class="flex shrink-0 flex-col gap-2">
+                    <button
+                        type="submit"
+                        class="rounded-full bg-primary px-6 py-4 text-base font-semibold text-primary-foreground disabled:opacity-50"
+                        :disabled="setForm.processing || workout.status !== 'in_progress'"
+                    >
+                        Log set
+                    </button>
+                    <button
+                        type="button"
+                        class="rounded-full border border-border px-6 py-3 text-sm"
+                        :disabled="setForm.processing"
+                        @click="cancelLogSheet"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </form>
         </LogSetSheet>
     </div>
 </template>
