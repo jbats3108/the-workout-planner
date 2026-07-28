@@ -20,6 +20,7 @@ use App\Routines\Http\Controllers\EditRoutineController;
 use App\Routines\Http\Controllers\ShowRoutineController;
 use App\Routines\Http\Controllers\StoreRoutineController;
 use App\Routines\Http\Controllers\UpdateRoutineController;
+use App\Shared\Http\Controllers\ShowHomeController;
 use App\Workouts\Http\Controllers\AddWorkingSetController;
 use App\Workouts\Http\Controllers\ApplyProgressionBumpsController;
 use App\Workouts\Http\Controllers\CompleteWorkoutSetController;
@@ -37,9 +38,8 @@ use App\Workouts\Http\Controllers\StoreWorkoutController;
 use App\Workouts\Http\Controllers\UpdateWorkoutHistorySetController;
 use App\Workouts\Models\Workout;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
-Route::get('/', fn () => Inertia::render('Home'))->name('home');
+Route::get('/', ShowHomeController::class)->name('home');
 
 Route::middleware('auth')->group(function (): void {
 

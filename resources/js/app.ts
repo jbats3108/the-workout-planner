@@ -1,9 +1,29 @@
 import '../css/app.css';
 
-import { createInertiaApp } from '@inertiajs/vue3';
+import { createInertiaApp, router } from '@inertiajs/vue3';
 import { ZiggyVue } from 'ziggy-js';
 import { initializeTheme } from './composables/useAppearance';
 import type { AppPageProps } from './types';
+
+function isGuestAuthPath(pathname: string): boolean {
+    return (
+        pathname === '/' ||
+        pathname === '/login' ||
+        pathname === '/register' ||
+        pathname === '/forgot-password' ||
+        pathname.startsWith('/reset-password/')
+    );
+}
+
+if (typeof window !== 'undefined') {
+    window.addEventListener('pageshow', (event: PageTransitionEvent) => {
+        if (!event.persisted || !isGuestAuthPath(window.location.pathname)) {
+            return;
+        }
+
+        router.reload();
+    });
+}
 
 const appName = import.meta.env.VITE_APP_NAME || 'OVRLOAD';
 

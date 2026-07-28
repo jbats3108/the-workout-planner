@@ -50,6 +50,7 @@ Gym-test 2026-07-26 + remaining product history. Newest first within each batch 
 19. **Clear block warm-up** — ~~one-tap remove all warm-up steps from a block in the editor~~ done
 20. **Warm-up defaults scope** — ~~Settings: seed warm-ups into every new block vs first block only~~ done
 21. **Dropsets** — ~~per working-set-slot multi-segment sets in editor + Play; update `CONTEXT.md` when shipping~~ done
+22. **Login screen on every open** — ~~authenticated users hitting `/` saw the guest home/login UI; bfcache could restore stale guest pages after sign-in~~ done (home redirect + guest-page bfcache reload)
 
 ## Backlog
 
@@ -80,7 +81,7 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 
 ### Bugfixes
 
-- **Login screen on every open?** — investigate why the app often shows login on open (session, PWA/tab restore, cookie, redirect)
+-
 
 ### Code quality & security
 
