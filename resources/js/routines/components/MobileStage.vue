@@ -178,6 +178,14 @@ const {
                                 class="w-14 rounded-lg border border-border bg-background px-2 py-1.5 font-mono text-sm"
                                 aria-label="Warm-up reps"
                             />
+                            <label
+                                v-if="si < activeBlock.warm_up.steps.length - 1"
+                                class="flex items-center gap-1 text-xs text-muted-foreground"
+                                title="Setup after this warm-up"
+                            >
+                                <input v-model="step.has_setup_after" type="checkbox" />
+                                Setup
+                            </label>
                             <button
                                 type="button"
                                 class="ml-auto text-xs text-muted-foreground hover:text-destructive"

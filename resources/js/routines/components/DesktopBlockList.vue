@@ -103,22 +103,35 @@ const {
                                 />
                             </td>
                             <td class="px-2 py-2">
-                                <div v-if="ei === 0" class="flex items-center gap-1">
-                                    <input
-                                        :value="warmUpText(block)"
-                                        class="w-32 rounded border border-border bg-card px-2 py-1 font-mono text-primary/90"
-                                        placeholder="40x5, 60x3, 80x1"
-                                        @input="setWarmUpText(block, ($event.target as HTMLInputElement).value)"
-                                    />
-                                    <button
-                                        v-if="block.warm_up.steps.length"
-                                        type="button"
-                                        class="shrink-0 text-xs text-muted-foreground hover:text-destructive"
-                                        title="Clear warm-up"
-                                        @click="clearWarmUp(block)"
-                                    >
-                                        Clear
-                                    </button>
+                                <div v-if="ei === 0" class="flex flex-col gap-1">
+                                    <div class="flex items-center gap-1">
+                                        <input
+                                            :value="warmUpText(block)"
+                                            class="w-32 rounded border border-border bg-card px-2 py-1 font-mono text-primary/90"
+                                            placeholder="40x5, 60x3, 80x1"
+                                            @input="setWarmUpText(block, ($event.target as HTMLInputElement).value)"
+                                        />
+                                        <button
+                                            v-if="block.warm_up.steps.length"
+                                            type="button"
+                                            class="shrink-0 text-xs text-muted-foreground hover:text-destructive"
+                                            title="Clear warm-up"
+                                            @click="clearWarmUp(block)"
+                                        >
+                                            Clear
+                                        </button>
+                                    </div>
+                                    <div v-if="block.warm_up.steps.length > 1" class="flex flex-wrap gap-1">
+                                        <label
+                                            v-for="(step, si) in block.warm_up.steps.slice(0, -1)"
+                                            :key="si"
+                                            class="flex items-center gap-0.5 text-[10px] text-muted-foreground"
+                                            :title="`Setup after warm-up ${si + 1}`"
+                                        >
+                                            <input v-model="step.has_setup_after" type="checkbox" />
+                                            S{{ si + 1 }}
+                                        </label>
+                                    </div>
                                 </div>
                             </td>
                             <td class="px-2 py-2">
