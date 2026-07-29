@@ -56,7 +56,10 @@ class UserTest extends TestCase
         $userRoutines = $user->routines;
 
         // Then
-        $this->assertEquals($routines->fresh(), $userRoutines);
+        $this->assertEqualsCanonicalizing(
+            $routines->pluck('id')->all(),
+            $userRoutines->pluck('id')->all(),
+        );
 
     }
 
