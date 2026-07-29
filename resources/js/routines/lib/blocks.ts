@@ -19,7 +19,7 @@ export function emptyBlock(
     } = {},
 ): Block {
     const { superset = false, seedWarmUp = true, warmUpDefaults = [], firstCatalogId = null } = options;
-    const steps = seedWarmUp ? warmUpDefaults.map((s) => ({ percent: s.percent, reps: s.reps })) : [];
+    const steps = seedWarmUp ? warmUpDefaults.map((s) => ({ percent: s.percent, reps: s.reps, has_setup_after: false })) : [];
     return {
         is_superset: superset,
         has_setup_after: false,
@@ -30,10 +30,28 @@ export function emptyBlock(
     };
 }
 
+export function syncSetupAfterBlockFlags(blocks: Block[]): void {
+    if (blocks.length === 0) {
+        return;
+    }
+
+    const lastIndex = blocks.length - 1;
+    blocks.forEach((block, index) => {
+        if (index === lastIndex) {
+            block.has_setup_after = false;
+        }
+    });
+}
+
+export function canSetupAfterBlock(blockIndex: number, blockCount: number): boolean {
+    return blockCount > 0 && blockIndex < blockCount - 1;
+}
+
 export function normalizeBlock(raw: Block): Block {
     const steps = (raw.warm_up?.steps ?? []).map((s) => ({
         percent: Number(s.percent),
         reps: Number(s.reps ?? 5),
+        has_setup_after: Boolean(s.has_setup_after),
     }));
     const dropsets = (raw.working?.dropsets ?? [])
         .map((d) => ({

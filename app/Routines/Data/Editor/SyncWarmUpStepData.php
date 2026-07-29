@@ -17,5 +17,7 @@ class SyncWarmUpStepData extends Data
 
         #[Min(1), Max(100)]
         public readonly int $reps = 5,
+
+        public readonly bool $hasSetupAfter = false,
     ) {}
 }

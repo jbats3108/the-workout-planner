@@ -1,4 +1,4 @@
-import { emptyBlock, emptyExercise, normalizeBlock, toggleSuperset } from '@/routines/lib/blocks';
+import { canSetupAfterBlock, emptyBlock, emptyExercise, normalizeBlock, syncSetupAfterBlockFlags, toggleSuperset } from '@/routines/lib/blocks';
 import { block } from '@/test/factories';
 import { describe, expect, it } from 'vitest';
 
@@ -11,7 +11,7 @@ describe('emptyExercise', () => {
 describe('emptyBlock', () => {
     it('seeds warm-up defaults', () => {
         const b = emptyBlock({ warmUpDefaults: [{ percent: 40, reps: 5 }] });
-        expect(b.warm_up.steps).toEqual([{ percent: 40, reps: 5 }]);
+        expect(b.warm_up.steps).toEqual([{ percent: 40, reps: 5, has_setup_after: false }]);
     });
 
     it('creates superset with two exercises', () => {
@@ -40,6 +40,23 @@ describe('normalizeBlock', () => {
             warm_up: { set_count: 0, rest_seconds: 60, steps: [] },
         });
         expect(normalizeBlock(raw).has_setup_after_warm_up).toBe(false);
+    });
+});
+
+describe('syncSetupAfterBlockFlags', () => {
+    it('clears setup-after on the final block', () => {
+        const blocks = [block({ has_setup_after: true }), block({ has_setup_after: true })];
+        syncSetupAfterBlockFlags(blocks);
+        expect(blocks[0].has_setup_after).toBe(true);
+        expect(blocks[1].has_setup_after).toBe(false);
+    });
+});
+
+describe('canSetupAfterBlock', () => {
+    it('allows every block except the last', () => {
+        expect(canSetupAfterBlock(0, 3)).toBe(true);
+        expect(canSetupAfterBlock(1, 3)).toBe(true);
+        expect(canSetupAfterBlock(2, 3)).toBe(false);
     });
 });
 

@@ -12,6 +12,7 @@ class WorkoutWarmUpStep extends Model
         'position',
         'percent_of_working',
         'reps',
+        'has_setup_after',
     ];
 
     /** @return array<string, string> */
@@ -21,6 +22,7 @@ class WorkoutWarmUpStep extends Model
             'position' => 'integer',
             'percent_of_working' => 'integer',
             'reps' => 'integer',
+            'has_setup_after' => 'boolean',
         ];
     }
 

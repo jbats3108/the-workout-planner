@@ -8,12 +8,14 @@ import { releaseScreenWake, requestScreenWake } from '@/workouts/lib/screenWake'
 import {
     defaultPromoteSegments,
     finishesWarmUpGroup,
+    finishesWarmUpStep,
     nextDropSegmentWeight,
     nextSupersetSet,
     plannedSetCount,
     previousSetWeightKg,
     shouldRestAfter,
     visitLeavesWorkout,
+    warmUpRestSeconds,
     workingRestSeconds,
     workingRoundsInBlock,
     workingWeightForSet,
@@ -283,6 +285,9 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         if (restAfter > 0 && block.has_setup_after_warm_up && finishesWarmUpGroup(block, set)) {
             restAfter = 0;
         }
+        if (restAfter > 0 && finishesWarmUpStep(block, set)) {
+            restAfter = 0;
+        }
 
         const payload = set.is_dropset
             ? {
@@ -368,10 +373,18 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         preparePlayerInteraction();
         const phase = focus.value.phase;
         const block = props.workout.blocks[focus.value.blockIndex];
-        setupDone.value[setupKey(block.id, phase)] = true;
+        setupDone.value[setupKey(block.id, phase, focus.value.warmUpStepIndex)] = true;
 
         if (phase === 'after_warm_up') {
             const rest = workingRestSeconds(block);
+            if (rest > 0) {
+                startRest(rest);
+                return;
+            }
+        }
+
+        if (phase === 'after_warm_up_step') {
+            const rest = warmUpRestSeconds(block);
             if (rest > 0) {
                 startRest(rest);
                 return;

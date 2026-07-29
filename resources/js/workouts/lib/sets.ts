@@ -57,6 +57,32 @@ export function finishesWarmUpGroup(block: PlayerBlock, set: PlayerSet): boolean
     return block.sets.filter((s) => s.group_type === 'warm_up').every((s) => s.completed || s.id === set.id);
 }
 
+export function warmUpStepIndexes(block: PlayerBlock): number[] {
+    const indexes = new Set(block.sets.filter((s) => s.group_type === 'warm_up').map((s) => s.set_index));
+
+    return [...indexes].sort((a, b) => a - b);
+}
+
+export function finishesWarmUpStep(block: PlayerBlock, set: PlayerSet): boolean {
+    if (set.group_type !== 'warm_up' || !set.has_setup_after) {
+        return false;
+    }
+
+    const stepIndexes = warmUpStepIndexes(block);
+    const lastStepIndex = stepIndexes[stepIndexes.length - 1];
+    if (set.set_index === lastStepIndex) {
+        return false;
+    }
+
+    const roundSets = block.sets.filter((s) => s.group_type === 'warm_up' && s.set_index === set.set_index);
+
+    return roundSets.every((s) => s.completed || s.id === set.id);
+}
+
+export function warmUpRestSeconds(block: PlayerBlock): number {
+    return block.sets.find((s) => s.group_type === 'warm_up')?.rest_seconds ?? 0;
+}
+
 export function workingRestSeconds(block: PlayerBlock): number {
     return block.sets.find((s) => s.group_type === 'working')?.rest_seconds ?? 0;
 }

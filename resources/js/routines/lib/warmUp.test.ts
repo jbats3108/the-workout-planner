@@ -23,11 +23,30 @@ describe('setWarmUpText', () => {
         const b = block();
         setWarmUpText(b, '40x5, 60, 80x1');
         expect(b.warm_up.steps).toEqual([
-            { percent: 40, reps: 5 },
-            { percent: 60, reps: 5 },
-            { percent: 80, reps: 1 },
+            { percent: 40, reps: 5, has_setup_after: false },
+            { percent: 60, reps: 5, has_setup_after: false },
+            { percent: 80, reps: 1, has_setup_after: false },
         ]);
         expect(b.warm_up.set_count).toBe(3);
+    });
+
+    it('preserves setup flags by position when text changes', () => {
+        const b = block({
+            warm_up: {
+                set_count: 2,
+                rest_seconds: 60,
+                steps: [
+                    { percent: 40, reps: 5, has_setup_after: true },
+                    { percent: 60, reps: 3, has_setup_after: false },
+                ],
+            },
+        });
+        setWarmUpText(b, '50x5, 70x3, 80x1');
+        expect(b.warm_up.steps).toEqual([
+            { percent: 50, reps: 5, has_setup_after: true },
+            { percent: 70, reps: 3, has_setup_after: false },
+            { percent: 80, reps: 1, has_setup_after: false },
+        ]);
     });
 
     it('clears setup-after-warm-up when cleared', () => {
