@@ -2,6 +2,7 @@
 
 namespace App\Workouts\Http\Controllers;
 
+use App\Routines\Models\Routine;
 use App\Shared\Http\Controllers\Controller;
 use App\Users\Models\User;
 use App\Workouts\Data\History\HistoryIndexPageData;
@@ -16,10 +17,18 @@ class IndexWorkoutHistoryController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        $routineId = $request->integer('routine') ?: null;
+        $routineSlug = $request->string('routine')->toString() ?: null;
+        $routineId = null;
+
+        if ($routineSlug !== null) {
+            $routineId = Routine::query()
+                ->where('user_id', $user->id)
+                ->where('slug', $routineSlug)
+                ->value('id');
+        }
 
         return Inertia::render('history/Index', [
-            'history' => HistoryIndexPageData::forUser($user, $routineId),
+            'history' => HistoryIndexPageData::forUser($user, $routineId !== null ? (int) $routineId : null, $routineSlug),
         ]);
     }
 }

@@ -39,7 +39,7 @@ class UpdateRoutineControllerTest extends TestCase
         $this->actingAs($this->secondUser)->put(route('routines.update', $routine), [
             'name' => 'New Name',
             'blocks' => [],
-        ])->assertForbidden();
+        ])->assertNotFound();
     }
 
     #[Test]

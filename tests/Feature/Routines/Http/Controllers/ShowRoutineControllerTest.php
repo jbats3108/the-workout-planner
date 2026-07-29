@@ -48,6 +48,6 @@ class ShowRoutineControllerTest extends TestCase
 
         $response
             ->assertRedirect(route('dashboard'))
-            ->assertSessionHas('error', 'You do not have access to that routine.');
+            ->assertSessionHas('error', 'Routine not found. Check the URL and try again.');
     }
 }

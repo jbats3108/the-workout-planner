@@ -46,7 +46,7 @@ class DiscardWorkoutControllerTest extends TestCase
 
         $this->actingAs($this->secondUser)
             ->post(route('workouts.discard', $workout))
-            ->assertForbidden();
+            ->assertNotFound();
     }
 
     private function createWorkoutForUser()

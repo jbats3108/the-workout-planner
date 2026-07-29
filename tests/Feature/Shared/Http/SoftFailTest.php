@@ -24,7 +24,7 @@ class SoftFailTest extends TestCase
     public function missing_workout_play_redirects_authenticated_user_with_flash(): void
     {
         $this->actingAs($this->user)
-            ->get(route('workouts.play', ['workout' => 999_999]))
+            ->get(route('workouts.play', ['workout' => '01INVALIDULIDNOTFOUND00000']))
             ->assertRedirect(route('dashboard'))
             ->assertSessionHas('error', 'Workout not found. Check the URL and try again.');
     }
@@ -33,13 +33,13 @@ class SoftFailTest extends TestCase
     public function missing_routine_redirects_with_resource_flash(): void
     {
         $this->actingAs($this->user)
-            ->get(route('routines.show', ['routine' => 999_999]))
+            ->get(route('routines.show', ['routine' => 'does-not-exist']))
             ->assertRedirect(route('dashboard'))
             ->assertSessionHas('error', 'Routine not found. Check the URL and try again.');
     }
 
     #[Test]
-    public function forbidden_workout_play_redirects_with_flash(): void
+    public function other_users_workout_play_soft_fails_as_not_found(): void
     {
         $workout = Workout::factory()->create([
             'user_id' => $this->user->id,
@@ -48,18 +48,18 @@ class SoftFailTest extends TestCase
         $this->actingAs($this->secondUser)
             ->get(route('workouts.play', $workout))
             ->assertRedirect(route('dashboard'))
-            ->assertSessionHas('error', 'You do not have access to that workout.');
+            ->assertSessionHas('error', 'Workout not found. Check the URL and try again.');
     }
 
     #[Test]
-    public function forbidden_routine_redirects_with_resource_flash(): void
+    public function other_users_routine_soft_fails_as_not_found(): void
     {
         $routine = Routine::factory()->withUser($this->user)->create();
 
         $this->actingAs($this->secondUser)
             ->get(route('routines.show', $routine))
             ->assertRedirect(route('dashboard'))
-            ->assertSessionHas('error', 'You do not have access to that routine.');
+            ->assertSessionHas('error', 'Routine not found. Check the URL and try again.');
     }
 
     #[Test]
@@ -77,7 +77,7 @@ class SoftFailTest extends TestCase
     }
 
     #[Test]
-    public function mutation_forbidden_stays_hard(): void
+    public function mutation_for_other_users_workout_is_not_found(): void
     {
         $workout = Workout::factory()->create([
             'user_id' => $this->user->id,
@@ -85,6 +85,6 @@ class SoftFailTest extends TestCase
 
         $this->actingAs($this->secondUser)
             ->post(route('workouts.finish', $workout))
-            ->assertForbidden();
+            ->assertNotFound();
     }
 }

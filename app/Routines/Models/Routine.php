@@ -4,6 +4,7 @@ namespace App\Routines\Models;
 
 use App\Routines\Services\RoutineSlugGenerator;
 use App\Shared\Traits\HasName;
+use App\Shared\Traits\HasSlug;
 use App\Users\Models\User;
 use App\Workouts\Models\Workout;
 use Database\Factories\RoutineFactory;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class Routine extends Model
 {
@@ -19,6 +21,7 @@ class Routine extends Model
     use HasFactory;
 
     use HasName;
+    use HasSlug;
     use SoftDeletes;
 
     protected $fillable = [
@@ -43,6 +46,23 @@ class Routine extends Model
 
             $routine->slug = RoutineSlugGenerator::forUser($user, (string) $routine->name);
         });
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
+    public function resolveRouteBinding($value, $field = null): ?Model
+    {
+        $query = $this->where($field ?? $this->getRouteKeyName(), $value);
+
+        $user = Auth::user();
+        if ($user instanceof User && ! $user->isAdmin()) {
+            $query->where('user_id', $user->id);
+        }
+
+        return $query->first();
     }
 
     /** @return array<string, string> */

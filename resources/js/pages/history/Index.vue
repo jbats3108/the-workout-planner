@@ -8,19 +8,19 @@ import { Trash2 } from 'lucide-vue-next';
 defineProps<{
     history: {
         workouts: HistoryWorkout[];
-        routine_filter_options: { id: number; name: string }[];
-        routine_id: number | null;
+        routine_filter_options: { slug: string; name: string }[];
+        routine_slug: string | null;
     };
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'History', href: '/history' }];
 
-const filterByRoutine = (routineId: number | null) => {
-    if (routineId === null) {
+const filterByRoutine = (routineSlug: string | null) => {
+    if (routineSlug === null) {
         router.get(route('history.index'));
         return;
     }
-    router.get(route('history.index', { routine: routineId }));
+    router.get(route('history.index', { routine: routineSlug }));
 };
 
 const formatDate = (iso: string) => {
@@ -50,13 +50,11 @@ const deleteWorkout = (workout: HistoryWorkout) => {
                     Routine
                     <select
                         class="rounded border border-border bg-background px-3 py-2 text-sm text-foreground"
-                        :value="history.routine_id ?? ''"
-                        @change="
-                            filterByRoutine(($event.target as HTMLSelectElement).value ? Number(($event.target as HTMLSelectElement).value) : null)
-                        "
+                        :value="history.routine_slug ?? ''"
+                        @change="filterByRoutine(($event.target as HTMLSelectElement).value || null)"
                     >
                         <option value="">All routines</option>
-                        <option v-for="routine in history.routine_filter_options" :key="routine.id" :value="routine.id">
+                        <option v-for="routine in history.routine_filter_options" :key="routine.slug" :value="routine.slug">
                             {{ routine.name }}
                         </option>
                     </select>

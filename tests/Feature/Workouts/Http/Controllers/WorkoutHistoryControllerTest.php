@@ -52,12 +52,12 @@ class WorkoutHistoryControllerTest extends TestCase
         [$workoutB, , $routineB] = $this->createFinishedWorkout();
 
         $this->actingAs($this->user)
-            ->get(route('history.index', ['routine' => $routineB->id]))
+            ->get(route('history.index', ['routine' => $routineB->slug]))
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->has('history.workouts', 1)
                 ->where('history.workouts.0.id', $workoutB->id)
-                ->where('history.routine_id', $routineB->id));
+                ->where('history.routine_slug', $routineB->slug));
 
         $this->assertNotSame($workoutA->routine_id, $routineB->id);
     }
@@ -142,7 +142,7 @@ class WorkoutHistoryControllerTest extends TestCase
                 'reps' => 5,
                 'weight_kg' => 80,
             ])
-            ->assertForbidden();
+            ->assertNotFound();
     }
 
     #[Test]
@@ -196,7 +196,7 @@ class WorkoutHistoryControllerTest extends TestCase
 
         $this->actingAs($this->secondUser)
             ->delete(route('history.destroy', $workout))
-            ->assertForbidden();
+            ->assertNotFound();
 
         $this->assertNotSoftDeleted($workout);
     }
