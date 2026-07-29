@@ -127,6 +127,7 @@ class WorkoutService
                             'position' => $warmUpStep->position,
                             'percent_of_working' => $warmUpStep->percent_of_working,
                             'reps' => $warmUpStep->reps,
+                            'has_setup_after' => $warmUpStep->has_setup_after,
                         ]);
                     }
 

@@ -114,6 +114,7 @@ class RoutineEditorService
                 'position' => $stepIndex + 1,
                 'percent_of_working' => min(100, max(1, $step->percent)),
                 'reps' => min(100, max(1, $step->reps)),
+                'has_setup_after' => $step->hasSetupAfter,
             ]);
         }
     }
