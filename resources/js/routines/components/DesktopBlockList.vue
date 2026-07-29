@@ -4,6 +4,7 @@ import DropsetEditor from '@/routines/components/DropsetEditor.vue';
 import ExercisePicker from '@/routines/components/ExercisePicker.vue';
 import { useRoutineEditor } from '@/routines/composables/useRoutineEditor';
 import { canSetupAfterBlock } from '@/routines/lib/blocks';
+import { optionalRepsPlaceholder, parseOptionalReps } from '@/routines/lib/optionalReps';
 
 const {
     form,
@@ -19,6 +20,8 @@ const {
     addBlock,
     trimDropsetsToSetCount,
     dropsetSummary,
+    achievementFloorDefault,
+    progressionTargetDefault,
 } = useRoutineEditor();
 </script>
 
@@ -32,6 +35,8 @@ const {
                         <th class="px-2 py-2">Exercise</th>
                         <th class="px-2 py-2">kg</th>
                         <th class="px-2 py-2">Reps</th>
+                        <th class="px-2 py-2">Floor</th>
+                        <th class="px-2 py-2">Bump</th>
                         <th class="px-2 py-2">Sets</th>
                         <th class="px-2 py-2">Rest</th>
                         <th class="px-2 py-2">Warm-up %×reps</th>
@@ -79,6 +84,30 @@ const {
                                     type="number"
                                     min="1"
                                     class="w-16 rounded border border-border bg-card px-2 py-1 font-mono"
+                                />
+                            </td>
+                            <td class="px-2 py-2">
+                                <input
+                                    :value="ex.achievement_floor ?? ''"
+                                    type="number"
+                                    min="1"
+                                    max="100"
+                                    :placeholder="optionalRepsPlaceholder(achievementFloorDefault)"
+                                    title="Achievement floor override (empty = user default)"
+                                    class="w-16 rounded border border-border bg-card px-2 py-1 font-mono"
+                                    @input="ex.achievement_floor = parseOptionalReps(($event.target as HTMLInputElement).value)"
+                                />
+                            </td>
+                            <td class="px-2 py-2">
+                                <input
+                                    :value="ex.progression_target ?? ''"
+                                    type="number"
+                                    min="1"
+                                    max="100"
+                                    :placeholder="optionalRepsPlaceholder(progressionTargetDefault)"
+                                    title="Progression target override (empty = user default)"
+                                    class="w-16 rounded border border-border bg-card px-2 py-1 font-mono"
+                                    @input="ex.progression_target = parseOptionalReps(($event.target as HTMLInputElement).value)"
                                 />
                             </td>
                             <td class="px-2 py-2">

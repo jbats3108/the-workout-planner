@@ -22,6 +22,8 @@ export type EditRoutineProps = {
     weight_unit: string;
     warm_up_defaults: WarmUpStep[];
     warm_up_defaults_scope?: WarmUpDefaultsScope;
+    achievement_floor_default?: number | null;
+    progression_target_default?: number | null;
 };
 
 export type RoutineEditor = ReturnType<typeof createRoutineEditor>;
@@ -58,6 +60,7 @@ export function createRoutineEditor(props: EditRoutineProps) {
     const activeExerciseIndex = ref(0);
     const warmUpExpanded = ref(false);
     const dropsetsExpanded = ref(false);
+    const progressionExpanded = ref(false);
     const deloadExpanded = ref(false);
 
     const toggleWarmUpExpanded = () => {
@@ -66,6 +69,10 @@ export function createRoutineEditor(props: EditRoutineProps) {
 
     const toggleDropsetsExpanded = () => {
         dropsetsExpanded.value = !dropsetsExpanded.value;
+    };
+
+    const toggleProgressionExpanded = () => {
+        progressionExpanded.value = !progressionExpanded.value;
     };
 
     const toggleDeloadExpanded = () => {
@@ -85,6 +92,7 @@ export function createRoutineEditor(props: EditRoutineProps) {
     watch(active, () => {
         warmUpExpanded.value = false;
         dropsetsExpanded.value = false;
+        progressionExpanded.value = false;
         activeExerciseIndex.value = 0;
     });
 
@@ -137,12 +145,20 @@ export function createRoutineEditor(props: EditRoutineProps) {
         },
     );
 
+    const normalizeOptionalReps = (value: number | null | undefined): number | null =>
+        typeof value === 'number' && Number.isFinite(value) && value >= 1 ? value : null;
+
     const save = () => {
         syncSetupAfterBlockFlags(form.blocks);
         form.transform((data) => ({
             ...data,
             blocks: data.blocks.map((block) => ({
                 ...block,
+                exercises: block.exercises.map((exercise) => ({
+                    ...exercise,
+                    achievement_floor: normalizeOptionalReps(exercise.achievement_floor),
+                    progression_target: normalizeOptionalReps(exercise.progression_target),
+                })),
                 working: {
                     set_count: block.working.set_count,
                     rest_seconds: block.working.rest_seconds,
@@ -177,8 +193,12 @@ export function createRoutineEditor(props: EditRoutineProps) {
         toggleWarmUpExpanded,
         dropsetsExpanded,
         toggleDropsetsExpanded,
+        progressionExpanded,
+        toggleProgressionExpanded,
         deloadExpanded,
         toggleDeloadExpanded,
+        achievementFloorDefault: computed(() => props.achievement_floor_default ?? null),
+        progressionTargetDefault: computed(() => props.progression_target_default ?? null),
         activeBlock,
         selectBlockExercise,
         exerciseName,

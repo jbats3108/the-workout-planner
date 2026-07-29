@@ -73,6 +73,40 @@ class UpdateRoutineControllerTest extends TestCase
     }
 
     #[Test]
+    public function owner_can_save_progression_overrides(): void
+    {
+        $routine = Routine::factory()->withUser($this->user)->create();
+        $exercise = Exercise::factory()->create();
+
+        $this->actingAs($this->user)->put(route('routines.update', $routine), [
+            'name' => 'Progression Overrides',
+            'deload_weight_factor' => 0.9,
+            'deload_reps_factor' => 1,
+            'blocks' => [
+                [
+                    'is_superset' => false,
+                    'has_setup_after' => false,
+                    'exercises' => [
+                        [
+                            'exercise_id' => $exercise->id,
+                            'working_weight_kg' => 80,
+                            'prescribed_reps' => 5,
+                            'achievement_floor' => 3,
+                            'progression_target' => 8,
+                        ],
+                    ],
+                    'working' => ['set_count' => 3, 'rest_seconds' => 180],
+                    'warm_up' => ['set_count' => 0, 'rest_seconds' => 60, 'steps' => []],
+                ],
+            ],
+        ])->assertRedirect(route('dashboard'));
+
+        $row = $routine->fresh()->blocks()->first()->blockExercises()->first();
+        $this->assertSame(3, $row->achievement_floor_override);
+        $this->assertSame(8, $row->progression_target_override);
+    }
+
+    #[Test]
     public function editor_validation_errors_surface_on_blocks(): void
     {
         $routine = Routine::factory()->withUser($this->user)->create();
@@ -162,6 +196,8 @@ class UpdateRoutineControllerTest extends TestCase
                 ->component('routines/Edit')
                 ->has('warm_up_defaults')
                 ->has('warm_up_defaults_scope')
+                ->has('achievement_floor_default')
+                ->has('progression_target_default')
                 ->where('routine.blocks.0.working.dropsets.0.set_index', 1)
                 ->where('routine.blocks.0.working.dropsets.0.segments.0.weight_kg', 20)
                 ->where('routine.blocks.0.working.dropsets.0.segments.1.weight_kg', 8)
