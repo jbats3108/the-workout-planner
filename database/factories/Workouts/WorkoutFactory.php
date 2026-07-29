@@ -9,6 +9,7 @@ use App\Workouts\Enums\WorkoutStatus;
 use App\Workouts\Models\Workout;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 /** @extends Factory<Workout> */
 class WorkoutFactory extends Factory
@@ -20,6 +21,7 @@ class WorkoutFactory extends Factory
         return [
             'user_id' => User::factory(),
             'routine_id' => Routine::factory(),
+            'ulid' => (string) Str::ulid(),
             'mode' => WorkoutMode::Normal,
             'status' => WorkoutStatus::InProgress,
             'notes' => null,
