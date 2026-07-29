@@ -100,6 +100,27 @@ class RoutineEditorServiceTest extends TestCase
     }
 
     #[Test]
+    public function sync_ignores_setup_after_on_the_final_block(): void
+    {
+        $routine = Routine::factory()->create();
+        $exercise = Exercise::factory()->create();
+
+        $result = $this->service->sync($routine, SyncRoutineData::from([
+            'name' => 'Final block setup',
+            'deload_weight_factor' => 0.8,
+            'deload_reps_factor' => 0.8,
+            'blocks' => [
+                $this->singleBlockPayload($exercise->id, ['has_setup_after' => false]),
+                $this->singleBlockPayload($exercise->id, ['has_setup_after' => true]),
+            ],
+        ]));
+
+        $blocks = $result->blocks->sortBy('position')->values();
+        $this->assertFalse($blocks[0]->has_setup_after);
+        $this->assertFalse($blocks[1]->has_setup_after);
+    }
+
+    #[Test]
     public function sync_allows_blocks_with_no_warm_up_steps(): void
     {
         $routine = Routine::factory()->create();

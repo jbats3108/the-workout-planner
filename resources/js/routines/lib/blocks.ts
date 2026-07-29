@@ -30,6 +30,23 @@ export function emptyBlock(
     };
 }
 
+export function syncSetupAfterBlockFlags(blocks: Block[]): void {
+    if (blocks.length === 0) {
+        return;
+    }
+
+    const lastIndex = blocks.length - 1;
+    blocks.forEach((block, index) => {
+        if (index === lastIndex) {
+            block.has_setup_after = false;
+        }
+    });
+}
+
+export function canSetupAfterBlock(blockIndex: number, blockCount: number): boolean {
+    return blockCount > 0 && blockIndex < blockCount - 1;
+}
+
 export function normalizeBlock(raw: Block): Block {
     const steps = (raw.warm_up?.steps ?? []).map((s) => ({
         percent: Number(s.percent),

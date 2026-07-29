@@ -69,4 +69,14 @@ describe('findFirstIncompleteFocus', () => {
         ];
         expect(findFirstIncompleteFocus(blocks, {})).toEqual({ kind: 'done' });
     });
+
+    it('skips setup after block on the final block', () => {
+        const blocks = [
+            playerBlock({
+                has_setup_after: true,
+                sets: [playerSet({ id: 1, completed: true })],
+            }),
+        ];
+        expect(findFirstIncompleteFocus(blocks, {})).toEqual({ kind: 'done' });
+    });
 });

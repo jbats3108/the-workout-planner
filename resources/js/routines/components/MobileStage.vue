@@ -2,6 +2,7 @@
 import DropsetEditor from '@/routines/components/DropsetEditor.vue';
 import ExerciseFinder from '@/routines/components/ExerciseFinder.vue';
 import { useRoutineEditor } from '@/routines/composables/useRoutineEditor';
+import { canSetupAfterBlock } from '@/routines/lib/blocks';
 import { Link } from '@inertiajs/vue3';
 import { ChevronDown } from 'lucide-vue-next';
 
@@ -221,8 +222,12 @@ const {
                         <input v-model="activeBlock.has_setup_after_warm_up" type="checkbox" :disabled="!activeBlock.warm_up.steps.length" />
                         Setup before working
                     </label>
-                    <label class="flex items-center gap-2">
-                        <input v-model="activeBlock.has_setup_after" type="checkbox" />
+                    <label
+                        class="flex items-center gap-2"
+                        :class="canSetupAfterBlock(active, form.blocks.length) ? '' : 'opacity-40'"
+                        :title="canSetupAfterBlock(active, form.blocks.length) ? undefined : 'Not on the final block'"
+                    >
+                        <input v-model="activeBlock.has_setup_after" type="checkbox" :disabled="!canSetupAfterBlock(active, form.blocks.length)" />
                         Setup after block
                     </label>
                 </div>

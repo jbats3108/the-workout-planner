@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import DropsetEditor from '@/routines/components/DropsetEditor.vue';
 import { useRoutineEditor } from '@/routines/composables/useRoutineEditor';
+import { canSetupAfterBlock } from '@/routines/lib/blocks';
 
 const {
     form,
@@ -158,8 +159,16 @@ const {
                                         <input v-model="block.has_setup_after_warm_up" type="checkbox" :disabled="!block.warm_up.steps.length" />
                                         Setup→work
                                     </label>
-                                    <label class="flex items-center gap-1">
-                                        <input v-model="block.has_setup_after" type="checkbox" />
+                                    <label
+                                        class="flex items-center gap-1"
+                                        :class="canSetupAfterBlock(bi, form.blocks.length) ? '' : 'opacity-40'"
+                                        :title="canSetupAfterBlock(bi, form.blocks.length) ? undefined : 'Not on the final block'"
+                                    >
+                                        <input
+                                            v-model="block.has_setup_after"
+                                            type="checkbox"
+                                            :disabled="!canSetupAfterBlock(bi, form.blocks.length)"
+                                        />
                                         Setup→next
                                     </label>
                                 </div>

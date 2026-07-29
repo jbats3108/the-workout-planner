@@ -60,7 +60,7 @@ export function findFirstIncompleteFocus(blocks: PlayerBlock[], setupDone: Recor
             return { kind: 'set', blockIndex, setId: incompleteWorking.id };
         }
 
-        if (block.has_setup_after && !setupDone[setupKey(block.id, 'after_block')]) {
+        if (block.has_setup_after && blockIndex < blocks.length - 1 && !setupDone[setupKey(block.id, 'after_block')]) {
             return { kind: 'setup', blockIndex, phase: 'after_block' };
         }
     }
