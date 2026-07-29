@@ -39,7 +39,7 @@ class PlayWorkoutControllerTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->component('workouts/Play')
-                ->where('workout.id', $workout->id)
+                ->where('workout.id', $workout->ulid)
                 ->where('workout.routine_name', $workout->routine->getName())
                 ->has('workout.blocks', 1)
                 ->has('plate_profile.bars')

@@ -68,7 +68,7 @@ describe('dropset helpers', () => {
 
 describe('visitLeavesWorkout', () => {
     it('detects navigation away from workout', () => {
-        expect(visitLeavesWorkout({ url: '/dashboard' }, 5)).toBe(true);
-        expect(visitLeavesWorkout({ url: '/workouts/5' }, 5)).toBe(false);
+        expect(visitLeavesWorkout({ url: '/dashboard' }, '01TESTULID')).toBe(true);
+        expect(visitLeavesWorkout({ url: '/workouts/01TESTULID' }, '01TESTULID')).toBe(false);
     });
 });

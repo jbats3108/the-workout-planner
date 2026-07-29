@@ -21,6 +21,7 @@ class RoutineEditorPageData extends Data
      */
     public function __construct(
         public readonly int $id,
+        public readonly string $slug,
         public readonly string $name,
         public readonly float $deloadWeightFactor,
         public readonly float $deloadRepsFactor,
@@ -97,6 +98,7 @@ class RoutineEditorPageData extends Data
 
         return new self(
             id: $routine->id,
+            slug: $routine->getSlug(),
             name: $routine->getName(),
             deloadWeightFactor: (float) $routine->deload_weight_factor,
             deloadRepsFactor: (float) $routine->deload_reps_factor,

@@ -53,7 +53,7 @@ export function defaultPromoteSegments(workingKg: number): Array<{ weight_kg: nu
     return [{ weight_kg: workingKg }, { weight_kg: nextDropSegmentWeight(workingKg) }];
 }
 
-export function visitLeavesWorkout(visit: { url: string | URL }, workoutId: number): boolean {
+export function visitLeavesWorkout(visit: { url: string | URL }, workoutId: string): boolean {
     const url = typeof visit.url === 'string' ? new URL(visit.url, window.location.origin) : visit.url;
     return !url.pathname.startsWith(`/workouts/${workoutId}`);
 }

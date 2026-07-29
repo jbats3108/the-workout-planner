@@ -16,7 +16,7 @@ class ProgressionPageData extends Data
      * @param  DataCollection<int, UndoBumpProposalData>  $undos
      */
     public function __construct(
-        public int $workoutId,
+        public string $workoutId,
         public string $routineName,
         #[DataCollectionOf(BumpProposalData::class)]
         public DataCollection $bumps,

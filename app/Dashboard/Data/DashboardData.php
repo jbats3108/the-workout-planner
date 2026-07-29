@@ -46,7 +46,7 @@ final class DashboardData extends Data
         return new self(
             routines: $user->routines->map(fn ($routine) => RoutineData::fromRoutine($routine)),
             inProgressWorkout: $inProgress === null ? null : new InProgressWorkoutData(
-                id: $inProgress->id,
+                id: $inProgress->ulid,
                 routineName: $inProgress->routine->getName(),
                 mode: $inProgress->mode->value,
             ),

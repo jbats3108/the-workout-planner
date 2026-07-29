@@ -15,6 +15,7 @@ export function exerciseOption(overrides: Partial<ExerciseOption> = {}): Exercis
 export function routinePayload(overrides: Partial<RoutinePayload> = {}): RoutinePayload {
     return {
         id: 1,
+        slug: 'test-routine',
         name: 'Test Routine',
         deload_weight_factor: 0.8,
         deload_reps_factor: 0.8,
@@ -67,7 +68,7 @@ export function playerBlock(overrides: Partial<PlayerBlock> = {}): PlayerBlock {
 
 export function workoutPayload(overrides: Partial<WorkoutPayload> = {}): WorkoutPayload {
     return {
-        id: 1,
+        id: '01TESTWORKOUTULID000000000',
         routine_name: 'Test',
         mode: 'normal',
         status: 'in_progress',

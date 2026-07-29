@@ -12,6 +12,7 @@ final class RoutineData extends Data
 {
     public function __construct(
         public readonly int $id,
+        public readonly string $slug,
         public readonly string $name,
         public readonly ?float $deloadWeightFactor = null,
         public readonly ?float $deloadRepsFactor = null,
@@ -28,6 +29,7 @@ final class RoutineData extends Data
 
         return new self(
             $routine->id,
+            $routine->getSlug(),
             $routine->getName(),
             $routine->deload_weight_factor !== null ? (float) $routine->deload_weight_factor : null,
             $routine->deload_reps_factor !== null ? (float) $routine->deload_reps_factor : null,

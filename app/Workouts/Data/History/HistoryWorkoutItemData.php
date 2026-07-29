@@ -11,7 +11,7 @@ use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 class HistoryWorkoutItemData extends Data
 {
     public function __construct(
-        public int $id,
+        public string $id,
         public string $routineName,
         public int $routineId,
         public string $mode,
@@ -23,7 +23,7 @@ class HistoryWorkoutItemData extends Data
         $workout->loadMissing('routine');
 
         return new self(
-            id: $workout->id,
+            id: $workout->ulid,
             routineName: $workout->routine->getName(),
             routineId: $workout->routine_id,
             mode: $workout->mode->value,
