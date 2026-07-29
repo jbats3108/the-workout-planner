@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class Workout extends Model
@@ -48,18 +47,6 @@ class Workout extends Model
     public function getRouteKeyName(): string
     {
         return 'ulid';
-    }
-
-    public function resolveRouteBinding($value, $field = null): ?Model
-    {
-        $query = $this->where($field ?? $this->getRouteKeyName(), $value);
-
-        $user = Auth::user();
-        if ($user instanceof User) {
-            $query->where('user_id', $user->id);
-        }
-
-        return $query->first();
     }
 
     /** @return array<string, string> */

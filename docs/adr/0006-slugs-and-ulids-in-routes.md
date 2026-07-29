@@ -31,7 +31,7 @@ Non-goals:
 
 - Generated once on create from `Str::slug($name)` with numeric suffix on collision (`barbell-strength`, `barbell-strength-2`, …) within the owning user.
 - `Routine` uses `HasSlug` and overrides `getRouteKeyName(): 'slug'`.
-- **Scoped route binding:** non-admin users resolve only their own routines (`where user_id = auth id`). Admins resolve globally (existing policy already lets admins view/delete any routine).
+- **Scoped route binding** lives in `AppServiceProvider` (`Route::bind('routine')`), not the model or policy: slugs are only unique per user, so lookup must scope to the auth user (admins unscoped) or the wrong row can bind. Policies still authorize after bind.
 - History filter query `?routine=` switches from numeric id to slug.
 
 ### Workout ULIDs
@@ -39,7 +39,7 @@ Non-goals:
 - New nullable-then-backfilled `ulid` column (`char(26)`), unique index.
 - Assigned in `creating` observer: `(string) Str::ulid()`.
 - `Workout` overrides `getRouteKeyName(): 'ulid'`.
-- **Scoped route binding:** always `where user_id = auth id` (no admin bypass on workouts today).
+- **No custom binding scope** — ULIDs are globally unique; ownership is enforced by existing `->can()` policies (cross-user access soft-fails as forbidden).
 - Integer `id` remains on DTOs only where needed internally; the value exposed to the frontend for `route()` calls becomes the ULID string (see DTO changes below).
 
 ### Out of scope (this ADR)

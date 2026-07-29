@@ -63,7 +63,7 @@ class WorkingSetControllerTest extends TestCase
 
         $this->actingAs($this->secondUser)
             ->post(route('workouts.working-sets.add', ['workout' => $workout, 'block' => $block]))
-            ->assertNotFound();
+            ->assertForbidden();
     }
 
     #[Test]

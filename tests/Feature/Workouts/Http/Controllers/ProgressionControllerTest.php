@@ -158,7 +158,7 @@ class ProgressionControllerTest extends TestCase
             ->post(route('workouts.progression.apply', $workout), [
                 'routine_block_exercise_ids' => [$routineExercise->id],
             ])
-            ->assertNotFound();
+            ->assertForbidden();
     }
 
     #[Test]

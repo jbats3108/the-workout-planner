@@ -56,7 +56,7 @@ class PlayWorkoutControllerTest extends TestCase
         $this->actingAs($this->secondUser)
             ->get(route('workouts.play', $workout))
             ->assertRedirect(route('dashboard'))
-            ->assertSessionHas('error', 'Workout not found. Check the URL and try again.');
+            ->assertSessionHas('error', 'You do not have access to that workout.');
     }
 
     #[Test]
