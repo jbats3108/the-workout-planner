@@ -11,6 +11,8 @@ const props = defineProps<{
     warm_up_steps_default: WarmUpStep[];
     warm_up_defaults_scope: WarmUpDefaultsScope;
     using_app_fallback: boolean;
+    achievement_floor_default: number | null;
+    progression_target_default: number | null;
     plate_profile: PlateProfile;
 }>();
 
@@ -24,7 +26,13 @@ const breadcrumbItems: BreadcrumbItem[] = [
 const form = useForm({
     warm_up_steps_default: props.warm_up_steps_default.map((s) => ({ ...s })),
     warm_up_defaults_scope: props.warm_up_defaults_scope,
+    achievement_floor_default: props.achievement_floor_default,
+    progression_target_default: props.progression_target_default,
 });
+
+const setOptionalReps = (field: 'achievement_floor_default' | 'progression_target_default', raw: string) => {
+    form[field] = raw === '' ? null : Number(raw);
+};
 
 const plateForm = useForm({
     name: props.plate_profile.name,
@@ -144,18 +152,62 @@ const savePlates = () => {
                             + Step
                         </button>
                         <button
-                            type="submit"
-                            class="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-50"
-                            :disabled="form.processing"
-                        >
-                            Save warm-ups
-                        </button>
-                        <button
                             type="button"
                             class="rounded-full border border-border px-4 py-2 text-sm text-muted-foreground hover:text-foreground"
                             @click="resetToApp"
                         >
                             Reset warm-ups
+                        </button>
+                    </div>
+
+                    <div class="space-y-4 border-t border-border pt-6">
+                        <HeadingSmall
+                            title="Progression"
+                            description="Defaults for new workouts. Per-exercise overrides in the routine editor win when set."
+                        />
+
+                        <label class="flex flex-col gap-1 text-sm text-muted-foreground">
+                            Achievement Floor
+                            <span class="text-xs text-muted-foreground/80">
+                                Minimum reps for a logged set’s weight to count as achieved (carry-forward). Leave blank to disable a default.
+                            </span>
+                            <input
+                                :value="form.achievement_floor_default ?? ''"
+                                type="number"
+                                min="1"
+                                max="100"
+                                placeholder="optional"
+                                class="mt-1 w-28 rounded border border-border bg-card px-3 py-2 font-mono text-foreground"
+                                @input="setOptionalReps('achievement_floor_default', ($event.target as HTMLInputElement).value)"
+                            />
+                            <InputError :message="form.errors.achievement_floor_default" />
+                        </label>
+
+                        <label class="flex flex-col gap-1 text-sm text-muted-foreground">
+                            Progression Target
+                            <span class="text-xs text-muted-foreground/80">
+                                Minimum reps at the working weight that triggers a bump suggestion. Leave blank for no bump prompts from the default.
+                            </span>
+                            <input
+                                :value="form.progression_target_default ?? ''"
+                                type="number"
+                                min="1"
+                                max="100"
+                                placeholder="optional"
+                                class="mt-1 w-28 rounded border border-border bg-card px-3 py-2 font-mono text-foreground"
+                                @input="setOptionalReps('progression_target_default', ($event.target as HTMLInputElement).value)"
+                            />
+                            <InputError :message="form.errors.progression_target_default" />
+                        </label>
+                    </div>
+
+                    <div class="flex flex-wrap gap-3 pt-2">
+                        <button
+                            type="submit"
+                            class="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-50"
+                            :disabled="form.processing"
+                        >
+                            Save training defaults
                         </button>
                     </div>
                 </form>

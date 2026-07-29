@@ -30,6 +30,8 @@ class TrainingDefaultsTest extends TestCase
             ->component('settings/Training')
             ->where('using_app_fallback', true)
             ->where('warm_up_defaults_scope', 'all_blocks')
+            ->where('achievement_floor_default', null)
+            ->where('progression_target_default', null)
             ->has('warm_up_steps_default', 3)
             ->has('plate_profile'));
     }
@@ -64,6 +66,49 @@ class TrainingDefaultsTest extends TestCase
             $this->user->resolvedWarmUpStepsDefault()
         );
         $this->assertSame(WarmUpDefaultsScope::FirstBlock, $this->user->warm_up_defaults_scope);
+    }
+
+    #[Test]
+    public function it_saves_progression_defaults(): void
+    {
+        $response = $this->actingAs($this->user)->put(route('training.update'), [
+            'warm_up_steps_default' => [
+                ['percent' => 40, 'reps' => 5],
+            ],
+            'warm_up_defaults_scope' => 'all_blocks',
+            'achievement_floor_default' => 1,
+            'progression_target_default' => 6,
+        ]);
+
+        $response->assertRedirect(route('training.edit'));
+
+        $this->user->refresh();
+        $this->assertSame(1, $this->user->achievement_floor_default);
+        $this->assertSame(6, $this->user->progression_target_default);
+    }
+
+    #[Test]
+    public function it_clears_progression_defaults_when_omitted_as_null(): void
+    {
+        $this->user->update([
+            'achievement_floor_default' => 2,
+            'progression_target_default' => 8,
+        ]);
+
+        $response = $this->actingAs($this->user)->put(route('training.update'), [
+            'warm_up_steps_default' => [
+                ['percent' => 40, 'reps' => 5],
+            ],
+            'warm_up_defaults_scope' => 'all_blocks',
+            'achievement_floor_default' => null,
+            'progression_target_default' => null,
+        ]);
+
+        $response->assertRedirect(route('training.edit'));
+
+        $this->user->refresh();
+        $this->assertNull($this->user->achievement_floor_default);
+        $this->assertNull($this->user->progression_target_default);
     }
 
     #[Test]
