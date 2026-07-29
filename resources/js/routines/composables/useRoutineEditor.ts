@@ -1,5 +1,4 @@
 import { emptyBlock, normalizeBlock, syncSetupAfterBlockFlags, toggleSuperset } from '@/routines/lib/blocks';
-import { exerciseOptionsFor, filterExercises } from '@/routines/lib/catalog';
 import {
     addDropsetSegment,
     applyRunTheRack,
@@ -31,19 +30,6 @@ export const routineEditorKey: InjectionKey<RoutineEditor> = Symbol('routineEdit
 
 export function createRoutineEditor(props: EditRoutineProps) {
     const catalog = computed(() => props.exercises ?? []);
-
-    const exerciseQuery = ref('');
-
-    const filteredExercises = computed(() => filterExercises(catalog.value, exerciseQuery.value));
-
-    const findMatches = computed(() => {
-        if (!exerciseQuery.value.trim()) {
-            return [];
-        }
-        return filteredExercises.value.slice(0, 40);
-    });
-
-    const optionsFor = (selectedId: number | null) => exerciseOptionsFor(catalog.value, filteredExercises.value, selectedId);
 
     const defaultWarmUpSteps = (): WarmUpStep[] =>
         (props.warm_up_defaults?.length ? props.warm_up_defaults : []).map((s) => ({
@@ -99,7 +85,6 @@ export function createRoutineEditor(props: EditRoutineProps) {
     watch(active, () => {
         warmUpExpanded.value = false;
         dropsetsExpanded.value = false;
-        exerciseQuery.value = '';
         activeExerciseIndex.value = 0;
     });
 
@@ -108,16 +93,6 @@ export function createRoutineEditor(props: EditRoutineProps) {
     const selectBlockExercise = (blockIndex: number, exerciseIndex = 0) => {
         active.value = blockIndex;
         activeExerciseIndex.value = exerciseIndex;
-    };
-
-    const applyExercisePick = (exerciseId: number) => {
-        const block = form.blocks[active.value];
-        const exercise = block?.exercises[activeExerciseIndex.value] ?? block?.exercises[0];
-        if (!exercise) {
-            return;
-        }
-        exercise.exercise_id = exerciseId;
-        exerciseQuery.value = '';
     };
 
     const exerciseName = (id: number | null) => catalog.value.find((e) => e.id === id)?.name ?? 'Exercise';
@@ -196,10 +171,6 @@ export function createRoutineEditor(props: EditRoutineProps) {
     return {
         form,
         catalog,
-        exerciseQuery,
-        filteredExercises,
-        findMatches,
-        exerciseOptionsFor: optionsFor,
         active,
         activeExerciseIndex,
         warmUpExpanded,
@@ -210,7 +181,6 @@ export function createRoutineEditor(props: EditRoutineProps) {
         toggleDeloadExpanded,
         activeBlock,
         selectBlockExercise,
-        applyExercisePick,
         exerciseName,
         addBlock,
         removeBlock,

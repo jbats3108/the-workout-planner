@@ -4,7 +4,6 @@
  */
 import AppLayout from '@/layouts/AppLayout.vue';
 import DesktopBlockList from '@/routines/components/DesktopBlockList.vue';
-import ExerciseFinder from '@/routines/components/ExerciseFinder.vue';
 import MobileStage from '@/routines/components/MobileStage.vue';
 import RoutineEditorHeader from '@/routines/components/RoutineEditorHeader.vue';
 import { createRoutineEditor, routineEditorKey, type EditRoutineProps } from '@/routines/composables/useRoutineEditor';
@@ -30,10 +29,6 @@ const { form } = editor;
 
         <div class="flex flex-1 flex-col overscroll-y-none bg-background text-foreground">
             <RoutineEditorHeader />
-
-            <div class="hidden border-b border-border px-4 py-3 md:block md:px-6">
-                <ExerciseFinder deferred />
-            </div>
 
             <DesktopBlockList />
             <MobileStage />

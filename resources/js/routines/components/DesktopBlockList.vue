@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import DeloadSettings from '@/routines/components/DeloadSettings.vue';
 import DropsetEditor from '@/routines/components/DropsetEditor.vue';
+import ExercisePicker from '@/routines/components/ExercisePicker.vue';
 import { useRoutineEditor } from '@/routines/composables/useRoutineEditor';
 import { canSetupAfterBlock } from '@/routines/lib/blocks';
 
@@ -10,7 +11,6 @@ const {
     activeExerciseIndex,
     activeBlock,
     selectBlockExercise,
-    exerciseOptionsFor,
     warmUpText,
     setWarmUpText,
     clearWarmUp,
@@ -53,17 +53,14 @@ const {
                                 {{ ei === 0 ? bi + 1 : '' }}
                             </td>
                             <td class="px-2 py-2">
-                                <div class="flex min-w-0 items-center gap-2">
+                                <div class="flex min-w-0 items-center gap-2" @click.stop>
                                     <span v-if="block.is_superset" class="font-mono text-xs text-primary">{{ ei === 0 ? 'A' : 'B' }}</span>
-                                    <select
-                                        v-model.number="ex.exercise_id"
-                                        class="w-44 rounded border border-border bg-card px-2 py-1"
-                                        @focus="selectBlockExercise(bi, ei)"
-                                    >
-                                        <option v-for="opt in exerciseOptionsFor(ex.exercise_id)" :key="opt.id" :value="opt.id">
-                                            {{ opt.name }}
-                                        </option>
-                                    </select>
+                                    <ExercisePicker
+                                        v-model="ex.exercise_id"
+                                        variant="desktop"
+                                        :active="bi === active && ei === activeExerciseIndex"
+                                        @open="selectBlockExercise(bi, ei)"
+                                    />
                                 </div>
                             </td>
                             <td class="px-2 py-2">
