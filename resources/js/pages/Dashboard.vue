@@ -26,8 +26,8 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const startWorkout = (routineId: number, mode: 'normal' | 'deload' = 'normal') => {
-    router.post(route('workouts.store', { routine: routineId }), { mode });
+const startWorkout = (routineSlug: string, mode: 'normal' | 'deload' = 'normal') => {
+    router.post(route('workouts.store', { routine: routineSlug }), { mode });
 };
 
 const canStart = (routine: Routine) => !props.data.in_progress_workout && routine.can_start === true;
@@ -60,7 +60,7 @@ const deleteRoutine = (routine: Routine) => {
     if (!confirm(`Delete “${routine.name}”? It will be archived and removed from your list.`)) {
         return;
     }
-    router.delete(route('routines.delete', routine.id));
+    router.delete(route('routines.delete', routine.slug));
 };
 
 const formatFinishedAt = (iso: string) => {
@@ -130,7 +130,7 @@ const formatFinishedAt = (iso: string) => {
                     :routine="routine"
                     :can-start="canStart(routine)"
                     :start-blocked-reason="startBlockedReason(routine)"
-                    @start="(mode) => startWorkout(routine.id, mode)"
+                    @start="(mode) => startWorkout(routine.slug, mode)"
                     @delete="deleteRoutine(routine)"
                 />
             </div>
