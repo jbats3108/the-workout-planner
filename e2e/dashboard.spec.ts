@@ -15,7 +15,7 @@ test.describe('dashboard', () => {
 
     test('opens routine editor', async ({ page }) => {
         await page.getByLabel('Edit routine').first().click();
-        await expect(page).toHaveURL(/\/routines\/\d+\/edit/);
+        await expect(page).toHaveURL(/\/routines\/[a-z0-9-]+\/edit/);
         await expect(page.getByText('Routine', { exact: true })).toBeVisible();
     });
 });
