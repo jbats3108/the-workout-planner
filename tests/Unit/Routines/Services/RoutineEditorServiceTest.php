@@ -59,7 +59,8 @@ class RoutineEditorServiceTest extends TestCase
         $this->assertSame('New Name', $result->name);
         $this->assertCount(1, $result->blocks);
         $block = $result->blocks->first();
-        $this->assertTrue($block->has_setup_after);
+        // Setup-after-block is disabled on the final routine block to avoid an end-of-workout pause.
+        $this->assertFalse($block->has_setup_after);
         $this->assertTrue($block->has_setup_after_warm_up);
         $this->assertSame(80000, $block->blockExercises->first()->working_weight_g);
         $steps = $block->warmUpSetGroup->warmUpSteps;
