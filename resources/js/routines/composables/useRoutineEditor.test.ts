@@ -37,13 +37,6 @@ describe('createRoutineEditor', () => {
         expect(editor.form.blocks[0].warm_up.steps).toHaveLength(1);
     });
 
-    it('filters exercises when query is set', () => {
-        const editor = mountEditor();
-        editor.exerciseQuery.value = 'row';
-        expect(editor.filteredExercises.value).toHaveLength(1);
-        expect(editor.findMatches.value[0].name).toBe('Row');
-    });
-
     it('keeps dropsets collapsed by default and resets when changing blocks', async () => {
         const editor = mountEditor({
             routine: routinePayload({
@@ -95,32 +88,10 @@ describe('createRoutineEditor', () => {
         expect(editor.dropsetsExpanded.value).toBe(false);
     });
 
-    it('applies exercise pick to active slot', () => {
-        const editor = mountEditor({
-            routine: routinePayload({
-                blocks: [
-                    {
-                        is_superset: false,
-                        has_setup_after: false,
-                        has_setup_after_warm_up: false,
-                        exercises: [
-                            {
-                                exercise_id: 1,
-                                working_weight_kg: 60,
-                                prescribed_reps: 6,
-                                achievement_floor: null,
-                                progression_target: null,
-                            },
-                        ],
-                        working: { set_count: 3, rest_seconds: 120, dropsets: [] },
-                        warm_up: { set_count: 0, rest_seconds: 60, steps: [] },
-                    },
-                ],
-            }),
-        });
-        editor.applyExercisePick(2);
-        expect(editor.form.blocks[0].exercises[0].exercise_id).toBe(2);
-        expect(editor.exerciseQuery.value).toBe('');
+    it('resolves exercise names from the catalog', () => {
+        const editor = mountEditor();
+        expect(editor.exerciseName(2)).toBe('Row');
+        expect(editor.exerciseName(null)).toBe('Exercise');
     });
 
     it('submits routine update via inertia form', () => {

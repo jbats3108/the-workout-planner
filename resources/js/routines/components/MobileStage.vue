@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import DeloadSettings from '@/routines/components/DeloadSettings.vue';
 import DropsetEditor from '@/routines/components/DropsetEditor.vue';
-import ExerciseFinder from '@/routines/components/ExerciseFinder.vue';
+import ExercisePicker from '@/routines/components/ExercisePicker.vue';
 import { useRoutineEditor } from '@/routines/composables/useRoutineEditor';
 import { canSetupAfterBlock } from '@/routines/lib/blocks';
 import { Link } from '@inertiajs/vue3';
@@ -18,7 +18,6 @@ const {
     toggleDropsetsExpanded,
     selectBlockExercise,
     exerciseName,
-    exerciseOptionsFor,
     removeBlock,
     addBlock,
     trimDropsetsToSetCount,
@@ -61,24 +60,16 @@ const {
                     <button type="button" class="text-xs text-destructive" @click="removeBlock(active)">Remove</button>
                 </div>
 
-                <div class="mb-4">
-                    <ExerciseFinder compact />
-                </div>
-
                 <div v-for="(ex, ei) in activeBlock.exercises" :key="ei" class="mb-4 last:mb-0">
                     <p v-if="activeBlock.is_superset" class="mb-1 font-mono text-xs text-muted-foreground">
                         {{ ei === 0 ? 'A' : 'B' }}
                     </p>
-                    <select
-                        v-model.number="ex.exercise_id"
-                        class="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-base"
-                        :class="ei === activeExerciseIndex ? 'border-primary' : ''"
-                        @focus="selectBlockExercise(active, ei)"
-                    >
-                        <option v-for="opt in exerciseOptionsFor(ex.exercise_id)" :key="opt.id" :value="opt.id">
-                            {{ opt.name }}
-                        </option>
-                    </select>
+                    <ExercisePicker
+                        v-model="ex.exercise_id"
+                        variant="mobile"
+                        :active="ei === activeExerciseIndex"
+                        @open="selectBlockExercise(active, ei)"
+                    />
                     <div class="mt-2 grid grid-cols-2 gap-2">
                         <label class="block">
                             <span class="text-xs text-muted-foreground">Working kg</span>
