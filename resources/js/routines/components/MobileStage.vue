@@ -12,6 +12,8 @@ const {
     activeExerciseIndex,
     warmUpExpanded,
     toggleWarmUpExpanded,
+    dropsetsExpanded,
+    toggleDropsetsExpanded,
     selectBlockExercise,
     exerciseName,
     exerciseOptionsFor,
@@ -25,6 +27,7 @@ const {
     removeWarmUpStep,
     clearWarmUp,
     toggleSuperset,
+    dropsetSummary,
     save,
     deleteRoutine,
 } = useRoutineEditor();
@@ -121,9 +124,27 @@ const {
                     </label>
                 </div>
 
-                <div v-if="!activeBlock.is_superset" class="mt-3 space-y-3 border-t border-border pt-3">
-                    <p class="text-xs text-muted-foreground">Dropsets (per working set)</p>
-                    <DropsetEditor :block="activeBlock" variant="mobile" />
+                <div v-if="!activeBlock.is_superset" class="mt-3 border-t border-border pt-3">
+                    <button
+                        type="button"
+                        class="flex w-full items-center justify-between gap-2 text-left"
+                        :aria-expanded="dropsetsExpanded"
+                        @click="toggleDropsetsExpanded"
+                    >
+                        <span class="min-w-0">
+                            <span class="block text-xs text-muted-foreground">Dropsets</span>
+                            <span class="block truncate font-mono text-sm text-foreground">
+                                {{ dropsetSummary(activeBlock) || 'None' }}
+                            </span>
+                        </span>
+                        <ChevronDown
+                            class="size-4 shrink-0 text-muted-foreground transition-transform"
+                            :class="dropsetsExpanded ? 'rotate-180' : ''"
+                        />
+                    </button>
+                    <div v-if="dropsetsExpanded" class="mt-3 space-y-3">
+                        <DropsetEditor :block="activeBlock" variant="mobile" />
+                    </div>
                 </div>
 
                 <div class="mt-3 border-t border-border pt-3">
