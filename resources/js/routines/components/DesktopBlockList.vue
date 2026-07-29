@@ -22,8 +22,8 @@ const {
 </script>
 
 <template>
-    <div class="hidden flex-1 flex-col md:flex">
-        <div class="flex-1 overflow-x-auto px-2 py-3">
+    <div class="hidden min-h-0 flex-1 flex-col md:flex">
+        <div class="overflow-x-auto px-2 py-3">
             <table class="w-full min-w-[60rem] border-collapse text-left text-sm">
                 <thead>
                     <tr class="border-b border-border font-mono text-xs text-muted-foreground uppercase">
@@ -52,11 +52,11 @@ const {
                                 {{ ei === 0 ? bi + 1 : '' }}
                             </td>
                             <td class="px-2 py-2">
-                                <div class="flex items-center gap-2">
+                                <div class="flex min-w-0 items-center gap-2">
                                     <span v-if="block.is_superset" class="font-mono text-xs text-primary">{{ ei === 0 ? 'A' : 'B' }}</span>
                                     <select
                                         v-model.number="ex.exercise_id"
-                                        class="max-w-xs rounded border border-border bg-card px-2 py-1"
+                                        class="w-44 rounded border border-border bg-card px-2 py-1"
                                         @focus="selectBlockExercise(bi, ei)"
                                     >
                                         <option v-for="opt in exerciseOptionsFor(ex.exercise_id)" :key="opt.id" :value="opt.id">
@@ -168,29 +168,29 @@ const {
             </table>
             <p v-if="!form.blocks.length" class="px-4 py-8 text-center text-muted-foreground">No blocks yet. Add one below.</p>
 
-            <!-- Keep deload adjacent to the table so superset selection doesn't create extra vertical space. -->
+            <!-- Keep Deload inside the same horizontal scroll region as the table, so the scrollbar sits below it. -->
             <DeloadSettings variant="desktop" />
 
-            <div v-if="activeBlock && !activeBlock.is_superset" class="mt-3 border-t border-border bg-card/40 px-4 py-3">
-                <div class="mb-2 flex items-baseline justify-between gap-2">
+            <div v-if="activeBlock && !activeBlock.is_superset" class="min-w-0 border-t border-border bg-card/40 px-4 py-3">
+                <div class="mb-2 flex min-w-0 items-baseline justify-between gap-2">
                     <h3 class="text-sm font-medium">Dropsets · Block {{ active + 1 }}</h3>
                     <p v-if="dropsetSummary(activeBlock)" class="truncate font-mono text-xs text-muted-foreground">
                         {{ dropsetSummary(activeBlock) }}
                     </p>
                 </div>
-                <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                <div class="grid min-w-0 grid-cols-[repeat(auto-fill,minmax(14rem,1fr))] gap-3">
                     <DropsetEditor :block="activeBlock" variant="desktop" />
                 </div>
             </div>
-        </div>
 
-        <footer class="flex gap-2 border-t border-border px-4 py-3">
-            <button type="button" class="rounded border border-border px-3 py-2 text-sm hover:border-primary" @click="addBlock(false)">
-                + Block
-            </button>
-            <button type="button" class="rounded border border-border px-3 py-2 text-sm hover:border-primary" @click="addBlock(true)">
-                + Superset
-            </button>
-        </footer>
+            <footer class="flex gap-2 border-t border-border px-4 py-3">
+                <button type="button" class="rounded border border-border px-3 py-2 text-sm hover:border-primary" @click="addBlock(false)">
+                    + Block
+                </button>
+                <button type="button" class="rounded border border-border px-3 py-2 text-sm hover:border-primary" @click="addBlock(true)">
+                    + Superset
+                </button>
+            </footer>
+        </div>
     </div>
 </template>
