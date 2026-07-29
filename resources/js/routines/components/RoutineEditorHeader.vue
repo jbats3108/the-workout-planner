@@ -19,26 +19,6 @@ const { form, errorList, save, deleteRoutine } = useRoutineEditor();
                 <InputError :message="form.errors.name" />
             </div>
             <div class="flex flex-wrap gap-3 font-mono text-sm">
-                <label class="flex items-center gap-2 text-muted-foreground">
-                    Deload ×W
-                    <input
-                        v-model.number="form.deload_weight_factor"
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        class="w-16 rounded border border-border bg-card px-2 py-1 text-foreground"
-                    />
-                </label>
-                <label class="flex items-center gap-2 text-muted-foreground">
-                    ×R
-                    <input
-                        v-model.number="form.deload_reps_factor"
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        class="w-16 rounded border border-border bg-card px-2 py-1 text-foreground"
-                    />
-                </label>
                 <Link
                     :href="route('dashboard')"
                     class="rounded-full border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"

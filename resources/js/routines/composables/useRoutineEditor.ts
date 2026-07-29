@@ -65,6 +65,7 @@ export function createRoutineEditor(props: EditRoutineProps) {
     const activeExerciseIndex = ref(0);
     const warmUpExpanded = ref(false);
     const dropsetsExpanded = ref(false);
+    const deloadExpanded = ref(false);
 
     const toggleWarmUpExpanded = () => {
         warmUpExpanded.value = !warmUpExpanded.value;
@@ -72,6 +73,10 @@ export function createRoutineEditor(props: EditRoutineProps) {
 
     const toggleDropsetsExpanded = () => {
         dropsetsExpanded.value = !dropsetsExpanded.value;
+    };
+
+    const toggleDeloadExpanded = () => {
+        deloadExpanded.value = !deloadExpanded.value;
     };
 
     watch(
@@ -192,6 +197,8 @@ export function createRoutineEditor(props: EditRoutineProps) {
         toggleWarmUpExpanded,
         dropsetsExpanded,
         toggleDropsetsExpanded,
+        deloadExpanded,
+        toggleDeloadExpanded,
         activeBlock,
         selectBlockExercise,
         applyExercisePick,

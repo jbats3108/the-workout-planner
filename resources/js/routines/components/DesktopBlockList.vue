@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import DeloadSettings from '@/routines/components/DeloadSettings.vue';
 import DropsetEditor from '@/routines/components/DropsetEditor.vue';
 import { useRoutineEditor } from '@/routines/composables/useRoutineEditor';
 
@@ -166,17 +167,20 @@ const {
                 </tbody>
             </table>
             <p v-if="!form.blocks.length" class="px-4 py-8 text-center text-muted-foreground">No blocks yet. Add one below.</p>
-        </div>
 
-        <div v-if="activeBlock && !activeBlock.is_superset" class="border-t border-border bg-card/40 px-4 py-3">
-            <div class="mb-2 flex items-baseline justify-between gap-2">
-                <h3 class="text-sm font-medium">Dropsets · Block {{ active + 1 }}</h3>
-                <p v-if="dropsetSummary(activeBlock)" class="truncate font-mono text-xs text-muted-foreground">
-                    {{ dropsetSummary(activeBlock) }}
-                </p>
-            </div>
-            <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-                <DropsetEditor :block="activeBlock" variant="desktop" />
+            <!-- Keep deload adjacent to the table so superset selection doesn't create extra vertical space. -->
+            <DeloadSettings variant="desktop" />
+
+            <div v-if="activeBlock && !activeBlock.is_superset" class="mt-3 border-t border-border bg-card/40 px-4 py-3">
+                <div class="mb-2 flex items-baseline justify-between gap-2">
+                    <h3 class="text-sm font-medium">Dropsets · Block {{ active + 1 }}</h3>
+                    <p v-if="dropsetSummary(activeBlock)" class="truncate font-mono text-xs text-muted-foreground">
+                        {{ dropsetSummary(activeBlock) }}
+                    </p>
+                </div>
+                <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                    <DropsetEditor :block="activeBlock" variant="desktop" />
+                </div>
             </div>
         </div>
 

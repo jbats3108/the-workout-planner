@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import DeloadSettings from '@/routines/components/DeloadSettings.vue';
 import DropsetEditor from '@/routines/components/DropsetEditor.vue';
 import ExerciseFinder from '@/routines/components/ExerciseFinder.vue';
 import { useRoutineEditor } from '@/routines/composables/useRoutineEditor';
@@ -220,6 +221,8 @@ const {
                         </div>
                     </div>
                 </div>
+
+                <DeloadSettings variant="mobile" />
 
                 <div class="mt-3 flex flex-wrap gap-4 border-t border-border pt-3 text-sm">
                     <label class="flex items-center gap-2">
