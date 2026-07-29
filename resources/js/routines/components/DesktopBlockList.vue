@@ -34,7 +34,7 @@ const {
                         <th class="px-2 py-2">Rest</th>
                         <th class="px-2 py-2">Warm-up %×reps</th>
                         <th class="px-2 py-2">WU rest</th>
-                        <th class="px-2 py-2">Flags</th>
+                        <th class="px-2 py-2">Options</th>
                         <th class="px-2 py-2" />
                     </tr>
                 </thead>
@@ -133,21 +133,21 @@ const {
                             </td>
                             <td class="px-2 py-2">
                                 <div v-if="ei === 0" class="flex flex-col gap-1 text-xs">
-                                    <label class="flex items-center gap-1">
+                                    <label class="flex items-center gap-1.5 whitespace-nowrap">
                                         <input type="checkbox" :checked="block.is_superset" @change="toggleSuperset(block)" />
-                                        SS
+                                        Superset
                                     </label>
                                     <label
-                                        class="flex items-center gap-1"
+                                        class="flex items-center gap-1.5 whitespace-nowrap"
                                         :class="block.warm_up.steps.length ? '' : 'opacity-40'"
                                         :title="block.warm_up.steps.length ? undefined : 'Add warm-up steps first'"
                                     >
                                         <input v-model="block.has_setup_after_warm_up" type="checkbox" :disabled="!block.warm_up.steps.length" />
-                                        Setup→work
+                                        Setup before working
                                     </label>
-                                    <label class="flex items-center gap-1">
+                                    <label class="flex items-center gap-1.5 whitespace-nowrap">
                                         <input v-model="block.has_setup_after" type="checkbox" />
-                                        Setup→next
+                                        Setup after block
                                     </label>
                                 </div>
                             </td>
