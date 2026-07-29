@@ -1,6 +1,7 @@
 export type WarmUpStep = {
     percent: number;
     reps: number;
+    has_setup_after?: boolean;
 };
 
 export type WarmUpDefaultsScope = 'all_blocks' | 'first_block';

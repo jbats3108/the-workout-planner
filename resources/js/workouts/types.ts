@@ -18,6 +18,7 @@ export type PlayerSet = {
     logged_reps: number | null;
     completed: boolean;
     rest_seconds: number;
+    has_setup_after: boolean;
     is_dropset: boolean;
     segments: PlayerSetSegment[];
 };
@@ -49,9 +50,12 @@ export type WorkoutPayload = {
     blocks: PlayerBlock[];
 };
 
-export type SetupPhase = 'after_warm_up' | 'after_block';
+export type SetupPhase = 'after_warm_up' | 'after_block' | 'after_warm_up_step';
 
-export type Focus = { kind: 'set'; blockIndex: number; setId: number } | { kind: 'setup'; blockIndex: number; phase: SetupPhase } | { kind: 'done' };
+export type Focus =
+    | { kind: 'set'; blockIndex: number; setId: number }
+    | { kind: 'setup'; blockIndex: number; phase: SetupPhase; warmUpStepIndex?: number }
+    | { kind: 'done' };
 
 export type Bump = {
     routine_block_exercise_id: number;

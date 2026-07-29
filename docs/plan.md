@@ -6,7 +6,13 @@ Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domai
 
 **Notion inbox:** after pulling bullets from Notion [Ovrload](https://app.notion.com/p/3aae5dd99f0c80ad928ade1a5c6b0749) into this file, clear **only** the list items under `## Backlog:` — leave that header and a single empty bullet (`-`). Do not replace the whole page or delete child pages / other sections.
 
-## Now (recently shipped)
+## Now
+
+Gym-test 2026-07-28 — numbered priority within this batch.
+
+-
+
+## Recently shipped (foundation)
 
 - [x] v2 schema + domain models (grams, set-group `type`, mirror workout snapshots)
 - [x] Domain-oriented `App\{Domain}\...` layout + mirrored tests
@@ -18,21 +24,27 @@ Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domai
 
 ## Shipped (recent)
 
-Gym-test 2026-07-26 + remaining product history. Newest first within each batch where noted.
+Gym-test 2026-07-28 + 2026-07-26 + remaining product history. Newest first within each batch where noted.
 
+1. **Setup between warm-ups** — ~~per-step setup after warm-up steps; setup then warm-up rest; block Setup→work unchanged~~ done
+1. **Add/remove set player bugs** — ~~− Set advanced focus / left `set N of 1`; last-round − Set skipped the block~~ done (reindex after remove; keep focus on add; hide − Set on last working round)
+1. **Player layout tweaks** — ~~centralise text, clearer section separation, bigger elements; stronger set-of-x highlight~~ done
+1. **Set x/n on setup** — ~~show set progress (x of n) during setup~~ done (Up next on setup/rest: `Set x/n` from planned group count)
+1. **Complete screen full-page** — ~~log-set complete UI should cover the whole page~~ done (full-screen log sheet; keyboard overlays content so Log/Cancel stay put; finish Complete stage hides player header)
+1. **Countdown beeps** — ~~rest/timer countdown audio cues~~ done (ticks at 5…1 + long end tone; vibrate mirrors when available)
 1. **Admin nav order** — ~~push Admin to the bottom of the top-nav items~~ done (after Training in primary rail/drawer)
 1. **Remove clickable titles** — ~~titles should not navigate; use explicit buttons only~~ done (dashboard routine name is plain text; edit via icon)
 1. **Bigger edit/delete icons** — ~~increase affordance size for edit/delete controls in the UI~~ done (dashboard routine cards: `size-5` + larger hit target)
 1. **Soft-fail not-found / errors** — ~~no raw error pages for expected GET misses/forbids; redirect + flash/toast~~ done (authenticated web; guests/admin/mutations stay hard)
 1. **Finished workout history** — browse/edit finished workouts at `/history`; dashboard recent strip + nav; warm-ups read-only; working weight + reps editable; re-eval progression on latest non-deload finish (carry-forward, bumps, undo via Bump Records; ADR-0004)
-2. **Complete-then-log UX** — Done on main stage opens bottom sheet; Log set commits; Cancel aborts without server write; main stage is display-only with plate guide
+2. **Complete-then-log UX** — ~~Done on main stage opens full-page log sheet; Log set commits; Cancel aborts without server write; main stage is display-only with plate guide~~ done
 2. **Rest-end alert + leave-during-rest** — sound/vibration when rest hits zero in foreground; notification permission on first rest + background notification when tab is hidden; clock-based rest sync on visibility return
 2. **Prev set weight → next** — ~~pending-rest blocks focus race; client `lastWorkingWeightKg` + prior logged weight~~ done
 3. **Keep screen awake in Play** — ~~Screen Wake Lock while player mounted; re-request on visibility~~ done
 4. **Preview next during rest / setup** — ~~Up next card: exercise, set, weight/reps, plate stack when barbell~~ done
 5. **Plate guide visibility in Play** — ~~works for barbell/EZ; missing equipment on pre-import orphans~~ done (audit + merge original short-name catalog)
 6. **Progression on finish** — ~~carry-forward highest achieved top weight; confirm bumps when progression target hit; skip both for deload workouts~~ done
-5. **Mid-session structure edits** — ~~mutate the in-progress workout snapshot (not the routine) from the player~~ done (add/remove incomplete working sets)
+5. **Mid-session structure edits** — ~~mutate the in-progress workout snapshot (not the routine) from the player~~ done (add/remove incomplete working sets; reindex + last-round − Set guard)
 6. **More app-like mobile behaviour** — ~~chrome polish: safe areas, player full-bleed (no AppLayout), leave confirm, overscroll off on player+editor~~ done (no PWA / bottom nav)
 7. **User default warm-up %s and reps** — ~~prefs on the user; per-step %×reps on warm-up steps; seed into new blocks; Settings → Training~~ done
 8. **Restyle whole app to match Overload branding** — ~~zinc + lime~~ done: dark-first near-black + neon yellow primary + cyan accent (`docs/branding.md`, `resources/css/app.css`)
@@ -60,10 +72,12 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 
 ### Features (FAQ)
 
+- **Type-ahead exercise search** — faster find-as-you-type in editor / catalog pickers
 - **FAQ page** — public/help FAQ; draft bullets on Notion [FAQ Page](https://app.notion.com/p/3aae5dd99f0c8006a6cbf6df379661a8) (early-adopter forever-free, Ko-fi, what app is/isn't, beta, no AI/ad data sale, not a training app, backlog link)
 - **Post-hoc workout record** — log a full finished workout in one pass (no Play); pick routine or ad-hoc structure; assign `finished_at` to a past date; grill scope (progression re-eval, warm-ups, deload flag)
 - **Bump confirmation timing** — grill: when (if at all) the bump confirmation screen should appear (finish only? history re-eval? skip entirely?)
 - **Strava integration** — connect account; export finished workouts (and/or sync activity metadata); grill scope (OAuth, fields, privacy)
+- **Garmin sync** — long-term; watch functionality too; prefer after Strava
 - **Per-exercise strength-over-time** — charts / PR timeline; needs its own grill
 - **History extensions** — warm-up edits; discarded workouts in list; structure edits on finished workouts
 - **Demote dropset → normal in Play**
@@ -81,7 +95,7 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 
 ### Bugfixes
 
--
+- [x] **Rest skip confirm** — inline "Skip rest? Cancel / Skip" confirm restored in `RestStage.vue`
 
 ### Code quality & security
 

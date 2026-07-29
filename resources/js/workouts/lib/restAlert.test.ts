@@ -1,12 +1,16 @@
 import {
     canUseRestNotifications,
     ensureRestNotificationPermission,
+    notifyRestCountdown,
     notifyRestEnded,
+    playRestCountdownBeep,
     playRestEndSound,
     prepareRestAlerts,
     primeRestAlerts,
     resetRestAlertsForTests,
+    shouldBeepRestCountdown,
     showRestEndNotification,
+    vibrateRestCountdown,
     vibrateRestEnd,
 } from '@/workouts/lib/restAlert';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -77,7 +81,12 @@ describe('restAlert', () => {
 
     it('vibrates on rest end', () => {
         vibrateRestEnd();
-        expect(navigator.vibrate).toHaveBeenCalledWith([180, 90, 180]);
+        expect(navigator.vibrate).toHaveBeenCalledWith(480);
+    });
+
+    it('vibrates a short pulse on countdown ticks', () => {
+        vibrateRestCountdown();
+        expect(navigator.vibrate).toHaveBeenCalledWith(40);
     });
 
     it('shows a notification when permission is granted', () => {
@@ -199,5 +208,77 @@ describe('restAlert', () => {
 
         expect(resume).toHaveBeenCalled();
         expect(Notification.requestPermission).toHaveBeenCalled();
+    });
+
+    it('only beeps countdown for the last five seconds', () => {
+        expect(shouldBeepRestCountdown(6)).toBe(false);
+        expect(shouldBeepRestCountdown(5)).toBe(true);
+        expect(shouldBeepRestCountdown(1)).toBe(true);
+        expect(shouldBeepRestCountdown(0)).toBe(false);
+    });
+
+    it('plays a shorter countdown tone when primed', () => {
+        resetRestAlertsForTests();
+        const start = vi.fn();
+        const stop = vi.fn();
+        const connect = vi.fn();
+        const createOscillator = vi.fn(() => ({
+            type: 'sine',
+            frequency: { value: 0 },
+            connect,
+            start,
+            stop,
+        }));
+
+        vi.stubGlobal(
+            'AudioContext',
+            vi.fn(() => ({
+                state: 'running',
+                createOscillator,
+                createGain: vi.fn(() => ({
+                    gain: { value: 0 },
+                    connect,
+                })),
+                destination: {},
+                resume: vi.fn(),
+            })),
+        );
+        vi.useFakeTimers();
+
+        primeRestAlerts();
+        expect(playRestCountdownBeep(6)).toBe(false);
+        expect(playRestCountdownBeep(5)).toBe(true);
+        vi.runAllTimers();
+        expect(stop).toHaveBeenCalled();
+    });
+
+    it('mirrors countdown beep with haptic', () => {
+        resetRestAlertsForTests();
+        const start = vi.fn();
+        vi.stubGlobal(
+            'AudioContext',
+            vi.fn(() => ({
+                state: 'running',
+                createOscillator: vi.fn(() => ({
+                    type: 'sine',
+                    frequency: { value: 0 },
+                    connect: vi.fn(),
+                    start,
+                    stop: vi.fn(),
+                })),
+                createGain: vi.fn(() => ({
+                    gain: { value: 0 },
+                    connect: vi.fn(),
+                })),
+                destination: {},
+                resume: vi.fn(),
+            })),
+        );
+
+        primeRestAlerts();
+        notifyRestCountdown(5);
+
+        expect(start).toHaveBeenCalled();
+        expect(navigator.vibrate).toHaveBeenCalledWith(40);
     });
 });

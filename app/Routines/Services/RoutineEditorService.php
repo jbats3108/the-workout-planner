@@ -34,10 +34,12 @@ class RoutineEditorService
                 $block->delete();
             });
 
-            $blocks = $data->blocks ?? [];
-            foreach (array_values(iterator_to_array($blocks)) as $position => $blockData) {
+            $blocks = array_values(iterator_to_array($data->blocks ?? []));
+            $lastIndex = count($blocks) - 1;
+
+            foreach ($blocks as $index => $blockData) {
                 /** @var SyncRoutineBlockData $blockData */
-                $this->createBlock($routine, $position + 1, $blockData);
+                $this->createBlock($routine, $index + 1, $blockData, $index === $lastIndex);
             }
 
             return $routine->fresh([
@@ -48,7 +50,7 @@ class RoutineEditorService
         });
     }
 
-    private function createBlock(Routine $routine, int $position, SyncRoutineBlockData $blockData): void
+    private function createBlock(Routine $routine, int $position, SyncRoutineBlockData $blockData, bool $isLastBlock = false): void
     {
         $exercises = $blockData->exercises->all();
 
@@ -70,7 +72,7 @@ class RoutineEditorService
             'routine_id' => $routine->id,
             'position' => $position,
             'is_superset' => $blockData->isSuperset,
-            'has_setup_after' => $blockData->hasSetupAfter,
+            'has_setup_after' => $isLastBlock ? false : $blockData->hasSetupAfter,
             'has_setup_after_warm_up' => $blockData->hasSetupAfterWarmUp,
         ]);
 
@@ -114,6 +116,7 @@ class RoutineEditorService
                 'position' => $stepIndex + 1,
                 'percent_of_working' => min(100, max(1, $step->percent)),
                 'reps' => min(100, max(1, $step->reps)),
+                'has_setup_after' => $step->hasSetupAfter,
             ]);
         }
     }

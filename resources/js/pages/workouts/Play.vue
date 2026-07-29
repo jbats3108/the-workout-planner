@@ -37,7 +37,7 @@ const primeOnFirstInteraction = () => {
     >
         <Head :title="`Play · ${workout.routine_name}`" />
 
-        <PlayerHeader />
+        <PlayerHeader v-if="focus.kind !== 'done'" />
 
         <RestStage v-if="restSecondsLeft > 0" />
         <SetupStage v-else-if="focus.kind === 'setup' && currentBlock" />

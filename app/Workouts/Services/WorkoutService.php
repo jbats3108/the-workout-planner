@@ -127,6 +127,7 @@ class WorkoutService
                             'position' => $warmUpStep->position,
                             'percent_of_working' => $warmUpStep->percent_of_working,
                             'reps' => $warmUpStep->reps,
+                            'has_setup_after' => $warmUpStep->has_setup_after,
                         ]);
                     }
 
@@ -349,7 +350,8 @@ class WorkoutService
             throw new WorkoutServiceException(self::WORKING_SET_GROUP_MISSING_ERROR);
         }
 
-        $roundSets = $group->sets->where('set_index', $set->set_index);
+        $removedIndex = $set->set_index;
+        $roundSets = $group->sets->where('set_index', $removedIndex);
 
         if ($roundSets->contains(fn (WorkoutSet $roundSet): bool => $roundSet->completed_at !== null)) {
             throw new WorkoutServiceException(self::SET_ALREADY_COMPLETED_ERROR);
@@ -359,10 +361,15 @@ class WorkoutService
             throw new WorkoutServiceException(self::CANNOT_REMOVE_LAST_WORKING_SET_ERROR);
         }
 
-        DB::transaction(function () use ($group, $roundSets): void {
+        DB::transaction(function () use ($group, $roundSets, $removedIndex): void {
             foreach ($roundSets as $roundSet) {
                 $roundSet->delete();
             }
+
+            WorkoutSet::query()
+                ->where('workout_set_group_id', $group->id)
+                ->where('set_index', '>', $removedIndex)
+                ->decrement('set_index');
 
             $group->set_count = max(1, $group->set_count - 1);
             $group->save();

@@ -89,6 +89,7 @@ class RoutineEditorPageData extends Data
                         $warmUp?->warmUpSteps->map(fn ($step) => new SyncWarmUpStepData(
                             percent: (int) $step->percent_of_working,
                             reps: (int) ($step->reps ?? 5),
+                            hasSetupAfter: (bool) $step->has_setup_after,
                         )) ?? [],
                         DataCollection::class,
                     ),

@@ -3,15 +3,19 @@ import { findFirstIncompleteFocus, flattenPlayerSets, setupKey, type FlatSetEntr
 import { formatRestSeconds, groupLabel, setupHintText, workoutProgressLabel } from '@/workouts/lib/labels';
 import { formatLoadStack, formatPlateStackLabel, resolvePlateLoad } from '@/workouts/lib/plates';
 import { preparePlayerInteraction } from '@/workouts/lib/playerInteraction';
-import { notifyRestEnded } from '@/workouts/lib/restAlert';
+import { notifyRestCountdown, notifyRestEnded, shouldBeepRestCountdown } from '@/workouts/lib/restAlert';
 import { releaseScreenWake, requestScreenWake } from '@/workouts/lib/screenWake';
 import {
     defaultPromoteSegments,
     finishesWarmUpGroup,
+    finishesWarmUpStep,
     nextDropSegmentWeight,
+    nextSupersetSet,
+    plannedSetCount,
     previousSetWeightKg,
     shouldRestAfter,
     visitLeavesWorkout,
+    warmUpRestSeconds,
     workingRestSeconds,
     workingRoundsInBlock,
     workingWeightForSet,
@@ -42,6 +46,8 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
 
     let restTimer: ReturnType<typeof setInterval> | null = null;
     let restEndsAt = 0;
+    /** Last whole second that already got a countdown beep (avoids double-fire on visibility sync). */
+    let lastCountdownBeepSecond: number | null = null;
     let removeBeforeListener: (() => void) | undefined;
     let removeVisibilityListener: (() => void) | undefined;
     let removeRestVisibilityListener: (() => void) | undefined;
@@ -65,6 +71,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         }
         restEndsAt = 0;
         restSecondsLeft.value = 0;
+        lastCountdownBeepSecond = null;
         removeRestVisibilityListener?.();
         removeRestVisibilityListener = undefined;
     };
@@ -87,6 +94,11 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         }
 
         restSecondsLeft.value = remaining;
+
+        if (shouldBeepRestCountdown(remaining) && lastCountdownBeepSecond !== remaining) {
+            lastCountdownBeepSecond = remaining;
+            notifyRestCountdown(remaining);
+        }
     };
 
     const startRest = (seconds: number) => {
@@ -116,6 +128,13 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         () => {
             if (restSecondsLeft.value > 0 || pendingRestSeconds.value > 0) {
                 return;
+            }
+            // Keep focus when add/remove only changes set count — don't jump to another set.
+            if (focus.value.kind === 'set') {
+                const focused = flatSets.value.find(({ set }) => set.id === (focus.value as { setId: number }).setId);
+                if (focused && !focused.set.completed) {
+                    return;
+                }
             }
             focus.value = firstIncomplete();
         },
@@ -266,6 +285,9 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         if (restAfter > 0 && block.has_setup_after_warm_up && finishesWarmUpGroup(block, set)) {
             restAfter = 0;
         }
+        if (restAfter > 0 && finishesWarmUpStep(block, set)) {
+            restAfter = 0;
+        }
 
         const payload = set.is_dropset
             ? {
@@ -351,10 +373,18 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         preparePlayerInteraction();
         const phase = focus.value.phase;
         const block = props.workout.blocks[focus.value.blockIndex];
-        setupDone.value[setupKey(block.id, phase)] = true;
+        setupDone.value[setupKey(block.id, phase, focus.value.warmUpStepIndex)] = true;
 
         if (phase === 'after_warm_up') {
             const rest = workingRestSeconds(block);
+            if (rest > 0) {
+                startRest(rest);
+                return;
+            }
+        }
+
+        if (phase === 'after_warm_up_step') {
+            const rest = warmUpRestSeconds(block);
             if (rest > 0) {
                 startRest(rest);
                 return;
@@ -365,6 +395,40 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
     };
 
     const setupHint = computed(() => setupHintText(focus.value, currentBlock.value));
+
+    const supersetNext = computed(() => {
+        if (!current.value) {
+            return null;
+        }
+
+        const nextSet = nextSupersetSet(current.value.block, current.value.set);
+        if (!nextSet) {
+            return null;
+        }
+
+        const entry = { blockIndex: current.value.blockIndex, block: current.value.block, set: nextSet };
+        let weightKg: number | null = null;
+
+        if (nextSet.group_type === 'warm_up') {
+            weightKg = nextSet.target_weight_kg;
+        } else {
+            weightKg = previousSetWeightKg(entry) ?? lastWorkingWeightKg.value[nextSet.workout_block_exercise_id] ?? nextSet.target_weight_kg;
+        }
+
+        const targetParts: string[] = [];
+        if (weightKg != null) {
+            targetParts.push(`${weightKg}${props.workout.weight_unit}`);
+        }
+        if (nextSet.target_reps != null) {
+            targetParts.push(`× ${nextSet.target_reps}`);
+        }
+
+        return {
+            exerciseName: nextSet.exercise_name,
+            targetLabel: targetParts.length > 0 ? targetParts.join(' ') : null,
+            label: targetParts.length > 0 ? `Then: ${nextSet.exercise_name} (${targetParts.join(' ')})` : `Then: ${nextSet.exercise_name}`,
+        };
+    });
 
     const upcoming = computed(() => {
         const entry = flatSets.value.find(({ set }) => !set.completed) ?? null;
@@ -394,6 +458,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
             exerciseName: entry.set.exercise_name,
             groupLabel: groupLabel(entry.set.group_type),
             setNumber: entry.set.set_index + 1,
+            setCount: plannedSetCount(entry.block, entry.set),
             blockPosition: entry.block.position,
             weightLabel,
             reps: entry.set.target_reps,
@@ -459,6 +524,12 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         }
 
         const index = current.value.set.set_index;
+        const hasLaterRound = current.value.block.sets.some((s) => s.group_type === 'working' && s.set_index > index);
+        if (!hasLaterRound) {
+            // Last round: removing it would skip straight to the next block/setup.
+            return false;
+        }
+
         const round = current.value.block.sets.filter((s) => s.group_type === 'working' && s.set_index === index);
         return round.every((s) => !s.completed);
     });
@@ -478,7 +549,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
     };
 
     const removeWorkingSet = () => {
-        if (!current.value) {
+        if (!current.value || !canRemoveWorkingSet.value) {
             return;
         }
         router.delete(route('workouts.sets.remove', [props.workout.id, current.value.set.id]), {
@@ -586,6 +657,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         progressLabel,
         upcoming,
         setupHint,
+        supersetNext,
         canPromoteToDropset,
         canAddWorkingSet,
         canRemoveWorkingSet,

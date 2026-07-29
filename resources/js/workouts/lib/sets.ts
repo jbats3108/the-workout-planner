@@ -29,11 +29,58 @@ export function shouldRestAfter(block: PlayerBlock, set: PlayerSet): boolean {
     return sameIndex.every((s) => s.completed || s.id === set.id);
 }
 
+/** Next exercise still to play in this superset round (A → B), or null on the last of the pair. */
+export function nextSupersetSet(block: PlayerBlock, set: PlayerSet): PlayerSet | null {
+    if (!block.is_superset) {
+        return null;
+    }
+
+    const exercisePosition = (workoutBlockExerciseId: number): number =>
+        block.exercises.find((exercise) => exercise.id === workoutBlockExerciseId)?.position ?? 0;
+
+    const round = block.sets
+        .filter((candidate) => candidate.group_type === set.group_type && candidate.set_index === set.set_index)
+        .sort((a, b) => exercisePosition(a.workout_block_exercise_id) - exercisePosition(b.workout_block_exercise_id));
+
+    const index = round.findIndex((candidate) => candidate.id === set.id);
+    if (index < 0 || index >= round.length - 1) {
+        return null;
+    }
+
+    return round[index + 1] ?? null;
+}
+
 export function finishesWarmUpGroup(block: PlayerBlock, set: PlayerSet): boolean {
     if (set.group_type !== 'warm_up') {
         return false;
     }
     return block.sets.filter((s) => s.group_type === 'warm_up').every((s) => s.completed || s.id === set.id);
+}
+
+export function warmUpStepIndexes(block: PlayerBlock): number[] {
+    const indexes = new Set(block.sets.filter((s) => s.group_type === 'warm_up').map((s) => s.set_index));
+
+    return [...indexes].sort((a, b) => a - b);
+}
+
+export function finishesWarmUpStep(block: PlayerBlock, set: PlayerSet): boolean {
+    if (set.group_type !== 'warm_up' || !set.has_setup_after) {
+        return false;
+    }
+
+    const stepIndexes = warmUpStepIndexes(block);
+    const lastStepIndex = stepIndexes[stepIndexes.length - 1];
+    if (set.set_index === lastStepIndex) {
+        return false;
+    }
+
+    const roundSets = block.sets.filter((s) => s.group_type === 'warm_up' && s.set_index === set.set_index);
+
+    return roundSets.every((s) => s.completed || s.id === set.id);
+}
+
+export function warmUpRestSeconds(block: PlayerBlock): number {
+    return block.sets.find((s) => s.group_type === 'warm_up')?.rest_seconds ?? 0;
 }
 
 export function workingRestSeconds(block: PlayerBlock): number {
@@ -43,6 +90,11 @@ export function workingRestSeconds(block: PlayerBlock): number {
 export function workingRoundsInBlock(block: PlayerBlock): number {
     const indexes = new Set(block.sets.filter((s) => s.group_type === 'working').map((s) => s.set_index));
     return indexes.size;
+}
+
+/** Planned sets in the same group for this exercise (x of n). */
+export function plannedSetCount(block: PlayerBlock, set: PlayerSet): number {
+    return block.sets.filter((s) => s.group_type === set.group_type && s.workout_block_exercise_id === set.workout_block_exercise_id).length;
 }
 
 export function nextDropSegmentWeight(lastKg: number): number {

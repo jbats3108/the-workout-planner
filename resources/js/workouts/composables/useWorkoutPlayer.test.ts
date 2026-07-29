@@ -5,7 +5,7 @@ import * as playerInteraction from '@/workouts/lib/playerInteraction';
 import * as restAlert from '@/workouts/lib/restAlert';
 import { mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { defineComponent, h } from 'vue';
+import { defineComponent, h, nextTick, reactive } from 'vue';
 
 function mountPlayer(overrides: Parameters<typeof workoutPayload>[0] = {}) {
     let player!: ReturnType<typeof createWorkoutPlayer>;
@@ -27,6 +27,7 @@ describe('createWorkoutPlayer', () => {
         vi.clearAllMocks();
         vi.spyOn(playerInteraction, 'preparePlayerInteraction').mockImplementation(() => {});
         vi.spyOn(restAlert, 'notifyRestEnded').mockImplementation(() => {});
+        vi.spyOn(restAlert, 'notifyRestCountdown').mockImplementation(() => {});
         vi.stubGlobal(
             'route',
             vi.fn((name: string, _params?: unknown) => `/${String(name)}`),
@@ -66,6 +67,38 @@ describe('createWorkoutPlayer', () => {
         });
         expect(player.upcoming.value?.exerciseName).toBe('Squat');
         expect(player.upcoming.value?.weightLabel).toBe('90');
+        expect(player.upcoming.value?.setNumber).toBe(2);
+        expect(player.upcoming.value?.setCount).toBe(2);
+    });
+
+    it('names the next exercise in a superset round with its target', () => {
+        const player = mountPlayer({
+            blocks: [
+                playerBlock({
+                    is_superset: true,
+                    exercises: [
+                        { id: 10, name: 'Press', working_weight_kg: 50, prescribed_reps: 8, position: 0 },
+                        { id: 11, name: 'Row', working_weight_kg: 60, prescribed_reps: 10, position: 1 },
+                    ],
+                    sets: [
+                        playerSet({ id: 1, workout_block_exercise_id: 10, exercise_name: 'Press', set_index: 0 }),
+                        playerSet({
+                            id: 2,
+                            workout_block_exercise_id: 11,
+                            exercise_name: 'Row',
+                            set_index: 0,
+                            target_weight_kg: 60,
+                            target_reps: 10,
+                        }),
+                    ],
+                }),
+            ],
+        });
+        expect(player.supersetNext.value).toEqual({
+            exerciseName: 'Row',
+            targetLabel: '60kg × 10',
+            label: 'Then: Row (60kg × 10)',
+        });
     });
 
     it('syncs draft weight from previous logged set', async () => {
@@ -171,6 +204,35 @@ describe('createWorkoutPlayer', () => {
         expect(player.restSecondsLeft.value).toBe(0);
     });
 
+    it('beeps once per remaining second in the last five seconds of rest', () => {
+        vi.useFakeTimers();
+        vi.setSystemTime(new Date('2026-01-01T12:00:00Z'));
+        inertiaMocks().inertiaFormPost.mockImplementation((_url, options) => {
+            options?.onSuccess?.();
+        });
+        const player = mountPlayer({
+            blocks: [
+                playerBlock({
+                    sets: [playerSet({ id: 1, completed: false, rest_seconds: 7 }), playerSet({ id: 2, set_index: 1, completed: false })],
+                }),
+            ],
+        });
+        player.logSheetOpen.value = true;
+        player.completeSet();
+
+        expect(restAlert.notifyRestCountdown).not.toHaveBeenCalled();
+
+        vi.advanceTimersByTime(2000);
+        expect(restAlert.notifyRestCountdown).toHaveBeenCalledWith(5);
+
+        vi.advanceTimersByTime(1000);
+        expect(restAlert.notifyRestCountdown).toHaveBeenCalledWith(4);
+
+        vi.advanceTimersByTime(3000);
+        expect(restAlert.notifyRestCountdown).toHaveBeenCalledWith(1);
+        expect(restAlert.notifyRestCountdown).toHaveBeenCalledTimes(5);
+    });
+
     it('acknowledges setup after warm-up', () => {
         vi.useFakeTimers();
         const player = mountPlayer({
@@ -187,6 +249,29 @@ describe('createWorkoutPlayer', () => {
         expect(player.focus.value.kind).toBe('setup');
         player.acknowledgeSetup();
         expect(player.restSecondsLeft.value).toBe(60);
+    });
+
+    it('acknowledges setup between warm-up steps', () => {
+        vi.useFakeTimers();
+        const player = mountPlayer({
+            blocks: [
+                playerBlock({
+                    sets: [
+                        playerSet({ id: 1, group_type: 'warm_up', set_index: 0, completed: true, has_setup_after: true, rest_seconds: 45 }),
+                        playerSet({ id: 2, group_type: 'warm_up', set_index: 1, completed: false }),
+                        playerSet({ id: 3, group_type: 'working', completed: false }),
+                    ],
+                }),
+            ],
+        });
+        expect(player.focus.value).toEqual({
+            kind: 'setup',
+            blockIndex: 0,
+            phase: 'after_warm_up_step',
+            warmUpStepIndex: 0,
+        });
+        player.acknowledgeSetup();
+        expect(player.restSecondsLeft.value).toBe(45);
     });
 
     it('applies nearest plate load to draft weight', () => {
@@ -297,6 +382,98 @@ describe('createWorkoutPlayer', () => {
             '/workouts.sets.remove',
             expect.objectContaining({ preserveScroll: true, only: ['workout'] }),
         );
+    });
+
+    it('hides remove on the last working set so it cannot skip the block', () => {
+        const player = mountPlayer({
+            blocks: [
+                playerBlock({
+                    id: 5,
+                    sets: [
+                        playerSet({ id: 1, set_index: 0, completed: true, logged_weight_kg: 100 }),
+                        playerSet({ id: 2, set_index: 1, completed: false }),
+                    ],
+                }),
+            ],
+        });
+        expect(player.focus.value).toEqual({ kind: 'set', blockIndex: 0, setId: 2 });
+        expect(player.canRemoveWorkingSet.value).toBe(false);
+        player.removeWorkingSet();
+        expect(inertiaMocks().routerMocks.delete).not.toHaveBeenCalled();
+    });
+
+    it('keeps focus on the current set when an extra set is added to the workout payload', async () => {
+        const props = reactive({
+            workout: workoutPayload({
+                blocks: [
+                    playerBlock({
+                        id: 5,
+                        sets: [playerSet({ id: 1, set_index: 0, completed: false }), playerSet({ id: 2, set_index: 1, completed: false })],
+                    }),
+                ],
+            }),
+            plate_profile: plateProfile(),
+        });
+        let player!: ReturnType<typeof createWorkoutPlayer>;
+        mount(
+            defineComponent({
+                setup() {
+                    player = createWorkoutPlayer(props);
+                    return () => h('div');
+                },
+            }),
+        );
+        expect(player.focus.value).toEqual({ kind: 'set', blockIndex: 0, setId: 1 });
+
+        props.workout = workoutPayload({
+            blocks: [
+                playerBlock({
+                    id: 5,
+                    sets: [
+                        playerSet({ id: 1, set_index: 0, completed: false }),
+                        playerSet({ id: 2, set_index: 1, completed: false }),
+                        playerSet({ id: 3, set_index: 2, completed: false }),
+                    ],
+                }),
+            ],
+        });
+        await nextTick();
+        expect(player.focus.value).toEqual({ kind: 'set', blockIndex: 0, setId: 1 });
+    });
+
+    it('refocuses when the focused set is removed from the workout payload', async () => {
+        const props = reactive({
+            workout: workoutPayload({
+                blocks: [
+                    playerBlock({
+                        id: 5,
+                        sets: [playerSet({ id: 1, set_index: 0, completed: false }), playerSet({ id: 2, set_index: 1, completed: false })],
+                    }),
+                ],
+            }),
+            plate_profile: plateProfile(),
+        });
+        let player!: ReturnType<typeof createWorkoutPlayer>;
+        mount(
+            defineComponent({
+                setup() {
+                    player = createWorkoutPlayer(props);
+                    return () => h('div');
+                },
+            }),
+        );
+        expect(player.focus.value).toEqual({ kind: 'set', blockIndex: 0, setId: 1 });
+
+        props.workout = workoutPayload({
+            blocks: [
+                playerBlock({
+                    id: 5,
+                    sets: [playerSet({ id: 2, set_index: 0, completed: false })],
+                }),
+            ],
+        });
+        await nextTick();
+        expect(player.focus.value).toEqual({ kind: 'set', blockIndex: 0, setId: 2 });
     });
 
     it('opens and cancels the log sheet without posting', () => {

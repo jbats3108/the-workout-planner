@@ -11,8 +11,17 @@ export function syncWarmUpMeta(block: Block): void {
     }
 }
 
+function normalizeWarmUpStep(step: WarmUpStep): WarmUpStep {
+    return {
+        percent: step.percent,
+        reps: step.reps,
+        has_setup_after: step.has_setup_after ?? false,
+    };
+}
+
 /** Compact editor string: `40x5, 60x3, 80x1` (also accepts legacy `40, 60, 80`). */
 export function setWarmUpText(block: Block, value: string): void {
+    const previousFlags = block.warm_up.steps.map((s) => s.has_setup_after ?? false);
     block.warm_up.steps = value
         .split(',')
         .map((part) => part.trim())
@@ -28,12 +37,13 @@ export function setWarmUpText(block: Block, value: string): void {
             }
             return null;
         })
-        .filter((s): s is WarmUpStep => s !== null && s.percent > 0 && s.reps > 0);
+        .filter((s): s is Omit<WarmUpStep, 'has_setup_after'> => s !== null && s.percent > 0 && s.reps > 0)
+        .map((step, index) => normalizeWarmUpStep({ ...step, has_setup_after: previousFlags[index] ?? false }));
     syncWarmUpMeta(block);
 }
 
 export function addWarmUpStep(block: Block): void {
-    block.warm_up.steps.push({ percent: 50, reps: 5 });
+    block.warm_up.steps.push({ percent: 50, reps: 5, has_setup_after: false });
     syncWarmUpMeta(block);
 }
 
@@ -45,4 +55,8 @@ export function removeWarmUpStep(block: Block, index: number): void {
 export function clearWarmUp(block: Block): void {
     block.warm_up.steps = [];
     syncWarmUpMeta(block);
+}
+
+export function canSetupAfterWarmUpStep(block: Block, stepIndex: number): boolean {
+    return stepIndex < block.warm_up.steps.length - 1;
 }

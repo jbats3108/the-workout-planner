@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import DeloadSettings from '@/routines/components/DeloadSettings.vue';
 import DropsetEditor from '@/routines/components/DropsetEditor.vue';
 import ExerciseFinder from '@/routines/components/ExerciseFinder.vue';
 import { useRoutineEditor } from '@/routines/composables/useRoutineEditor';
+import { canSetupAfterBlock } from '@/routines/lib/blocks';
 import { Link } from '@inertiajs/vue3';
 import { ChevronDown } from 'lucide-vue-next';
 
@@ -12,6 +14,8 @@ const {
     activeExerciseIndex,
     warmUpExpanded,
     toggleWarmUpExpanded,
+    dropsetsExpanded,
+    toggleDropsetsExpanded,
     selectBlockExercise,
     exerciseName,
     exerciseOptionsFor,
@@ -25,6 +29,7 @@ const {
     removeWarmUpStep,
     clearWarmUp,
     toggleSuperset,
+    dropsetSummary,
     save,
     deleteRoutine,
 } = useRoutineEditor();
@@ -121,9 +126,27 @@ const {
                     </label>
                 </div>
 
-                <div v-if="!activeBlock.is_superset" class="mt-3 space-y-3 border-t border-border pt-3">
-                    <p class="text-xs text-muted-foreground">Dropsets (per working set)</p>
-                    <DropsetEditor :block="activeBlock" variant="mobile" />
+                <div v-if="!activeBlock.is_superset" class="mt-3 border-t border-border pt-3">
+                    <button
+                        type="button"
+                        class="flex w-full items-center justify-between gap-2 text-left"
+                        :aria-expanded="dropsetsExpanded"
+                        @click="toggleDropsetsExpanded"
+                    >
+                        <span class="min-w-0">
+                            <span class="block text-xs text-muted-foreground">Dropsets</span>
+                            <span class="block truncate font-mono text-sm text-foreground">
+                                {{ dropsetSummary(activeBlock) || 'None' }}
+                            </span>
+                        </span>
+                        <ChevronDown
+                            class="size-4 shrink-0 text-muted-foreground transition-transform"
+                            :class="dropsetsExpanded ? 'rotate-180' : ''"
+                        />
+                    </button>
+                    <div v-if="dropsetsExpanded" class="mt-3 space-y-3">
+                        <DropsetEditor :block="activeBlock" variant="mobile" />
+                    </div>
                 </div>
 
                 <div class="mt-3 border-t border-border pt-3">
@@ -178,6 +201,14 @@ const {
                                 class="w-14 rounded-lg border border-border bg-background px-2 py-1.5 font-mono text-sm"
                                 aria-label="Warm-up reps"
                             />
+                            <label
+                                v-if="si < activeBlock.warm_up.steps.length - 1"
+                                class="flex items-center gap-1 text-xs text-muted-foreground"
+                                title="Setup after this warm-up"
+                            >
+                                <input v-model="step.has_setup_after" type="checkbox" />
+                                Setup
+                            </label>
                             <button
                                 type="button"
                                 class="ml-auto text-xs text-muted-foreground hover:text-destructive"
@@ -200,6 +231,8 @@ const {
                     </div>
                 </div>
 
+                <DeloadSettings variant="mobile" />
+
                 <div class="mt-3 flex flex-wrap gap-4 border-t border-border pt-3 text-sm">
                     <label class="flex items-center gap-2">
                         <input type="checkbox" :checked="activeBlock.is_superset" @change="toggleSuperset(activeBlock)" />
@@ -213,8 +246,12 @@ const {
                         <input v-model="activeBlock.has_setup_after_warm_up" type="checkbox" :disabled="!activeBlock.warm_up.steps.length" />
                         Setup before working
                     </label>
-                    <label class="flex items-center gap-2">
-                        <input v-model="activeBlock.has_setup_after" type="checkbox" />
+                    <label
+                        class="flex items-center gap-2"
+                        :class="canSetupAfterBlock(active, form.blocks.length) ? '' : 'opacity-40'"
+                        :title="canSetupAfterBlock(active, form.blocks.length) ? undefined : 'Not on the final block'"
+                    >
+                        <input v-model="activeBlock.has_setup_after" type="checkbox" :disabled="!canSetupAfterBlock(active, form.blocks.length)" />
                         Setup after block
                     </label>
                 </div>

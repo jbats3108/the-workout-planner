@@ -13,6 +13,7 @@ const set = (overrides: Partial<PlayerSet> & Pick<PlayerSet, 'id' | 'group_type'
     logged_reps: null,
     completed: true,
     rest_seconds: 60,
+    has_setup_after: false,
     is_dropset: false,
     segments: [],
     ...overrides,

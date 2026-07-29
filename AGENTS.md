@@ -6,7 +6,7 @@ This is **OVRLOAD** (repo: the-workout-planner): a Laravel 13 (PHP 8.5) backend 
 
 ### Running the app (development)
 - Start everything with `composer run dev`. This runs `php artisan serve` (http://localhost:8000), `queue:listen`, `pail` (logs), and `npm run dev` (Vite on http://localhost:5173) concurrently. Run it in a long-lived tmux session, not as a one-shot command.
-- Phone / LAN: run `composer run dev:lan` (auto-detects LAN IP for Vite). Open `http://<LAN-ip>:8000` on the phone. Optional: set `VITE_DEV_HOST` in `.env` if auto-detect picks the wrong interface.
+- Phone / LAN: run `composer run dev:lan` (auto-detects wifi/ethernet IP for Vite; skips docker bridges). Open the URL printed as `LAN dev: phone → …`. Optional: set `VITE_DEV_HOST` in `.env` only if detection is wrong.
 - The app requires built or dev-served frontend assets. When using `composer run dev`, Vite serves them in dev mode. Without Vite running, the app expects a production build (`npm run build`, output in `public/build/`).
 - Seeded login (from `database/seeders/UserSeeder.php`): `admin1@test.com` / `password` (admin) and `user1@test.com` / `password` (regular user). Registration is invite-only: leave `REGISTRATION_INVITE` empty locally (no public signup). Admins create one-time links under **Admin → Invites** (copy / mailto). Optional master secret for bootstrap: `php artisan registration:invite-secret --write` (production only).
 - Demo routines (from `RoutineSeeder`, owned by `user1@test.com`): **Barbell Strength** (plates + WU first block only), **Dumbbell Accessories** (DB + 28.75 dip, WU all blocks), **Superset Pump** (supersets, WU on some), **Dropset Finishers** (mixed dropsets). Re-seed with `php artisan db:seed --class=RoutineSeeder`.

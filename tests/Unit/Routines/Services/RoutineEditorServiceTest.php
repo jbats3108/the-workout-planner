@@ -59,7 +59,8 @@ class RoutineEditorServiceTest extends TestCase
         $this->assertSame('New Name', $result->name);
         $this->assertCount(1, $result->blocks);
         $block = $result->blocks->first();
-        $this->assertTrue($block->has_setup_after);
+        // Setup-after-block is disabled on the final routine block to avoid an end-of-workout pause.
+        $this->assertFalse($block->has_setup_after);
         $this->assertTrue($block->has_setup_after_warm_up);
         $this->assertSame(80000, $block->blockExercises->first()->working_weight_g);
         $steps = $block->warmUpSetGroup->warmUpSteps;
@@ -68,6 +69,56 @@ class RoutineEditorServiceTest extends TestCase
         $this->assertSame(5, $steps[0]->reps);
         $this->assertSame(75, $steps[1]->percent_of_working);
         $this->assertSame(3, $steps[1]->reps);
+    }
+
+    #[Test]
+    public function sync_persists_setup_after_on_warm_up_steps(): void
+    {
+        $routine = Routine::factory()->create();
+        $exercise = Exercise::factory()->create();
+
+        $result = $this->service->sync($routine, SyncRoutineData::from([
+            'name' => 'Warm-up setup',
+            'deload_weight_factor' => 0.8,
+            'deload_reps_factor' => 0.8,
+            'blocks' => [
+                $this->singleBlockPayload($exercise->id, [
+                    'warm_up' => [
+                        'set_count' => 2,
+                        'rest_seconds' => 60,
+                        'steps' => [
+                            ['percent' => 40, 'reps' => 5, 'has_setup_after' => true],
+                            ['percent' => 60, 'reps' => 3, 'has_setup_after' => false],
+                        ],
+                    ],
+                ]),
+            ],
+        ]));
+
+        $steps = $result->blocks->first()->warmUpSetGroup->warmUpSteps;
+        $this->assertTrue($steps[0]->has_setup_after);
+        $this->assertFalse($steps[1]->has_setup_after);
+    }
+
+    #[Test]
+    public function sync_ignores_setup_after_on_the_final_block(): void
+    {
+        $routine = Routine::factory()->create();
+        $exercise = Exercise::factory()->create();
+
+        $result = $this->service->sync($routine, SyncRoutineData::from([
+            'name' => 'Final block setup',
+            'deload_weight_factor' => 0.8,
+            'deload_reps_factor' => 0.8,
+            'blocks' => [
+                $this->singleBlockPayload($exercise->id, ['has_setup_after' => false]),
+                $this->singleBlockPayload($exercise->id, ['has_setup_after' => true]),
+            ],
+        ]));
+
+        $blocks = $result->blocks->sortBy('position')->values();
+        $this->assertFalse($blocks[0]->has_setup_after);
+        $this->assertFalse($blocks[1]->has_setup_after);
     }
 
     #[Test]

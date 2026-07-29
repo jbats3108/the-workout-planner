@@ -3,7 +3,10 @@ import { flattenPlayerSets } from '@/workouts/lib/focus';
 import {
     defaultPromoteSegments,
     finishesWarmUpGroup,
+    finishesWarmUpStep,
     nextDropSegmentWeight,
+    nextSupersetSet,
+    plannedSetCount,
     previousSetWeightKg,
     shouldRestAfter,
     visitLeavesWorkout,
@@ -47,6 +50,51 @@ describe('shouldRestAfter', () => {
     });
 });
 
+describe('nextSupersetSet', () => {
+    it('returns the partner exercise later in the round', () => {
+        const block = playerBlock({
+            is_superset: true,
+            exercises: [
+                { id: 10, name: 'Press', working_weight_kg: 50, prescribed_reps: 8, position: 0 },
+                { id: 11, name: 'Row', working_weight_kg: 50, prescribed_reps: 8, position: 1 },
+            ],
+            sets: [
+                playerSet({ id: 1, workout_block_exercise_id: 10, exercise_name: 'Press', set_index: 0 }),
+                playerSet({ id: 2, workout_block_exercise_id: 11, exercise_name: 'Row', set_index: 0 }),
+            ],
+        });
+        expect(nextSupersetSet(block, block.sets[0])?.exercise_name).toBe('Row');
+        expect(nextSupersetSet(block, block.sets[1])).toBeNull();
+    });
+
+    it('returns null outside supersets', () => {
+        const block = playerBlock();
+        expect(nextSupersetSet(block, block.sets[0])).toBeNull();
+    });
+});
+
+describe('finishesWarmUpStep', () => {
+    it('is true when a mid warm-up round completes with setup after', () => {
+        const block = playerBlock({
+            sets: [
+                playerSet({ id: 1, group_type: 'warm_up', set_index: 0, completed: true, has_setup_after: true }),
+                playerSet({ id: 2, group_type: 'warm_up', set_index: 1, completed: false, has_setup_after: false }),
+            ],
+        });
+        expect(finishesWarmUpStep(block, block.sets[0])).toBe(true);
+    });
+
+    it('is false on the last warm-up step even when flagged', () => {
+        const block = playerBlock({
+            sets: [
+                playerSet({ id: 1, group_type: 'warm_up', set_index: 0, completed: true, has_setup_after: false }),
+                playerSet({ id: 2, group_type: 'warm_up', set_index: 1, completed: false, has_setup_after: true }),
+            ],
+        });
+        expect(finishesWarmUpStep(block, block.sets[1])).toBe(false);
+    });
+});
+
 describe('finishesWarmUpGroup', () => {
     it('is true on last warm-up set', () => {
         const block = playerBlock({
@@ -56,6 +104,20 @@ describe('finishesWarmUpGroup', () => {
             ],
         });
         expect(finishesWarmUpGroup(block, block.sets[1])).toBe(true);
+    });
+});
+
+describe('plannedSetCount', () => {
+    it('counts sets in the same group for the exercise', () => {
+        const block = playerBlock({
+            sets: [
+                playerSet({ id: 1, set_index: 0 }),
+                playerSet({ id: 2, set_index: 1 }),
+                playerSet({ id: 3, set_index: 2 }),
+                playerSet({ id: 4, group_type: 'warm_up', set_index: 0 }),
+            ],
+        });
+        expect(plannedSetCount(block, block.sets[1])).toBe(3);
     });
 });
 
