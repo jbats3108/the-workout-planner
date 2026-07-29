@@ -24,5 +24,11 @@ export function setupHintText(focus: Focus, block: PlayerBlock | null): string {
     if (focus.phase === 'after_warm_up') {
         return `Block ${block.position} — before working sets`;
     }
+    if (focus.phase === 'after_warm_up_step') {
+        const stepNum = (focus.warmUpStepIndex ?? 0) + 1;
+
+        return `Block ${block.position} — after warm-up ${stepNum}`;
+    }
+
     return `After block ${block.position}`;
 }

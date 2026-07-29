@@ -2,6 +2,7 @@
 import DropsetEditor from '@/routines/components/DropsetEditor.vue';
 import ExerciseFinder from '@/routines/components/ExerciseFinder.vue';
 import { useRoutineEditor } from '@/routines/composables/useRoutineEditor';
+import { canSetupAfterBlock } from '@/routines/lib/blocks';
 import { Link } from '@inertiajs/vue3';
 import { ChevronDown } from 'lucide-vue-next';
 
@@ -178,6 +179,14 @@ const {
                                 class="w-14 rounded-lg border border-border bg-background px-2 py-1.5 font-mono text-sm"
                                 aria-label="Warm-up reps"
                             />
+                            <label
+                                v-if="si < activeBlock.warm_up.steps.length - 1"
+                                class="flex items-center gap-1 text-xs text-muted-foreground"
+                                title="Setup after this warm-up"
+                            >
+                                <input v-model="step.has_setup_after" type="checkbox" />
+                                Setup
+                            </label>
                             <button
                                 type="button"
                                 class="ml-auto text-xs text-muted-foreground hover:text-destructive"
@@ -213,8 +222,12 @@ const {
                         <input v-model="activeBlock.has_setup_after_warm_up" type="checkbox" :disabled="!activeBlock.warm_up.steps.length" />
                         Setup before working
                     </label>
-                    <label class="flex items-center gap-2">
-                        <input v-model="activeBlock.has_setup_after" type="checkbox" />
+                    <label
+                        class="flex items-center gap-2"
+                        :class="canSetupAfterBlock(active, form.blocks.length) ? '' : 'opacity-40'"
+                        :title="canSetupAfterBlock(active, form.blocks.length) ? undefined : 'Not on the final block'"
+                    >
+                        <input v-model="activeBlock.has_setup_after" type="checkbox" :disabled="!canSetupAfterBlock(active, form.blocks.length)" />
                         Setup after block
                     </label>
                 </div>

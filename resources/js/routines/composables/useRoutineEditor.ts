@@ -1,4 +1,4 @@
-import { emptyBlock, normalizeBlock, toggleSuperset } from '@/routines/lib/blocks';
+import { emptyBlock, normalizeBlock, syncSetupAfterBlockFlags, toggleSuperset } from '@/routines/lib/blocks';
 import { exerciseOptionsFor, filterExercises } from '@/routines/lib/catalog';
 import {
     addDropsetSegment,
@@ -58,7 +58,14 @@ export function createRoutineEditor(props: EditRoutineProps) {
         deload_weight_factor: props.routine.deload_weight_factor,
         deload_reps_factor: props.routine.deload_reps_factor,
         // Inertia props are nested reactive proxies — structuredClone cannot clone them
-        blocks: props.routine.blocks.length ? (JSON.parse(JSON.stringify(props.routine.blocks)) as Block[]).map(normalizeBlock) : ([] as Block[]),
+        blocks: props.routine.blocks.length
+            ? (() => {
+                  const blocks = (JSON.parse(JSON.stringify(props.routine.blocks)) as Block[]).map(normalizeBlock);
+                  syncSetupAfterBlockFlags(blocks);
+
+                  return blocks;
+              })()
+            : ([] as Block[]),
     });
 
     const active = ref(0);
@@ -72,6 +79,7 @@ export function createRoutineEditor(props: EditRoutineProps) {
     watch(
         () => form.blocks.length,
         (len) => {
+            syncSetupAfterBlockFlags(form.blocks);
             if (active.value >= len) {
                 active.value = Math.max(0, len - 1);
             }
@@ -144,6 +152,7 @@ export function createRoutineEditor(props: EditRoutineProps) {
     );
 
     const save = () => {
+        syncSetupAfterBlockFlags(form.blocks);
         form.transform((data) => ({
             ...data,
             blocks: data.blocks.map((block) => ({

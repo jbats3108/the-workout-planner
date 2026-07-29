@@ -31,6 +31,7 @@ class WorkoutPlayerSetData extends Data
         public readonly ?int $loggedReps,
         public readonly bool $completed,
         public readonly int $restSeconds,
+        public readonly bool $hasSetupAfter,
         public readonly bool $isDropset,
         #[DataCollectionOf(WorkoutPlayerSetSegmentData::class)]
         public readonly DataCollection $segments,
@@ -79,6 +80,7 @@ class WorkoutPlayerSetData extends Data
             loggedReps: $set->reps,
             completed: $set->completed_at !== null,
             restSeconds: $restSeconds,
+            hasSetupAfter: $groupType === SetGroupType::WarmUp && ($warmUpStep?->has_setup_after ?? false),
             isDropset: $isDropset,
             segments: WorkoutPlayerSetSegmentData::collect($segments, DataCollection::class),
         );

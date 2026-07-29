@@ -251,6 +251,29 @@ describe('createWorkoutPlayer', () => {
         expect(player.restSecondsLeft.value).toBe(60);
     });
 
+    it('acknowledges setup between warm-up steps', () => {
+        vi.useFakeTimers();
+        const player = mountPlayer({
+            blocks: [
+                playerBlock({
+                    sets: [
+                        playerSet({ id: 1, group_type: 'warm_up', set_index: 0, completed: true, has_setup_after: true, rest_seconds: 45 }),
+                        playerSet({ id: 2, group_type: 'warm_up', set_index: 1, completed: false }),
+                        playerSet({ id: 3, group_type: 'working', completed: false }),
+                    ],
+                }),
+            ],
+        });
+        expect(player.focus.value).toEqual({
+            kind: 'setup',
+            blockIndex: 0,
+            phase: 'after_warm_up_step',
+            warmUpStepIndex: 0,
+        });
+        player.acknowledgeSetup();
+        expect(player.restSecondsLeft.value).toBe(45);
+    });
+
     it('applies nearest plate load to draft weight', () => {
         const player = mountPlayer({
             blocks: [

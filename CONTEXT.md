@@ -81,7 +81,7 @@ Short pause between the two exercises in a superset round (A then B), before wor
 _Avoid_: Gap, changeover
 
 **Setup**:
-Press-when-done pause for equipment changes. Planned on a block after its warm-up (before working) and/or after the block. Not rest and not working time. When setup-before-working is planned, the working Set Group’s rest runs after setup is acknowledged, before the first working set.
+Press-when-done pause for equipment changes. Planned on a block after individual warm-up steps (before the next warm-up rest), after all warm-ups (before working) and/or after the block. Not rest and not working time. Mid warm-up setup runs before that step’s warm-up group rest. Setup-before-working runs before the working Set Group’s rest.
 _Avoid_: Transition (for between-block), intermission
 
 ## Loading
