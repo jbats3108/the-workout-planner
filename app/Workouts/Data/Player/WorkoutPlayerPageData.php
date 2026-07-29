@@ -18,7 +18,7 @@ class WorkoutPlayerPageData extends Data
      * @param  DataCollection<int, WorkoutPlayerBlockData>  $blocks
      */
     public function __construct(
-        public readonly int $id,
+        public readonly string $id,
         public readonly string $routineName,
         public readonly string $mode,
         public readonly string $status,
@@ -37,7 +37,7 @@ class WorkoutPlayerPageData extends Data
         ]);
 
         return new self(
-            id: $workout->id,
+            id: $workout->ulid,
             routineName: $workout->routine->getName(),
             mode: $workout->mode->value,
             status: $workout->status->value,

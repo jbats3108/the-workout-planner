@@ -31,9 +31,9 @@ class StoreWorkoutControllerTest extends TestCase
     {
         $routine = Routine::factory()->withUser($this->user)->create();
 
-        $response = $this->actingAs($this->secondUser)->post(route('workouts.store', ['routine' => $routine->id]));
+        $response = $this->actingAs($this->secondUser)->post(route('workouts.store', $routine));
 
-        $response->assertForbidden();
+        $response->assertNotFound();
     }
 
     #[Test]
@@ -41,7 +41,7 @@ class StoreWorkoutControllerTest extends TestCase
     {
         $routine = Routine::factory()->withUser($this->user)->create();
 
-        $response = $this->actingAs($this->user)->post(route('workouts.store', ['routine' => $routine->id]));
+        $response = $this->actingAs($this->user)->post(route('workouts.store', $routine));
 
         $response->assertRedirectBack();
         $response->assertRedirectBackWithErrors();
@@ -53,11 +53,12 @@ class StoreWorkoutControllerTest extends TestCase
         $routine = Routine::factory()->withUser($this->user)->create();
         $this->seedRoutineBlockWithExercise($routine);
 
-        $response = $this->actingAs($this->user)->post(route('workouts.store', ['routine' => $routine->id]));
+        $response = $this->actingAs($this->user)->post(route('workouts.store', $routine));
 
         $workout = Workout::query()->where('routine_id', $routine->id)->firstOrFail();
 
         $response->assertRedirect(route('workouts.play', $workout));
+        $this->assertStringContainsString($workout->ulid, $response->headers->get('Location') ?? '');
         $this->assertSame(WorkoutStatus::InProgress, $workout->status);
     }
 
@@ -66,12 +67,12 @@ class StoreWorkoutControllerTest extends TestCase
     {
         $routine = Routine::factory()->withUser($this->user)->create();
         $this->seedRoutineBlockWithExercise($routine);
-        $this->actingAs($this->user)->post(route('workouts.store', ['routine' => $routine->id]));
+        $this->actingAs($this->user)->post(route('workouts.store', $routine));
 
         $other = Routine::factory()->withUser($this->user)->create();
         $this->seedRoutineBlockWithExercise($other);
 
-        $response = $this->actingAs($this->user)->post(route('workouts.store', ['routine' => $other->id]));
+        $response = $this->actingAs($this->user)->post(route('workouts.store', $other));
 
         $response->assertRedirectBack();
         $response->assertRedirectBackWithErrors();

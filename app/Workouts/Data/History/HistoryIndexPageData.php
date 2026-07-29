@@ -18,16 +18,16 @@ class HistoryIndexPageData extends Data
 {
     /**
      * @param  DataCollection<int, HistoryWorkoutItemData>  $workouts
-     * @param  Collection<int, array{id: int, name: string}>  $routineFilterOptions
+     * @param  Collection<int, array{slug: string, name: string}>  $routineFilterOptions
      */
     public function __construct(
         #[DataCollectionOf(HistoryWorkoutItemData::class)]
         public DataCollection $workouts,
         public Collection $routineFilterOptions,
-        public ?int $routineId = null,
+        public ?string $routineSlug = null,
     ) {}
 
-    public static function forUser(User $user, ?int $routineId = null): self
+    public static function forUser(User $user, ?int $routineId = null, ?string $routineSlug = null): self
     {
         $query = Workout::query()
             ->with('routine')
@@ -46,14 +46,14 @@ class HistoryIndexPageData extends Data
             ->orderBy('name')
             ->get()
             ->map(fn (Routine $routine): array => [
-                'id' => $routine->id,
+                'slug' => $routine->getSlug(),
                 'name' => $routine->getName(),
             ]);
 
         return new self(
             workouts: HistoryWorkoutItemData::collect($workouts, DataCollection::class),
             routineFilterOptions: $routineFilterOptions,
-            routineId: $routineId,
+            routineSlug: $routineSlug,
         );
     }
 }

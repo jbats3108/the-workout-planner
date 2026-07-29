@@ -60,7 +60,7 @@ class ProgressionControllerTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->component('workouts/Progression')
-                ->where('progression.workout_id', $workout->id)
+                ->where('progression.workout_id', $workout->ulid)
                 ->has('progression.bumps', 1));
     }
 

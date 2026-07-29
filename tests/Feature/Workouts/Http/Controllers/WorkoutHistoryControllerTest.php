@@ -42,7 +42,7 @@ class WorkoutHistoryControllerTest extends TestCase
             ->assertInertia(fn (Assert $page) => $page
                 ->component('history/Index')
                 ->has('history.workouts', 1)
-                ->where('history.workouts.0.id', $finished->id));
+                ->where('history.workouts.0.id', $finished->ulid));
     }
 
     #[Test]
@@ -52,12 +52,12 @@ class WorkoutHistoryControllerTest extends TestCase
         [$workoutB, , $routineB] = $this->createFinishedWorkout();
 
         $this->actingAs($this->user)
-            ->get(route('history.index', ['routine' => $routineB->id]))
+            ->get(route('history.index', ['routine' => $routineB->slug]))
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->has('history.workouts', 1)
-                ->where('history.workouts.0.id', $workoutB->id)
-                ->where('history.routine_id', $routineB->id));
+                ->where('history.workouts.0.id', $workoutB->ulid)
+                ->where('history.routine_slug', $routineB->slug));
 
         $this->assertNotSame($workoutA->routine_id, $routineB->id);
     }
@@ -72,7 +72,7 @@ class WorkoutHistoryControllerTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->component('history/Show')
-                ->where('history.workout.id', $workout->id)
+                ->where('history.workout.id', $workout->ulid)
                 ->where('history.can_re_evaluate', true));
     }
 

@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Workout extends Model
 {
@@ -24,12 +25,29 @@ class Workout extends Model
     protected $fillable = [
         'user_id',
         'routine_id',
+        'ulid',
         'mode',
         'status',
         'notes',
         'started_at',
         'finished_at',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Workout $workout): void {
+            if ($workout->ulid !== null && $workout->ulid !== '') {
+                return;
+            }
+
+            $workout->ulid = (string) Str::ulid();
+        });
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'ulid';
+    }
 
     /** @return array<string, string> */
     protected function casts(): array

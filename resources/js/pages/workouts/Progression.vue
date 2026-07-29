@@ -7,7 +7,7 @@ import { computed, ref } from 'vue';
 
 const props = defineProps<{
     progression: {
-        workout_id: number;
+        workout_id: string;
         routine_name: string;
         bumps: Bump[];
         undos: UndoBump[];

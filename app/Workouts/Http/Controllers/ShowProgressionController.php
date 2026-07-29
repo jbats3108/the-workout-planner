@@ -40,7 +40,7 @@ class ShowProgressionController extends Controller
 
         return Inertia::render('workouts/Progression', [
             'progression' => new ProgressionPageData(
-                workoutId: $workout->id,
+                workoutId: $workout->ulid,
                 routineName: $workout->routine->getName(),
                 bumps: $bumps,
                 undos: $undos,

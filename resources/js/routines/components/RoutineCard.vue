@@ -50,7 +50,7 @@ const startTitle = (mode: 'normal' | 'deload') => {
             <div class="flex items-center gap-1">
                 <Button variant="ghost" size="icon-sm" as-child>
                     <Link
-                        :href="route('routines.edit', routine.id)"
+                        :href="route('routines.edit', routine.slug)"
                         class="text-muted-foreground hover:text-primary"
                         title="Edit routine"
                         aria-label="Edit routine"

@@ -29,7 +29,7 @@ class DeleteRoutineControllerTest extends TestCase
         $routine = Routine::factory()->withUser($this->user)->create();
 
         // When
-        $route = route('routines.delete', ['routine' => $routine->id]);
+        $route = route('routines.delete', $routine);
         $response = $this->actingAs($this->adminUser)->delete($route);
 
         // Then
@@ -67,7 +67,7 @@ class DeleteRoutineControllerTest extends TestCase
         $response = $this->makeRequest($routine);
 
         // Then
-        $response->assertForbidden();
+        $response->assertNotFound();
 
     }
 
@@ -76,7 +76,7 @@ class DeleteRoutineControllerTest extends TestCase
      */
     private function makeRequest(Routine $routine): TestResponse
     {
-        $route = route('routines.delete', ['routine' => $routine->id]);
+        $route = route('routines.delete', $routine);
 
         return $this->actingAs($this->user)->delete($route);
     }

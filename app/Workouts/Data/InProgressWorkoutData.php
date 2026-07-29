@@ -10,7 +10,7 @@ use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 class InProgressWorkoutData extends Data
 {
     public function __construct(
-        public readonly int $id,
+        public readonly string $id,
         public readonly string $routineName,
         public readonly string $mode,
     ) {}

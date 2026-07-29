@@ -46,9 +46,15 @@ class DashboardServiceTest extends TestCase
 
         $this->assertCount(5, $dashboardRoutines);
 
-        $routineData = $routines->map(fn (Routine $routine) => RoutineData::fromRoutine($routine));
+        $routineData = $routines
+            ->sortBy('id')
+            ->values()
+            ->map(fn (Routine $routine) => RoutineData::fromRoutine($routine));
 
-        $this->assertEquals($routineData, $dashboardRoutines);
+        $this->assertEquals(
+            $routineData->all(),
+            $dashboardRoutines->sortBy('id')->values()->all(),
+        );
 
     }
 
@@ -81,6 +87,6 @@ class DashboardServiceTest extends TestCase
         $dashboardData = (new DashboardService)->getDashboardData($this->user);
 
         $this->assertCount(1, $dashboardData->recentFinishedWorkouts);
-        $this->assertSame($workout->id, $dashboardData->recentFinishedWorkouts->first()->id);
+        $this->assertSame($workout->ulid, $dashboardData->recentFinishedWorkouts->first()->id);
     }
 }

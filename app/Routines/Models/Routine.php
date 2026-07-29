@@ -2,7 +2,9 @@
 
 namespace App\Routines\Models;
 
+use App\Routines\Services\RoutineSlugGenerator;
 use App\Shared\Traits\HasName;
+use App\Shared\Traits\HasSlug;
 use App\Users\Models\User;
 use App\Workouts\Models\Workout;
 use Database\Factories\RoutineFactory;
@@ -18,14 +20,37 @@ class Routine extends Model
     use HasFactory;
 
     use HasName;
+    use HasSlug;
     use SoftDeletes;
 
     protected $fillable = [
         'user_id',
         'name',
+        'slug',
         'deload_weight_factor',
         'deload_reps_factor',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Routine $routine): void {
+            if ($routine->slug !== null && $routine->slug !== '') {
+                return;
+            }
+
+            $user = $routine->user ?? User::query()->find($routine->user_id);
+            if ($user === null) {
+                return;
+            }
+
+            $routine->slug = RoutineSlugGenerator::forUser($user, (string) $routine->name);
+        });
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
     /** @return array<string, string> */
     protected function casts(): array

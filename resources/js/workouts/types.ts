@@ -42,7 +42,7 @@ export type PlayerBlock = {
 };
 
 export type WorkoutPayload = {
-    id: number;
+    id: string;
     routine_name: string;
     mode: string;
     status: string;
@@ -73,7 +73,7 @@ export type UndoBump = {
 };
 
 export type HistoryWorkout = {
-    id: number;
+    id: string;
     routine_name: string;
     routine_id: number;
     mode: string;
@@ -81,7 +81,7 @@ export type HistoryWorkout = {
 };
 
 export type InProgressWorkout = {
-    id: number;
+    id: string;
     routine_name: string;
     mode: string;
 };

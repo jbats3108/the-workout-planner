@@ -181,14 +181,14 @@ export function createRoutineEditor(props: EditRoutineProps) {
                               })),
                 },
             })),
-        })).put(route('routines.update', props.routine.id));
+        })).put(route('routines.update', props.routine.slug));
     };
 
     const deleteRoutine = () => {
         if (!confirm(`Delete “${form.name || 'this routine'}”? It will be archived and removed from your list.`)) {
             return;
         }
-        router.delete(route('routines.delete', props.routine.id));
+        router.delete(route('routines.delete', props.routine.slug));
     };
 
     const errorList = computed(() => Object.values(form.errors));

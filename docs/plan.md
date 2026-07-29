@@ -100,7 +100,7 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 ### Code quality & security
 
 - **Audit agent guidance for duplication** — Spatie Data DTO rules (and likely other conventions) are repeated across `AGENTS.md`, ADRs, and `.cursor/skills/...`; consolidate so agents load one source of truth and keep context light
-- **Slugs instead of IDs** — investigate in routes (routines, workouts, exercises, etc.)
+- **Slugs instead of IDs** — done: [ADR-0006](adr/0006-slugs-and-ulids-in-routes.md) (routine slugs + workout ULIDs)
 - **Policy audit** — verify every route/action has the right ability and policies stay complete as surfaces grow
 - **Facilitate full code review** — make a thorough review of the app tractable (scope, tooling, or staged passes)
 - **Security sweep** — hunt for authz holes, mass-assignment, IDOR, CSRF/session gaps, and similar

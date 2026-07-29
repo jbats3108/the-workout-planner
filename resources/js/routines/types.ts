@@ -36,6 +36,7 @@ export type Block = {
 
 export type RoutinePayload = {
     id: number;
+    slug: string;
     name: string;
     deload_weight_factor: number;
     deload_reps_factor: number;
@@ -45,6 +46,7 @@ export type RoutinePayload = {
 /** Dashboard / list row for a routine the user owns. */
 export type Routine = {
     id: number;
+    slug: string;
     name: string;
     deload_weight_factor?: number | null;
     deload_reps_factor?: number | null;
