@@ -95,7 +95,7 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 
 ### Bugfixes
 
-- **Rest skip confirm missing?** — “are you sure?” on Skip rest disappeared; confirm whether intentional and restore if not
+- [x] **Rest skip confirm** — inline "Skip rest? Cancel / Skip" confirm restored in `RestStage.vue`
 
 ### Code quality & security
 
