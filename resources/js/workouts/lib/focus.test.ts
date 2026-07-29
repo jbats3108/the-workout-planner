@@ -29,6 +29,24 @@ describe('findFirstIncompleteFocus', () => {
         expect(findFirstIncompleteFocus(blocks, {})).toEqual({ kind: 'set', blockIndex: 0, setId: 1 });
     });
 
+    it('returns setup between warm-up steps', () => {
+        const blocks = [
+            playerBlock({
+                sets: [
+                    playerSet({ id: 1, group_type: 'warm_up', set_index: 0, completed: true, has_setup_after: true }),
+                    playerSet({ id: 2, group_type: 'warm_up', set_index: 1, completed: false }),
+                    playerSet({ id: 3, group_type: 'working', completed: false }),
+                ],
+            }),
+        ];
+        expect(findFirstIncompleteFocus(blocks, {})).toEqual({
+            kind: 'setup',
+            blockIndex: 0,
+            phase: 'after_warm_up_step',
+            warmUpStepIndex: 0,
+        });
+    });
+
     it('returns setup between warm-up and working', () => {
         const blocks = [
             playerBlock({

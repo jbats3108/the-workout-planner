@@ -3,6 +3,7 @@ import { flattenPlayerSets } from '@/workouts/lib/focus';
 import {
     defaultPromoteSegments,
     finishesWarmUpGroup,
+    finishesWarmUpStep,
     nextDropSegmentWeight,
     nextSupersetSet,
     plannedSetCount,
@@ -69,6 +70,28 @@ describe('nextSupersetSet', () => {
     it('returns null outside supersets', () => {
         const block = playerBlock();
         expect(nextSupersetSet(block, block.sets[0])).toBeNull();
+    });
+});
+
+describe('finishesWarmUpStep', () => {
+    it('is true when a mid warm-up round completes with setup after', () => {
+        const block = playerBlock({
+            sets: [
+                playerSet({ id: 1, group_type: 'warm_up', set_index: 0, completed: true, has_setup_after: true }),
+                playerSet({ id: 2, group_type: 'warm_up', set_index: 1, completed: false, has_setup_after: false }),
+            ],
+        });
+        expect(finishesWarmUpStep(block, block.sets[0])).toBe(true);
+    });
+
+    it('is false on the last warm-up step even when flagged', () => {
+        const block = playerBlock({
+            sets: [
+                playerSet({ id: 1, group_type: 'warm_up', set_index: 0, completed: true, has_setup_after: false }),
+                playerSet({ id: 2, group_type: 'warm_up', set_index: 1, completed: false, has_setup_after: true }),
+            ],
+        });
+        expect(finishesWarmUpStep(block, block.sets[1])).toBe(false);
     });
 });
 

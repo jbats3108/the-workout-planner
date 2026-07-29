@@ -37,6 +37,7 @@ export function playerSet(overrides: Partial<PlayerSet> = {}): PlayerSet {
         logged_reps: null,
         completed: false,
         rest_seconds: 120,
+        has_setup_after: false,
         is_dropset: false,
         segments: [],
         ...overrides,

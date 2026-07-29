@@ -71,6 +71,35 @@ class RoutineEditorServiceTest extends TestCase
     }
 
     #[Test]
+    public function sync_persists_setup_after_on_warm_up_steps(): void
+    {
+        $routine = Routine::factory()->create();
+        $exercise = Exercise::factory()->create();
+
+        $result = $this->service->sync($routine, SyncRoutineData::from([
+            'name' => 'Warm-up setup',
+            'deload_weight_factor' => 0.8,
+            'deload_reps_factor' => 0.8,
+            'blocks' => [
+                $this->singleBlockPayload($exercise->id, [
+                    'warm_up' => [
+                        'set_count' => 2,
+                        'rest_seconds' => 60,
+                        'steps' => [
+                            ['percent' => 40, 'reps' => 5, 'has_setup_after' => true],
+                            ['percent' => 60, 'reps' => 3, 'has_setup_after' => false],
+                        ],
+                    ],
+                ]),
+            ],
+        ]));
+
+        $steps = $result->blocks->first()->warmUpSetGroup->warmUpSteps;
+        $this->assertTrue($steps[0]->has_setup_after);
+        $this->assertFalse($steps[1]->has_setup_after);
+    }
+
+    #[Test]
     public function sync_allows_blocks_with_no_warm_up_steps(): void
     {
         $routine = Routine::factory()->create();
