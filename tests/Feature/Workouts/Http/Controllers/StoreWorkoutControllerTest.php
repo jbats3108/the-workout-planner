@@ -58,6 +58,7 @@ class StoreWorkoutControllerTest extends TestCase
         $workout = Workout::query()->where('routine_id', $routine->id)->firstOrFail();
 
         $response->assertRedirect(route('workouts.play', $workout));
+        $this->assertStringContainsString($workout->ulid, $response->headers->get('Location') ?? '');
         $this->assertSame(WorkoutStatus::InProgress, $workout->status);
     }
 

@@ -40,4 +40,17 @@ class RoutineTest extends TestCase
         // When / Then
         $this->assertCount(1, $routine->blocks);
     }
+
+    #[Test]
+    public function renaming_does_not_change_the_slug(): void
+    {
+        $routine = Routine::factory()->create([
+            'name' => 'Barbell Strength',
+            'slug' => 'barbell-strength',
+        ]);
+
+        $routine->update(['name' => 'New Name']);
+
+        $this->assertSame('barbell-strength', $routine->fresh()->slug);
+    }
 }

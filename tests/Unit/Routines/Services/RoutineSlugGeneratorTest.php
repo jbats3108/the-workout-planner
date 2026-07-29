@@ -57,4 +57,30 @@ class RoutineSlugGeneratorTest extends TestCase
 
         $this->assertSame('routine', RoutineSlugGenerator::forUser($user, '!!!'));
     }
+
+    public function test_it_transliterates_unicode_names(): void
+    {
+        $user = User::factory()->create();
+
+        $this->assertSame(
+            'cafe-strength',
+            RoutineSlugGenerator::forUser($user, 'Café Strength'),
+        );
+    }
+
+    public function test_it_ignores_soft_deleted_slug_collisions(): void
+    {
+        $user = User::factory()->create();
+        $routine = Routine::factory()->withUser($user)->create([
+            'name' => 'Barbell Strength',
+            'slug' => 'barbell-strength',
+        ]);
+        $routine->delete();
+
+        // Unique index still covers soft-deleted rows, so suffix is required.
+        $this->assertSame(
+            'barbell-strength-2',
+            RoutineSlugGenerator::forUser($user, 'Barbell Strength'),
+        );
+    }
 }

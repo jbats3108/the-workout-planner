@@ -41,10 +41,15 @@ class StoreRoutineControllerTest extends TestCase
         $response = $this->actingAs($this->user)->post(route('routines.store'), $createRoutineRequest);
 
         // Then
-        $response->assertRedirect(route('routines.edit', Routine::where('name', 'Test Routine')->first()));
+        $routine = Routine::where('name', 'Test Routine')->first();
+        $this->assertNotNull($routine);
+        $this->assertSame('test-routine', $routine->slug);
+        $response->assertRedirect(route('routines.edit', $routine));
+        $this->assertStringContainsString('test-routine', $response->headers->get('Location') ?? '');
 
         $this->assertDatabaseHas('routines', [
             'name' => 'Test Routine',
+            'slug' => 'test-routine',
             'user_id' => $this->user->id,
         ]);
     }
