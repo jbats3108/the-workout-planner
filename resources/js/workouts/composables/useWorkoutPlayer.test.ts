@@ -1,3 +1,4 @@
+import * as haptics from '@/shared/lib/haptics';
 import { plateProfile, playerBlock, playerSet, workoutPayload } from '@/test/factories';
 import { inertiaMocks } from '@/test/inertiaMocks';
 import { createWorkoutPlayer, useWorkoutPlayer, workoutPlayerKey } from '@/workouts/composables/useWorkoutPlayer';
@@ -28,6 +29,8 @@ describe('createWorkoutPlayer', () => {
         vi.spyOn(playerInteraction, 'preparePlayerInteraction').mockImplementation(() => {});
         vi.spyOn(restAlert, 'notifyRestEnded').mockImplementation(() => {});
         vi.spyOn(restAlert, 'notifyRestCountdown').mockImplementation(() => {});
+        vi.spyOn(haptics, 'hapticTap').mockImplementation(() => {});
+        vi.spyOn(haptics, 'hapticConfirm').mockImplementation(() => {});
         vi.stubGlobal(
             'route',
             vi.fn((name: string, _params?: unknown) => `/${String(name)}`),
@@ -541,11 +544,19 @@ describe('createWorkoutPlayer', () => {
         const player = mountPlayer();
         player.openLogSheet();
         expect(player.logSheetOpen.value).toBe(true);
+        expect(haptics.hapticTap).toHaveBeenCalled();
         player.cancelLogSheet();
         expect(player.logSheetOpen.value).toBe(false);
         expect(inertiaMocks().inertiaFormPost).not.toHaveBeenCalled();
     });
 
+    it('confirms log set with a haptic', () => {
+        const player = mountPlayer();
+        player.openLogSheet();
+        player.completeSet();
+        expect(haptics.hapticConfirm).toHaveBeenCalled();
+        expect(inertiaMocks().inertiaFormPost).toHaveBeenCalled();
+    });
     it('ignores completeSet when the log sheet is closed', () => {
         const player = mountPlayer();
         player.completeSet();
