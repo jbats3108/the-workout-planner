@@ -48,7 +48,13 @@ const unlockInput = (event: PointerEvent) => {
 <template>
     <div v-if="current" class="flex flex-1 flex-col px-4 py-6 text-center">
         <div class="flex min-h-0 flex-1 flex-col items-center justify-center gap-8">
-            <h2 class="text-3xl leading-tight font-semibold">{{ current.set.exercise_name }}</h2>
+            <div class="space-y-2">
+                <h2 class="text-3xl leading-tight font-semibold">{{ current.set.exercise_name }}</h2>
+                <p class="text-2xl font-bold tracking-tight text-primary">
+                    {{ groupLabel(current.set.group_type) }}
+                    {{ current.set.set_index + 1 }} of {{ plannedSetCount(current.block, current.set) }}
+                </p>
+            </div>
 
             <p class="font-mono text-3xl font-semibold tracking-tight text-foreground">
                 Target
@@ -73,8 +79,7 @@ const unlockInput = (event: PointerEvent) => {
 
             <div class="space-y-2">
                 <p class="text-sm font-semibold tracking-wide text-foreground">
-                    Block {{ current.block.position }} · {{ groupLabel(current.set.group_type) }} {{ current.set.set_index + 1 }} of
-                    {{ plannedSetCount(current.block, current.set) }}
+                    Block {{ current.block.position }}
                     <span v-if="current.set.is_dropset"> · Dropset</span>
                     <span v-if="current.block.is_superset"> · Superset</span>
                 </p>
@@ -127,6 +132,10 @@ const unlockInput = (event: PointerEvent) => {
                     <div>
                         <p class="text-xs tracking-widest text-muted-foreground uppercase">Log set</p>
                         <h3 class="mt-1 text-xl font-semibold md:text-lg">{{ current.set.exercise_name }}</h3>
+                        <p class="mt-1 text-base font-semibold text-primary">
+                            {{ groupLabel(current.set.group_type) }}
+                            {{ current.set.set_index + 1 }} of {{ plannedSetCount(current.block, current.set) }}
+                        </p>
                     </div>
 
                     <div class="space-y-4 pt-10 md:pt-0">
