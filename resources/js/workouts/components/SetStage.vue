@@ -121,14 +121,14 @@ const unlockInput = (event: PointerEvent) => {
         </div>
 
         <LogSetSheet v-model:open="logSheetOpen">
-            <form class="flex min-h-0 flex-1 flex-col gap-4" @submit.prevent="completeSet">
-                <div class="min-h-0 flex-1 space-y-4 overflow-y-auto">
+            <form class="flex min-h-0 flex-1 flex-col gap-4 md:gap-5 md:text-left" @submit.prevent="completeSet">
+                <div class="min-h-0 flex-1 space-y-4 overflow-y-auto md:flex-none">
                     <div>
                         <p class="text-xs tracking-widest text-muted-foreground uppercase">Log set</p>
-                        <h3 class="mt-1 text-xl font-semibold">{{ current.set.exercise_name }}</h3>
+                        <h3 class="mt-1 text-xl font-semibold md:text-lg">{{ current.set.exercise_name }}</h3>
                     </div>
 
-                    <div class="space-y-4 pt-10">
+                    <div class="space-y-4 pt-10 md:pt-0">
                         <template v-if="current.set.is_dropset">
                             <label class="flex flex-col gap-1 text-sm text-muted-foreground">
                                 Reps (shared)
@@ -138,7 +138,7 @@ const unlockInput = (event: PointerEvent) => {
                                     min="0"
                                     max="100"
                                     readonly
-                                    class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground"
+                                    class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground md:rounded-md md:py-2 md:text-base"
                                     required
                                     @pointerdown="unlockInput"
                                 />
@@ -154,7 +154,7 @@ const unlockInput = (event: PointerEvent) => {
                                         min="0"
                                         inputmode="decimal"
                                         readonly
-                                        class="flex-1 rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground"
+                                        class="flex-1 rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground md:rounded-md md:py-2 md:text-base"
                                         required
                                         @pointerdown="unlockInput"
                                     />
@@ -189,7 +189,7 @@ const unlockInput = (event: PointerEvent) => {
                                         min="0"
                                         inputmode="decimal"
                                         readonly
-                                        class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground"
+                                        class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground md:rounded-md md:py-2 md:text-base"
                                         required
                                         @pointerdown="unlockInput"
                                     />
@@ -202,7 +202,7 @@ const unlockInput = (event: PointerEvent) => {
                                         min="0"
                                         max="100"
                                         readonly
-                                        class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground"
+                                        class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground md:rounded-md md:py-2 md:text-base"
                                         required
                                         @pointerdown="unlockInput"
                                     />
@@ -212,17 +212,17 @@ const unlockInput = (event: PointerEvent) => {
                     </div>
                 </div>
 
-                <div class="flex shrink-0 flex-col gap-2">
+                <div class="flex shrink-0 flex-col gap-2 md:flex-row-reverse md:items-center md:justify-start md:gap-3">
                     <button
                         type="submit"
-                        class="rounded-full bg-primary px-6 py-4 text-base font-semibold text-primary-foreground disabled:opacity-50"
+                        class="rounded-full bg-primary px-6 py-4 text-base font-semibold text-primary-foreground disabled:opacity-50 md:rounded-md md:px-4 md:py-2 md:text-sm"
                         :disabled="setForm.processing || workout.status !== 'in_progress'"
                     >
                         Log set
                     </button>
                     <button
                         type="button"
-                        class="rounded-full border border-border px-6 py-3 text-sm"
+                        class="rounded-full border border-border px-6 py-3 text-sm md:rounded-md md:border-transparent md:px-3 md:py-2 md:text-muted-foreground md:hover:bg-secondary md:hover:text-foreground"
                         :disabled="setForm.processing"
                         @click="cancelLogSheet"
                     >

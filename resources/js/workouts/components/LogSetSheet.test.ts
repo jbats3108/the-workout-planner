@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { nextTick } from 'vue';
 
 describe('LogSetSheet', () => {
-    it('covers the full screen without a half-height sheet', async () => {
+    it('covers the full screen on mobile and becomes a centered dialog on desktop', async () => {
         const wrapper = mount(LogSetSheet, {
             props: {
                 open: true,
@@ -24,6 +24,9 @@ describe('LogSetSheet', () => {
         expect(panel).not.toBeNull();
         expect(panel!.className).toContain('fixed');
         expect(panel!.className).toContain('inset-0');
+        expect(panel!.className).toContain('md:max-w-md');
+        expect(panel!.className).toContain('md:top-1/2');
+        expect(panel!.className).toContain('md:rounded-xl');
         expect(panel!.className).not.toContain('max-h-[55dvh]');
         expect(panel!.className).not.toContain('h-dvh');
         expect(panel!.textContent).toContain('fields');
