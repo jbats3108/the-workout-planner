@@ -81,10 +81,7 @@ const deleteWorkout = () => {
             >
                 <header class="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 border-b border-border bg-card/40 px-3 py-2">
                     <p class="font-medium">{{ title }}</p>
-                    <p class="font-mono text-xs text-muted-foreground uppercase">
-                        Block {{ block.position }}
-                        <span v-if="block.is_superset"> · Superset</span>
-                    </p>
+                    <p v-if="block.is_superset" class="font-mono text-xs text-muted-foreground uppercase">Superset</p>
                 </header>
 
                 <div class="divide-y divide-border">

@@ -45,14 +45,14 @@ const showPair = computed(() => (props.pair?.length ?? 0) >= 2);
                 </div>
             </div>
             <p class="mt-4 text-base text-muted-foreground">
-                Block {{ upcoming.blockPosition }} · {{ upcoming.groupLabel }} · Set {{ upcoming.setNumber }}/{{ upcoming.setCount }} · Superset
+                {{ upcoming.groupLabel }} · Set {{ upcoming.setNumber }}/{{ upcoming.setCount }} · Superset
             </p>
         </template>
 
         <template v-else>
             <p class="mt-2 text-xl font-semibold">{{ upcoming.exerciseName }}</p>
             <p class="mt-2 text-base text-muted-foreground">
-                Block {{ upcoming.blockPosition }} · {{ upcoming.groupLabel }} · Set {{ upcoming.setNumber }}/{{ upcoming.setCount }}
+                {{ upcoming.groupLabel }} · Set {{ upcoming.setNumber }}/{{ upcoming.setCount }}
                 <span v-if="upcoming.isDropset"> · Dropset</span>
             </p>
             <p v-if="upcoming.weightLabel != null || upcoming.reps != null" class="mt-3 font-mono text-2xl font-semibold text-foreground">

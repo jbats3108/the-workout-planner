@@ -1,4 +1,5 @@
 import type { FlatSetEntry } from '@/workouts/lib/focus';
+import { historyBlockTitle } from '@/workouts/lib/historyDisplay';
 import type { Focus, PlayerBlock } from '@/workouts/types';
 
 export function groupLabel(type: string): string {
@@ -21,14 +22,17 @@ export function setupHintText(focus: Focus, block: PlayerBlock | null): string {
     if (focus.kind !== 'setup' || !block) {
         return '';
     }
+
+    const name = historyBlockTitle(block);
+
     if (focus.phase === 'after_warm_up') {
-        return `Block ${block.position} — before working sets`;
+        return `${name} — before working sets`;
     }
     if (focus.phase === 'after_warm_up_step') {
         const stepNum = (focus.warmUpStepIndex ?? 0) + 1;
 
-        return `Block ${block.position} — after warm-up ${stepNum}`;
+        return `${name} — after warm-up ${stepNum}`;
     }
 
-    return `After block ${block.position}`;
+    return `After ${name}`;
 }
