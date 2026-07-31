@@ -116,6 +116,12 @@ class WorkoutProgressionService
                     continue;
                 }
 
+                // Only raise when the routine weight still matches the proposal base.
+                // Avoid lowering past intervening carry-forward, later bumps, or manual edits.
+                if ($exercise->working_weight_g !== $proposal->fromWeightG) {
+                    continue;
+                }
+
                 $exercise->working_weight_g = $proposal->toWeightG;
                 $exercise->save();
 
@@ -156,10 +162,17 @@ class WorkoutProgressionService
             foreach ($records as $record) {
                 $exercise = $record->routineBlockExercise;
 
-                if ($exercise !== null) {
-                    $exercise->working_weight_g = $record->from_weight_g;
-                    $exercise->save();
+                if ($exercise === null) {
+                    continue;
                 }
+
+                // Only revert when the routine still sits at the bumped weight.
+                if ($exercise->working_weight_g !== $record->to_weight_g) {
+                    continue;
+                }
+
+                $exercise->working_weight_g = $record->from_weight_g;
+                $exercise->save();
 
                 $record->undone_at = now();
                 $record->save();
@@ -243,6 +256,12 @@ class WorkoutProgressionService
             $workoutExercise = $this->findWorkoutExerciseForRoutineExercise($workout, $record->routine_block_exercise_id);
 
             if ($workoutExercise === null) {
+                continue;
+            }
+
+            $routineExercise = RoutineBlockExercise::query()->find($record->routine_block_exercise_id);
+
+            if ($routineExercise === null || $routineExercise->working_weight_g !== $record->to_weight_g) {
                 continue;
             }
 
