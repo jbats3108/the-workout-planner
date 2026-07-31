@@ -50,12 +50,16 @@ _Avoid_: Count reps, achieved-at, valid set threshold
 Minimum reps at the working weight that triggers a bump suggestion. Optional; user default with per-exercise override.
 _Avoid_: Bump reps, increase-at, progression threshold
 
+**Bump When**:
+Which completed working set(s) decide whether the Progression Target was hit for a bump suggestion. User default, snapshotted onto the Workout at start. **Any set**: any working set at or above the snapshotted working weight. **Last set at top weight**: among sets at the session’s heaviest weight, the last one (must still be at or above the snapshotted working weight).
+_Avoid_: Bump mode, progression style, confirm rule
+
 **Carry-forward**:
 On finishing (or when re-evaluating an eligible finished workout), set the routine’s working weight for an exercise to the highest achieved top weight from that workout — without asking. Only raises weight; never lowers. Does not apply from deload workouts.
 _Avoid_: Sync, catch-up
 
 **Bump**:
-A confirmed increase to an exercise’s working weight on the routine, offered when the progression target was hit. Never silent. Each confirmation produces a **Bump Record**.
+A confirmed increase to an exercise’s working weight on the routine, offered when the Progression Target was hit under the Workout’s **Bump When** rule. Never silent. Each confirmation produces a **Bump Record**.
 _Avoid_: Increase, PR jump, auto-load
 
 **Bump Record**:
