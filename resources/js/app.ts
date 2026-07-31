@@ -1,6 +1,7 @@
 import '../css/app.css';
 
 import { createInertiaApp, router } from '@inertiajs/vue3';
+import { registerSW } from 'virtual:pwa-register';
 import { ZiggyVue } from 'ziggy-js';
 import { initializeTheme } from './composables/useAppearance';
 import type { AppPageProps } from './types';
@@ -50,3 +51,7 @@ createInertiaApp({
 });
 
 initializeTheme();
+
+if (import.meta.env.PROD) {
+    registerSW({ immediate: true });
+}

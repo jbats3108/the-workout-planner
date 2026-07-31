@@ -3,6 +3,7 @@ import tailwindcss from '@tailwindcss/vite';
 import vue from '@vitejs/plugin-vue';
 import laravel from 'laravel-vite-plugin';
 import { defineConfig, loadEnv, type Plugin } from 'vite';
+import { VitePWA } from 'vite-plugin-pwa';
 import vueDevtools from 'vite-plugin-vue-devtools';
 import { detectLanIpv4 } from './vite/detectLanHost';
 
@@ -67,6 +68,19 @@ export default defineConfig(({ mode }) => {
                 },
             }),
             vueDevtools(),
+            VitePWA({
+                registerType: 'autoUpdate',
+                injectRegister: false,
+                manifest: false,
+                workbox: {
+                    globPatterns: ['**/*.{js,css,ico,png,svg,woff2,webmanifest}'],
+                    navigateFallback: null,
+                    cleanupOutdatedCaches: true,
+                },
+                devOptions: {
+                    enabled: false,
+                },
+            }),
             ...(shareOnLan ? [lanSsrDevOrigin(publicHost!)] : []),
         ],
         server: shareOnLan
