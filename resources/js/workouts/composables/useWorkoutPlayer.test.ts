@@ -618,7 +618,7 @@ describe('createWorkoutPlayer', () => {
             ],
         });
 
-        expect(player.logProgressionHints.value).toBe('Floor 4 · Bump 6');
+        expect(player.logProgressionHints.value).toBe('Floor 4. Bump @ 6');
     });
 
     it('hides progression hints on warm-up and dropset log sheets', () => {
