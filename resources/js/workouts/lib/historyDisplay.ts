@@ -1,4 +1,4 @@
-import type { PlayerSet } from '@/workouts/types';
+import type { PlayerBlock, PlayerSet } from '@/workouts/types';
 
 /** Trim kg for display (supports 2dp loads like 28.75). */
 export function formatKg(kg: number | null | undefined): string {
@@ -7,6 +7,21 @@ export function formatKg(kg: number | null | undefined): string {
     }
 
     return String(parseFloat(kg.toFixed(2)));
+}
+
+/** Block heading for history: exercise name(s), A / B for supersets. */
+export function historyBlockTitle(block: PlayerBlock): string {
+    const names = [...block.exercises].sort((a, b) => a.position - b.position).map((exercise) => exercise.name);
+
+    if (names.length === 0) {
+        return `Block ${block.position}`;
+    }
+
+    if (block.is_superset && names.length >= 2) {
+        return `${names[0]} / ${names[1]}`;
+    }
+
+    return names[0] ?? `Block ${block.position}`;
 }
 
 export type HistoryBlockRow = { type: 'warm_up'; key: string; sets: PlayerSet[] } | { type: 'working'; key: string; set: PlayerSet };

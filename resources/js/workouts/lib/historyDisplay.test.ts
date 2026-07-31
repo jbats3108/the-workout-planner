@@ -1,5 +1,5 @@
-import { formatKg, historyRowsForBlock } from '@/workouts/lib/historyDisplay';
-import type { PlayerSet } from '@/workouts/types';
+import { formatKg, historyBlockTitle, historyRowsForBlock } from '@/workouts/lib/historyDisplay';
+import type { PlayerBlock, PlayerSet } from '@/workouts/types';
 import { describe, expect, it } from 'vitest';
 
 const set = (overrides: Partial<PlayerSet> & Pick<PlayerSet, 'id' | 'group_type'>): PlayerSet => ({
@@ -25,6 +25,39 @@ describe('formatKg', () => {
         expect(formatKg(28.75)).toBe('28.75');
         expect(formatKg(28.7500001)).toBe('28.75');
         expect(formatKg(null)).toBe('—');
+    });
+});
+
+describe('historyBlockTitle', () => {
+    it('uses the single exercise name', () => {
+        const block = {
+            id: 1,
+            position: 1,
+            is_superset: false,
+            has_setup_after: false,
+            has_setup_after_warm_up: false,
+            exercises: [{ id: 1, name: 'Squat', working_weight_kg: 100, prescribed_reps: 5, position: 0 }],
+            sets: [],
+        } satisfies PlayerBlock;
+
+        expect(historyBlockTitle(block)).toBe('Squat');
+    });
+
+    it('joins superset exercises with a slash', () => {
+        const block = {
+            id: 2,
+            position: 2,
+            is_superset: true,
+            has_setup_after: false,
+            has_setup_after_warm_up: false,
+            exercises: [
+                { id: 10, name: 'Press', working_weight_kg: 50, prescribed_reps: 8, position: 0 },
+                { id: 11, name: 'Row', working_weight_kg: 60, prescribed_reps: 10, position: 1 },
+            ],
+            sets: [],
+        } satisfies PlayerBlock;
+
+        expect(historyBlockTitle(block)).toBe('Press / Row');
     });
 });
 
