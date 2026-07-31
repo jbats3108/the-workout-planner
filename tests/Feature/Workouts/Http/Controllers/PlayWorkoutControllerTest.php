@@ -109,6 +109,37 @@ class PlayWorkoutControllerTest extends TestCase
     }
 
     #[Test]
+    public function it_rejects_recompleting_an_already_logged_set(): void
+    {
+        $workout = $this->createWorkoutForUser();
+        $set = WorkoutSet::query()
+            ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workout->id))
+            ->firstOrFail();
+
+        $this->actingAs($this->user)
+            ->post(route('workouts.sets.complete', ['workout' => $workout, 'set' => $set]), [
+                'reps' => 5,
+                'weight_kg' => 80,
+            ])
+            ->assertRedirect();
+
+        $completedAt = $set->fresh()->completed_at;
+
+        $this->actingAs($this->user)
+            ->post(route('workouts.sets.complete', ['workout' => $workout, 'set' => $set]), [
+                'reps' => 8,
+                'weight_kg' => 100,
+            ])
+            ->assertRedirect()
+            ->assertSessionHasErrors('set');
+
+        $set->refresh();
+        $this->assertSame(5, $set->reps);
+        $this->assertSame(80000, $set->weight_g);
+        $this->assertEquals($completedAt?->timestamp, $set->completed_at?->timestamp);
+    }
+
+    #[Test]
     public function it_accepts_fractional_kilogram_weights(): void
     {
         $workout = $this->createWorkoutForUser();

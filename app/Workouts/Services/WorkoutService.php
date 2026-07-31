@@ -32,6 +32,8 @@ class WorkoutService
 
     public const SET_ALREADY_COMPLETED_ERROR = 'Completed sets cannot be removed';
 
+    public const SET_ALREADY_LOGGED_ERROR = 'This set is already logged';
+
     public const CANNOT_REMOVE_LAST_WORKING_SET_ERROR = 'At least one working set is required';
 
     public const WORKING_SET_GROUP_MISSING_ERROR = 'This block has no working sets';
@@ -200,6 +202,10 @@ class WorkoutService
 
         if ($workout->status !== WorkoutStatus::InProgress) {
             throw new WorkoutServiceException(self::WORKOUT_NOT_IN_PROGRESS_ERROR);
+        }
+
+        if ($set->completed_at !== null) {
+            throw new WorkoutServiceException(self::SET_ALREADY_LOGGED_ERROR);
         }
 
         $isPlannedDropset = $set->isDropset();
