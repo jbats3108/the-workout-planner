@@ -12,7 +12,7 @@ const props = defineProps<{
     warm_up_defaults_scope: WarmUpDefaultsScope;
     using_app_fallback: boolean;
     achievement_floor_default: number | null;
-    progression_target_default: number | null;
+    bump_when_default: 'any_set' | 'last_at_top_weight';
     plate_profile: PlateProfile;
 }>();
 
@@ -27,10 +27,10 @@ const form = useForm({
     warm_up_steps_default: props.warm_up_steps_default.map((s) => ({ ...s })),
     warm_up_defaults_scope: props.warm_up_defaults_scope,
     achievement_floor_default: props.achievement_floor_default,
-    progression_target_default: props.progression_target_default,
+    bump_when_default: props.bump_when_default,
 });
 
-const setOptionalReps = (field: 'achievement_floor_default' | 'progression_target_default', raw: string) => {
+const setOptionalReps = (field: 'achievement_floor_default', raw: string) => {
     form[field] = raw === '' ? null : Number(raw);
 };
 
@@ -183,22 +183,22 @@ const savePlates = () => {
                             <InputError :message="form.errors.achievement_floor_default" />
                         </label>
 
-                        <label class="flex flex-col gap-1 text-sm text-muted-foreground">
-                            Progression Target
-                            <span class="text-xs text-muted-foreground/80">
-                                Minimum reps at the working weight that triggers a bump suggestion. Leave blank for no bump prompts from the default.
+                        <fieldset class="space-y-2">
+                            <legend class="text-sm text-muted-foreground">Bump when</legend>
+                            <span class="block text-xs text-muted-foreground/80">
+                                Bump unlocks when you hit the exercise’s Target (prescribed) reps. Top weight = heaviest completed working set; the
+                                last of those decides under “Last set at top weight.”
                             </span>
-                            <input
-                                :value="form.progression_target_default ?? ''"
-                                type="number"
-                                min="1"
-                                max="100"
-                                placeholder="optional"
-                                class="mt-1 w-28 rounded border border-border bg-card px-3 py-2 font-mono text-foreground"
-                                @input="setOptionalReps('progression_target_default', ($event.target as HTMLInputElement).value)"
-                            />
-                            <InputError :message="form.errors.progression_target_default" />
-                        </label>
+                            <label class="flex items-center gap-2 text-sm">
+                                <input v-model="form.bump_when_default" type="radio" value="any_set" />
+                                Any set
+                            </label>
+                            <label class="flex items-center gap-2 text-sm">
+                                <input v-model="form.bump_when_default" type="radio" value="last_at_top_weight" />
+                                Last set at top weight
+                            </label>
+                            <InputError :message="form.errors.bump_when_default" />
+                        </fieldset>
                     </div>
 
                     <div class="flex flex-wrap gap-3 pt-2">

@@ -92,7 +92,7 @@ class UpdateRoutineControllerTest extends TestCase
                             'working_weight_kg' => 80,
                             'prescribed_reps' => 5,
                             'achievement_floor' => 3,
-                            'progression_target' => 8,
+                            'progression_target' => null,
                         ],
                     ],
                     'working' => ['set_count' => 3, 'rest_seconds' => 180],
@@ -103,7 +103,7 @@ class UpdateRoutineControllerTest extends TestCase
 
         $row = $routine->fresh()->blocks()->first()->blockExercises()->first();
         $this->assertSame(3, $row->achievement_floor_override);
-        $this->assertSame(8, $row->progression_target_override);
+        $this->assertNull($row->progression_target_override);
     }
 
     #[Test]
@@ -197,7 +197,7 @@ class UpdateRoutineControllerTest extends TestCase
                 ->has('warm_up_defaults')
                 ->has('warm_up_defaults_scope')
                 ->has('achievement_floor_default')
-                ->has('progression_target_default')
+                ->missing('progression_target_default')
                 ->where('routine.blocks.0.working.dropsets.0.set_index', 1)
                 ->where('routine.blocks.0.working.dropsets.0.segments.0.weight_kg', 20)
                 ->where('routine.blocks.0.working.dropsets.0.segments.1.weight_kg', 8)

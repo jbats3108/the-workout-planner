@@ -4,6 +4,7 @@ namespace App\Workouts\Services;
 
 use App\Routines\Models\RoutineBlockExercise;
 use App\Shared\Enums\SetGroupType;
+use App\Users\Enums\BumpWhen;
 use App\Workouts\Data\Progression\BumpProposalData;
 use App\Workouts\Data\Progression\ProgressionSessionData;
 use App\Workouts\Data\Progression\UndoBumpProposalData;
@@ -71,7 +72,7 @@ class WorkoutProgressionService
 
                 if (
                     $collectNewBumps
-                    && $this->hitProgressionTarget($workoutExercise, $workingSets)
+                    && $this->hitProgressionTarget($workoutExercise, $workingSets, $workout)
                     && ! in_array($routineExercise->id, $activeBumpExerciseIds, true)
                 ) {
                     $routineExercise->refresh();
@@ -226,7 +227,7 @@ class WorkoutProgressionService
 
             $workingSets = $this->completedWorkingSets($workoutExercise);
 
-            if ($this->hitProgressionTarget($workoutExercise, $workingSets)) {
+            if ($this->hitProgressionTarget($workoutExercise, $workingSets, $workout)) {
                 continue;
             }
 
@@ -317,17 +318,45 @@ class WorkoutProgressionService
     /**
      * @param  Collection<int, WorkoutSet>  $workingSets
      */
-    private function hitProgressionTarget(WorkoutBlockExercise $workoutExercise, Collection $workingSets): bool
+    private function hitProgressionTarget(WorkoutBlockExercise $workoutExercise, Collection $workingSets, Workout $workout): bool
     {
-        $target = $workoutExercise->progression_target;
+        $target = $workoutExercise->prescribed_reps;
 
-        if ($target === null) {
-            return false;
+        $bumpWhen = $workout->bump_when ?? BumpWhen::AnySet;
+
+        if ($bumpWhen === BumpWhen::LastAtTopWeight) {
+            $decisive = $this->lastSetAtTopWeight($workingSets);
+
+            return $decisive !== null
+                && $decisive->weight_g >= $workoutExercise->working_weight_g
+                && $decisive->reps >= $target;
         }
 
         return $workingSets->contains(
             fn (WorkoutSet $set): bool => $set->weight_g >= $workoutExercise->working_weight_g
                 && $set->reps >= $target
         );
+    }
+
+    /**
+     * Among completed working sets, the chronologically last set at the session's heaviest weight.
+     *
+     * @param  Collection<int, WorkoutSet>  $workingSets
+     */
+    private function lastSetAtTopWeight(Collection $workingSets): ?WorkoutSet
+    {
+        if ($workingSets->isEmpty()) {
+            return null;
+        }
+
+        $topWeight = $workingSets->max('weight_g');
+
+        return $workingSets
+            ->filter(fn (WorkoutSet $set): bool => $set->weight_g === $topWeight)
+            ->sortBy([
+                ['set_index', 'asc'],
+                ['id', 'asc'],
+            ])
+            ->last();
     }
 }

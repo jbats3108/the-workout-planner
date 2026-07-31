@@ -5,6 +5,7 @@ namespace App\Workouts\Services;
 use App\Routines\Models\Routine;
 use App\Routines\Models\RoutineBlock;
 use App\Shared\Enums\SetGroupType;
+use App\Users\Enums\BumpWhen;
 use App\Users\Models\User;
 use App\Workouts\Data\Progression\BumpProposalData;
 use App\Workouts\Enums\WorkoutMode;
@@ -79,6 +80,7 @@ class WorkoutService
                 'user_id' => $routine->user_id,
                 'routine_id' => $routine->id,
                 'mode' => $mode,
+                'bump_when' => $routine->user->bump_when_default ?? BumpWhen::AnySet,
                 'status' => WorkoutStatus::InProgress,
                 'started_at' => now(),
             ]);
@@ -106,8 +108,7 @@ class WorkoutService
                         'prescribed_reps' => max(1, (int) round($routineBlockExercise->prescribed_reps * $repsFactor)),
                         'achievement_floor' => $routineBlockExercise->achievement_floor_override
                             ?? $routine->user->achievement_floor_default,
-                        'progression_target' => $routineBlockExercise->progression_target_override
-                            ?? $routine->user->progression_target_default,
+                        'progression_target' => $routineBlockExercise->prescribed_reps,
                     ]);
                 }
 

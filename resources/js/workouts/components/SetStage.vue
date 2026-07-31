@@ -30,6 +30,7 @@ const {
     setForm,
     draftSegments,
     logSheetOpen,
+    logProgressionHints,
     supersetNext,
 } = useWorkoutPlayer();
 
@@ -194,19 +195,24 @@ const unlockInput = (event: PointerEvent) => {
                                         @pointerdown="unlockInput"
                                     />
                                 </label>
-                                <label class="flex min-w-0 flex-1 flex-col gap-1 text-sm text-muted-foreground">
-                                    Reps
-                                    <input
-                                        v-model.number="setForm.reps"
-                                        type="number"
-                                        min="0"
-                                        max="100"
-                                        readonly
-                                        class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground md:rounded-md md:py-2 md:text-base"
-                                        required
-                                        @pointerdown="unlockInput"
-                                    />
-                                </label>
+                                <div class="flex min-w-0 flex-1 flex-col gap-1">
+                                    <label class="flex flex-col gap-1 text-sm text-muted-foreground">
+                                        Reps
+                                        <input
+                                            v-model.number="setForm.reps"
+                                            type="number"
+                                            min="0"
+                                            max="100"
+                                            readonly
+                                            class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground md:rounded-md md:py-2 md:text-base"
+                                            required
+                                            @pointerdown="unlockInput"
+                                        />
+                                    </label>
+                                    <p v-if="logProgressionHints" class="font-mono text-sm text-foreground/70">
+                                        {{ logProgressionHints }}
+                                    </p>
+                                </div>
                             </div>
                         </template>
                     </div>

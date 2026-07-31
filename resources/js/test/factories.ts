@@ -59,6 +59,8 @@ export function playerBlock(overrides: Partial<PlayerBlock> = {}): PlayerBlock {
                 name: 'Squat',
                 working_weight_kg: 100,
                 prescribed_reps: 5,
+                achievement_floor: null,
+                progression_target: null,
                 position: 0,
             },
         ],

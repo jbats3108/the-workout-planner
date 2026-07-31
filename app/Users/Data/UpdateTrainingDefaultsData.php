@@ -3,6 +3,7 @@
 namespace App\Users\Data;
 
 use App\Routines\Data\Editor\SyncWarmUpStepData;
+use App\Users\Enums\BumpWhen;
 use App\Users\Enums\WarmUpDefaultsScope;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Attributes\MapName;
@@ -31,7 +32,7 @@ class UpdateTrainingDefaultsData extends Data
         #[Nullable, Min(1), Max(100)]
         public readonly ?int $achievementFloorDefault = null,
 
-        #[Nullable, Min(1), Max(100)]
-        public readonly ?int $progressionTargetDefault = null,
+        #[Enum(BumpWhen::class)]
+        public readonly BumpWhen $bumpWhenDefault = BumpWhen::AnySet,
     ) {}
 }

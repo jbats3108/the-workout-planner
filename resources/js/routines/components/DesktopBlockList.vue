@@ -21,7 +21,6 @@ const {
     trimDropsetsToSetCount,
     dropsetSummary,
     achievementFloorDefault,
-    progressionTargetDefault,
 } = useRoutineEditor();
 </script>
 
@@ -36,7 +35,6 @@ const {
                         <th class="px-2 py-2">kg</th>
                         <th class="px-2 py-2">Reps</th>
                         <th class="px-2 py-2">Floor</th>
-                        <th class="px-2 py-2">Bump</th>
                         <th class="px-2 py-2">Sets</th>
                         <th class="px-2 py-2">Rest</th>
                         <th class="px-2 py-2">Warm-up %×reps</th>
@@ -96,18 +94,6 @@ const {
                                     title="Achievement floor override (empty = user default)"
                                     class="w-16 rounded border border-border bg-card px-2 py-1 font-mono"
                                     @input="ex.achievement_floor = parseOptionalReps(($event.target as HTMLInputElement).value)"
-                                />
-                            </td>
-                            <td class="px-2 py-2">
-                                <input
-                                    :value="ex.progression_target ?? ''"
-                                    type="number"
-                                    min="1"
-                                    max="100"
-                                    :placeholder="optionalRepsPlaceholder(progressionTargetDefault)"
-                                    title="Progression target override (empty = user default)"
-                                    class="w-16 rounded border border-border bg-card px-2 py-1 font-mono"
-                                    @input="ex.progression_target = parseOptionalReps(($event.target as HTMLInputElement).value)"
                                 />
                             </td>
                             <td class="px-2 py-2">

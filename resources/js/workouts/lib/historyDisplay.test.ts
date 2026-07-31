@@ -36,7 +36,9 @@ describe('historyBlockTitle', () => {
             is_superset: false,
             has_setup_after: false,
             has_setup_after_warm_up: false,
-            exercises: [{ id: 1, name: 'Squat', working_weight_kg: 100, prescribed_reps: 5, position: 0 }],
+            exercises: [
+                { id: 1, name: 'Squat', working_weight_kg: 100, prescribed_reps: 5, achievement_floor: null, progression_target: null, position: 0 },
+            ],
             sets: [],
         } satisfies PlayerBlock;
 
@@ -51,8 +53,8 @@ describe('historyBlockTitle', () => {
             has_setup_after: false,
             has_setup_after_warm_up: false,
             exercises: [
-                { id: 10, name: 'Press', working_weight_kg: 50, prescribed_reps: 8, position: 0 },
-                { id: 11, name: 'Row', working_weight_kg: 60, prescribed_reps: 10, position: 1 },
+                { id: 10, name: 'Press', working_weight_kg: 50, prescribed_reps: 8, achievement_floor: null, progression_target: null, position: 0 },
+                { id: 11, name: 'Row', working_weight_kg: 60, prescribed_reps: 10, achievement_floor: null, progression_target: null, position: 1 },
             ],
             sets: [],
         } satisfies PlayerBlock;
