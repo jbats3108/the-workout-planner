@@ -42,4 +42,20 @@ class ManifestTest extends TestCase
         $response->assertSee('name="apple-mobile-web-app-capable" content="yes"', false);
         $response->assertSee('name="apple-mobile-web-app-title" content="OVRLOAD"', false);
     }
+
+    #[Test]
+    public function it_emits_the_service_worker_at_the_web_root_when_built(): void
+    {
+        $path = public_path('sw.js');
+
+        if (! is_file($path)) {
+            $this->markTestSkipped('Run `npm run build` to emit public/sw.js.');
+        }
+
+        $contents = file_get_contents($path);
+
+        $this->assertNotFalse($contents);
+        $this->assertStringContainsString('/build/', $contents);
+        $this->assertStringNotContainsString('navigateFallback', $contents);
+    }
 }

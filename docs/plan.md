@@ -8,7 +8,8 @@ Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domai
 
 ## Now
 
-- **PWA installable (phase 1)** — manifest, Apple meta tags, service worker, iOS install banner; tab shell + haptics remain backlog
+- **PWA installable (phase 1)** — manifest, Apple meta tags, service worker at `/sw.js` (root scope for Android Chrome install), iOS install banner; tab shell + haptics remain backlog
+
 
 ## Recently shipped (foundation)
 
