@@ -127,9 +127,6 @@ const unlockInput = (event: PointerEvent) => {
                     <div>
                         <p class="text-xs tracking-widest text-muted-foreground uppercase">Log set</p>
                         <h3 class="mt-1 text-xl font-semibold md:text-lg">{{ current.set.exercise_name }}</h3>
-                        <p v-if="logProgressionHints" class="mt-1 font-mono text-sm text-muted-foreground">
-                            {{ logProgressionHints }}
-                        </p>
                     </div>
 
                     <div class="space-y-4 pt-10 md:pt-0">
@@ -198,19 +195,24 @@ const unlockInput = (event: PointerEvent) => {
                                         @pointerdown="unlockInput"
                                     />
                                 </label>
-                                <label class="flex min-w-0 flex-1 flex-col gap-1 text-sm text-muted-foreground">
-                                    Reps
-                                    <input
-                                        v-model.number="setForm.reps"
-                                        type="number"
-                                        min="0"
-                                        max="100"
-                                        readonly
-                                        class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground md:rounded-md md:py-2 md:text-base"
-                                        required
-                                        @pointerdown="unlockInput"
-                                    />
-                                </label>
+                                <div class="flex min-w-0 flex-1 flex-col gap-1">
+                                    <label class="flex flex-col gap-1 text-sm text-muted-foreground">
+                                        Reps
+                                        <input
+                                            v-model.number="setForm.reps"
+                                            type="number"
+                                            min="0"
+                                            max="100"
+                                            readonly
+                                            class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground md:rounded-md md:py-2 md:text-base"
+                                            required
+                                            @pointerdown="unlockInput"
+                                        />
+                                    </label>
+                                    <p v-if="logProgressionHints" class="font-mono text-sm text-foreground/70">
+                                        {{ logProgressionHints }}
+                                    </p>
+                                </div>
                             </div>
                         </template>
                     </div>
