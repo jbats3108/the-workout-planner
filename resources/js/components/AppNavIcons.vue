@@ -6,7 +6,7 @@ import { route as ziggyRoute } from 'ziggy-js';
 
 const props = withDefaults(
     defineProps<{
-        /** `rail` = icon-only desktop strip; `drawer` = labeled mobile sheet */
+        /** `rail` = icon-only strip; `drawer` = labeled list (desktop sidebar + mobile sheet) */
         variant?: 'rail' | 'drawer';
     }>(),
     { variant: 'rail' },
@@ -85,6 +85,7 @@ const settingsLinks: NavLink[] = [
             :href="link.href"
             :class="itemClass(isActive(link.match))"
             :aria-label="link.label"
+            :title="labeled ? undefined : link.label"
             prefetch
             @click="onNavigate"
         >
@@ -110,11 +111,25 @@ const settingsLinks: NavLink[] = [
             </Link>
         </template>
 
-        <Link v-else :href="route('profile.edit')" :class="itemClass(settingsActive)" aria-label="Settings" prefetch @click="onNavigate">
+        <Link
+            v-else
+            :href="route('profile.edit')"
+            :class="itemClass(settingsActive)"
+            aria-label="Settings"
+            title="Settings"
+            prefetch
+            @click="onNavigate"
+        >
             <Settings :class="iconClass" />
         </Link>
 
-        <button type="button" :class="[itemClass(false), labeled ? 'justify-start' : '']" aria-label="Log out" @click="logout">
+        <button
+            type="button"
+            :class="[itemClass(false), labeled ? 'justify-start' : '']"
+            aria-label="Log out"
+            :title="labeled ? undefined : 'Log out'"
+            @click="logout"
+        >
             <LogOut :class="iconClass" />
             <span v-if="labeled">Log out</span>
         </button>
