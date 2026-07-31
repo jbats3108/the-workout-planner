@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import type { Routine } from '@/routines/types';
 import { Link } from '@inertiajs/vue3';
-import { Pencil, Trash2 } from 'lucide-vue-next';
+import { Copy, Pencil, Trash2 } from 'lucide-vue-next';
 
 const props = defineProps<{
     routine: Routine;
@@ -12,6 +12,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     start: [mode: 'normal' | 'deload'];
+    duplicate: [];
     delete: [];
 }>();
 
@@ -57,6 +58,17 @@ const startTitle = (mode: 'normal' | 'deload') => {
                     >
                         <Pencil class="size-5" />
                     </Link>
+                </Button>
+                <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon-sm"
+                    class="text-muted-foreground hover:text-primary"
+                    title="Duplicate routine"
+                    aria-label="Duplicate routine"
+                    @click="emit('duplicate')"
+                >
+                    <Copy class="size-5" />
                 </Button>
                 <Button
                     type="button"

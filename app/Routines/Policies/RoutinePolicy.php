@@ -33,4 +33,9 @@ class RoutinePolicy
     {
         return $routine->user->is($user);
     }
+
+    public function duplicate(User $user, Routine $routine): bool
+    {
+        return $routine->user->is($user);
+    }
 }

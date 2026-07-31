@@ -16,6 +16,7 @@ use App\MuscleGroups\Http\Controllers\StoreMuscleGroupController;
 use App\MuscleGroups\Models\MuscleGroup;
 use App\Routines\Http\Controllers\CreateRoutineController;
 use App\Routines\Http\Controllers\DeleteRoutineController;
+use App\Routines\Http\Controllers\DuplicateRoutineController;
 use App\Routines\Http\Controllers\EditRoutineController;
 use App\Routines\Http\Controllers\ShowRoutineController;
 use App\Routines\Http\Controllers\StoreRoutineController;
@@ -73,6 +74,10 @@ Route::middleware('auth')->group(function (): void {
         Route::delete('/{routine}', DeleteRoutineController::class)
             ->can('delete', 'routine')
             ->name('routines.delete');
+
+        Route::post('/{routine}/duplicate', DuplicateRoutineController::class)
+            ->can('duplicate', 'routine')
+            ->name('routines.duplicate');
 
         Route::put('/{routine}', UpdateRoutineController::class)
             ->can('update', 'routine')

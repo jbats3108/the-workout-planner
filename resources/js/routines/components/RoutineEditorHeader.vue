@@ -3,7 +3,7 @@ import InputError from '@/components/InputError.vue';
 import { useRoutineEditor } from '@/routines/composables/useRoutineEditor';
 import { Link } from '@inertiajs/vue3';
 
-const { form, errorList, save, deleteRoutine } = useRoutineEditor();
+const { form, errorList, save, duplicateRoutine, deleteRoutine } = useRoutineEditor();
 </script>
 
 <template>
@@ -25,6 +25,13 @@ const { form, errorList, save, deleteRoutine } = useRoutineEditor();
                 >
                     Cancel
                 </Link>
+                <button
+                    type="button"
+                    class="rounded-full border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                    @click="duplicateRoutine"
+                >
+                    Duplicate
+                </button>
                 <button
                     type="button"
                     class="rounded-full border border-destructive/50 px-4 py-2 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10"
