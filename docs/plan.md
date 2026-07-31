@@ -8,7 +8,8 @@ Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domai
 
 ## Now
 
-- 
+- **PWA installable (phase 1)** — manifest, Apple meta tags, service worker at `/sw.js` (root scope for Android Chrome install), iOS install banner; tab shell + haptics remain backlog
+
 
 ## Recently shipped (foundation)
 
@@ -93,7 +94,7 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 ### Polish & mobile integration
 
 - **Log sheet polish** — mobile UX on shipped complete-then-log: sheet swipe/backdrop dismiss; auto-focus weight/reps; redesign **+ Set** / **− Set** placement
-- **PWA & app shell** — installable PWA; tabbed app shell; haptics
+- **PWA app shell** — tabbed app shell; haptics (installable PWA done in phase 1)
 
 ### Bugfixes
 

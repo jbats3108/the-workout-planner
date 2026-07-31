@@ -4,6 +4,7 @@ import AppHeader from '@/components/AppHeader.vue';
 import AppShell from '@/components/AppShell.vue';
 import AppSidebar from '@/components/AppSidebar.vue';
 import FlashAlerts from '@/shared/components/FlashAlerts.vue';
+import PwaInstallBanner from '@/shared/components/PwaInstallBanner.vue';
 import type { BreadcrumbItemType } from '@/types';
 
 interface Props {
@@ -27,5 +28,6 @@ withDefaults(defineProps<Props>(), {
                 </AppContent>
             </div>
         </div>
+        <PwaInstallBanner />
     </AppShell>
 </template>

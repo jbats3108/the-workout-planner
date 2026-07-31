@@ -5,6 +5,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=overlays-content">
         <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
         <meta name="theme-color" content="#f7f7f7" media="(prefers-color-scheme: light)">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="apple-mobile-web-app-title" content="OVRLOAD">
+        <meta name="mobile-web-app-capable" content="yes">
+        <link rel="manifest" href="/manifest.webmanifest">
 
         {{-- SVG only here; .ico is still on disk for older clients that request /favicon.ico directly --}}
         <link rel="icon" href="/favicon-dark.svg" type="image/svg+xml" data-app-favicon>

@@ -4,12 +4,9 @@ import { formatDeloadSummary } from '@/routines/lib/deload';
 import { ChevronDown } from 'lucide-vue-next';
 import { computed } from 'vue';
 
-const { variant = 'desktop' } = withDefaults(
-    defineProps<{
-        variant?: 'desktop' | 'mobile';
-    }>(),
-    { variant: 'desktop' },
-);
+const { variant = 'desktop' } = defineProps<{
+    variant?: 'desktop' | 'mobile';
+}>();
 
 const { form, deloadExpanded, toggleDeloadExpanded } = useRoutineEditor();
 

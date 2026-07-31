@@ -2,7 +2,10 @@ import inertia from '@inertiajs/vite';
 import tailwindcss from '@tailwindcss/vite';
 import vue from '@vitejs/plugin-vue';
 import laravel from 'laravel-vite-plugin';
+import { readdirSync, unlinkSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 import { defineConfig, loadEnv, type Plugin } from 'vite';
+import { VitePWA } from 'vite-plugin-pwa';
 import vueDevtools from 'vite-plugin-vue-devtools';
 import { detectLanIpv4 } from './vite/detectLanHost';
 
@@ -33,7 +36,27 @@ function lanSsrDevOrigin(publicHost: string): Plugin {
     };
 }
 
-export default defineConfig(({ mode }) => {
+/**
+ * SW must live at /sw.js (not /build/sw.js) so its default scope is `/` and Chrome
+ * can install the PWA. Hashed workbox helpers also land in public/ — clear stale ones.
+ */
+function cleanPublicPwaArtifacts(): Plugin {
+    return {
+        name: 'clean-public-pwa-artifacts',
+        apply: 'build',
+        buildStart() {
+            const publicDir = resolve(import.meta.dirname, 'public');
+
+            for (const file of readdirSync(publicDir)) {
+                if (file === 'sw.js' || /^workbox-.+\.js$/.test(file)) {
+                    unlinkSync(join(publicDir, file));
+                }
+            }
+        },
+    };
+}
+
+export default defineConfig(({ mode, isSsrBuild }) => {
     const env = loadEnv(mode, process.cwd(), '');
     const ddevUrl = env.DDEV_PRIMARY_URL || null;
     const lanDev = env.LAN_DEV === '1' || env.LAN_DEV === 'true';
@@ -67,6 +90,37 @@ export default defineConfig(({ mode }) => {
                 },
             }),
             vueDevtools(),
+            // Wipe stale root SW before client emit. Skip on SSR so we don't delete it.
+            ...(!isSsrBuild ? [cleanPublicPwaArtifacts()] : []),
+            VitePWA({
+                // Keep the plugin on SSR so `virtual:pwa-register` resolves; skip SW emit.
+                disable: isSsrBuild,
+                registerType: 'autoUpdate',
+                injectRegister: false,
+                manifest: false,
+                // Emit SW at public/sw.js so scope defaults to `/` (installable on Android).
+                outDir: 'public',
+                scope: '/',
+                base: '/',
+                buildBase: '/',
+                workbox: {
+                    globDirectory: resolve(import.meta.dirname, 'public/build'),
+                    globPatterns: ['**/*.{js,css,ico,png,svg,woff2,webmanifest}'],
+                    modifyURLPrefix: {
+                        '': '/build/',
+                    },
+                    navigateFallback: null,
+                    cleanupOutdatedCaches: true,
+                    additionalManifestEntries: [
+                        { url: '/manifest.webmanifest', revision: '1' },
+                        { url: '/pwa-192x192.png', revision: '1' },
+                        { url: '/pwa-512x512.png', revision: '1' },
+                    ],
+                },
+                devOptions: {
+                    enabled: false,
+                },
+            }),
             ...(shareOnLan ? [lanSsrDevOrigin(publicHost!)] : []),
         ],
         server: shareOnLan
