@@ -18,6 +18,7 @@ use App\Workouts\Models\WorkoutSet;
 use App\Workouts\Models\WorkoutSetGroup;
 use App\Workouts\Models\WorkoutSetSegment;
 use App\Workouts\Models\WorkoutWarmUpStep;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Facades\DB;
 use Spatie\LaravelData\DataCollection;
 
@@ -71,100 +72,107 @@ class WorkoutService
             throw new WorkoutServiceException(self::ROUTINE_HAS_NO_EXERCISES_ERROR);
         }
 
-        if ($this->inProgressFor($routine->user) !== null) {
-            throw new WorkoutServiceException(self::ALREADY_IN_PROGRESS_ERROR);
-        }
+        try {
+            return DB::transaction(function () use ($routine, $mode): Workout {
+                // Serialize starts per user so concurrent requests cannot both pass the check.
+                User::query()->whereKey($routine->user_id)->lockForUpdate()->firstOrFail();
 
-        return DB::transaction(function () use ($routine, $mode): Workout {
-            $workout = Workout::create([
-                'user_id' => $routine->user_id,
-                'routine_id' => $routine->id,
-                'mode' => $mode,
-                'bump_when' => $routine->user->bump_when_default ?? BumpWhen::AnySet,
-                'status' => WorkoutStatus::InProgress,
-                'started_at' => now(),
-            ]);
-
-            $weightFactor = $mode === WorkoutMode::Deload ? (float) $routine->deload_weight_factor : 1.0;
-            $repsFactor = $mode === WorkoutMode::Deload ? (float) $routine->deload_reps_factor : 1.0;
-
-            foreach ($routine->blocks as $routineBlock) {
-                $workoutBlock = WorkoutBlock::create([
-                    'workout_id' => $workout->id,
-                    'position' => $routineBlock->position,
-                    'is_superset' => $routineBlock->is_superset,
-                    'has_setup_after' => $routineBlock->has_setup_after,
-                    'has_setup_after_warm_up' => $routineBlock->has_setup_after_warm_up,
-                ]);
-
-                foreach ($routineBlock->blockExercises as $routineBlockExercise) {
-                    WorkoutBlockExercise::create([
-                        'workout_block_id' => $workoutBlock->id,
-                        'exercise_id' => $routineBlockExercise->exercise_id,
-                        'position' => $routineBlockExercise->position,
-                        'exercise_name' => $routineBlockExercise->exercise->getName(),
-                        'equipment' => $routineBlockExercise->exercise->equipment,
-                        'working_weight_g' => (int) round($routineBlockExercise->working_weight_g * $weightFactor),
-                        'prescribed_reps' => max(1, (int) round($routineBlockExercise->prescribed_reps * $repsFactor)),
-                        'achievement_floor' => $routineBlockExercise->achievement_floor_override
-                            ?? $routine->user->achievement_floor_default,
-                        'progression_target' => $routineBlockExercise->prescribed_reps,
-                    ]);
+                if ($this->inProgressFor($routine->user) !== null) {
+                    throw new WorkoutServiceException(self::ALREADY_IN_PROGRESS_ERROR);
                 }
 
-                $workoutBlock->load('blockExercises');
+                $workout = Workout::create([
+                    'user_id' => $routine->user_id,
+                    'routine_id' => $routine->id,
+                    'mode' => $mode,
+                    'bump_when' => $routine->user->bump_when_default ?? BumpWhen::AnySet,
+                    'status' => WorkoutStatus::InProgress,
+                    'started_at' => now(),
+                ]);
 
-                foreach ($routineBlock->setGroups as $routineSetGroup) {
-                    $workoutSetGroup = WorkoutSetGroup::create([
-                        'workout_block_id' => $workoutBlock->id,
-                        'type' => $routineSetGroup->type,
-                        'set_count' => $routineSetGroup->set_count,
-                        'rest_seconds' => $routineSetGroup->rest_seconds,
+                $weightFactor = $mode === WorkoutMode::Deload ? (float) $routine->deload_weight_factor : 1.0;
+                $repsFactor = $mode === WorkoutMode::Deload ? (float) $routine->deload_reps_factor : 1.0;
+
+                foreach ($routine->blocks as $routineBlock) {
+                    $workoutBlock = WorkoutBlock::create([
+                        'workout_id' => $workout->id,
+                        'position' => $routineBlock->position,
+                        'is_superset' => $routineBlock->is_superset,
+                        'has_setup_after' => $routineBlock->has_setup_after,
+                        'has_setup_after_warm_up' => $routineBlock->has_setup_after_warm_up,
                     ]);
 
-                    foreach ($routineSetGroup->warmUpSteps as $warmUpStep) {
-                        WorkoutWarmUpStep::create([
-                            'workout_set_group_id' => $workoutSetGroup->id,
-                            'position' => $warmUpStep->position,
-                            'percent_of_working' => $warmUpStep->percent_of_working,
-                            'reps' => $warmUpStep->reps,
-                            'has_setup_after' => $warmUpStep->has_setup_after,
+                    foreach ($routineBlock->blockExercises as $routineBlockExercise) {
+                        WorkoutBlockExercise::create([
+                            'workout_block_id' => $workoutBlock->id,
+                            'exercise_id' => $routineBlockExercise->exercise_id,
+                            'position' => $routineBlockExercise->position,
+                            'exercise_name' => $routineBlockExercise->exercise->getName(),
+                            'equipment' => $routineBlockExercise->exercise->equipment,
+                            'working_weight_g' => (int) round($routineBlockExercise->working_weight_g * $weightFactor),
+                            'prescribed_reps' => max(1, (int) round($routineBlockExercise->prescribed_reps * $repsFactor)),
+                            'achievement_floor' => $routineBlockExercise->achievement_floor_override
+                                ?? $routine->user->achievement_floor_default,
+                            'progression_target' => $routineBlockExercise->prescribed_reps,
                         ]);
                     }
 
-                    $segmentsByIndex = $routineSetGroup->dropsetSegments
-                        ->groupBy('set_index');
+                    $workoutBlock->load('blockExercises');
 
-                    for ($setIndex = 0; $setIndex < $routineSetGroup->set_count; $setIndex++) {
-                        $recipeSegments = $segmentsByIndex->get($setIndex, collect())
-                            ->sortBy('position')
-                            ->values();
+                    foreach ($routineBlock->setGroups as $routineSetGroup) {
+                        $workoutSetGroup = WorkoutSetGroup::create([
+                            'workout_block_id' => $workoutBlock->id,
+                            'type' => $routineSetGroup->type,
+                            'set_count' => $routineSetGroup->set_count,
+                            'rest_seconds' => $routineSetGroup->rest_seconds,
+                        ]);
 
-                        foreach ($workoutBlock->blockExercises as $workoutBlockExercise) {
-                            $workoutSet = WorkoutSet::create([
+                        foreach ($routineSetGroup->warmUpSteps as $warmUpStep) {
+                            WorkoutWarmUpStep::create([
                                 'workout_set_group_id' => $workoutSetGroup->id,
-                                'workout_block_exercise_id' => $workoutBlockExercise->id,
-                                'set_index' => $setIndex,
+                                'position' => $warmUpStep->position,
+                                'percent_of_working' => $warmUpStep->percent_of_working,
+                                'reps' => $warmUpStep->reps,
+                                'has_setup_after' => $warmUpStep->has_setup_after,
                             ]);
+                        }
 
-                            if ($recipeSegments->count() < 2) {
-                                continue;
-                            }
+                        $segmentsByIndex = $routineSetGroup->dropsetSegments
+                            ->groupBy('set_index');
 
-                            foreach ($recipeSegments as $segmentIndex => $recipeSegment) {
-                                WorkoutSetSegment::create([
-                                    'workout_set_id' => $workoutSet->id,
-                                    'position' => $segmentIndex + 1,
-                                    'weight_g' => (int) round($recipeSegment->weight_g * $weightFactor),
+                        for ($setIndex = 0; $setIndex < $routineSetGroup->set_count; $setIndex++) {
+                            $recipeSegments = $segmentsByIndex->get($setIndex, collect())
+                                ->sortBy('position')
+                                ->values();
+
+                            foreach ($workoutBlock->blockExercises as $workoutBlockExercise) {
+                                $workoutSet = WorkoutSet::create([
+                                    'workout_set_group_id' => $workoutSetGroup->id,
+                                    'workout_block_exercise_id' => $workoutBlockExercise->id,
+                                    'set_index' => $setIndex,
                                 ]);
+
+                                if ($recipeSegments->count() < 2) {
+                                    continue;
+                                }
+
+                                foreach ($recipeSegments as $segmentIndex => $recipeSegment) {
+                                    WorkoutSetSegment::create([
+                                        'workout_set_id' => $workoutSet->id,
+                                        'position' => $segmentIndex + 1,
+                                        'weight_g' => (int) round($recipeSegment->weight_g * $weightFactor),
+                                    ]);
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            return $workout->fresh(['blocks']);
-        });
+                return $workout->fresh(['blocks']);
+            });
+        } catch (UniqueConstraintViolationException $exception) {
+            throw new WorkoutServiceException(self::ALREADY_IN_PROGRESS_ERROR, previous: $exception);
+        }
     }
 
     public function inProgressFor(User $user): ?Workout

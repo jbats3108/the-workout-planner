@@ -12,8 +12,10 @@ use App\Shared\Enums\SetGroupType;
 use App\Workouts\Enums\WorkoutMode;
 use App\Workouts\Enums\WorkoutStatus;
 use App\Workouts\Exceptions\WorkoutServiceException;
+use App\Workouts\Models\Workout;
 use App\Workouts\Models\WorkoutSet;
 use App\Workouts\Services\WorkoutService;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -130,6 +132,24 @@ class WorkoutServiceTest extends TestCase
         $this->expectExceptionMessage(WorkoutService::ALREADY_IN_PROGRESS_ERROR);
 
         $this->workoutService->createWorkout($other);
+    }
+
+    #[Test]
+    public function unique_index_rejects_a_second_in_progress_row_for_the_same_user(): void
+    {
+        $routine = Routine::factory()->create();
+        $this->seedRoutineBlockWithExercise($routine);
+        $this->workoutService->createWorkout($routine);
+
+        $this->expectException(UniqueConstraintViolationException::class);
+
+        Workout::query()->create([
+            'user_id' => $routine->user_id,
+            'routine_id' => $routine->id,
+            'mode' => WorkoutMode::Normal,
+            'status' => WorkoutStatus::InProgress,
+            'started_at' => now(),
+        ]);
     }
 
     #[Test]
