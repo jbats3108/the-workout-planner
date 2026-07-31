@@ -4,6 +4,7 @@ namespace App\Users\Models;
 
 use App\Exercises\Models\Exercise;
 use App\Routines\Models\Routine;
+use App\Users\Enums\BumpWhen;
 use App\Users\Enums\WarmUpDefaultsScope;
 use App\Users\Enums\WeightUnit;
 use App\Workouts\Models\Workout;
@@ -31,6 +32,7 @@ class User extends Authenticatable
         'weight_unit',
         'achievement_floor_default',
         'progression_target_default',
+        'bump_when_default',
         'warm_up_steps_default',
         'warm_up_defaults_scope',
     ];
@@ -50,6 +52,7 @@ class User extends Authenticatable
             'weight_unit' => WeightUnit::class,
             'achievement_floor_default' => 'integer',
             'progression_target_default' => 'integer',
+            'bump_when_default' => BumpWhen::class,
             'warm_up_steps_default' => 'array',
             'warm_up_defaults_scope' => WarmUpDefaultsScope::class,
         ];
