@@ -9,6 +9,7 @@ import {
     plannedSetCount,
     previousSetWeightKg,
     shouldRestAfter,
+    supersetRoundSets,
     visitLeavesWorkout,
     workingWeightForSet,
 } from '@/workouts/lib/sets';
@@ -47,6 +48,28 @@ describe('shouldRestAfter', () => {
         });
         const current = block.sets[1];
         expect(shouldRestAfter(block, current)).toBe(true);
+    });
+});
+
+describe('supersetRoundSets', () => {
+    it('returns A then B for a superset round', () => {
+        const block = playerBlock({
+            is_superset: true,
+            exercises: [
+                { id: 10, name: 'Press', working_weight_kg: 50, prescribed_reps: 8, position: 0 },
+                { id: 11, name: 'Row', working_weight_kg: 50, prescribed_reps: 8, position: 1 },
+            ],
+            sets: [
+                playerSet({ id: 2, workout_block_exercise_id: 11, exercise_name: 'Row', set_index: 0 }),
+                playerSet({ id: 1, workout_block_exercise_id: 10, exercise_name: 'Press', set_index: 0 }),
+            ],
+        });
+        expect(supersetRoundSets(block, block.sets[0]).map((s) => s.exercise_name)).toEqual(['Press', 'Row']);
+    });
+
+    it('returns only the given set outside supersets', () => {
+        const block = playerBlock();
+        expect(supersetRoundSets(block, block.sets[0])).toEqual([block.sets[0]]);
     });
 });
 

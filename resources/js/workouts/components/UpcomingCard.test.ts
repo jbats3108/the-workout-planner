@@ -26,4 +26,56 @@ describe('UpcomingCard', () => {
         expect(wrapper.text()).toContain('× 5');
         expect(wrapper.text()).toContain('20 bar');
     });
+
+    it('renders both exercises for a setup superset pair', () => {
+        const wrapper = mount(UpcomingCard, {
+            props: {
+                upcoming: {
+                    exerciseName: 'Press',
+                    groupLabel: 'Working',
+                    setNumber: 1,
+                    setCount: 3,
+                    blockPosition: 2,
+                    weightLabel: '50',
+                    reps: 8,
+                    isDropset: false,
+                    plateStack: null,
+                },
+                pair: [
+                    {
+                        exerciseName: 'Press',
+                        groupLabel: 'Working',
+                        setNumber: 1,
+                        setCount: 3,
+                        blockPosition: 2,
+                        weightLabel: '50',
+                        reps: 8,
+                        isDropset: false,
+                        plateStack: null,
+                        letter: 'A',
+                    },
+                    {
+                        exerciseName: 'Row',
+                        groupLabel: 'Working',
+                        setNumber: 1,
+                        setCount: 3,
+                        blockPosition: 2,
+                        weightLabel: '60',
+                        reps: 10,
+                        isDropset: false,
+                        plateStack: null,
+                        letter: 'B',
+                    },
+                ],
+                weightUnit: 'kg',
+            },
+        });
+        expect(wrapper.text()).toContain('A ·');
+        expect(wrapper.text()).toContain('Press');
+        expect(wrapper.text()).toContain('B ·');
+        expect(wrapper.text()).toContain('Row');
+        expect(wrapper.text()).toContain('50kg');
+        expect(wrapper.text()).toContain('60kg');
+        expect(wrapper.text()).toContain('Superset');
+    });
 });

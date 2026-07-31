@@ -29,19 +29,28 @@ export function shouldRestAfter(block: PlayerBlock, set: PlayerSet): boolean {
     return sameIndex.every((s) => s.completed || s.id === set.id);
 }
 
+function exercisePositionInBlock(block: PlayerBlock, workoutBlockExerciseId: number): number {
+    return block.exercises.find((exercise) => exercise.id === workoutBlockExerciseId)?.position ?? 0;
+}
+
+/** Sets in the same group round, ordered by exercise position (A then B for supersets). */
+export function supersetRoundSets(block: PlayerBlock, set: PlayerSet): PlayerSet[] {
+    if (!block.is_superset) {
+        return [set];
+    }
+
+    return block.sets
+        .filter((candidate) => candidate.group_type === set.group_type && candidate.set_index === set.set_index)
+        .sort((a, b) => exercisePositionInBlock(block, a.workout_block_exercise_id) - exercisePositionInBlock(block, b.workout_block_exercise_id));
+}
+
 /** Next exercise still to play in this superset round (A → B), or null on the last of the pair. */
 export function nextSupersetSet(block: PlayerBlock, set: PlayerSet): PlayerSet | null {
     if (!block.is_superset) {
         return null;
     }
 
-    const exercisePosition = (workoutBlockExerciseId: number): number =>
-        block.exercises.find((exercise) => exercise.id === workoutBlockExerciseId)?.position ?? 0;
-
-    const round = block.sets
-        .filter((candidate) => candidate.group_type === set.group_type && candidate.set_index === set.set_index)
-        .sort((a, b) => exercisePosition(a.workout_block_exercise_id) - exercisePosition(b.workout_block_exercise_id));
-
+    const round = supersetRoundSets(block, set);
     const index = round.findIndex((candidate) => candidate.id === set.id);
     if (index < 0 || index >= round.length - 1) {
         return null;
