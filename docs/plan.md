@@ -111,8 +111,41 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 
 - **Audit agent guidance for duplication** — Spatie Data DTO rules (and likely other conventions) are repeated across `AGENTS.md`, ADRs, and `.cursor/skills/...`; consolidate so agents load one source of truth and keep context light
 - **Frontend dedupe / component opportunities** — examine repeated Vue patterns (forms, optional number inputs, stage chrome, sheets) for shared components or helpers without over-abstracting
-- **Policy audit** — verify every route/action has the right ability and policies stay complete as surfaces grow
-- **Facilitate full code review** — make a thorough review of the app tractable (scope, tooling, or staged passes)
-- **Security sweep** — hunt for authz holes, mass-assignment, IDOR, CSRF/session gaps, and similar
+- **Policy audit** — folded into full-app code review slices (see **Grill: Full app code review**)
+- **Full app code review** — staged domain passes; plan in **Grill: Full app code review** below
+- **FE double-submit guards** — add `form.processing` / busy disable (or server idempotency) on bare `router.post`/`delete` paths flagged in reviews (Dashboard start/finish, Play finish/abandon, etc.)
+- **Security sweep** — covered by Auth/Admin slice + severity ordering in that grill; keep as reminder until slice 3 done
 - **GDPR compliance?** — clarify whether/what is required (privacy policy, data export/delete, retention, cookies); grill before building
+
+## Grill: Full app code review
+
+Read-only `/code-review` passes. Not Bugbot/Security-diff tools (those only cover a diff). Base on `main`. One new chat per slice. Findings only: severity → path → cause → fix. No drive-by refactors.
+
+Cursor rule: `.cursor/rules/code-review.mdc` (same checklist; attach for `/code-review` chats).
+
+**Do now (pick one start):**
+
+1. **Workouts** (~3–4h) — player, progression, history re-eval, policies, one-in-progress *(slice 1 fixes: PR #32)*
+2. **Routines** (~2–3h) — editor sync, duplicate, deload, dropsets/supersets
+3. **Auth + Admin** (~1.5–2h) — invite gate, roles, throttle, soft-fail, IDOR on slugs/ULIDs
+4. **Settings + Users** (~1–1.5h) — plates, training defaults, profile destroy
+5. **Shared + FE shell** (~1–1.5h) — middleware, PWA SW, nav, catalog filter
+
+**Later:**
+
+- **Cross-cutting** (~1–2h) — ADR drift, DTO boundaries, test gaps, N+1, FE double-submit sweep
+- Park findings in one place (GitHub issue, Notion, or a **Review findings** subsection under this grill)
+
+**Per-slice checklist:**
+
+1. Routes + policies → ownership / IDOR
+2. Services → rules vs `CONTEXT.md` + ADRs
+3. Mutations → validation, race, soft-fail vs hard fail
+4. Matching FE (`resources/js/{domain}/`) → client/server drift
+5. **Double-submit** — `useForm` + `:disabled="form.processing"` (or busy flag) on every mutating control; flag bare `router.post`/`put`/`delete` with no guard; note whether server also rejects duplicates
+6. Tests → happy / fail / edge; note gaps
+
+**Severity order:** security → data corruption (progression/snapshot/history) → Play/editor bugs → missing tests on those → ADR drift last
+
+**Chat prompt template:** `/code-review` slice N: {Domain}. Read-only. Prioritize bugs, security, missing tests, FE double-submit. Base: `main`.
 
