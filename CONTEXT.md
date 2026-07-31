@@ -14,6 +14,7 @@ _Avoid_: Program, split, schedule, workout plan
 
 **Block**:
 One ordered unit inside a routine. Either a single exercise or a **superset** (exactly two exercises). Owns one warm-up Set Group and one working Set Group shared across the block’s exercises. Optional setup after the block.
+_UI_: Shown as **Exercise** (e.g. “Add exercise”, “Exercise N”); keep Block in code, routes, and this glossary.
 _Avoid_: Slot, group, row, exercise entry
 
 **Superset**:
