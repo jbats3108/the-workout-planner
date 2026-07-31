@@ -175,7 +175,7 @@ const {
                                     <label
                                         class="flex items-center gap-1"
                                         :class="canSetupAfterBlock(bi, form.blocks.length) ? '' : 'opacity-40'"
-                                        :title="canSetupAfterBlock(bi, form.blocks.length) ? undefined : 'Not on the final block'"
+                                        :title="canSetupAfterBlock(bi, form.blocks.length) ? undefined : 'Not on the final exercise'"
                                     >
                                         <input
                                             v-model="block.has_setup_after"
@@ -200,14 +200,14 @@ const {
                     </template>
                 </tbody>
             </table>
-            <p v-if="!form.blocks.length" class="px-4 py-8 text-center text-muted-foreground">No blocks yet. Add one below.</p>
+            <p v-if="!form.blocks.length" class="px-4 py-8 text-center text-muted-foreground">No exercises yet. Add one below.</p>
 
             <!-- Keep Deload inside the same horizontal scroll region as the table, so the scrollbar sits below it. -->
             <DeloadSettings variant="desktop" />
 
             <div v-if="activeBlock && !activeBlock.is_superset" class="min-w-0 border-t border-border bg-card/40 px-4 py-3">
                 <div class="mb-2 flex min-w-0 items-baseline justify-between gap-2">
-                    <h3 class="text-sm font-medium">Dropsets · Block {{ active + 1 }}</h3>
+                    <h3 class="text-sm font-medium">Dropsets · Exercise {{ active + 1 }}</h3>
                     <p v-if="dropsetSummary(activeBlock)" class="truncate font-mono text-xs text-muted-foreground">
                         {{ dropsetSummary(activeBlock) }}
                     </p>
@@ -219,7 +219,7 @@ const {
 
             <footer class="flex gap-2 border-t border-border px-4 py-3">
                 <button type="button" class="rounded border border-border px-3 py-2 text-sm hover:border-primary" @click="addBlock(false)">
-                    + Block
+                    + Exercise
                 </button>
                 <button type="button" class="rounded border border-border px-3 py-2 text-sm hover:border-primary" @click="addBlock(true)">
                     + Superset

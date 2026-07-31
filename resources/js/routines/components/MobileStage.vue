@@ -58,7 +58,7 @@ const {
             <div class="rounded-2xl border border-border bg-card p-4">
                 <div class="mb-3 flex items-center justify-between">
                     <h2 class="text-base font-semibold">
-                        Block {{ active + 1 }}
+                        Exercise {{ active + 1 }}
                         <span v-if="activeBlock.is_superset" class="ml-2 text-sm font-normal text-primary">Superset</span>
                     </h2>
                     <button type="button" class="text-xs text-destructive" @click="removeBlock(active)">Remove</button>
@@ -282,10 +282,10 @@ const {
                     <label
                         class="flex items-center gap-2"
                         :class="canSetupAfterBlock(active, form.blocks.length) ? '' : 'opacity-40'"
-                        :title="canSetupAfterBlock(active, form.blocks.length) ? undefined : 'Not on the final block'"
+                        :title="canSetupAfterBlock(active, form.blocks.length) ? undefined : 'Not on the final exercise'"
                     >
                         <input v-model="activeBlock.has_setup_after" type="checkbox" :disabled="!canSetupAfterBlock(active, form.blocks.length)" />
-                        Setup after block
+                        Setup after exercise
                     </label>
                 </div>
             </div>
@@ -296,7 +296,7 @@ const {
                     class="flex-1 rounded-xl border border-dashed border-border px-4 py-3 text-sm text-muted-foreground hover:border-primary hover:text-primary"
                     @click="addBlock(false)"
                 >
-                    Add block
+                    Add exercise
                 </button>
                 <button
                     type="button"
@@ -309,14 +309,14 @@ const {
         </main>
 
         <div v-else class="px-4 pb-28">
-            <p class="py-8 text-center text-muted-foreground">No blocks yet.</p>
+            <p class="py-8 text-center text-muted-foreground">No exercises yet.</p>
             <div class="flex gap-2">
                 <button
                     type="button"
                     class="flex-1 rounded-xl border border-dashed border-border px-4 py-3 text-sm text-muted-foreground hover:border-primary hover:text-primary"
                     @click="addBlock(false)"
                 >
-                    Add block
+                    Add exercise
                 </button>
                 <button
                     type="button"

@@ -24,7 +24,7 @@ const submit = () => {
         <div class="mx-auto flex w-full max-w-lg flex-1 flex-col px-4 py-10 text-foreground">
             <p class="text-xs tracking-[0.2em] text-muted-foreground uppercase">Routine</p>
             <h1 class="mt-2 text-2xl font-bold">Name your routine</h1>
-            <p class="mt-2 text-sm text-muted-foreground">You can add blocks and exercises on the next screen.</p>
+            <p class="mt-2 text-sm text-muted-foreground">You can add exercises on the next screen.</p>
 
             <form class="mt-8 flex flex-col gap-6" @submit.prevent="submit">
                 <label class="flex flex-col gap-2 text-sm text-muted-foreground">
