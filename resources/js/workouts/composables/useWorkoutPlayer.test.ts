@@ -101,6 +101,67 @@ describe('createWorkoutPlayer', () => {
         });
     });
 
+    it('previews both superset exercises during setup', () => {
+        const player = mountPlayer({
+            blocks: [
+                playerBlock({
+                    is_superset: true,
+                    has_setup_after_warm_up: true,
+                    exercises: [
+                        { id: 10, name: 'Press', working_weight_kg: 50, prescribed_reps: 8, position: 0 },
+                        { id: 11, name: 'Row', working_weight_kg: 60, prescribed_reps: 10, position: 1 },
+                    ],
+                    sets: [
+                        playerSet({ id: 1, group_type: 'warm_up', workout_block_exercise_id: 10, exercise_name: 'Press', completed: true }),
+                        playerSet({
+                            id: 2,
+                            group_type: 'working',
+                            workout_block_exercise_id: 10,
+                            exercise_name: 'Press',
+                            set_index: 0,
+                            target_weight_kg: 50,
+                            target_reps: 8,
+                        }),
+                        playerSet({
+                            id: 3,
+                            group_type: 'working',
+                            workout_block_exercise_id: 11,
+                            exercise_name: 'Row',
+                            set_index: 0,
+                            target_weight_kg: 60,
+                            target_reps: 10,
+                        }),
+                    ],
+                }),
+            ],
+        });
+        expect(player.focus.value.kind).toBe('setup');
+        expect(player.setupSupersetPair.value?.map((item) => item.exerciseName)).toEqual(['Press', 'Row']);
+        expect(player.setupSupersetPair.value?.map((item) => item.letter)).toEqual(['A', 'B']);
+        expect(player.setupSupersetPair.value?.[0].weightLabel).toBe('50');
+        expect(player.setupSupersetPair.value?.[1].weightLabel).toBe('60');
+    });
+
+    it('omits setup superset pair outside setup focus', () => {
+        const player = mountPlayer({
+            blocks: [
+                playerBlock({
+                    is_superset: true,
+                    exercises: [
+                        { id: 10, name: 'Press', working_weight_kg: 50, prescribed_reps: 8, position: 0 },
+                        { id: 11, name: 'Row', working_weight_kg: 60, prescribed_reps: 10, position: 1 },
+                    ],
+                    sets: [
+                        playerSet({ id: 1, workout_block_exercise_id: 10, exercise_name: 'Press', set_index: 0 }),
+                        playerSet({ id: 2, workout_block_exercise_id: 11, exercise_name: 'Row', set_index: 0 }),
+                    ],
+                }),
+            ],
+        });
+        expect(player.focus.value.kind).toBe('set');
+        expect(player.setupSupersetPair.value).toBeNull();
+    });
+
     it('syncs draft weight from previous logged set', async () => {
         const player = mountPlayer({
             blocks: [

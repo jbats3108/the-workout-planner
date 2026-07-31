@@ -14,6 +14,7 @@ import {
     plannedSetCount,
     previousSetWeightKg,
     shouldRestAfter,
+    supersetRoundSets,
     visitLeavesWorkout,
     warmUpRestSeconds,
     workingRestSeconds,
@@ -430,12 +431,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         };
     });
 
-    const upcoming = computed(() => {
-        const entry = flatSets.value.find(({ set }) => !set.completed) ?? null;
-        if (!entry) {
-            return null;
-        }
-
+    const previewForEntry = (entry: FlatSetEntry, letter: string | null = null) => {
         let weightKg: number | null = null;
         let weightLabel: string | null = null;
 
@@ -464,7 +460,36 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
             reps: entry.set.target_reps,
             isDropset: entry.set.is_dropset,
             plateStack: formatLoadStack(entry.set.equipment, weightKg, props.plate_profile, props.workout.weight_unit),
+            letter,
         };
+    };
+
+    const upcoming = computed(() => {
+        const entry = flatSets.value.find(({ set }) => !set.completed) ?? null;
+        if (!entry) {
+            return null;
+        }
+
+        return previewForEntry(entry);
+    });
+
+    /** Both exercises in the upcoming superset round — only while on Setup. */
+    const setupSupersetPair = computed(() => {
+        if (focus.value.kind !== 'setup') {
+            return null;
+        }
+
+        const entry = flatSets.value.find(({ set }) => !set.completed) ?? null;
+        if (!entry?.block.is_superset) {
+            return null;
+        }
+
+        const round = supersetRoundSets(entry.block, entry.set);
+        if (round.length < 2) {
+            return null;
+        }
+
+        return round.map((set, index) => previewForEntry({ blockIndex: entry.blockIndex, block: entry.block, set }, String.fromCharCode(65 + index)));
     });
 
     const finishWorkout = () => {
@@ -657,6 +682,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         progressLabel,
         upcoming,
         setupHint,
+        setupSupersetPair,
         supersetNext,
         canPromoteToDropset,
         canAddWorkingSet,
