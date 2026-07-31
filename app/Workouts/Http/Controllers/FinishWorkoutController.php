@@ -25,6 +25,8 @@ class FinishWorkoutController extends Controller
             return back()->withErrors(['workout' => $exception->getMessage()]);
         }
 
+        $progressionService->forgetSiblingProgressionSessions($workout);
+
         if ($bumps->count() === 0) {
             return redirect()->route('dashboard');
         }

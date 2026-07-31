@@ -121,6 +121,93 @@ class ProgressionControllerTest extends TestCase
     }
 
     #[Test]
+    public function apply_rejects_stale_session_after_newer_finish(): void
+    {
+        [$workoutA, $routineExercise] = $this->createFinishedEligibleWorkout();
+        $this->actingAs($this->user)->post(route('workouts.finish', $workoutA));
+        $this->assertNotEmpty(session("workout_progression.{$workoutA->id}"));
+
+        $workoutB = app(WorkoutService::class)->createWorkout($workoutA->routine->fresh());
+        $setB = WorkoutSet::query()
+            ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workoutB->id))
+            ->firstOrFail();
+        app(WorkoutService::class)->completeSet($setB, reps: 6, weightGrams: 80000);
+        $this->actingAs($this->user)->post(route('workouts.finish', $workoutB));
+
+        $this->assertNull(session("workout_progression.{$workoutA->id}"));
+
+        $this->withSession([
+            "workout_progression.{$workoutA->id}" => [[
+                'routine_block_exercise_id' => $routineExercise->id,
+                'from_weight_g' => 80000,
+                'to_weight_g' => 82500,
+                'exercise_name' => 'Squat',
+            ]],
+        ])
+            ->post(route('workouts.progression.apply', $workoutA), [
+                'routine_block_exercise_ids' => [$routineExercise->id],
+            ])
+            ->assertForbidden();
+
+        $this->assertSame(80000, $routineExercise->fresh()->working_weight_g);
+    }
+
+    #[Test]
+    public function show_redirects_when_workout_is_no_longer_latest(): void
+    {
+        [$workoutA] = $this->createFinishedEligibleWorkout();
+        $this->actingAs($this->user)->post(route('workouts.finish', $workoutA));
+
+        $workoutB = app(WorkoutService::class)->createWorkout($workoutA->routine->fresh());
+        $setB = WorkoutSet::query()
+            ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workoutB->id))
+            ->firstOrFail();
+        app(WorkoutService::class)->completeSet($setB, reps: 5, weightGrams: 80000);
+        app(WorkoutService::class)->finishWorkout($workoutB);
+
+        $this->withSession([
+            "workout_progression.{$workoutA->id}" => [[
+                'routine_block_exercise_id' => 1,
+                'from_weight_g' => 80000,
+                'to_weight_g' => 82500,
+                'exercise_name' => 'Squat',
+            ]],
+        ])
+            ->get(route('workouts.progression', $workoutA))
+            ->assertRedirect(route('dashboard'))
+            ->assertSessionHas('error', 'Progression is only available for the latest finished workout.');
+
+        $this->assertNull(session("workout_progression.{$workoutA->id}"));
+    }
+
+    #[Test]
+    public function skip_clears_stale_session_even_when_not_latest(): void
+    {
+        [$workoutA] = $this->createFinishedEligibleWorkout();
+        $this->actingAs($this->user)->post(route('workouts.finish', $workoutA));
+
+        $workoutB = app(WorkoutService::class)->createWorkout($workoutA->routine->fresh());
+        $setB = WorkoutSet::query()
+            ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workoutB->id))
+            ->firstOrFail();
+        app(WorkoutService::class)->completeSet($setB, reps: 5, weightGrams: 80000);
+        app(WorkoutService::class)->finishWorkout($workoutB);
+
+        $this->withSession([
+            "workout_progression.{$workoutA->id}" => [[
+                'routine_block_exercise_id' => 1,
+                'from_weight_g' => 80000,
+                'to_weight_g' => 82500,
+                'exercise_name' => 'Squat',
+            ]],
+        ])
+            ->post(route('workouts.progression.skip', $workoutA))
+            ->assertRedirect(route('dashboard'));
+
+        $this->assertNull(session("workout_progression.{$workoutA->id}"));
+    }
+
+    #[Test]
     public function apply_clears_session_and_redirects_to_dashboard(): void
     {
         [$workout, $routineExercise] = $this->createFinishedEligibleWorkout();

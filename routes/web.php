@@ -152,7 +152,7 @@ Route::middleware('auth')->group(function (): void {
             ->name('workouts.progression.apply');
 
         Route::post('/{workout}/progression/skip', SkipProgressionController::class)
-            ->can('applyProgression', 'workout')
+            ->can('dismissProgression', 'workout')
             ->name('workouts.progression.skip');
     });
 

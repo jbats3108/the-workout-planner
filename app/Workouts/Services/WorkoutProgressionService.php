@@ -169,10 +169,31 @@ class WorkoutProgressionService
 
     public function storeProgressionSession(Workout $workout, ProgressionSessionData $session): void
     {
+        $this->forgetSiblingProgressionSessions($workout);
+
         session([
             "workout_progression.{$workout->id}" => $session->bumps->toArray(),
             "workout_progression_undos.{$workout->id}" => $session->undos->toArray(),
         ]);
+    }
+
+    /**
+     * Drop leftover progression sessions for older finishes of the same routine.
+     */
+    public function forgetSiblingProgressionSessions(Workout $workout): void
+    {
+        $siblingIds = Workout::query()
+            ->where('user_id', $workout->user_id)
+            ->where('routine_id', $workout->routine_id)
+            ->whereKeyNot($workout->id)
+            ->pluck('id');
+
+        foreach ($siblingIds as $siblingId) {
+            session()->forget([
+                "workout_progression.{$siblingId}",
+                "workout_progression_undos.{$siblingId}",
+            ]);
+        }
     }
 
     public function pullProgressionSession(Workout $workout): ?ProgressionSessionData

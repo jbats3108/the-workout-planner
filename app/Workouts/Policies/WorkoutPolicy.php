@@ -29,6 +29,13 @@ class WorkoutPolicy
 
     public function applyProgression(User $user, Workout $workout): bool
     {
+        return $workout->user->is($user)
+            && $workout->status === WorkoutStatus::Finished
+            && $workout->isEligibleForProgressionReEval();
+    }
+
+    public function dismissProgression(User $user, Workout $workout): bool
+    {
         return $workout->user->is($user) && $workout->status === WorkoutStatus::Finished;
     }
 
