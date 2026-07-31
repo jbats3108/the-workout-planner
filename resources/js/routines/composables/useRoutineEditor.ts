@@ -157,7 +157,7 @@ export function createRoutineEditor(props: EditRoutineProps) {
                 exercises: block.exercises.map((exercise) => ({
                     ...exercise,
                     achievement_floor: normalizeOptionalReps(exercise.achievement_floor),
-                    progression_target: normalizeOptionalReps(exercise.progression_target),
+                    progression_target: null,
                 })),
                 working: {
                     set_count: block.working.set_count,
@@ -205,7 +205,7 @@ export function createRoutineEditor(props: EditRoutineProps) {
         deloadExpanded,
         toggleDeloadExpanded,
         achievementFloorDefault: computed(() => props.achievement_floor_default ?? null),
-        progressionTargetDefault: computed(() => props.progression_target_default ?? null),
+        progressionTargetDefault: computed(() => null),
         activeBlock,
         selectBlockExercise,
         exerciseName,

@@ -131,7 +131,7 @@ describe('createRoutineEditor', () => {
         });
         expect(editor.progressionExpanded.value).toBe(false);
         expect(editor.achievementFloorDefault.value).toBe(1);
-        expect(editor.progressionTargetDefault.value).toBe(6);
+        expect(editor.progressionTargetDefault.value).toBeNull();
         editor.toggleProgressionExpanded();
         expect(editor.progressionExpanded.value).toBe(true);
         editor.active.value = 1;

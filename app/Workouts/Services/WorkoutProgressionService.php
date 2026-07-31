@@ -320,11 +320,7 @@ class WorkoutProgressionService
      */
     private function hitProgressionTarget(WorkoutBlockExercise $workoutExercise, Collection $workingSets, Workout $workout): bool
     {
-        $target = $workoutExercise->progression_target;
-
-        if ($target === null) {
-            return false;
-        }
+        $target = $workoutExercise->prescribed_reps;
 
         $bumpWhen = $workout->bump_when ?? BumpWhen::AnySet;
 

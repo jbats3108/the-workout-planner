@@ -47,7 +47,7 @@ Minimum reps for a logged set’s weight to count as achieved. Optional; user de
 _Avoid_: Count reps, achieved-at, valid set threshold
 
 **Progression Target**:
-Minimum reps at the working weight that triggers a bump suggestion. Optional; user default with per-exercise override.
+The exercise’s prescribed reps (**Target** in Play). Hitting this many reps at the working weight unlocks a bump suggestion (subject to **Bump When**). Not a separate setting.
 _Avoid_: Bump reps, increase-at, progression threshold
 
 **Bump When**:
@@ -59,7 +59,7 @@ On finishing (or when re-evaluating an eligible finished workout), set the routi
 _Avoid_: Sync, catch-up
 
 **Bump**:
-A confirmed increase to an exercise’s working weight on the routine, offered when the Progression Target was hit under the Workout’s **Bump When** rule. Never silent. Each confirmation produces a **Bump Record**.
+A confirmed increase to an exercise’s working weight on the routine, offered when the prescribed Target reps were hit under the Workout’s **Bump When** rule. Never silent. Each confirmation produces a **Bump Record**.
 _Avoid_: Increase, PR jump, auto-load
 
 **Bump Record**:

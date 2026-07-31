@@ -44,20 +44,20 @@ class PlayWorkoutControllerTest extends TestCase
                 ->where('workout.routine_name', $workout->routine->getName())
                 ->has('workout.blocks', 1)
                 ->where('workout.blocks.0.exercises.0.achievement_floor', $this->user->achievement_floor_default)
-                ->where('workout.blocks.0.exercises.0.progression_target', $this->user->progression_target_default)
                 ->has('plate_profile.bars')
                 ->has('plate_profile.plates')
             );
     }
 
     #[Test]
-    public function it_includes_achievement_floor_and_progression_target_on_player_exercises(): void
+    public function it_snapshots_bump_threshold_from_prescribed_reps(): void
     {
         $this->user->update([
             'achievement_floor_default' => 4,
-            'progression_target_default' => 6,
+            'progression_target_default' => 99,
         ]);
         $workout = $this->createWorkoutForUser();
+        $prescribed = $workout->blocks->first()->blockExercises->first()->prescribed_reps;
 
         $this->actingAs($this->user)
             ->get(route('workouts.play', $workout))
@@ -65,7 +65,8 @@ class PlayWorkoutControllerTest extends TestCase
             ->assertInertia(fn (Assert $page) => $page
                 ->component('workouts/Play')
                 ->where('workout.blocks.0.exercises.0.achievement_floor', 4)
-                ->where('workout.blocks.0.exercises.0.progression_target', 6)
+                ->where('workout.blocks.0.exercises.0.progression_target', $prescribed)
+                ->where('workout.blocks.0.exercises.0.prescribed_reps', $prescribed)
             );
     }
 
@@ -90,13 +91,13 @@ class PlayWorkoutControllerTest extends TestCase
 
         $this->actingAs($this->user)
             ->post(route('workouts.sets.complete', ['workout' => $workout, 'set' => $set]), [
-                'reps' => 6,
+                'reps' => 5,
                 'weight_kg' => 80,
             ])
             ->assertRedirect();
 
         $set->refresh();
-        $this->assertSame(6, $set->reps);
+        $this->assertSame(5, $set->reps);
         $this->assertSame(80000, $set->weight_g);
         $this->assertNotNull($set->completed_at);
 

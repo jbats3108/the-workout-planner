@@ -48,7 +48,6 @@ class EditRoutineController extends Controller
             'warm_up_defaults' => $user->resolvedWarmUpStepsDefault(),
             'warm_up_defaults_scope' => ($user->warm_up_defaults_scope ?? WarmUpDefaultsScope::AllBlocks)->value,
             'achievement_floor_default' => $user->achievement_floor_default,
-            'progression_target_default' => $user->progression_target_default,
         ]);
     }
 }

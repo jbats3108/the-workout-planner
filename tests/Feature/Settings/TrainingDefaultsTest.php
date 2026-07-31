@@ -32,8 +32,8 @@ class TrainingDefaultsTest extends TestCase
             ->where('using_app_fallback', true)
             ->where('warm_up_defaults_scope', 'all_blocks')
             ->where('achievement_floor_default', null)
-            ->where('progression_target_default', null)
             ->where('bump_when_default', 'any_set')
+            ->missing('progression_target_default')
             ->has('warm_up_steps_default', 3)
             ->has('plate_profile'));
     }
@@ -71,7 +71,7 @@ class TrainingDefaultsTest extends TestCase
     }
 
     #[Test]
-    public function it_saves_progression_defaults(): void
+    public function it_saves_achievement_floor_default(): void
     {
         $response = $this->actingAs($this->user)->put(route('training.update'), [
             'warm_up_steps_default' => [
@@ -79,22 +79,20 @@ class TrainingDefaultsTest extends TestCase
             ],
             'warm_up_defaults_scope' => 'all_blocks',
             'achievement_floor_default' => 1,
-            'progression_target_default' => 6,
+            'bump_when_default' => 'any_set',
         ]);
 
         $response->assertRedirect(route('training.edit'));
 
         $this->user->refresh();
         $this->assertSame(1, $this->user->achievement_floor_default);
-        $this->assertSame(6, $this->user->progression_target_default);
     }
 
     #[Test]
-    public function it_clears_progression_defaults_when_omitted_as_null(): void
+    public function it_clears_achievement_floor_when_omitted_as_null(): void
     {
         $this->user->update([
             'achievement_floor_default' => 2,
-            'progression_target_default' => 8,
         ]);
 
         $response = $this->actingAs($this->user)->put(route('training.update'), [
@@ -103,14 +101,13 @@ class TrainingDefaultsTest extends TestCase
             ],
             'warm_up_defaults_scope' => 'all_blocks',
             'achievement_floor_default' => null,
-            'progression_target_default' => null,
+            'bump_when_default' => 'any_set',
         ]);
 
         $response->assertRedirect(route('training.edit'));
 
         $this->user->refresh();
         $this->assertNull($this->user->achievement_floor_default);
-        $this->assertNull($this->user->progression_target_default);
     }
 
     #[Test]

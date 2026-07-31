@@ -33,7 +33,6 @@ const {
     toggleSuperset,
     dropsetSummary,
     achievementFloorDefault,
-    progressionTargetDefault,
     save,
     deleteRoutine,
 } = useRoutineEditor();
@@ -154,7 +153,7 @@ const {
                     >
                         <span class="min-w-0">
                             <span class="block text-xs text-muted-foreground">Progression</span>
-                            <span class="block truncate font-mono text-sm text-foreground"> Floor / Bump overrides </span>
+                            <span class="block truncate font-mono text-sm text-foreground"> Floor override </span>
                         </span>
                         <ChevronDown
                             class="size-4 shrink-0 text-muted-foreground transition-transform"
@@ -166,34 +165,20 @@ const {
                             <p v-if="activeBlock.is_superset" class="font-mono text-xs text-muted-foreground">
                                 {{ ei === 0 ? 'A' : 'B' }}
                             </p>
-                            <div class="grid grid-cols-2 gap-2">
-                                <label class="block">
-                                    <span class="text-xs text-muted-foreground">Floor</span>
-                                    <input
-                                        :value="ex.achievement_floor ?? ''"
-                                        type="number"
-                                        min="1"
-                                        max="100"
-                                        :placeholder="optionalRepsPlaceholder(achievementFloorDefault)"
-                                        class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-lg"
-                                        @input="ex.achievement_floor = parseOptionalReps(($event.target as HTMLInputElement).value)"
-                                    />
-                                </label>
-                                <label class="block">
-                                    <span class="text-xs text-muted-foreground">Bump</span>
-                                    <input
-                                        :value="ex.progression_target ?? ''"
-                                        type="number"
-                                        min="1"
-                                        max="100"
-                                        :placeholder="optionalRepsPlaceholder(progressionTargetDefault)"
-                                        class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-lg"
-                                        @input="ex.progression_target = parseOptionalReps(($event.target as HTMLInputElement).value)"
-                                    />
-                                </label>
-                            </div>
+                            <label class="block">
+                                <span class="text-xs text-muted-foreground">Floor</span>
+                                <input
+                                    :value="ex.achievement_floor ?? ''"
+                                    type="number"
+                                    min="1"
+                                    max="100"
+                                    :placeholder="optionalRepsPlaceholder(achievementFloorDefault)"
+                                    class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-lg"
+                                    @input="ex.achievement_floor = parseOptionalReps(($event.target as HTMLInputElement).value)"
+                                />
+                            </label>
                         </div>
-                        <p class="text-xs text-muted-foreground">Empty inherits Settings → Training defaults.</p>
+                        <p class="text-xs text-muted-foreground">Empty inherits Settings → Training. Bump is always the exercise Target (reps).</p>
                     </div>
                 </div>
 

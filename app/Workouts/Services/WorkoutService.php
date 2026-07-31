@@ -108,8 +108,7 @@ class WorkoutService
                         'prescribed_reps' => max(1, (int) round($routineBlockExercise->prescribed_reps * $repsFactor)),
                         'achievement_floor' => $routineBlockExercise->achievement_floor_override
                             ?? $routine->user->achievement_floor_default,
-                        'progression_target' => $routineBlockExercise->progression_target_override
-                            ?? $routine->user->progression_target_default,
+                        'progression_target' => $routineBlockExercise->prescribed_reps,
                     ]);
                 }
 
