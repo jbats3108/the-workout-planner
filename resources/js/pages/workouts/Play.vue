@@ -2,6 +2,7 @@
 /**
  * Workout player — chrome-minimal full-bleed stage.
  */
+import ConfirmDialogHost from '@/shared/components/ConfirmDialogHost.vue';
 import CompleteStage from '@/workouts/components/CompleteStage.vue';
 import PlayerHeader from '@/workouts/components/PlayerHeader.vue';
 import RestStage from '@/workouts/components/RestStage.vue';
@@ -43,5 +44,6 @@ const primeOnFirstInteraction = () => {
         <SetupStage v-else-if="focus.kind === 'setup' && currentBlock" />
         <CompleteStage v-else-if="focus.kind === 'done'" />
         <SetStage v-else-if="current" />
+        <ConfirmDialogHost />
     </div>
 </template>
