@@ -82,6 +82,7 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 ### Features (FAQ)
 
 - **Tutorial / welcome guide** — help new users find Settings, progression defaults, editor overrides, and bump confirmation; inbox: start with FAQ, then create/play walkthrough
+- **Exercise catalog curation** — too many near-duplicate variants (esp. deadlift); trim or group so find/pick stays usable
 - **Post-hoc workout record** — log a full finished workout in one pass (no Play); pick routine or ad-hoc structure; assign `finished_at` to a past date; grill scope (progression re-eval, warm-ups, deload flag)
 - **Switch exercise for deload** — swap the exercise used when starting a deload (same structure, different lift)
 - **Strava integration** — connect account; export finished workouts (and/or sync activity metadata); grill scope (OAuth, fields, privacy)
@@ -99,6 +100,7 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 ### Polish & mobile integration
 
 - **Log sheet polish** — mobile UX on shipped complete-then-log: sheet swipe/backdrop dismiss; auto-focus weight/reps; redesign **+ Set** / **− Set** placement
+- **Set x/y in exercise header (Play)** — make set progress part of the exercise name header so what’s being done is unmistakable
 
 ### Bugfixes
 
