@@ -4,6 +4,7 @@ namespace App\Settings\Http\Controllers;
 
 use App\Shared\Http\Controllers\Controller;
 use App\Users\Data\UpdateTrainingDefaultsData;
+use App\Users\Enums\BumpWhen;
 use App\Users\Enums\WarmUpDefaultsScope;
 use App\Users\Models\User;
 use App\Users\Services\PlateProfileService;
@@ -25,6 +26,7 @@ class TrainingDefaultsController extends Controller
             'using_app_fallback' => $user->warm_up_steps_default === null,
             'achievement_floor_default' => $user->achievement_floor_default,
             'progression_target_default' => $user->progression_target_default,
+            'bump_when_default' => ($user->bump_when_default ?? BumpWhen::AnySet)->value,
             'plate_profile' => $profiles->profilePayloadFor($user),
         ]);
     }
@@ -48,6 +50,7 @@ class TrainingDefaultsController extends Controller
         $user->warm_up_defaults_scope = $data->warmUpDefaultsScope;
         $user->achievement_floor_default = $data->achievementFloorDefault;
         $user->progression_target_default = $data->progressionTargetDefault;
+        $user->bump_when_default = $data->bumpWhenDefault;
         $user->save();
 
         return redirect()

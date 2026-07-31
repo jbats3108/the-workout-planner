@@ -13,6 +13,7 @@ const props = defineProps<{
     using_app_fallback: boolean;
     achievement_floor_default: number | null;
     progression_target_default: number | null;
+    bump_when_default: 'any_set' | 'last_at_top_weight';
     plate_profile: PlateProfile;
 }>();
 
@@ -28,6 +29,7 @@ const form = useForm({
     warm_up_defaults_scope: props.warm_up_defaults_scope,
     achievement_floor_default: props.achievement_floor_default,
     progression_target_default: props.progression_target_default,
+    bump_when_default: props.bump_when_default,
 });
 
 const setOptionalReps = (field: 'achievement_floor_default' | 'progression_target_default', raw: string) => {
@@ -199,6 +201,22 @@ const savePlates = () => {
                             />
                             <InputError :message="form.errors.progression_target_default" />
                         </label>
+
+                        <fieldset class="space-y-2">
+                            <legend class="text-sm text-muted-foreground">Bump when</legend>
+                            <span class="block text-xs text-muted-foreground/80">
+                                Top weight = heaviest completed working set; the last of those decides under “Last set at top weight.”
+                            </span>
+                            <label class="flex items-center gap-2 text-sm">
+                                <input v-model="form.bump_when_default" type="radio" value="any_set" />
+                                Any set
+                            </label>
+                            <label class="flex items-center gap-2 text-sm">
+                                <input v-model="form.bump_when_default" type="radio" value="last_at_top_weight" />
+                                Last set at top weight
+                            </label>
+                            <InputError :message="form.errors.bump_when_default" />
+                        </fieldset>
                     </div>
 
                     <div class="flex flex-wrap gap-3 pt-2">
