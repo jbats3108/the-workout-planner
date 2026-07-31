@@ -8,7 +8,13 @@ Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domai
 
 ## Now
 
-- 
+- **Duplicate routine** — clone an existing routine as a starting point
+- **Bump confirmation: no bump on achieve reps** — do not suggest bump merely for hitting prescribed reps; grill remaining timing (finish only? history re-eval? skip entirely?)
+- **FAQ page** — public/help FAQ; draft bullets on Notion [FAQ Page](https://app.notion.com/p/3aae5dd99f0c8006a6cbf6df379661a8) (early-adopter forever-free, Ko-fi, what app is/isn't, beta, no AI/ad data sale, not a training app, backlog link)
+- **PWA app shell** — tabbed app shell; haptics (installable PWA done in phase 1)
+- **"Block" naming** — "block" is not intuitive; grill rename / copy before changing domain language
+- **History: group block sets** — group sets by block in history UI
+- **Superset setup preview** — show both exercises during setup
 
 ## Recently shipped (foundation)
 
@@ -24,7 +30,7 @@ Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domai
 
 Gym-test 2026-07-28 + 2026-07-26 + remaining product history. Newest first within each batch where noted.
 
-1. **PWA installable (phase 1)** — ~~manifest, Apple meta tags, service worker at `/sw.js` (root scope), iOS install banner~~ done (#23); tab shell + haptics remain backlog
+1. **PWA installable (phase 1)** — ~~manifest, Apple meta tags, service worker at `/sw.js` (root scope), iOS install banner~~ done (#23); tab shell + haptics in Now
 2. **Progression defaults UI** — ~~Settings Achievement Floor / Progression Target + editor Floor / Bump overrides~~ done (empty override inherits user default; placeholders from Settings)
 3. **Slugs / ULIDs in routes** — ~~investigate slugs instead of IDs~~ done: [ADR-0006](adr/0006-slugs-and-ulids-in-routes.md) (routine slugs + workout ULIDs)
 4. **Rest skip confirm** — ~~inline Skip rest confirm in player~~ done (`RestStage.vue`)
@@ -48,7 +54,7 @@ Gym-test 2026-07-28 + 2026-07-26 + remaining product history. Newest first withi
 22. **Plate guide visibility in Play** — ~~works for barbell/EZ; missing equipment on pre-import orphans~~ done (audit + merge original short-name catalog)
 23. **Progression on finish** — ~~carry-forward highest achieved top weight; confirm bumps when progression target hit; skip both for deload workouts~~ done
 24. **Mid-session structure edits** — ~~mutate the in-progress workout snapshot (not the routine) from the player~~ done (add/remove incomplete working sets; reindex + last-round − Set guard)
-25. **More app-like mobile behaviour** — ~~chrome polish: safe areas, player full-bleed (no AppLayout), leave confirm, overscroll off on player+editor~~ done (PWA install in #1; bottom nav still backlog)
+25. **More app-like mobile behaviour** — ~~chrome polish: safe areas, player full-bleed (no AppLayout), leave confirm, overscroll off on player+editor~~ done (PWA install in #1; bottom nav in Now)
 26. **User default warm-up %s and reps** — ~~prefs on the user; per-step %×reps on warm-up steps; seed into new blocks; Settings → Training~~ done
 27. **Restyle whole app to match Overload branding** — ~~zinc + lime~~ done: dark-first near-black + neon yellow primary + cyan accent (`docs/branding.md`, `resources/css/app.css`)
 28. **Find and import exercises** — ~~shared catalog JSON + `exercises:import` + seeder; editor find filter; index scoped to `forUser`~~ done (~80 lifts)
@@ -75,10 +81,9 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 
 ### Features (FAQ)
 
-- **FAQ page** — public/help FAQ; draft bullets on Notion [FAQ Page](https://app.notion.com/p/3aae5dd99f0c8006a6cbf6df379661a8) (early-adopter forever-free, Ko-fi, what app is/isn't, beta, no AI/ad data sale, not a training app, backlog link)
-- **Tutorial / welcome guide** — help new users find Settings, progression defaults, editor overrides, and bump confirmation
+- **Tutorial / welcome guide** — help new users find Settings, progression defaults, editor overrides, and bump confirmation; inbox: start with FAQ, then create/play walkthrough
 - **Post-hoc workout record** — log a full finished workout in one pass (no Play); pick routine or ad-hoc structure; assign `finished_at` to a past date; grill scope (progression re-eval, warm-ups, deload flag)
-- **Bump confirmation timing** — grill: when (if at all) the bump confirmation screen should appear (finish only? history re-eval? skip entirely?)
+- **Switch exercise for deload** — swap the exercise used when starting a deload (same structure, different lift)
 - **Strava integration** — connect account; export finished workouts (and/or sync activity metadata); grill scope (OAuth, fields, privacy)
 - **Garmin sync** — long-term; watch functionality too; prefer after Strava
 - **Per-exercise strength-over-time** — charts / PR timeline; needs its own grill
@@ -94,7 +99,6 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 ### Polish & mobile integration
 
 - **Log sheet polish** — mobile UX on shipped complete-then-log: sheet swipe/backdrop dismiss; auto-focus weight/reps; redesign **+ Set** / **− Set** placement
-- **PWA app shell** — tabbed app shell; haptics (installable PWA done in phase 1)
 
 ### Bugfixes
 
@@ -104,7 +108,6 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 
 - **Audit agent guidance for duplication** — Spatie Data DTO rules (and likely other conventions) are repeated across `AGENTS.md`, ADRs, and `.cursor/skills/...`; consolidate so agents load one source of truth and keep context light
 - **Frontend dedupe / component opportunities** — examine repeated Vue patterns (forms, optional number inputs, stage chrome, sheets) for shared components or helpers without over-abstracting
-- **Slugs instead of IDs** — done: [ADR-0006](adr/0006-slugs-and-ulids-in-routes.md) (routine slugs + workout ULIDs)
 - **Policy audit** — verify every route/action has the right ability and policies stay complete as surfaces grow
 - **Facilitate full code review** — make a thorough review of the app tractable (scope, tooling, or staged passes)
 - **Security sweep** — hunt for authz holes, mass-assignment, IDOR, CSRF/session gaps, and similar
