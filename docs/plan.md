@@ -100,8 +100,8 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 
 ### Polish & mobile integration
 
+- **Nicer confirms** — replace browser `confirm`/`alert` with in-app dialogs
 - **Log sheet polish** — mobile UX on shipped complete-then-log: sheet swipe/backdrop dismiss; auto-focus weight/reps; redesign **+ Set** / **− Set** placement
-- **Set x/y in exercise header (Play)** — make set progress part of the exercise name header so what’s being done is unmistakable
 
 ### Bugfixes
 
