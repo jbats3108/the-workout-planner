@@ -25,7 +25,7 @@ Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domai
 
 Gym-test 2026-07-28 + 2026-07-26 + remaining product history. Newest first within each batch where noted.
 
-1. **Bump when mode** — ~~Settings “Bump when”: Any set / Last set at top weight; snapshotted on workout start; floor-only never bumps; confirm stays on finish + history re-eval~~ done
+1. **Bump when mode** — ~~Settings “Bump when”: Any set / Last set at top weight; snapshotted on workout start; floor-only never bumps; confirm stays on finish + history re-eval~~ done; log sheet shows Floor / Bump for working sets
 2. **PWA app shell** — ~~tabbed app shell; haptics~~ done (mobile bottom tabs: Dashboard · History · Training · Settings; desktop sidebar unchanged; player haptics on Done / Log set; rest-end vibrate already shipped)
 3. **Duplicate routine** — ~~clone an existing routine as a starting point~~ done (POST duplicate; deep-copies blocks / set groups / warm-ups / dropsets / deload; opens editor as `{name} (copy)`)
 4. **Superset setup preview** — ~~show both exercises during setup~~ done (Setup Up Next lists A + B for the upcoming round)

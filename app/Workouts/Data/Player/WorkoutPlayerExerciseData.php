@@ -16,6 +16,8 @@ class WorkoutPlayerExerciseData extends Data
         public readonly ?string $equipment,
         public readonly float $workingWeightKg,
         public readonly int $prescribedReps,
+        public readonly ?int $achievementFloor,
+        public readonly ?int $progressionTarget,
         public readonly int $position,
     ) {}
 
@@ -27,6 +29,8 @@ class WorkoutPlayerExerciseData extends Data
             equipment: $exercise->equipment?->value,
             workingWeightKg: round($exercise->working_weight_g / 1000, 3),
             prescribedReps: $exercise->prescribed_reps,
+            achievementFloor: $exercise->achievement_floor,
+            progressionTarget: $exercise->progression_target,
             position: $exercise->position,
         );
     }

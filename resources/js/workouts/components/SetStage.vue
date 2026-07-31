@@ -30,6 +30,7 @@ const {
     setForm,
     draftSegments,
     logSheetOpen,
+    logProgressionHints,
     supersetNext,
 } = useWorkoutPlayer();
 
@@ -126,6 +127,9 @@ const unlockInput = (event: PointerEvent) => {
                     <div>
                         <p class="text-xs tracking-widest text-muted-foreground uppercase">Log set</p>
                         <h3 class="mt-1 text-xl font-semibold md:text-lg">{{ current.set.exercise_name }}</h3>
+                        <p v-if="logProgressionHints" class="mt-1 font-mono text-sm text-muted-foreground">
+                            {{ logProgressionHints }}
+                        </p>
                     </div>
 
                     <div class="space-y-4 pt-10 md:pt-0">

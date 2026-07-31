@@ -157,6 +157,35 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         return props.workout.blocks[focus.value.blockIndex] ?? null;
     });
 
+    const currentExercise = computed(() => {
+        const entry = current.value;
+        const block = currentBlock.value;
+        if (!entry || !block) {
+            return null;
+        }
+
+        return block.exercises.find((exercise) => exercise.id === entry.set.workout_block_exercise_id) ?? null;
+    });
+
+    /** Floor / Bump for the log sheet — working sets only, omit when unset. */
+    const logProgressionHints = computed(() => {
+        const entry = current.value;
+        const exercise = currentExercise.value;
+        if (!entry || !exercise || entry.set.group_type !== 'working' || entry.set.is_dropset) {
+            return null;
+        }
+
+        const parts: string[] = [];
+        if (exercise.achievement_floor != null) {
+            parts.push(`Floor ${exercise.achievement_floor}`);
+        }
+        if (exercise.progression_target != null) {
+            parts.push(`Bump ${exercise.progression_target}`);
+        }
+
+        return parts.length > 0 ? parts.join(' · ') : null;
+    });
+
     const syncDraftFromSet = (entry: FlatSetEntry) => {
         setForm.reps = entry.set.logged_reps ?? entry.set.target_reps ?? 0;
         if (entry.set.is_dropset) {
@@ -677,6 +706,8 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         focus,
         current,
         currentBlock,
+        currentExercise,
+        logProgressionHints,
         setForm,
         draftSegments,
         restSecondsLeft,

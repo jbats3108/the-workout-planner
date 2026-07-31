@@ -38,8 +38,8 @@ describe('shouldRestAfter', () => {
         const block = playerBlock({
             is_superset: true,
             exercises: [
-                { id: 10, name: 'A', working_weight_kg: 50, prescribed_reps: 8, position: 0 },
-                { id: 11, name: 'B', working_weight_kg: 50, prescribed_reps: 8, position: 1 },
+                { id: 10, name: 'A', working_weight_kg: 50, prescribed_reps: 8, achievement_floor: null, progression_target: null, position: 0 },
+                { id: 11, name: 'B', working_weight_kg: 50, prescribed_reps: 8, achievement_floor: null, progression_target: null, position: 1 },
             ],
             sets: [
                 playerSet({ id: 1, workout_block_exercise_id: 10, completed: true }),
@@ -56,8 +56,8 @@ describe('supersetRoundSets', () => {
         const block = playerBlock({
             is_superset: true,
             exercises: [
-                { id: 10, name: 'Press', working_weight_kg: 50, prescribed_reps: 8, position: 0 },
-                { id: 11, name: 'Row', working_weight_kg: 50, prescribed_reps: 8, position: 1 },
+                { id: 10, name: 'Press', working_weight_kg: 50, prescribed_reps: 8, achievement_floor: null, progression_target: null, position: 0 },
+                { id: 11, name: 'Row', working_weight_kg: 50, prescribed_reps: 8, achievement_floor: null, progression_target: null, position: 1 },
             ],
             sets: [
                 playerSet({ id: 2, workout_block_exercise_id: 11, exercise_name: 'Row', set_index: 0 }),
@@ -78,8 +78,8 @@ describe('nextSupersetSet', () => {
         const block = playerBlock({
             is_superset: true,
             exercises: [
-                { id: 10, name: 'Press', working_weight_kg: 50, prescribed_reps: 8, position: 0 },
-                { id: 11, name: 'Row', working_weight_kg: 50, prescribed_reps: 8, position: 1 },
+                { id: 10, name: 'Press', working_weight_kg: 50, prescribed_reps: 8, achievement_floor: null, progression_target: null, position: 0 },
+                { id: 11, name: 'Row', working_weight_kg: 50, prescribed_reps: 8, achievement_floor: null, progression_target: null, position: 1 },
             ],
             sets: [
                 playerSet({ id: 1, workout_block_exercise_id: 10, exercise_name: 'Press', set_index: 0 }),

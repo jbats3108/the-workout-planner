@@ -43,8 +43,29 @@ class PlayWorkoutControllerTest extends TestCase
                 ->where('workout.id', $workout->ulid)
                 ->where('workout.routine_name', $workout->routine->getName())
                 ->has('workout.blocks', 1)
+                ->where('workout.blocks.0.exercises.0.achievement_floor', $this->user->achievement_floor_default)
+                ->where('workout.blocks.0.exercises.0.progression_target', $this->user->progression_target_default)
                 ->has('plate_profile.bars')
                 ->has('plate_profile.plates')
+            );
+    }
+
+    #[Test]
+    public function it_includes_achievement_floor_and_progression_target_on_player_exercises(): void
+    {
+        $this->user->update([
+            'achievement_floor_default' => 4,
+            'progression_target_default' => 6,
+        ]);
+        $workout = $this->createWorkoutForUser();
+
+        $this->actingAs($this->user)
+            ->get(route('workouts.play', $workout))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('workouts/Play')
+                ->where('workout.blocks.0.exercises.0.achievement_floor', 4)
+                ->where('workout.blocks.0.exercises.0.progression_target', 6)
             );
     }
 

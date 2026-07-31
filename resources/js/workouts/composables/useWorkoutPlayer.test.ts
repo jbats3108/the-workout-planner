@@ -80,8 +80,24 @@ describe('createWorkoutPlayer', () => {
                 playerBlock({
                     is_superset: true,
                     exercises: [
-                        { id: 10, name: 'Press', working_weight_kg: 50, prescribed_reps: 8, position: 0 },
-                        { id: 11, name: 'Row', working_weight_kg: 60, prescribed_reps: 10, position: 1 },
+                        {
+                            id: 10,
+                            name: 'Press',
+                            working_weight_kg: 50,
+                            prescribed_reps: 8,
+                            achievement_floor: null,
+                            progression_target: null,
+                            position: 0,
+                        },
+                        {
+                            id: 11,
+                            name: 'Row',
+                            working_weight_kg: 60,
+                            prescribed_reps: 10,
+                            achievement_floor: null,
+                            progression_target: null,
+                            position: 1,
+                        },
                     ],
                     sets: [
                         playerSet({ id: 1, workout_block_exercise_id: 10, exercise_name: 'Press', set_index: 0 }),
@@ -111,8 +127,24 @@ describe('createWorkoutPlayer', () => {
                     is_superset: true,
                     has_setup_after_warm_up: true,
                     exercises: [
-                        { id: 10, name: 'Press', working_weight_kg: 50, prescribed_reps: 8, position: 0 },
-                        { id: 11, name: 'Row', working_weight_kg: 60, prescribed_reps: 10, position: 1 },
+                        {
+                            id: 10,
+                            name: 'Press',
+                            working_weight_kg: 50,
+                            prescribed_reps: 8,
+                            achievement_floor: null,
+                            progression_target: null,
+                            position: 0,
+                        },
+                        {
+                            id: 11,
+                            name: 'Row',
+                            working_weight_kg: 60,
+                            prescribed_reps: 10,
+                            achievement_floor: null,
+                            progression_target: null,
+                            position: 1,
+                        },
                     ],
                     sets: [
                         playerSet({ id: 1, group_type: 'warm_up', workout_block_exercise_id: 10, exercise_name: 'Press', completed: true }),
@@ -151,8 +183,24 @@ describe('createWorkoutPlayer', () => {
                 playerBlock({
                     is_superset: true,
                     exercises: [
-                        { id: 10, name: 'Press', working_weight_kg: 50, prescribed_reps: 8, position: 0 },
-                        { id: 11, name: 'Row', working_weight_kg: 60, prescribed_reps: 10, position: 1 },
+                        {
+                            id: 10,
+                            name: 'Press',
+                            working_weight_kg: 50,
+                            prescribed_reps: 8,
+                            achievement_floor: null,
+                            progression_target: null,
+                            position: 0,
+                        },
+                        {
+                            id: 11,
+                            name: 'Row',
+                            working_weight_kg: 60,
+                            prescribed_reps: 10,
+                            achievement_floor: null,
+                            progression_target: null,
+                            position: 1,
+                        },
                     ],
                     sets: [
                         playerSet({ id: 1, workout_block_exercise_id: 10, exercise_name: 'Press', set_index: 0 }),
@@ -548,6 +596,82 @@ describe('createWorkoutPlayer', () => {
         player.cancelLogSheet();
         expect(player.logSheetOpen.value).toBe(false);
         expect(inertiaMocks().inertiaFormPost).not.toHaveBeenCalled();
+    });
+
+    it('exposes floor and bump hints for working sets on the log sheet', () => {
+        const player = mountPlayer({
+            blocks: [
+                playerBlock({
+                    exercises: [
+                        {
+                            id: 10,
+                            name: 'Squat',
+                            working_weight_kg: 100,
+                            prescribed_reps: 5,
+                            achievement_floor: 4,
+                            progression_target: 6,
+                            position: 0,
+                        },
+                    ],
+                    sets: [playerSet({ id: 1, workout_block_exercise_id: 10, group_type: 'working' })],
+                }),
+            ],
+        });
+
+        expect(player.logProgressionHints.value).toBe('Floor 4 · Bump 6');
+    });
+
+    it('hides progression hints on warm-up and dropset log sheets', () => {
+        const warmUp = mountPlayer({
+            blocks: [
+                playerBlock({
+                    exercises: [
+                        {
+                            id: 10,
+                            name: 'Squat',
+                            working_weight_kg: 100,
+                            prescribed_reps: 5,
+                            achievement_floor: 4,
+                            progression_target: 6,
+                            position: 0,
+                        },
+                    ],
+                    sets: [playerSet({ id: 1, workout_block_exercise_id: 10, group_type: 'warm_up' })],
+                }),
+            ],
+        });
+        expect(warmUp.logProgressionHints.value).toBeNull();
+
+        const dropset = mountPlayer({
+            blocks: [
+                playerBlock({
+                    exercises: [
+                        {
+                            id: 10,
+                            name: 'Squat',
+                            working_weight_kg: 100,
+                            prescribed_reps: 5,
+                            achievement_floor: 4,
+                            progression_target: 6,
+                            position: 0,
+                        },
+                    ],
+                    sets: [
+                        playerSet({
+                            id: 1,
+                            workout_block_exercise_id: 10,
+                            group_type: 'working',
+                            is_dropset: true,
+                            segments: [
+                                { position: 1, weight_kg: 100 },
+                                { position: 2, weight_kg: 80 },
+                            ],
+                        }),
+                    ],
+                }),
+            ],
+        });
+        expect(dropset.logProgressionHints.value).toBeNull();
     });
 
     it('confirms log set with a haptic', () => {
