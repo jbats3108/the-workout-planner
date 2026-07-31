@@ -76,13 +76,15 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 ### Features (FAQ)
 
 - **FAQ page** — public/help FAQ; draft bullets on Notion [FAQ Page](https://app.notion.com/p/3aae5dd99f0c8006a6cbf6df379661a8) (early-adopter forever-free, Ko-fi, what app is/isn't, beta, no AI/ad data sale, not a training app, backlog link)
-- **Tutorial / welcome guide** — help new users find Settings, progression defaults, editor overrides, and bump confirmation
+- **Tutorial / welcome guide** — help new users find Settings, progression defaults, editor overrides, and bump confirmation; inbox: start with FAQ, then create/play walkthrough
 - **Post-hoc workout record** — log a full finished workout in one pass (no Play); pick routine or ad-hoc structure; assign `finished_at` to a past date; grill scope (progression re-eval, warm-ups, deload flag)
-- **Bump confirmation timing** — grill: when (if at all) the bump confirmation screen should appear (finish only? history re-eval? skip entirely?)
+- **Bump confirmation timing** — grill: when (if at all) the bump confirmation screen should appear (finish only? history re-eval? skip entirely?); inbox: do not suggest bump merely for hitting prescribed reps
+- **Duplicate routine** — clone an existing routine as a starting point
+- **Switch exercise for deload** — swap the exercise used when starting a deload (same structure, different lift)
 - **Strava integration** — connect account; export finished workouts (and/or sync activity metadata); grill scope (OAuth, fields, privacy)
 - **Garmin sync** — long-term; watch functionality too; prefer after Strava
 - **Per-exercise strength-over-time** — charts / PR timeline; needs its own grill
-- **History extensions** — warm-up edits; discarded workouts in list; structure edits on finished workouts
+- **History extensions** — warm-up edits; discarded workouts in list; structure edits on finished workouts; group block sets together in history UI
 - **Demote dropset → normal in Play**
 - **Ad-hoc setup from player** — beyond planned `has_setup_after`
 - **Transition duration preference** — stored user pref (today client-side for supersets)
@@ -90,11 +92,13 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 - **Dropsets on supersets**
 - **Gym dumbbell / rack inventory** — min, max, step for run-the-rack helper
 - **Flaky-network drafts** — best-effort offline/queue for player logging
+- **"Block" naming** — inbox: "block" is not intuitive; grill rename / copy before changing domain language
 
 ### Polish & mobile integration
 
 - **Log sheet polish** — mobile UX on shipped complete-then-log: sheet swipe/backdrop dismiss; auto-focus weight/reps; redesign **+ Set** / **− Set** placement
 - **PWA app shell** — tabbed app shell; haptics (installable PWA done in phase 1)
+- **Superset setup preview** — show both exercises during setup (inbox)
 
 ### Bugfixes
 
@@ -104,7 +108,6 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 
 - **Audit agent guidance for duplication** — Spatie Data DTO rules (and likely other conventions) are repeated across `AGENTS.md`, ADRs, and `.cursor/skills/...`; consolidate so agents load one source of truth and keep context light
 - **Frontend dedupe / component opportunities** — examine repeated Vue patterns (forms, optional number inputs, stage chrome, sheets) for shared components or helpers without over-abstracting
-- **Slugs instead of IDs** — done: [ADR-0006](adr/0006-slugs-and-ulids-in-routes.md) (routine slugs + workout ULIDs)
 - **Policy audit** — verify every route/action has the right ability and policies stay complete as surfaces grow
 - **Facilitate full code review** — make a thorough review of the app tractable (scope, tooling, or staged passes)
 - **Security sweep** — hunt for authz holes, mass-assignment, IDOR, CSRF/session gaps, and similar
