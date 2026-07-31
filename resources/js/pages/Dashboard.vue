@@ -56,6 +56,10 @@ const abandonInProgress = () => {
     router.post(route('workouts.discard', workout.id));
 };
 
+const duplicateRoutine = (routine: Routine) => {
+    router.post(route('routines.duplicate', routine.slug));
+};
+
 const deleteRoutine = (routine: Routine) => {
     if (!confirm(`Delete “${routine.name}”? It will be archived and removed from your list.`)) {
         return;
@@ -131,6 +135,7 @@ const formatFinishedAt = (iso: string) => {
                     :can-start="canStart(routine)"
                     :start-blocked-reason="startBlockedReason(routine)"
                     @start="(mode) => startWorkout(routine.slug, mode)"
+                    @duplicate="duplicateRoutine(routine)"
                     @delete="deleteRoutine(routine)"
                 />
             </div>

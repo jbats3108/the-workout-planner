@@ -175,6 +175,13 @@ export function createRoutineEditor(props: EditRoutineProps) {
         })).put(route('routines.update', props.routine.slug));
     };
 
+    const duplicateRoutine = () => {
+        if (form.isDirty && !confirm('Duplicate the last saved version? Unsaved edits will not be included.')) {
+            return;
+        }
+        router.post(route('routines.duplicate', props.routine.slug));
+    };
+
     const deleteRoutine = () => {
         if (!confirm(`Delete “${form.name || 'this routine'}”? It will be archived and removed from your list.`)) {
             return;
@@ -223,6 +230,7 @@ export function createRoutineEditor(props: EditRoutineProps) {
         rackStep,
         applyRunTheRack: onApplyRunTheRack,
         save,
+        duplicateRoutine,
         deleteRoutine,
         errorList,
         weightUnit: props.weight_unit,
