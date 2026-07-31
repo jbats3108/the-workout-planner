@@ -1,4 +1,4 @@
-import { formatKg, historyBlockTitle, historyRowsForBlock } from '@/workouts/lib/historyDisplay';
+import { formatKg, historyBlockTitle, historyRowsForBlock, historyWarmUpGroups } from '@/workouts/lib/historyDisplay';
 import type { PlayerBlock, PlayerSet } from '@/workouts/types';
 import { describe, expect, it } from 'vitest';
 
@@ -61,18 +61,124 @@ describe('historyBlockTitle', () => {
     });
 });
 
+describe('historyWarmUpGroups', () => {
+    it('keeps a single-exercise warm-up as one load line', () => {
+        expect(
+            historyWarmUpGroups([
+                set({ id: 1, group_type: 'warm_up', logged_reps: 5, logged_weight_kg: 40 }),
+                set({ id: 2, group_type: 'warm_up', set_index: 1, logged_reps: 3, logged_weight_kg: 50 }),
+            ]),
+        ).toEqual([{ exerciseName: null, loads: ['5×40', '3×50'] }]);
+    });
+
+    it('groups multi-exercise warm-ups by exercise', () => {
+        expect(
+            historyWarmUpGroups([
+                set({
+                    id: 1,
+                    group_type: 'warm_up',
+                    workout_block_exercise_id: 10,
+                    exercise_name: 'Press',
+                    set_index: 0,
+                    logged_reps: 5,
+                    logged_weight_kg: 40,
+                }),
+                set({
+                    id: 2,
+                    group_type: 'warm_up',
+                    workout_block_exercise_id: 11,
+                    exercise_name: 'Row',
+                    set_index: 0,
+                    logged_reps: 5,
+                    logged_weight_kg: 30,
+                }),
+                set({
+                    id: 3,
+                    group_type: 'warm_up',
+                    workout_block_exercise_id: 10,
+                    exercise_name: 'Press',
+                    set_index: 1,
+                    logged_reps: 3,
+                    logged_weight_kg: 50,
+                }),
+                set({
+                    id: 4,
+                    group_type: 'warm_up',
+                    workout_block_exercise_id: 11,
+                    exercise_name: 'Row',
+                    set_index: 1,
+                    logged_reps: 3,
+                    logged_weight_kg: 40,
+                }),
+            ]),
+        ).toEqual([
+            { exerciseName: 'Press', loads: ['5×40', '3×50'] },
+            { exerciseName: 'Row', loads: ['5×30', '3×40'] },
+        ]);
+    });
+});
+
 describe('historyRowsForBlock', () => {
-    it('collapses contiguous warm-ups into one row', () => {
+    it('collapses warm-ups and groups working sets by exercise', () => {
         const rows = historyRowsForBlock([
             set({ id: 1, group_type: 'warm_up', logged_reps: 5, logged_weight_kg: 40 }),
             set({ id: 2, group_type: 'warm_up', logged_reps: 3, logged_weight_kg: 50 }),
-            set({ id: 3, group_type: 'working', logged_reps: 6, logged_weight_kg: 80 }),
-            set({ id: 4, group_type: 'working', logged_reps: 6, logged_weight_kg: 80 }),
+            set({ id: 3, group_type: 'working', set_index: 0, logged_reps: 6, logged_weight_kg: 80 }),
+            set({ id: 4, group_type: 'working', set_index: 1, logged_reps: 6, logged_weight_kg: 80 }),
         ]);
 
-        expect(rows).toHaveLength(3);
+        expect(rows).toHaveLength(2);
         expect(rows[0]).toMatchObject({ type: 'warm_up', sets: [{ id: 1 }, { id: 2 }] });
-        expect(rows[1]).toMatchObject({ type: 'working', set: { id: 3 } });
-        expect(rows[2]).toMatchObject({ type: 'working', set: { id: 4 } });
+        expect(rows[1]).toMatchObject({
+            type: 'working_group',
+            exerciseName: 'Bench',
+            sets: [{ id: 3 }, { id: 4 }],
+        });
+    });
+
+    it('keeps separate working groups for a superset pair', () => {
+        const rows = historyRowsForBlock([
+            set({
+                id: 1,
+                group_type: 'working',
+                workout_block_exercise_id: 10,
+                exercise_name: 'Press',
+                set_index: 0,
+            }),
+            set({
+                id: 2,
+                group_type: 'working',
+                workout_block_exercise_id: 11,
+                exercise_name: 'Row',
+                set_index: 0,
+            }),
+            set({
+                id: 3,
+                group_type: 'working',
+                workout_block_exercise_id: 10,
+                exercise_name: 'Press',
+                set_index: 1,
+            }),
+            set({
+                id: 4,
+                group_type: 'working',
+                workout_block_exercise_id: 11,
+                exercise_name: 'Row',
+                set_index: 1,
+            }),
+        ]);
+
+        expect(rows).toEqual([
+            expect.objectContaining({
+                type: 'working_group',
+                exerciseName: 'Press',
+                sets: [expect.objectContaining({ id: 1 }), expect.objectContaining({ id: 3 })],
+            }),
+            expect.objectContaining({
+                type: 'working_group',
+                exerciseName: 'Row',
+                sets: [expect.objectContaining({ id: 2 }), expect.objectContaining({ id: 4 })],
+            }),
+        ]);
     });
 });

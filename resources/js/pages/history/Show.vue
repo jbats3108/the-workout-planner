@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { formatKg, historyBlockTitle, historyRowsForBlock } from '@/workouts/lib/historyDisplay';
-import type { PlayerSet, WorkoutPayload } from '@/workouts/types';
+import { historyBlockTitle, historyRowsForBlock, historyWarmUpGroups } from '@/workouts/lib/historyDisplay';
+import type { WorkoutPayload } from '@/workouts/types';
 import { Head, router, useForm } from '@inertiajs/vue3';
 import { Trash2 } from 'lucide-vue-next';
 import { computed } from 'vue';
@@ -36,13 +36,9 @@ const blockRows = computed(() =>
         block,
         title: historyBlockTitle(block),
         rows: historyRowsForBlock(block.sets),
+        showExerciseHeadings: block.is_superset || block.exercises.length > 1,
     })),
 );
-
-const warmUpTitle = (sets: PlayerSet[]) => {
-    const names = [...new Set(sets.map((set) => set.exercise_name))];
-    return names.length === 1 ? names[0] : 'Warm up';
-};
 
 const saveSet = (setId: number) => {
     forms[setId].put(route('history.sets.update', [props.history.workout.id, setId]));
@@ -61,7 +57,7 @@ const deleteWorkout = () => {
     <Head :title="`History · ${history.workout.routine_name}`" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex flex-1 flex-col gap-6 p-4 text-foreground">
+        <div class="flex flex-1 flex-col gap-5 p-4 text-foreground">
             <div class="flex flex-wrap items-start justify-between gap-3">
                 <div>
                     <p class="font-mono text-xs tracking-wide text-primary uppercase">History</p>
@@ -78,61 +74,74 @@ const deleteWorkout = () => {
                 </button>
             </div>
 
-            <section v-for="{ block, title, rows } in blockRows" :key="block.id" class="overflow-hidden rounded-xl border border-border">
-                <header class="border-b border-border bg-card/40 px-4 py-3">
+            <section
+                v-for="{ block, title, rows, showExerciseHeadings } in blockRows"
+                :key="block.id"
+                class="overflow-hidden rounded-xl border border-border"
+            >
+                <header class="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 border-b border-border bg-card/40 px-3 py-2">
                     <p class="font-medium">{{ title }}</p>
-                    <p class="mt-0.5 font-mono text-xs text-muted-foreground uppercase">
+                    <p class="font-mono text-xs text-muted-foreground uppercase">
                         Block {{ block.position }}
                         <span v-if="block.is_superset"> · Superset</span>
                     </p>
                 </header>
 
                 <div class="divide-y divide-border">
-                    <div v-for="row in rows" :key="row.key" class="px-4 py-3">
+                    <div v-for="row in rows" :key="row.key" class="px-3 py-2.5">
                         <template v-if="row.type === 'warm_up'">
-                            <p class="font-medium">{{ warmUpTitle(row.sets) }}</p>
                             <p class="font-mono text-xs text-muted-foreground uppercase">Warm up</p>
-                            <ul class="mt-2 space-y-1 text-sm text-muted-foreground">
-                                <li v-for="set in row.sets" :key="set.id">
-                                    <span v-if="warmUpTitle(row.sets) === 'Warm up'" class="text-foreground/80">{{ set.exercise_name }} · </span>
-                                    {{ set.logged_reps ?? '—' }} × {{ formatKg(set.logged_weight_kg ?? set.target_weight_kg) }} kg
+                            <ul class="mt-1.5 space-y-1.5">
+                                <li v-for="(group, gi) in historyWarmUpGroups(row.sets)" :key="gi" class="text-sm">
+                                    <p v-if="group.exerciseName" class="font-medium text-foreground">{{ group.exerciseName }}</p>
+                                    <p class="font-mono text-muted-foreground">{{ group.loads.join(' · ') }}</p>
                                 </li>
                             </ul>
                         </template>
 
                         <template v-else>
-                            <p class="font-medium">{{ row.set.exercise_name }}</p>
-                            <p class="font-mono text-xs text-muted-foreground uppercase">Working</p>
-
-                            <form class="mt-3 flex flex-wrap items-end gap-3" @submit.prevent="saveSet(row.set.id)">
-                                <label class="flex flex-col gap-1 text-xs text-muted-foreground">
-                                    Reps
-                                    <input
-                                        v-model.number="forms[row.set.id].reps"
-                                        type="number"
-                                        min="0"
-                                        class="w-20 rounded border border-border bg-background px-2 py-1.5 text-sm"
-                                    />
-                                </label>
-                                <label v-if="!row.set.is_dropset" class="flex flex-col gap-1 text-xs text-muted-foreground">
-                                    Weight (kg)
-                                    <input
-                                        v-model.number="forms[row.set.id].weight_kg"
-                                        type="number"
-                                        min="0"
-                                        step="0.01"
-                                        inputmode="decimal"
-                                        class="w-24 rounded border border-border bg-background px-2 py-1.5 text-sm"
-                                    />
-                                </label>
-                                <button
-                                    type="submit"
-                                    class="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-40"
-                                    :disabled="forms[row.set.id].processing"
-                                >
-                                    Save
-                                </button>
-                            </form>
+                            <p v-if="showExerciseHeadings" class="mb-1.5 text-sm font-medium">{{ row.exerciseName }}</p>
+                            <ul class="space-y-2">
+                                <li v-for="set in row.sets" :key="set.id">
+                                    <form class="flex flex-wrap items-center gap-2" @submit.prevent="saveSet(set.id)">
+                                        <span class="w-6 shrink-0 font-mono text-xs text-muted-foreground">{{ set.set_index + 1 }}</span>
+                                        <label class="flex items-center gap-1 text-xs text-muted-foreground">
+                                            <span class="sr-only">Reps</span>
+                                            <input
+                                                v-model.number="forms[set.id].reps"
+                                                type="number"
+                                                min="0"
+                                                class="w-14 rounded border border-border bg-background px-1.5 py-1 text-sm"
+                                                aria-label="Reps"
+                                            />
+                                        </label>
+                                        <span class="text-xs text-muted-foreground">×</span>
+                                        <template v-if="!set.is_dropset">
+                                            <label class="flex items-center gap-1 text-xs text-muted-foreground">
+                                                <span class="sr-only">Weight</span>
+                                                <input
+                                                    v-model.number="forms[set.id].weight_kg"
+                                                    type="number"
+                                                    min="0"
+                                                    step="0.01"
+                                                    inputmode="decimal"
+                                                    class="w-16 rounded border border-border bg-background px-1.5 py-1 text-sm"
+                                                    aria-label="Weight (kg)"
+                                                />
+                                                <span>kg</span>
+                                            </label>
+                                        </template>
+                                        <span v-else class="font-mono text-xs text-muted-foreground">dropset</span>
+                                        <button
+                                            type="submit"
+                                            class="ml-auto rounded-md bg-primary px-2.5 py-1 text-xs font-semibold text-primary-foreground disabled:opacity-40"
+                                            :disabled="forms[set.id].processing"
+                                        >
+                                            Save
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
                         </template>
                     </div>
                 </div>

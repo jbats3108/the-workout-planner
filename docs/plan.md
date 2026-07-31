@@ -29,7 +29,7 @@ Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domai
 Gym-test 2026-07-28 + 2026-07-26 + remaining product history. Newest first within each batch where noted.
 
 1. **Superset setup preview** — ~~show both exercises during setup~~ done (Setup Up Next lists A + B for the upcoming round)
-2. **History: group block sets** — ~~group sets by block in history UI~~ done (one section per block with title + nested rows)
+2. **History: group block sets** — ~~group sets by block in history UI~~ done (one section per block; working sets grouped by exercise)
 3. **PWA installable (phase 1)** — ~~manifest, Apple meta tags, service worker at `/sw.js` (root scope), iOS install banner~~ done (#23); tab shell + haptics in Now
 4. **Progression defaults UI** — ~~Settings Achievement Floor / Progression Target + editor Floor / Bump overrides~~ done (empty override inherits user default; placeholders from Settings)
 5. **Slugs / ULIDs in routes** — ~~investigate slugs instead of IDs~~ done: [ADR-0006](adr/0006-slugs-and-ulids-in-routes.md) (routine slugs + workout ULIDs)
