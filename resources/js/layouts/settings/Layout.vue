@@ -3,22 +3,40 @@ import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { type NavItem } from '@/types';
-import { Link, usePage } from '@inertiajs/vue3';
-
-const sidebarNavItems: NavItem[] = [
-    {
-        title: 'Profile',
-        href: '/settings/profile',
-    },
-    {
-        title: 'Appearance',
-        href: '/settings/appearance',
-    },
-];
+import { Link, router, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
+import { route as ziggyRoute } from 'ziggy-js';
 
 const page = usePage();
+const route = (name: string, params?: Record<string, unknown>, absolute?: boolean) => ziggyRoute(name, params, absolute, page.props.ziggy);
+const isAdmin = computed(() => Boolean(page.props.auth.user?.is_admin));
 
-const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.location).pathname : '';
+const sidebarNavItems = computed((): NavItem[] => {
+    const items: NavItem[] = [
+        {
+            title: 'Profile',
+            href: route('profile.edit'),
+        },
+        {
+            title: 'Appearance',
+            href: route('appearance'),
+        },
+    ];
+    if (isAdmin.value) {
+        items.push({
+            title: 'Admin',
+            href: route('admin.index'),
+        });
+    }
+    return items;
+});
+
+const currentPath = computed(() => page.url.split('?')[0]);
+
+const logout = () => {
+    router.flushAll();
+    router.post(route('logout'));
+};
 </script>
 
 <template>
@@ -39,6 +57,7 @@ const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.locati
                             {{ item.title }}
                         </Link>
                     </Button>
+                    <Button type="button" variant="ghost" class="w-full justify-start text-muted-foreground" @click="logout"> Log out </Button>
                 </nav>
             </aside>
 

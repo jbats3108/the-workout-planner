@@ -8,7 +8,7 @@ const { visible, dismiss } = usePwaInstall();
 <template>
     <div
         v-if="visible"
-        class="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-card px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] shadow-lg md:hidden"
+        class="fixed inset-x-0 bottom-[calc(3.5rem+env(safe-area-inset-bottom,0px))] z-50 border-t border-border bg-card px-4 py-3 shadow-lg md:hidden"
         role="region"
         aria-label="Install OVRLOAD"
     >

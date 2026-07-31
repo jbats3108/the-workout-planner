@@ -1,4 +1,5 @@
 import { gramsToKg } from '@/lib/plateCalculator';
+import { hapticConfirm, hapticTap } from '@/shared/lib/haptics';
 import { findFirstIncompleteFocus, flattenPlayerSets, setupKey, type FlatSetEntry } from '@/workouts/lib/focus';
 import { formatRestSeconds, groupLabel, setupHintText, workoutProgressLabel } from '@/workouts/lib/labels';
 import { formatLoadStack, formatPlateStackLabel, resolvePlateLoad } from '@/workouts/lib/plates';
@@ -267,6 +268,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
             return;
         }
         preparePlayerInteraction();
+        hapticTap();
         syncDraftFromSet(current.value);
         logSheetOpen.value = true;
     };
@@ -280,6 +282,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
             return;
         }
         preparePlayerInteraction();
+        hapticConfirm();
         logSheetOpen.value = false;
         const { block, set } = current.value;
         let restAfter = shouldRestAfter(block, set) ? set.rest_seconds : 0;
