@@ -9,12 +9,14 @@ use App\Routines\Models\RoutineBlockExercise;
 use App\Routines\Models\RoutineDropsetSegment;
 use App\Routines\Models\RoutineSetGroup;
 use App\Shared\Enums\SetGroupType;
+use App\Users\Enums\BumpWhen;
 use App\Users\Models\User;
 use App\Workouts\Enums\WorkoutMode;
 use App\Workouts\Models\WorkoutSet;
 use App\Workouts\Services\WorkoutProgressionService;
 use App\Workouts\Services\WorkoutService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Collection;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -60,6 +62,87 @@ class WorkoutProgressionServiceTest extends TestCase
         $this->assertSame($routineExercise->id, $bumps->first()->routineBlockExerciseId);
         $this->assertSame(80000, $bumps->first()->fromWeightG);
         $this->assertSame(82500, $bumps->first()->toWeightG);
+    }
+
+    #[Test]
+    public function finish_does_not_offer_bump_when_only_floor_reps_are_hit(): void
+    {
+        [$routine] = $this->seedRoutine(workingWeightG: 20000, progressionTarget: 6, achievementFloor: 4);
+        $workout = $this->workoutService->createWorkout($routine);
+        $set = $this->firstSet($workout->id);
+
+        $this->workoutService->completeSet($set, reps: 4, weightGrams: 20000);
+        $bumps = $this->workoutService->finishWorkout($workout);
+
+        $this->assertCount(0, $bumps);
+    }
+
+    #[Test]
+    public function last_at_top_weight_skips_bump_when_top_set_misses_target(): void
+    {
+        [$routine] = $this->seedRoutine(
+            workingWeightG: 20000,
+            progressionTarget: 6,
+            achievementFloor: 4,
+            bumpWhen: BumpWhen::LastAtTopWeight,
+            setCount: 3,
+        );
+        $workout = $this->workoutService->createWorkout($routine);
+        $this->assertSame(BumpWhen::LastAtTopWeight, $workout->bump_when);
+
+        $sets = $this->workingSets($workout->id);
+        $this->workoutService->completeSet($sets[0], reps: 6, weightGrams: 20000);
+        $this->workoutService->completeSet($sets[1], reps: 6, weightGrams: 22500);
+        $this->workoutService->completeSet($sets[2], reps: 4, weightGrams: 25000);
+
+        $bumps = $this->workoutService->finishWorkout($workout);
+
+        $this->assertCount(0, $bumps);
+    }
+
+    #[Test]
+    public function last_at_top_weight_offers_bump_from_last_heaviest_set(): void
+    {
+        [$routine, $routineExercise] = $this->seedRoutine(
+            workingWeightG: 20000,
+            progressionTarget: 6,
+            achievementFloor: 4,
+            bumpWhen: BumpWhen::LastAtTopWeight,
+            setCount: 3,
+        );
+        $workout = $this->workoutService->createWorkout($routine);
+
+        $sets = $this->workingSets($workout->id);
+        $this->workoutService->completeSet($sets[0], reps: 6, weightGrams: 20000);
+        $this->workoutService->completeSet($sets[1], reps: 6, weightGrams: 20000);
+        $this->workoutService->completeSet($sets[2], reps: 4, weightGrams: 15000);
+
+        $bumps = $this->workoutService->finishWorkout($workout);
+
+        $this->assertCount(1, $bumps);
+        $this->assertSame($routineExercise->id, $bumps->first()->routineBlockExerciseId);
+    }
+
+    #[Test]
+    public function any_set_still_offers_bump_when_earlier_set_hit_target(): void
+    {
+        [$routine] = $this->seedRoutine(
+            workingWeightG: 20000,
+            progressionTarget: 6,
+            achievementFloor: 4,
+            bumpWhen: BumpWhen::AnySet,
+            setCount: 3,
+        );
+        $workout = $this->workoutService->createWorkout($routine);
+
+        $sets = $this->workingSets($workout->id);
+        $this->workoutService->completeSet($sets[0], reps: 6, weightGrams: 20000);
+        $this->workoutService->completeSet($sets[1], reps: 6, weightGrams: 22500);
+        $this->workoutService->completeSet($sets[2], reps: 4, weightGrams: 25000);
+
+        $bumps = $this->workoutService->finishWorkout($workout);
+
+        $this->assertCount(1, $bumps);
     }
 
     #[Test]
@@ -158,11 +241,17 @@ class WorkoutProgressionServiceTest extends TestCase
     /**
      * @return array{0: Routine, 1: RoutineBlockExercise}
      */
-    private function seedRoutine(int $workingWeightG, int $progressionTarget, int $achievementFloor): array
-    {
+    private function seedRoutine(
+        int $workingWeightG,
+        int $progressionTarget,
+        int $achievementFloor,
+        BumpWhen $bumpWhen = BumpWhen::AnySet,
+        int $setCount = 1,
+    ): array {
         $user = User::factory()->create([
             'progression_target_default' => $progressionTarget,
             'achievement_floor_default' => $achievementFloor,
+            'bump_when_default' => $bumpWhen,
         ]);
         $routine = Routine::factory()->create(['user_id' => $user->id]);
         $block = RoutineBlock::create([
@@ -179,7 +268,7 @@ class WorkoutProgressionServiceTest extends TestCase
         RoutineSetGroup::create([
             'routine_block_id' => $block->id,
             'type' => SetGroupType::Working,
-            'set_count' => 1,
+            'set_count' => $setCount,
         ]);
 
         return [$routine->fresh(['user', 'blocks.blockExercises', 'blocks.setGroups']), $routineExercise];
@@ -187,8 +276,17 @@ class WorkoutProgressionServiceTest extends TestCase
 
     private function firstSet(int $workoutId): WorkoutSet
     {
+        return $this->workingSets($workoutId)->first();
+    }
+
+    /**
+     * @return Collection<int, WorkoutSet>
+     */
+    private function workingSets(int $workoutId): Collection
+    {
         return WorkoutSet::query()
             ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workoutId))
-            ->firstOrFail();
+            ->orderBy('set_index')
+            ->get();
     }
 }

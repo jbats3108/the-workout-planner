@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Settings;
 
+use App\Users\Enums\BumpWhen;
 use App\Users\Enums\WarmUpDefaultsScope;
 use App\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -32,6 +33,7 @@ class TrainingDefaultsTest extends TestCase
             ->where('warm_up_defaults_scope', 'all_blocks')
             ->where('achievement_floor_default', null)
             ->where('progression_target_default', null)
+            ->where('bump_when_default', 'any_set')
             ->has('warm_up_steps_default', 3)
             ->has('plate_profile'));
     }
@@ -109,6 +111,23 @@ class TrainingDefaultsTest extends TestCase
         $this->user->refresh();
         $this->assertNull($this->user->achievement_floor_default);
         $this->assertNull($this->user->progression_target_default);
+    }
+
+    #[Test]
+    public function it_saves_bump_when_default(): void
+    {
+        $response = $this->actingAs($this->user)->put(route('training.update'), [
+            'warm_up_steps_default' => [
+                ['percent' => 40, 'reps' => 5],
+            ],
+            'warm_up_defaults_scope' => 'all_blocks',
+            'bump_when_default' => 'last_at_top_weight',
+        ]);
+
+        $response->assertRedirect(route('training.edit'));
+
+        $this->user->refresh();
+        $this->assertSame(BumpWhen::LastAtTopWeight, $this->user->bump_when_default);
     }
 
     #[Test]
