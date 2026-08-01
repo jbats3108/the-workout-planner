@@ -4,6 +4,7 @@ import AppContent from '@/components/AppContent.vue';
 import AppHeader from '@/components/AppHeader.vue';
 import AppShell from '@/components/AppShell.vue';
 import AppSidebar from '@/components/AppSidebar.vue';
+import ConfirmDialogHost from '@/shared/components/ConfirmDialogHost.vue';
 import FlashAlerts from '@/shared/components/FlashAlerts.vue';
 import PwaInstallBanner from '@/shared/components/PwaInstallBanner.vue';
 import type { BreadcrumbItemType } from '@/types';
@@ -31,5 +32,6 @@ withDefaults(defineProps<Props>(), {
         </div>
         <AppBottomNav />
         <PwaInstallBanner />
+        <ConfirmDialogHost />
     </AppShell>
 </template>

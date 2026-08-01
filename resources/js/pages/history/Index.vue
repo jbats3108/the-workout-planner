@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import { confirmDialog } from '@/shared/lib/confirmDialog';
 import { type BreadcrumbItem } from '@/types';
 import type { HistoryWorkout } from '@/workouts/types';
 import { Head, Link, router } from '@inertiajs/vue3';
@@ -28,8 +29,14 @@ const formatDate = (iso: string) => {
     return new Date(iso).toLocaleDateString(undefined, { dateStyle: 'medium' });
 };
 
-const deleteWorkout = (workout: HistoryWorkout) => {
-    if (!confirm(`Remove “${workout.routine_name}” from history? This cannot be undone.`)) {
+const deleteWorkout = async (workout: HistoryWorkout) => {
+    const ok = await confirmDialog({
+        title: `Remove “${workout.routine_name}” from history?`,
+        description: 'This cannot be undone.',
+        confirmLabel: 'Remove',
+        variant: 'destructive',
+    });
+    if (!ok) {
         return;
     }
     router.delete(route('history.destroy', workout.id));

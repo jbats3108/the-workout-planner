@@ -41,6 +41,10 @@ Active product backlog: `docs/plan.md`. Prefer updating that file over inventing
 
 **Notion inbox:** page [Ovrload](https://app.notion.com/p/3aae5dd99f0c80ad928ade1a5c6b0749). When pulling items into `docs/plan.md`, clear **only** bullets under `## Backlog:` afterward; leave the header and one empty bullet (`-`). Preserve child pages and all other page content — never `replace_content` the whole page for inbox sync.
 
+### Code review
+
+Staged full-app / domain-slice reviews: `docs/plan.md` → **Grill: Full app code review**, and `.cursor/rules/code-review.mdc`. Checklist includes FE double-submit (`form.processing` vs bare `router.post`/`delete`) alongside authz, races, and tests.
+
 ### Git branches
 
 If the current branch is `main` and the chat starts implementation work, create and check out a new task branch from up-to-date `main` first. See `.cursor/rules/git-branch-from-main.mdc`.

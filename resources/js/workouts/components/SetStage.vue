@@ -78,10 +78,10 @@ const unlockInput = (event: PointerEvent) => {
             />
 
             <div class="space-y-2">
-                <p class="text-sm font-semibold tracking-wide text-foreground">
-                    Block {{ current.block.position }}
-                    <span v-if="current.set.is_dropset"> · Dropset</span>
-                    <span v-if="current.block.is_superset"> · Superset</span>
+                <p v-if="current.set.is_dropset || current.block.is_superset" class="text-sm font-semibold tracking-wide text-foreground">
+                    <template v-if="current.set.is_dropset">Dropset</template>
+                    <template v-if="current.set.is_dropset && current.block.is_superset"> · </template>
+                    <template v-if="current.block.is_superset">Superset</template>
                 </p>
                 <p v-if="supersetNext" class="text-base text-muted-foreground">{{ supersetNext.label }}</p>
             </div>

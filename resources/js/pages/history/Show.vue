@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import { confirmDialog } from '@/shared/lib/confirmDialog';
 import { type BreadcrumbItem } from '@/types';
 import { historyBlockTitle, historyRowsForBlock, historyWarmUpGroups } from '@/workouts/lib/historyDisplay';
 import type { WorkoutPayload } from '@/workouts/types';
@@ -44,9 +45,15 @@ const saveSet = (setId: number) => {
     forms[setId].put(route('history.sets.update', [props.history.workout.id, setId]));
 };
 
-const deleteWorkout = () => {
+const deleteWorkout = async () => {
     const name = props.history.workout.routine_name;
-    if (!confirm(`Remove “${name}” from history? This cannot be undone.`)) {
+    const ok = await confirmDialog({
+        title: `Remove “${name}” from history?`,
+        description: 'This cannot be undone.',
+        confirmLabel: 'Remove',
+        variant: 'destructive',
+    });
+    if (!ok) {
         return;
     }
     router.delete(route('history.destroy', props.history.workout.id));
@@ -81,10 +88,7 @@ const deleteWorkout = () => {
             >
                 <header class="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 border-b border-border bg-card/40 px-3 py-2">
                     <p class="font-medium">{{ title }}</p>
-                    <p class="font-mono text-xs text-muted-foreground uppercase">
-                        Block {{ block.position }}
-                        <span v-if="block.is_superset"> · Superset</span>
-                    </p>
+                    <p v-if="block.is_superset" class="font-mono text-xs text-muted-foreground uppercase">Superset</p>
                 </header>
 
                 <div class="divide-y divide-border">
