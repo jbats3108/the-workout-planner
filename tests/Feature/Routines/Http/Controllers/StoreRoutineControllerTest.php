@@ -53,4 +53,35 @@ class StoreRoutineControllerTest extends TestCase
             'user_id' => $this->user->id,
         ]);
     }
+
+    #[Test]
+    public function it_rejects_an_overlong_name(): void
+    {
+        $before = Routine::query()->count();
+
+        $response = $this->actingAs($this->user)->post(route('routines.store'), [
+            'name' => str_repeat('a', 256),
+        ]);
+
+        $response->assertSessionHasErrors('name');
+        $this->assertSame($before, Routine::query()->count());
+    }
+
+    #[Test]
+    public function it_rejects_out_of_range_deload_factors(): void
+    {
+        $before = Routine::query()->count();
+
+        $this->actingAs($this->user)->post(route('routines.store'), [
+            'name' => 'Test Routine',
+            'deload_weight_factor' => 5.1,
+        ])->assertSessionHasErrors('deload_weight_factor');
+
+        $this->actingAs($this->user)->post(route('routines.store'), [
+            'name' => 'Test Routine',
+            'deload_reps_factor' => 10.1,
+        ])->assertSessionHasErrors('deload_reps_factor');
+
+        $this->assertSame($before, Routine::query()->count());
+    }
 }
