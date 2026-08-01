@@ -128,8 +128,18 @@ Cursor rule: `.cursor/rules/code-review.mdc` (same checklist; attach for `/code-
 1. **Workouts** (~3–4h) — player, progression, history re-eval, policies, one-in-progress *(slice 1 fixes: PR #32)*
 2. **Routines** (~2–3h) — editor sync, duplicate, deload, dropsets/supersets *(slice 2 fixes: PR #36)*
 3. **Auth + Admin** (~1.5–2h) — invite gate, roles, throttle, soft-fail, IDOR on slugs/ULIDs *(slice 3 fixes: PR #35)*
-4. **Settings + Users** (~1–1.5h) — plates, training defaults, profile destroy
+4. **Settings + Users** (~1–1.5h) — plates, training defaults, profile destroy *(slice 4 review done; fixes on `fix/settings-users-code-review-slice-4`)*
 5. **Shared + FE shell** (~1–1.5h) — middleware, PWA SW, nav, catalog filter
+
+**Review findings — Slice 4 (Settings + Users):**
+
+1. **Fixed** — account destroy promoted custom exercises to shared catalog (`nullOnDelete`) → force-delete customs after owned routines/workouts; FK `restrictOnDelete`
+2. **Fixed** — duplicate plate denominations → DB 500 → soft-fail validation on `plates`
+3. **Fixed** — `training.reset` bare `router.post` → `useForm` + `processing` disable
+4. **Fixed** — thin tests → destroy cascade, empty bars, guest redirects on settings mutations
+5. **Parked (low)** — plate profile unique is `(user_id, name)` not `user_id` alone; concurrent `ensureProfile` race
+6. **Parked (low)** — dead email-verification UI (`User` ≠ `MustVerifyEmail`)
+7. **Parked (low)** — settings sidebar omits Training (lives in bottom nav)
 
 **Later:**
 
