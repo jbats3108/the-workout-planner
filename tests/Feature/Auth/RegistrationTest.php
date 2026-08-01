@@ -118,4 +118,25 @@ class RegistrationTest extends TestCase
         $this->assertGuest();
         $this->assertNull(User::where('email', 'badrole@example.com')->first());
     }
+
+    public function test_registration_is_rate_limited(): void
+    {
+        for ($i = 0; $i < 6; $i++) {
+            $this->post('/register', [
+                'name' => "User {$i}",
+                'email' => "ratelimit{$i}@example.com",
+                'password' => 'password',
+                'password_confirmation' => 'password',
+                'invite' => 'nope',
+            ]);
+        }
+
+        $this->post('/register', [
+            'name' => 'Throttled',
+            'email' => 'throttled@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'invite' => 'nope',
+        ])->assertStatus(429);
+    }
 }
