@@ -128,7 +128,7 @@ Cursor rule: `.cursor/rules/code-review.mdc` (same checklist; attach for `/code-
 1. **Workouts** (~3–4h) — player, progression, history re-eval, policies, one-in-progress *(slice 1 fixes: PR #32)*
 2. **Routines** (~2–3h) — editor sync, duplicate, deload, dropsets/supersets *(slice 2 fixes: PR #36)*
 3. **Auth + Admin** (~1.5–2h) — invite gate, roles, throttle, soft-fail, IDOR on slugs/ULIDs *(slice 3 fixes: PR #35)*
-4. **Settings + Users** (~1–1.5h) — plates, training defaults, profile destroy *(slice 4 review done; fixes on `fix/settings-users-code-review-slice-4`)*
+4. **Settings + Users** (~1–1.5h) — plates, training defaults, profile destroy *(slice 4 fixes: PR #37)*
 5. **Shared + FE shell** (~1–1.5h) — middleware, PWA SW, nav, catalog filter
 
 **Review findings — Slice 4 (Settings + Users):**
