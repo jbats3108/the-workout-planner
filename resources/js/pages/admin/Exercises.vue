@@ -9,7 +9,7 @@ import { useCatalogFilter } from '@/shared/composables/useCatalogFilter';
 import { confirmDialog } from '@/shared/lib/confirmDialog';
 import { type BreadcrumbItem } from '@/types';
 import { Deferred, Head, router, useForm } from '@inertiajs/vue3';
-import { computed, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 const props = defineProps<{
     exercises?: AdminExercise[];
@@ -19,6 +19,7 @@ const props = defineProps<{
 
 const catalog = computed(() => props.exercises ?? []);
 const { query, filtered } = useCatalogFilter(catalog, (e) => [e.name, e.slug, e.primary_muscle_group]);
+const mutating = ref(false);
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Admin', href: '/admin' },
@@ -51,13 +52,19 @@ const submit = () => {
 };
 
 const remove = async (exercise: AdminExercise) => {
+    if (mutating.value) return;
     const ok = await confirmDialog({
         title: `Delete “${exercise.name}” from the shared catalog?`,
         confirmLabel: 'Delete',
         variant: 'destructive',
     });
     if (!ok) return;
-    router.delete(route('exercises.delete', exercise.id));
+    mutating.value = true;
+    router.delete(route('exercises.delete', exercise.id), {
+        onFinish: () => {
+            mutating.value = false;
+        },
+    });
 };
 </script>
 
@@ -151,7 +158,14 @@ const remove = async (exercise: AdminExercise) => {
                                     <span v-if="exercise.equipment"> · {{ exercise.equipment }}</span>
                                 </p>
                             </div>
-                            <button type="button" class="text-sm text-destructive hover:underline" @click="remove(exercise)">Delete</button>
+                            <button
+                                type="button"
+                                class="text-sm text-destructive hover:underline disabled:opacity-50"
+                                :disabled="mutating"
+                                @click="remove(exercise)"
+                            >
+                                Delete
+                            </button>
                         </li>
                     </ul>
                 </Deferred>
