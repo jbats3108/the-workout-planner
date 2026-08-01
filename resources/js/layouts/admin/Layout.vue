@@ -4,17 +4,18 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 const sidebarNavItems: NavItem[] = [
-    { title: 'Overview', href: '/admin' },
-    { title: 'Exercises', href: '/admin/exercises' },
-    { title: 'Muscle groups', href: '/admin/muscle-groups' },
-    { title: 'Users', href: '/admin/users' },
-    { title: 'Invites', href: '/admin/invites' },
+    { title: 'Overview', href: route('admin.index') },
+    { title: 'Exercises', href: route('admin.exercises') },
+    { title: 'Muscle groups', href: route('admin.muscle-groups') },
+    { title: 'Users', href: route('admin.users') },
+    { title: 'Invites', href: route('admin.invites') },
 ];
 
 const page = usePage();
-const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.location).pathname : '';
+const currentPath = computed(() => page.url.split('?')[0]);
 </script>
 
 <template>

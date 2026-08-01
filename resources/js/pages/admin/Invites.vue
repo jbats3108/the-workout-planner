@@ -20,7 +20,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const page = usePage();
-const flashUrl = computed(() => (page.props.flash as { invite_url?: string | null })?.invite_url ?? null);
+const flashUrl = computed(() => page.props.flash.invite_url ?? null);
 const copiedId = ref<number | 'flash' | null>(null);
 const mutating = ref(false);
 

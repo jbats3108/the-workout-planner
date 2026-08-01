@@ -7,8 +7,8 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import AdminLayout from '@/layouts/admin/Layout.vue';
 import { confirmDialog } from '@/shared/lib/confirmDialog';
 import { type BreadcrumbItem } from '@/types';
-import { Head, router, useForm } from '@inertiajs/vue3';
-import { ref, watch } from 'vue';
+import { Head, useForm } from '@inertiajs/vue3';
+import { watch } from 'vue';
 
 defineProps<{
     muscle_groups: MuscleGroupRow[];
@@ -39,20 +39,19 @@ const submit = () => {
     });
 };
 
+const deleteForm = useForm({});
+
 const remove = async (group: MuscleGroupRow) => {
-    if (mutating.value) return;
+    if (deleteForm.processing) {
+        return;
+    }
     const ok = await confirmDialog({
         title: `Delete muscle group “${group.name}”?`,
         confirmLabel: 'Delete',
         variant: 'destructive',
     });
     if (!ok) return;
-    mutating.value = true;
-    router.delete(route('muscle-groups.delete', group.id), {
-        onFinish: () => {
-            mutating.value = false;
-        },
-    });
+    deleteForm.delete(route('muscle-groups.delete', group.id));
 };
 </script>
 
@@ -98,7 +97,7 @@ const remove = async (group: MuscleGroupRow) => {
                     <button
                         type="button"
                         class="text-sm text-destructive hover:underline disabled:opacity-50"
-                        :disabled="mutating"
+                        :disabled="deleteForm.processing"
                         @click="remove(group)"
                     >
                         Delete

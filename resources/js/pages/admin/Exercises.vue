@@ -8,8 +8,8 @@ import AdminLayout from '@/layouts/admin/Layout.vue';
 import { useCatalogFilter } from '@/shared/composables/useCatalogFilter';
 import { confirmDialog } from '@/shared/lib/confirmDialog';
 import { type BreadcrumbItem } from '@/types';
-import { Deferred, Head, router, useForm } from '@inertiajs/vue3';
-import { computed, ref, watch } from 'vue';
+import { Deferred, Head, useForm } from '@inertiajs/vue3';
+import { computed, watch } from 'vue';
 
 const props = defineProps<{
     exercises?: AdminExercise[];
@@ -18,8 +18,13 @@ const props = defineProps<{
 }>();
 
 const catalog = computed(() => props.exercises ?? []);
-const { query, filtered } = useCatalogFilter(catalog, (e) => [e.name, e.slug, e.primary_muscle_group]);
-const mutating = ref(false);
+const { query, filtered } = useCatalogFilter(catalog, (e) => [
+    e.name,
+    e.slug,
+    e.primary_muscle_group,
+    e.secondary_muscle_group ?? '',
+    e.equipment ?? '',
+]);
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Admin', href: '/admin' },
@@ -51,20 +56,19 @@ const submit = () => {
     });
 };
 
+const deleteForm = useForm({});
+
 const remove = async (exercise: AdminExercise) => {
-    if (mutating.value) return;
+    if (deleteForm.processing) {
+        return;
+    }
     const ok = await confirmDialog({
         title: `Delete “${exercise.name}” from the shared catalog?`,
         confirmLabel: 'Delete',
         variant: 'destructive',
     });
     if (!ok) return;
-    mutating.value = true;
-    router.delete(route('exercises.delete', exercise.id), {
-        onFinish: () => {
-            mutating.value = false;
-        },
-    });
+    deleteForm.delete(route('exercises.delete', exercise.id));
 };
 </script>
 
@@ -161,7 +165,7 @@ const remove = async (exercise: AdminExercise) => {
                             <button
                                 type="button"
                                 class="text-sm text-destructive hover:underline disabled:opacity-50"
-                                :disabled="mutating"
+                                :disabled="deleteForm.processing"
                                 @click="remove(exercise)"
                             >
                                 Delete
