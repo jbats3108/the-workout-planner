@@ -48,4 +48,13 @@ class PasswordUpdateTest extends TestCase
             ->assertSessionHasErrors('current_password')
             ->assertRedirect('/settings/password');
     }
+
+    public function test_guests_are_redirected_from_password_update(): void
+    {
+        $this->put('/settings/password', [
+            'current_password' => 'password',
+            'password' => 'new-password',
+            'password_confirmation' => 'new-password',
+        ])->assertRedirect(route('login'));
+    }
 }

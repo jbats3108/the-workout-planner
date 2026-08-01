@@ -96,4 +96,16 @@ class ProfileUpdateTest extends TestCase
 
         $this->assertNotNull($user->fresh());
     }
+
+    public function test_guests_are_redirected_from_profile_mutations(): void
+    {
+        $this->patch('/settings/profile', [
+            'name' => 'Hacker',
+            'email' => 'hacker@example.com',
+        ])->assertRedirect(route('login'));
+
+        $this->delete('/settings/profile', [
+            'password' => 'password',
+        ])->assertRedirect(route('login'));
+    }
 }

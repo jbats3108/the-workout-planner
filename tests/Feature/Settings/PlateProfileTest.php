@@ -70,4 +70,34 @@ class PlateProfileTest extends TestCase
             ->assertRedirect(route('training.edit'))
             ->assertSessionHasErrors('plates');
     }
+
+    #[Test]
+    public function it_rejects_an_empty_bars_list(): void
+    {
+        $this->actingAs($this->user)->get(route('training.edit'));
+
+        $this->actingAs($this->user)
+            ->from(route('training.edit'))
+            ->put(route('training.plates.update'), [
+                'name' => 'Garage',
+                'bars' => [],
+                'plates' => [
+                    ['denomination_g' => 10000, 'count' => 4, 'colour' => null],
+                ],
+            ])
+            ->assertRedirect(route('training.edit'))
+            ->assertSessionHasErrors('bars');
+    }
+
+    #[Test]
+    public function guests_are_redirected_from_plate_profile_update(): void
+    {
+        $this->put(route('training.plates.update'), [
+            'name' => 'Garage',
+            'bars' => [
+                ['name' => 'Olympic', 'weight_g' => 20000, 'is_default' => true],
+            ],
+            'plates' => [],
+        ])->assertRedirect(route('login'));
+    }
 }
