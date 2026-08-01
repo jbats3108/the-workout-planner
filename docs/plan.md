@@ -127,14 +127,27 @@ Cursor rule: `.cursor/rules/code-review.mdc` (same checklist; attach for `/code-
 
 1. **Workouts** (~3–4h) — player, progression, history re-eval, policies, one-in-progress *(slice 1 fixes: PR #32)*
 2. **Routines** (~2–3h) — editor sync, duplicate, deload, dropsets/supersets *(slice 2 fixes: PR #36)*
-3. **Auth + Admin** (~1.5–2h) — invite gate, roles, throttle, soft-fail, IDOR on slugs/ULIDs
+3. **Auth + Admin** (~1.5–2h) — invite gate, roles, throttle, soft-fail, IDOR on slugs/ULIDs *(slice 3 fixes: in progress)*
 4. **Settings + Users** (~1–1.5h) — plates, training defaults, profile destroy
 5. **Shared + FE shell** (~1–1.5h) — middleware, PWA SW, nav, catalog filter
 
 **Later:**
 
 - **Cross-cutting** (~1–2h) — ADR drift, DTO boundaries, test gaps, N+1, FE double-submit sweep
-- Park findings in one place (GitHub issue, Notion, or a **Review findings** subsection under this grill)
+
+### Review findings
+
+#### Slice 3 — Auth + Admin
+
+1. **High** — one-time invite TOCTOU: parallel POSTs can multi-use a token (`RegisteredUserController` + `RegistrationInviteService::consume`). Fix: transaction + `lockForUpdate` / conditional consume.
+2. **High (ops)** — master `REGISTRATION_INVITE` is reusable and defaults to `admin`. Leave empty after bootstrap; prefer Admin → Invites; rotate if leaked.
+3. **Medium** — no throttle on `POST /register`. Fix: route throttle + test.
+4. **Medium** — register `Role::findOrCreate` trusts invite/`invite_role` without `user|admin` allowlist.
+5. **Medium** — register not transactional (user can exist if consume fails). Same fix as #1.
+6. **Low** — admin Invites revoke / Exercises+MuscleGroups delete: bare `router.post`/`delete` without busy disable.
+7. **Low** — email verify routes exist but `User` is not `MustVerifyEmail` (invite-only; defer cleanup).
+
+**OK:** invite middleware hard-404; SoftFail skips guests + `admin/*`; login rate limit; password-reset generic copy; catalog policies → `isAdmin()`; auth forms use `form.processing`.
 
 ### Review findings
 
