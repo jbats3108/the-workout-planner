@@ -58,6 +58,26 @@ class AdminPanelTest extends TestCase
     }
 
     #[Test]
+    public function admin_exercises_page_tolerates_soft_deleted_primary_muscle_group(): void
+    {
+        $exercise = Exercise::query()->shared()->with('primaryMuscleGroup')->firstOrFail();
+        $exercise->primaryMuscleGroup->delete();
+
+        $this->actingAs($this->adminUser)->get(route('admin.exercises'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('admin/Exercises')
+                ->loadDeferredProps(fn ($page) => $page
+                    ->where(
+                        'exercises',
+                        fn ($exercises): bool => collect($exercises)->contains(
+                            fn (array $row): bool => $row['slug'] === $exercise->getSlug()
+                                && $row['primary_muscle_group'] === 'Unknown',
+                        ),
+                    )));
+    }
+
+    #[Test]
     public function admins_can_create_and_revoke_invites(): void
     {
         $this->actingAs($this->adminUser)
