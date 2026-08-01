@@ -10,7 +10,7 @@ import {
     trimDropsetsToSetCount,
 } from '@/routines/lib/dropsets';
 import { formatRest } from '@/routines/lib/formatRest';
-import { addWarmUpStep, clearWarmUp, removeWarmUpStep, setWarmUpText, warmUpText } from '@/routines/lib/warmUp';
+import { addWarmUpStep, clearWarmUp, removeWarmUpStep, sanitizeWarmUpStepsForSave, setWarmUpText, warmUpText } from '@/routines/lib/warmUp';
 import type { Block, ExerciseOption, RoutinePayload, WarmUpStep } from '@/routines/types';
 import type { WarmUpDefaultsScope } from '@/settings/types';
 import { confirmDialog } from '@/shared/lib/confirmDialog';
@@ -154,26 +154,36 @@ export function createRoutineEditor(props: EditRoutineProps) {
         syncSetupAfterBlockFlags(form.blocks);
         form.transform((data) => ({
             ...data,
-            blocks: data.blocks.map((block) => ({
-                ...block,
-                exercises: block.exercises.map((exercise) => ({
-                    ...exercise,
-                    achievement_floor: normalizeOptionalReps(exercise.achievement_floor),
-                    progression_target: null,
-                })),
-                working: {
-                    set_count: block.working.set_count,
-                    rest_seconds: block.working.rest_seconds,
-                    dropsets: block.is_superset
-                        ? []
-                        : block.working.dropsets
-                              .filter((d) => d.set_index < block.working.set_count && d.segments.length >= 2)
-                              .map((d) => ({
-                                  set_index: d.set_index,
-                                  segments: d.segments.map((s) => ({ weight_kg: s.weight_kg })),
-                              })),
-                },
-            })),
+            blocks: data.blocks.map((block) => {
+                const warmUpSteps = sanitizeWarmUpStepsForSave(block.warm_up.steps);
+
+                return {
+                    ...block,
+                    has_setup_after_warm_up: warmUpSteps.length === 0 ? false : block.has_setup_after_warm_up,
+                    exercises: block.exercises.map((exercise) => ({
+                        ...exercise,
+                        achievement_floor: normalizeOptionalReps(exercise.achievement_floor),
+                        progression_target: null,
+                    })),
+                    warm_up: {
+                        set_count: warmUpSteps.length,
+                        rest_seconds: block.warm_up.rest_seconds,
+                        steps: warmUpSteps,
+                    },
+                    working: {
+                        set_count: block.working.set_count,
+                        rest_seconds: block.working.rest_seconds,
+                        dropsets: block.is_superset
+                            ? []
+                            : block.working.dropsets
+                                  .filter((d) => d.set_index < block.working.set_count && d.segments.length >= 2)
+                                  .map((d) => ({
+                                      set_index: d.set_index,
+                                      segments: d.segments.map((s) => ({ weight_kg: s.weight_kg })),
+                                  })),
+                    },
+                };
+            }),
         })).put(route('routines.update', props.routine.slug));
     };
 
