@@ -63,6 +63,7 @@ export function createRoutineEditor(props: EditRoutineProps) {
     const dropsetsExpanded = ref(false);
     const progressionExpanded = ref(false);
     const deloadExpanded = ref(false);
+    const mutating = ref(false);
 
     const toggleWarmUpExpanded = () => {
         warmUpExpanded.value = !warmUpExpanded.value;
@@ -177,6 +178,9 @@ export function createRoutineEditor(props: EditRoutineProps) {
     };
 
     const duplicateRoutine = async () => {
+        if (mutating.value || form.processing) {
+            return;
+        }
         if (form.isDirty) {
             const ok = await confirmDialog({
                 title: 'Duplicate the last saved version?',
@@ -187,10 +191,22 @@ export function createRoutineEditor(props: EditRoutineProps) {
                 return;
             }
         }
-        router.post(route('routines.duplicate', props.routine.slug));
+        mutating.value = true;
+        router.post(
+            route('routines.duplicate', props.routine.slug),
+            {},
+            {
+                onFinish: () => {
+                    mutating.value = false;
+                },
+            },
+        );
     };
 
     const deleteRoutine = async () => {
+        if (mutating.value || form.processing) {
+            return;
+        }
         const ok = await confirmDialog({
             title: `Delete “${form.name || 'this routine'}”?`,
             description: 'It will be archived and removed from your list.',
@@ -200,7 +216,12 @@ export function createRoutineEditor(props: EditRoutineProps) {
         if (!ok) {
             return;
         }
-        router.delete(route('routines.delete', props.routine.slug));
+        mutating.value = true;
+        router.delete(route('routines.delete', props.routine.slug), {
+            onFinish: () => {
+                mutating.value = false;
+            },
+        });
     };
 
     const errorList = computed(() => Object.values(form.errors));
@@ -246,6 +267,7 @@ export function createRoutineEditor(props: EditRoutineProps) {
         save,
         duplicateRoutine,
         deleteRoutine,
+        mutating,
         errorList,
         weightUnit: props.weight_unit,
     };

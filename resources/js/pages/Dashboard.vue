@@ -7,7 +7,7 @@ import { confirmDialog } from '@/shared/lib/confirmDialog';
 import { type BreadcrumbItem } from '@/types';
 import type { HistoryWorkout, InProgressWorkout } from '@/workouts/types';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 const props = defineProps<{
     data: {
@@ -19,6 +19,7 @@ const props = defineProps<{
 
 const page = usePage();
 const formErrors = computed(() => Object.values(page.props.errors ?? {}));
+const routineMutating = ref(false);
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -69,10 +70,25 @@ const abandonInProgress = async () => {
 };
 
 const duplicateRoutine = (routine: Routine) => {
-    router.post(route('routines.duplicate', routine.slug));
+    if (routineMutating.value) {
+        return;
+    }
+    routineMutating.value = true;
+    router.post(
+        route('routines.duplicate', routine.slug),
+        {},
+        {
+            onFinish: () => {
+                routineMutating.value = false;
+            },
+        },
+    );
 };
 
 const deleteRoutine = async (routine: Routine) => {
+    if (routineMutating.value) {
+        return;
+    }
     const ok = await confirmDialog({
         title: `Delete “${routine.name}”?`,
         description: 'It will be archived and removed from your list.',
@@ -82,7 +98,12 @@ const deleteRoutine = async (routine: Routine) => {
     if (!ok) {
         return;
     }
-    router.delete(route('routines.delete', routine.slug));
+    routineMutating.value = true;
+    router.delete(route('routines.delete', routine.slug), {
+        onFinish: () => {
+            routineMutating.value = false;
+        },
+    });
 };
 
 const formatFinishedAt = (iso: string) => {
@@ -152,6 +173,7 @@ const formatFinishedAt = (iso: string) => {
                     :routine="routine"
                     :can-start="canStart(routine)"
                     :start-blocked-reason="startBlockedReason(routine)"
+                    :mutating="routineMutating"
                     @start="(mode) => startWorkout(routine.slug, mode)"
                     @duplicate="duplicateRoutine(routine)"
                     @delete="deleteRoutine(routine)"
