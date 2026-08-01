@@ -114,7 +114,7 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 - **Policy audit** — folded into full-app code review slices (see **Grill: Full app code review**)
 - **Full app code review** — staged domain passes; plan in **Grill: Full app code review** below
 - **FE double-submit guards** — add `form.processing` / busy disable (or server idempotency) on bare `router.post`/`delete` paths flagged in reviews (Dashboard start/finish, Play finish/abandon; routine duplicate/delete done in slice 2)
-- **Security sweep** — covered by Auth/Admin slice + severity ordering in that grill; keep as reminder until slice 3 done
+- **Security sweep** — Auth/Admin slice 3 done (ops leftover: master invite hygiene)
 - **GDPR compliance?** — clarify whether/what is required (privacy policy, data export/delete, retention, cookies); grill before building
 
 ## Grill: Full app code review
@@ -127,7 +127,7 @@ Cursor rule: `.cursor/rules/code-review.mdc` (same checklist; attach for `/code-
 
 1. **Workouts** (~3–4h) — player, progression, history re-eval, policies, one-in-progress *(slice 1 fixes: PR #32)*
 2. **Routines** (~2–3h) — editor sync, duplicate, deload, dropsets/supersets *(slice 2 fixes: PR #36)*
-3. **Auth + Admin** (~1.5–2h) — invite gate, roles, throttle, soft-fail, IDOR on slugs/ULIDs *(slice 3 fixes: in progress)*
+3. **Auth + Admin** (~1.5–2h) — invite gate, roles, throttle, soft-fail, IDOR on slugs/ULIDs *(slice 3 fixes: PR #35)*
 4. **Settings + Users** (~1–1.5h) — plates, training defaults, profile destroy
 5. **Shared + FE shell** (~1–1.5h) — middleware, PWA SW, nav, catalog filter
 
@@ -139,15 +139,13 @@ Cursor rule: `.cursor/rules/code-review.mdc` (same checklist; attach for `/code-
 
 #### Slice 3 — Auth + Admin
 
-1. **High** — one-time invite TOCTOU: parallel POSTs can multi-use a token (`RegisteredUserController` + `RegistrationInviteService::consume`). Fix: transaction + `lockForUpdate` / conditional consume.
-2. **High (ops)** — master `REGISTRATION_INVITE` is reusable and defaults to `admin`. Leave empty after bootstrap; prefer Admin → Invites; rotate if leaked.
-3. **Medium** — no throttle on `POST /register`. Fix: route throttle + test.
-4. **Medium** — register `Role::findOrCreate` trusts invite/`invite_role` without `user|admin` allowlist.
-5. **Medium** — register not transactional (user can exist if consume fails). Same fix as #1.
-6. **Low** — admin Invites revoke / Exercises+MuscleGroups delete: bare `router.post`/`delete` without busy disable.
-7. **Low** — email verify routes exist but `User` is not `MustVerifyEmail` (invite-only; defer cleanup).
-
-**OK:** invite middleware hard-404; SoftFail skips guests + `admin/*`; login rate limit; password-reset generic copy; catalog policies → `isAdmin()`; auth forms use `form.processing`.
+1. **High** — one-time invite TOCTOU — **fixed** (transaction + `lockForUpdate` + usable-only consume)
+2. **High (ops)** — master `REGISTRATION_INVITE` reusable → `admin` — ops only; leave empty after bootstrap
+3. **Medium** — no register throttle — **fixed** (`throttle:6,1` before invite middleware)
+4. **Medium** — register role allowlist — **fixed** (`ALLOWED_ROLES` + `findByName`)
+5. **Medium** — register not transactional — **fixed** (same as #1)
+6. **Low** — admin revoke/delete double-submit — **fixed** (`mutating` busy flag)
+7. **Low** — email verify unused — deferred (invite-only)
 
 ### Review findings
 
