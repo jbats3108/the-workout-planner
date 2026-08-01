@@ -49,4 +49,25 @@ class PlateProfileTest extends TestCase
             ->assertRedirect(route('training.edit'))
             ->assertSessionHas('success');
     }
+
+    #[Test]
+    public function it_rejects_duplicate_plate_denominations(): void
+    {
+        $this->actingAs($this->user)->get(route('training.edit'));
+
+        $this->actingAs($this->user)
+            ->from(route('training.edit'))
+            ->put(route('training.plates.update'), [
+                'name' => 'Garage',
+                'bars' => [
+                    ['name' => 'Olympic', 'weight_g' => 20000, 'is_default' => true],
+                ],
+                'plates' => [
+                    ['denomination_g' => 10000, 'count' => 4, 'colour' => 'green'],
+                    ['denomination_g' => 10000, 'count' => 2, 'colour' => null],
+                ],
+            ])
+            ->assertRedirect(route('training.edit'))
+            ->assertSessionHasErrors('plates');
+    }
 }
