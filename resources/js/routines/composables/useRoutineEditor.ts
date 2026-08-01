@@ -13,6 +13,7 @@ import { formatRest } from '@/routines/lib/formatRest';
 import { addWarmUpStep, clearWarmUp, removeWarmUpStep, setWarmUpText, warmUpText } from '@/routines/lib/warmUp';
 import type { Block, ExerciseOption, RoutinePayload, WarmUpStep } from '@/routines/types';
 import type { WarmUpDefaultsScope } from '@/settings/types';
+import { confirmDialog } from '@/shared/lib/confirmDialog';
 import { router, useForm } from '@inertiajs/vue3';
 import { computed, inject, ref, watch, type InjectionKey } from 'vue';
 
@@ -175,15 +176,28 @@ export function createRoutineEditor(props: EditRoutineProps) {
         })).put(route('routines.update', props.routine.slug));
     };
 
-    const duplicateRoutine = () => {
-        if (form.isDirty && !confirm('Duplicate the last saved version? Unsaved edits will not be included.')) {
-            return;
+    const duplicateRoutine = async () => {
+        if (form.isDirty) {
+            const ok = await confirmDialog({
+                title: 'Duplicate the last saved version?',
+                description: 'Unsaved edits will not be included.',
+                confirmLabel: 'Duplicate',
+            });
+            if (!ok) {
+                return;
+            }
         }
         router.post(route('routines.duplicate', props.routine.slug));
     };
 
-    const deleteRoutine = () => {
-        if (!confirm(`Delete “${form.name || 'this routine'}”? It will be archived and removed from your list.`)) {
+    const deleteRoutine = async () => {
+        const ok = await confirmDialog({
+            title: `Delete “${form.name || 'this routine'}”?`,
+            description: 'It will be archived and removed from your list.',
+            confirmLabel: 'Delete',
+            variant: 'destructive',
+        });
+        if (!ok) {
             return;
         }
         router.delete(route('routines.delete', props.routine.slug));

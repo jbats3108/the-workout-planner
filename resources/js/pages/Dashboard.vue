@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/AppLayout.vue';
 import RoutineCard from '@/routines/components/RoutineCard.vue';
 import type { Routine } from '@/routines/types';
+import { confirmDialog } from '@/shared/lib/confirmDialog';
 import { type BreadcrumbItem } from '@/types';
 import type { HistoryWorkout, InProgressWorkout } from '@/workouts/types';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
@@ -42,17 +43,28 @@ const startBlockedReason = (routine: Routine) => {
     return null;
 };
 
-const finishInProgress = () => {
+const finishInProgress = async () => {
     const workout = props.data.in_progress_workout;
     if (!workout) return;
-    if (!confirm('Finish this workout now? Incomplete sets stay incomplete.')) return;
+    const ok = await confirmDialog({
+        title: 'Finish this workout now?',
+        description: 'Incomplete sets stay incomplete.',
+        confirmLabel: 'Finish',
+    });
+    if (!ok) return;
     router.post(route('workouts.finish', workout.id));
 };
 
-const abandonInProgress = () => {
+const abandonInProgress = async () => {
     const workout = props.data.in_progress_workout;
     if (!workout) return;
-    if (!confirm('Abandon this workout? Logged sets are kept but it will not count as finished.')) return;
+    const ok = await confirmDialog({
+        title: 'Abandon this workout?',
+        description: 'Logged sets are kept but it will not count as finished.',
+        confirmLabel: 'Abandon',
+        variant: 'destructive',
+    });
+    if (!ok) return;
     router.post(route('workouts.discard', workout.id));
 };
 
@@ -60,8 +72,14 @@ const duplicateRoutine = (routine: Routine) => {
     router.post(route('routines.duplicate', routine.slug));
 };
 
-const deleteRoutine = (routine: Routine) => {
-    if (!confirm(`Delete “${routine.name}”? It will be archived and removed from your list.`)) {
+const deleteRoutine = async (routine: Routine) => {
+    const ok = await confirmDialog({
+        title: `Delete “${routine.name}”?`,
+        description: 'It will be archived and removed from your list.',
+        confirmLabel: 'Delete',
+        variant: 'destructive',
+    });
+    if (!ok) {
         return;
     }
     router.delete(route('routines.delete', routine.slug));

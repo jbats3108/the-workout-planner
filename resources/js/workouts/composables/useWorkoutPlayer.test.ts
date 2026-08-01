@@ -1,3 +1,4 @@
+import * as confirmDialog from '@/shared/lib/confirmDialog';
 import * as haptics from '@/shared/lib/haptics';
 import { plateProfile, playerBlock, playerSet, workoutPayload } from '@/test/factories';
 import { inertiaMocks } from '@/test/inertiaMocks';
@@ -31,13 +32,10 @@ describe('createWorkoutPlayer', () => {
         vi.spyOn(restAlert, 'notifyRestCountdown').mockImplementation(() => {});
         vi.spyOn(haptics, 'hapticTap').mockImplementation(() => {});
         vi.spyOn(haptics, 'hapticConfirm').mockImplementation(() => {});
+        vi.spyOn(confirmDialog, 'confirmDialog').mockResolvedValue(true);
         vi.stubGlobal(
             'route',
             vi.fn((name: string, _params?: unknown) => `/${String(name)}`),
-        );
-        vi.stubGlobal(
-            'confirm',
-            vi.fn(() => true),
         );
         Object.defineProperty(navigator, 'wakeLock', {
             configurable: true,
@@ -447,28 +445,28 @@ describe('createWorkoutPlayer', () => {
         );
     });
 
-    it('finishes workout when confirmed', () => {
+    it('finishes workout when confirmed', async () => {
         const player = mountPlayer();
-        player.finishWorkout();
+        await player.finishWorkout();
         expect(inertiaMocks().routerMocks.post).toHaveBeenCalledWith('/workouts.finish', {}, expect.any(Object));
     });
 
-    it('abandons workout when confirmed', () => {
+    it('abandons workout when confirmed', async () => {
         const player = mountPlayer();
-        player.abandonWorkout();
+        await player.abandonWorkout();
         expect(inertiaMocks().routerMocks.post).toHaveBeenCalledWith('/workouts.discard', {}, expect.any(Object));
     });
 
-    it('leaves workout via dashboard visit', () => {
+    it('leaves workout via dashboard visit', async () => {
         const player = mountPlayer();
-        player.leaveWorkout();
+        await player.leaveWorkout();
         expect(inertiaMocks().routerMocks.visit).toHaveBeenCalledWith('/dashboard');
     });
 
-    it('cancels leave when confirm is declined', () => {
-        vi.mocked(globalThis.confirm).mockReturnValueOnce(false);
+    it('cancels leave when confirm is declined', async () => {
+        vi.mocked(confirmDialog.confirmDialog).mockResolvedValueOnce(false);
         const player = mountPlayer();
-        player.leaveWorkout();
+        await player.leaveWorkout();
         expect(inertiaMocks().routerMocks.visit).not.toHaveBeenCalled();
     });
 

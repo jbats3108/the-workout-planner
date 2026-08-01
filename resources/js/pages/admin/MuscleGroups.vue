@@ -5,6 +5,7 @@ import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import AdminLayout from '@/layouts/admin/Layout.vue';
+import { confirmDialog } from '@/shared/lib/confirmDialog';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router, useForm } from '@inertiajs/vue3';
 import { watch } from 'vue';
@@ -36,8 +37,13 @@ const submit = () => {
     });
 };
 
-const remove = (group: MuscleGroupRow) => {
-    if (!confirm(`Delete muscle group “${group.name}”?`)) return;
+const remove = async (group: MuscleGroupRow) => {
+    const ok = await confirmDialog({
+        title: `Delete muscle group “${group.name}”?`,
+        confirmLabel: 'Delete',
+        variant: 'destructive',
+    });
+    if (!ok) return;
     router.delete(route('muscle-groups.delete', group.id));
 };
 </script>

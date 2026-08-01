@@ -11,8 +11,10 @@ async function loginAsUser(page: Page): Promise<void> {
 async function clearInProgressWorkout(page: Page): Promise<void> {
     const abandon = page.getByRole('button', { name: 'Abandon' });
     if (await abandon.isVisible()) {
-        page.once('dialog', (dialog) => dialog.accept());
         await abandon.click();
+        const dialog = page.getByRole('dialog');
+        await expect(dialog.getByRole('heading', { name: 'Abandon this workout?' })).toBeVisible();
+        await dialog.getByRole('button', { name: 'Abandon' }).click();
         await expect(abandon).not.toBeVisible();
     }
 }
