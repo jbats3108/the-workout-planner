@@ -19,8 +19,6 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Muscle groups', href: '/admin/muscle-groups' },
 ];
 
-const mutating = ref(false);
-
 const form = useForm({
     name: '',
     slug: '',
