@@ -97,6 +97,17 @@ class User extends Authenticatable
         return $this->hasRole('admin');
     }
 
+    protected static function booted(): void
+    {
+        static::deleting(function (User $user): void {
+            // Routines/workouts soft-delete; hard-delete so restrictOnDelete exercise FKs clear
+            // before customs are removed. Otherwise user delete nulls user_id and customs become shared.
+            $user->workouts()->withTrashed()->get()->each->forceDelete();
+            $user->routines()->withTrashed()->get()->each->forceDelete();
+            $user->customExercises()->withTrashed()->forceDelete();
+        });
+    }
+
     /** @return HasMany<Routine, $this> */
     public function routines(): HasMany
     {
