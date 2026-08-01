@@ -80,6 +80,26 @@ class RegistrationTest extends TestCase
         $this->get('/register?invite='.$invite->token)->assertNotFound();
     }
 
+    public function test_expired_invite_is_rejected_on_register(): void
+    {
+        $admin = User::factory()->withRole('admin')->create();
+        $invite = app(RegistrationInviteService::class)->create($admin, 'user');
+        $invite->forceFill(['expires_at' => now()->subMinute()])->save();
+
+        $this->get('/register?invite='.$invite->token)->assertNotFound();
+
+        $this->post('/register', [
+            'name' => 'Expired',
+            'email' => 'expired@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'invite' => $invite->token,
+        ])->assertNotFound();
+
+        $this->assertGuest();
+        $this->assertNull(User::where('email', 'expired@example.com')->first());
+    }
+
     public function test_registration_consumes_invite_atomically_with_user(): void
     {
         $admin = User::factory()->withRole('admin')->create();

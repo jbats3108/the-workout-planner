@@ -89,6 +89,46 @@ class AdminPanelTest extends TestCase
     }
 
     #[Test]
+    public function non_admins_cannot_create_or_revoke_invites(): void
+    {
+        $invite = RegistrationInvite::query()->create([
+            'token' => 'locked-token-'.uniqid(),
+            'created_by' => $this->adminUser->id,
+            'role' => 'user',
+            'expires_at' => now()->addDay(),
+        ]);
+
+        $this->actingAs($this->user)
+            ->post(route('admin.invites.store'), [
+                'note' => 'Nope',
+                'role' => 'user',
+                'expires_in_days' => 3,
+            ])
+            ->assertForbidden();
+
+        $this->actingAs($this->user)
+            ->post(route('admin.invites.revoke', $invite->id))
+            ->assertForbidden();
+
+        $this->assertNull($invite->fresh()->revoked_at);
+        $this->assertSame(1, RegistrationInvite::query()->count());
+    }
+
+    #[Test]
+    public function invite_store_rejects_invalid_role(): void
+    {
+        $this->actingAs($this->adminUser)
+            ->post(route('admin.invites.store'), [
+                'note' => 'Bad role',
+                'role' => 'superadmin',
+                'expires_in_days' => 3,
+            ])
+            ->assertSessionHasErrors('role');
+
+        $this->assertSame(0, RegistrationInvite::query()->count());
+    }
+
+    #[Test]
     public function guests_are_redirected_to_login(): void
     {
         $this->get(route('admin.index'))->assertRedirect(route('login'));
