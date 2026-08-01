@@ -107,6 +107,32 @@ class StoreExerciseControllerTest extends TestCase
         $this->assertNull($createdExercise->secondaryMuscleGroup);
     }
 
+    #[Test]
+    public function it_rejects_duplicate_shared_slugs(): void
+    {
+        // Given
+        Exercise::factory()->create([
+            'name' => 'Existing',
+            'slug' => 'test-exercise',
+            'user_id' => null,
+            'primary_muscle_group_id' => $this->validMuscleGroup->id,
+        ]);
+
+        $createExerciseRequest = [
+            'name' => 'Duplicate',
+            'slug' => 'test-exercise',
+            'primary_muscle_group' => $this->validMuscleGroup->getSlug(),
+            'secondary_muscle_group' => null,
+        ];
+
+        // When
+        $response = $this->makeRequest($createExerciseRequest);
+
+        // Then
+        $response->assertSessionHasErrors('slug');
+        $this->assertSame(1, Exercise::query()->where('slug', 'test-exercise')->whereNull('user_id')->count());
+    }
+
     /**
      * @param  array{
      *     name: string,

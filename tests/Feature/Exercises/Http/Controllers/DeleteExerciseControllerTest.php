@@ -39,7 +39,7 @@ class DeleteExerciseControllerTest extends TestCase
     public function it_deletes_an_exercise(): void
     {
         // Given
-        $exercise = Exercise::factory()->create();
+        $exercise = Exercise::factory()->create(['user_id' => null]);
 
         $route = route('exercises.delete', ['exercise' => $exercise->id]);
 
@@ -49,6 +49,26 @@ class DeleteExerciseControllerTest extends TestCase
         // Then
         $response->assertRedirect(route('admin.exercises'));
         $this->assertSoftDeleted(Exercise::class, ['id' => $exercise->id]);
+    }
 
+    #[Test]
+    public function it_rejects_deleting_a_custom_user_exercise(): void
+    {
+        // Given
+        $exercise = Exercise::factory()->create([
+            'user_id' => $this->user->id,
+        ]);
+
+        $route = route('exercises.delete', ['exercise' => $exercise->id]);
+
+        // When
+        $response = $this->actingAs($this->adminUser)->delete($route);
+
+        // Then
+        $response->assertForbidden();
+        $this->assertDatabaseHas(Exercise::class, [
+            'id' => $exercise->id,
+            'deleted_at' => null,
+        ]);
     }
 }
