@@ -14,7 +14,7 @@ class StoreAdminInviteController extends Controller
     {
         $data = $request->validate([
             'note' => ['nullable', 'string', 'max:255'],
-            'role' => ['required', 'string', Rule::in(['user', 'admin'])],
+            'role' => ['required', 'string', Rule::in(RegistrationInviteService::ALLOWED_ROLES)],
             'expires_in_days' => ['nullable', 'integer', 'min:1', 'max:365'],
         ]);
 

@@ -59,7 +59,7 @@ class RegisteredUserController extends Controller
                 'password' => Hash::make($request->password),
             ]);
 
-            $user->assignRole(Role::findOrCreate($resolved['role'], 'web'));
+            $user->assignRole(Role::findByName($resolved['role'], 'web'));
             $this->invites->consume($resolved['invite'], $user);
 
             return $user;

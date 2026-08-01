@@ -8,6 +8,9 @@ use Illuminate\Support\Str;
 
 class RegistrationInviteService
 {
+    /** @var list<string> */
+    public const array ALLOWED_ROLES = ['user', 'admin'];
+
     public function isMasterInvite(string $token): bool
     {
         $expected = config('registration.invite');
@@ -37,9 +40,10 @@ class RegistrationInviteService
     {
         if ($this->isMasterInvite($token)) {
             $role = config('registration.invite_role', 'admin');
+            $role = is_string($role) && $role !== '' ? $role : 'admin';
 
             return [
-                'role' => is_string($role) && $role !== '' ? $role : 'admin',
+                'role' => $this->assertAllowedRole($role),
                 'invite' => null,
             ];
         }
@@ -58,9 +62,18 @@ class RegistrationInviteService
         }
 
         return [
-            'role' => $invite->role,
+            'role' => $this->assertAllowedRole($invite->role),
             'invite' => $invite,
         ];
+    }
+
+    public function assertAllowedRole(string $role): string
+    {
+        if (! in_array($role, self::ALLOWED_ROLES, true)) {
+            abort(404);
+        }
+
+        return $role;
     }
 
     public function consume(?RegistrationInvite $invite, User $user): void
@@ -91,7 +104,7 @@ class RegistrationInviteService
         return RegistrationInvite::create([
             'token' => Str::random(48),
             'created_by' => $creator->id,
-            'role' => $role,
+            'role' => $this->assertAllowedRole($role),
             'note' => $note,
             'expires_at' => $expiresInDays !== null ? now()->addDays($expiresInDays) : null,
         ]);

@@ -100,4 +100,22 @@ class RegistrationTest extends TestCase
         $this->assertSame($user->id, $invite->used_by);
         $this->assertTrue($user->hasRole('user'));
     }
+
+    public function test_registration_rejects_invite_with_disallowed_role(): void
+    {
+        $admin = User::factory()->withRole('admin')->create();
+        $invite = app(RegistrationInviteService::class)->create($admin, 'user');
+        $invite->forceFill(['role' => 'superadmin'])->save();
+
+        $this->post('/register', [
+            'name' => 'Bad Role',
+            'email' => 'badrole@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'invite' => $invite->token,
+        ])->assertNotFound();
+
+        $this->assertGuest();
+        $this->assertNull(User::where('email', 'badrole@example.com')->first());
+    }
 }

@@ -56,6 +56,32 @@ class RegistrationInviteServiceTest extends TestCase
     }
 
     #[Test]
+    public function resolve_aborts_for_disallowed_master_role(): void
+    {
+        config(['registration.invite' => 'master-secret', 'registration.invite_role' => 'superadmin']);
+
+        $this->expectException(NotFoundHttpException::class);
+        $this->service->resolve('master-secret');
+    }
+
+    #[Test]
+    public function resolve_aborts_for_disallowed_invite_role(): void
+    {
+        $invite = $this->service->create(User::factory()->create());
+        $invite->forceFill(['role' => 'superadmin'])->save();
+
+        $this->expectException(NotFoundHttpException::class);
+        $this->service->resolve($invite->token);
+    }
+
+    #[Test]
+    public function create_aborts_for_disallowed_role(): void
+    {
+        $this->expectException(NotFoundHttpException::class);
+        $this->service->create(User::factory()->create(), 'superadmin');
+    }
+
+    #[Test]
     public function resolve_returns_usable_invite(): void
     {
         $invite = $this->service->create(User::factory()->create(), 'user', 'buddy');
