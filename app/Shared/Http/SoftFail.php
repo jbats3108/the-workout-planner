@@ -11,14 +11,14 @@ use Throwable;
 
 class SoftFail
 {
-    public const NOT_FOUND_MESSAGE = 'That link looks wrong. Check the URL and try again.';
+    public const string NOT_FOUND_MESSAGE = 'That link looks wrong. Check the URL and try again.';
 
-    public const FORBIDDEN_MESSAGE = 'You do not have access to that.';
+    public const string FORBIDDEN_MESSAGE = 'You do not have access to that.';
 
     /**
      * @var array<string, string>
      */
-    private const ROUTE_RESOURCE_LABELS = [
+    private const array ROUTE_RESOURCE_LABELS = [
         'workout' => 'Workout',
         'routine' => 'Routine',
         'exercise' => 'Exercise',

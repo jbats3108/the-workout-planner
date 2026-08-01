@@ -109,6 +109,27 @@ Correct:
 
 Pass data to JS via data attributes or use a dedicated PHP-to-JS package.
 
+## Typed Class Constants
+
+Give class constants an explicit type (PHP 8.3+). Prefer this over untyped `const` so intent and static analysis stay aligned.
+
+Incorrect:
+```php
+public const NOT_FOUND_MESSAGE = 'That link looks wrong.';
+private const ROUTE_RESOURCE_LABELS = [
+    'workout' => 'Workout',
+];
+```
+
+Correct:
+```php
+public const string NOT_FOUND_MESSAGE = 'That link looks wrong.';
+/** @var array<string, string> */
+private const array ROUTE_RESOURCE_LABELS = [
+    'workout' => 'Workout',
+];
+```
+
 ## No Unnecessary Comments
 
 Code should be readable on its own. Use descriptive method and variable names instead of comments. The only exception is config files, where descriptive comments are expected.
