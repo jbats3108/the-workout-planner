@@ -105,6 +105,29 @@ class RegistrationInviteServiceTest extends TestCase
     }
 
     #[Test]
+    public function consume_aborts_when_invite_already_used(): void
+    {
+        $invite = $this->service->create(User::factory()->create());
+        $first = User::factory()->create();
+        $second = User::factory()->create();
+
+        $this->service->consume($invite, $first);
+
+        $this->expectException(NotFoundHttpException::class);
+        $this->service->consume($invite, $second);
+    }
+
+    #[Test]
+    public function resolve_for_update_aborts_after_invite_is_consumed(): void
+    {
+        $invite = $this->service->create(User::factory()->create());
+        $this->service->consume($invite, User::factory()->create());
+
+        $this->expectException(NotFoundHttpException::class);
+        $this->service->resolve($invite->token, forUpdate: true);
+    }
+
+    #[Test]
     public function create_sets_expiry_and_role(): void
     {
         $creator = User::factory()->create();

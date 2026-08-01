@@ -33,7 +33,7 @@ class RegistrationInviteService
     /**
      * @return array{role: string, invite: ?RegistrationInvite}
      */
-    public function resolve(string $token): array
+    public function resolve(string $token, bool $forUpdate = false): array
     {
         if ($this->isMasterInvite($token)) {
             $role = config('registration.invite_role', 'admin');
@@ -44,7 +44,15 @@ class RegistrationInviteService
             ];
         }
 
-        $invite = $this->findUsable($token);
+        $query = RegistrationInvite::query()
+            ->usable()
+            ->where('token', $token);
+
+        if ($forUpdate) {
+            $query->lockForUpdate();
+        }
+
+        $invite = $query->first();
         if ($invite === null) {
             abort(404);
         }
@@ -61,10 +69,17 @@ class RegistrationInviteService
             return;
         }
 
-        $invite->update([
-            'used_at' => now(),
-            'used_by' => $user->id,
-        ]);
+        $claimed = RegistrationInvite::query()
+            ->whereKey($invite->id)
+            ->usable()
+            ->update([
+                'used_at' => now(),
+                'used_by' => $user->id,
+            ]);
+
+        if ($claimed === 0) {
+            abort(404);
+        }
     }
 
     public function create(

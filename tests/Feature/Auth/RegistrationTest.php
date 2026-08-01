@@ -79,4 +79,25 @@ class RegistrationTest extends TestCase
 
         $this->get('/register?invite='.$invite->token)->assertNotFound();
     }
+
+    public function test_registration_consumes_invite_atomically_with_user(): void
+    {
+        $admin = User::factory()->withRole('admin')->create();
+        $invite = app(RegistrationInviteService::class)->create($admin, 'user');
+
+        $this->post('/register', [
+            'name' => 'Atomic',
+            'email' => 'atomic@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'invite' => $invite->token,
+        ])->assertRedirect(route('dashboard', absolute: false));
+
+        $user = User::where('email', 'atomic@example.com')->firstOrFail();
+        $invite->refresh();
+
+        $this->assertNotNull($invite->used_at);
+        $this->assertSame($user->id, $invite->used_by);
+        $this->assertTrue($user->hasRole('user'));
+    }
 }
