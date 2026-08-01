@@ -235,7 +235,7 @@ class RoutineEditorServiceTest extends TestCase
         $exerciseB = Exercise::factory()->create();
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('A single block must have exactly one exercise.');
+        $this->expectExceptionMessage('A non-superset must have exactly one exercise.');
 
         $this->service->sync($routine, SyncRoutineData::from([
             'name' => 'Bad Single',
@@ -269,7 +269,7 @@ class RoutineEditorServiceTest extends TestCase
         $exercise = Exercise::factory()->create();
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('A superset block must have exactly two exercises.');
+        $this->expectExceptionMessage('A superset must have exactly two exercises.');
 
         $this->service->sync($routine, SyncRoutineData::from([
             'name' => 'Bad Superset Count',

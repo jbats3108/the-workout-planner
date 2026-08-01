@@ -6,6 +6,7 @@ import InputError from '@/components/InputError.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import AdminLayout from '@/layouts/admin/Layout.vue';
 import { useCatalogFilter } from '@/shared/composables/useCatalogFilter';
+import { confirmDialog } from '@/shared/lib/confirmDialog';
 import { type BreadcrumbItem } from '@/types';
 import { Deferred, Head, router, useForm } from '@inertiajs/vue3';
 import { computed, watch } from 'vue';
@@ -49,8 +50,13 @@ const submit = () => {
     });
 };
 
-const remove = (exercise: AdminExercise) => {
-    if (!confirm(`Delete “${exercise.name}” from the shared catalog?`)) return;
+const remove = async (exercise: AdminExercise) => {
+    const ok = await confirmDialog({
+        title: `Delete “${exercise.name}” from the shared catalog?`,
+        confirmLabel: 'Delete',
+        variant: 'destructive',
+    });
+    if (!ok) return;
     router.delete(route('exercises.delete', exercise.id));
 };
 </script>

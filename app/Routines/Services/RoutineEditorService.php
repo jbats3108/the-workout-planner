@@ -55,11 +55,11 @@ class RoutineEditorService
         $exercises = $blockData->exercises->all();
 
         if ($blockData->isSuperset && count($exercises) !== 2) {
-            throw new InvalidArgumentException('A superset block must have exactly two exercises.');
+            throw new InvalidArgumentException('A superset must have exactly two exercises.');
         }
 
         if (! $blockData->isSuperset && count($exercises) !== 1) {
-            throw new InvalidArgumentException('A single block must have exactly one exercise.');
+            throw new InvalidArgumentException('A non-superset must have exactly one exercise.');
         }
 
         $dropsets = $blockData->working->dropsetList();

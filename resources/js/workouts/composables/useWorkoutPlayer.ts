@@ -1,4 +1,5 @@
 import { gramsToKg } from '@/lib/plateCalculator';
+import { confirmDialog } from '@/shared/lib/confirmDialog';
 import { hapticConfirm, hapticTap } from '@/shared/lib/haptics';
 import { findFirstIncompleteFocus, flattenPlayerSets, setupKey, type FlatSetEntry } from '@/workouts/lib/focus';
 import { formatRestSeconds, groupLabel, setupHintText, workoutProgressLabel } from '@/workouts/lib/labels';
@@ -274,15 +275,40 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
             if (!visitLeavesWorkout(event.detail.visit, props.workout.id)) {
                 return;
             }
-            if (!confirm('Leave workout? Progress is saved — you can resume from the dashboard.')) {
-                event.preventDefault();
-            }
+
+            event.preventDefault();
+            const visit = event.detail.visit;
+            void confirmDialog({
+                title: 'Leave workout?',
+                description: 'Progress is saved — you can resume from the dashboard.',
+                confirmLabel: 'Leave',
+            }).then((ok) => {
+                if (!ok) {
+                    return;
+                }
+                leaveConfirmed.value = true;
+                router.visit(visit.url, {
+                    method: visit.method,
+                    data: visit.data,
+                    replace: visit.replace,
+                    preserveScroll: visit.preserveScroll,
+                    preserveState: visit.preserveState,
+                    only: visit.only,
+                    except: visit.except,
+                    headers: visit.headers,
+                });
+            });
         });
     });
 
-    const leaveWorkout = () => {
+    const leaveWorkout = async () => {
         if (props.workout.status === 'in_progress') {
-            if (!confirm('Leave workout? Progress is saved — you can resume from the dashboard.')) {
+            const ok = await confirmDialog({
+                title: 'Leave workout?',
+                description: 'Progress is saved — you can resume from the dashboard.',
+                confirmLabel: 'Leave',
+            });
+            if (!ok) {
                 return;
             }
         }
@@ -522,13 +548,20 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         return round.map((set, index) => previewForEntry({ blockIndex: entry.blockIndex, block: entry.block, set }, String.fromCharCode(65 + index)));
     });
 
-    const finishWorkout = () => {
+    const finishWorkout = async () => {
         if (props.workout.status !== 'in_progress') {
             return;
         }
         const incomplete = flatSets.value.some(({ set }) => !set.completed);
-        if (incomplete && !confirm('Finish now? Incomplete sets stay incomplete.')) {
-            return;
+        if (incomplete) {
+            const ok = await confirmDialog({
+                title: 'Finish now?',
+                description: 'Incomplete sets stay incomplete.',
+                confirmLabel: 'Finish',
+            });
+            if (!ok) {
+                return;
+            }
         }
         leaveConfirmed.value = true;
         router.post(
@@ -542,11 +575,17 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         );
     };
 
-    const abandonWorkout = () => {
+    const abandonWorkout = async () => {
         if (props.workout.status !== 'in_progress') {
             return;
         }
-        if (!confirm('Abandon this workout? It will not count as finished.')) {
+        const ok = await confirmDialog({
+            title: 'Abandon this workout?',
+            description: 'It will not count as finished.',
+            confirmLabel: 'Abandon',
+            variant: 'destructive',
+        });
+        if (!ok) {
             return;
         }
         leaveConfirmed.value = true;

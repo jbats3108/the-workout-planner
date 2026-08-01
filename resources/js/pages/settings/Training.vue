@@ -91,7 +91,7 @@ const savePlates = () => {
             <section class="space-y-6">
                 <HeadingSmall
                     title="Warm-up defaults"
-                    description="Seeded into new routine blocks. Each step is a percent of working weight and its own reps."
+                    description="Seeded into new routine exercises. Each step is a percent of working weight and its own reps."
                 />
 
                 <p v-if="using_app_fallback" class="text-sm text-muted-foreground">Using the app fallback ladder until you save your own.</p>
@@ -101,11 +101,11 @@ const savePlates = () => {
                         <legend class="text-sm text-muted-foreground">Apply defaults to</legend>
                         <label class="flex items-center gap-2 text-sm">
                             <input v-model="form.warm_up_defaults_scope" type="radio" value="all_blocks" />
-                            Every new block
+                            Every new exercise
                         </label>
                         <label class="flex items-center gap-2 text-sm">
                             <input v-model="form.warm_up_defaults_scope" type="radio" value="first_block" />
-                            First block only
+                            First exercise only
                         </label>
                     </fieldset>
 

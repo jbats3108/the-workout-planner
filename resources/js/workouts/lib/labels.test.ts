@@ -23,8 +23,12 @@ describe('labels', () => {
         expect(workoutProgressLabel(flat)).toBe('1/2');
     });
 
-    it('describes setup hints', () => {
+    it('describes setup hints with exercise names', () => {
         const block = playerBlock({ position: 2 });
-        expect(setupHintText({ kind: 'setup', blockIndex: 0, phase: 'after_warm_up' }, block)).toContain('Block 2');
+        expect(setupHintText({ kind: 'setup', blockIndex: 0, phase: 'after_warm_up' }, block)).toBe('Squat — before working sets');
+        expect(setupHintText({ kind: 'setup', blockIndex: 0, phase: 'after_warm_up_step', warmUpStepIndex: 0 }, block)).toBe(
+            'Squat — after warm-up 1',
+        );
+        expect(setupHintText({ kind: 'setup', blockIndex: 0, phase: 'after_block' }, block)).toBe('After Squat');
     });
 });

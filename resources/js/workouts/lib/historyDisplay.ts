@@ -9,19 +9,19 @@ export function formatKg(kg: number | null | undefined): string {
     return String(parseFloat(kg.toFixed(2)));
 }
 
-/** Block heading for history: exercise name(s), A / B for supersets. */
+/** Heading for a block: exercise name(s). Fallback ordinal uses UI noun “Exercise”. */
 export function historyBlockTitle(block: PlayerBlock): string {
     const names = [...block.exercises].sort((a, b) => a.position - b.position).map((exercise) => exercise.name);
 
     if (names.length === 0) {
-        return `Block ${block.position}`;
+        return `Exercise ${block.position}`;
     }
 
     if (block.is_superset && names.length >= 2) {
         return `${names[0]} / ${names[1]}`;
     }
 
-    return names[0] ?? `Block ${block.position}`;
+    return names[0] ?? `Exercise ${block.position}`;
 }
 
 /** Warm-up loads for display: one group (null name) or per-exercise for supersets. */

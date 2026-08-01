@@ -4,6 +4,7 @@ import HeadingSmall from '@/components/HeadingSmall.vue';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/AppLayout.vue';
 import AdminLayout from '@/layouts/admin/Layout.vue';
+import { confirmDialog } from '@/shared/lib/confirmDialog';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router, useForm, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
@@ -49,8 +50,13 @@ const mailtoHref = (url: string) => {
     return `mailto:?subject=${subject}&body=${body}`;
 };
 
-const revoke = (id: number) => {
-    if (!confirm('Revoke this invite?')) return;
+const revoke = async (id: number) => {
+    const ok = await confirmDialog({
+        title: 'Revoke this invite?',
+        confirmLabel: 'Revoke',
+        variant: 'destructive',
+    });
+    if (!ok) return;
     router.post(route('admin.invites.revoke', id), {}, { preserveScroll: true });
 };
 </script>
