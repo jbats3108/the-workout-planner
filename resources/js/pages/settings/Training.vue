@@ -5,7 +5,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { gramsToKg } from '@/lib/plateCalculator';
 import type { PlateProfile, WarmUpDefaultsScope, WarmUpStep } from '@/settings/types';
 import { type BreadcrumbItem } from '@/types';
-import { Head, router, useForm } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 
 const props = defineProps<{
     warm_up_steps_default: WarmUpStep[];
@@ -30,6 +30,8 @@ const form = useForm({
     bump_when_default: props.bump_when_default,
 });
 
+const resetForm = useForm({});
+
 const setOptionalReps = (field: 'achievement_floor_default', raw: string) => {
     form[field] = raw === '' ? null : Number(raw);
 };
@@ -53,7 +55,10 @@ const submit = () => {
 };
 
 const resetToApp = () => {
-    router.post(route('training.reset'));
+    if (resetForm.processing) {
+        return;
+    }
+    resetForm.post(route('training.reset'));
 };
 
 const addBar = () => {
@@ -154,6 +159,7 @@ const savePlates = () => {
                         <button
                             type="button"
                             class="rounded-full border border-border px-4 py-2 text-sm text-muted-foreground hover:text-foreground"
+                            :disabled="resetForm.processing"
                             @click="resetToApp"
                         >
                             Reset warm-ups

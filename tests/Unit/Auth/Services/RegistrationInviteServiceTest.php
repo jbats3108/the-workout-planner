@@ -56,6 +56,32 @@ class RegistrationInviteServiceTest extends TestCase
     }
 
     #[Test]
+    public function resolve_aborts_for_disallowed_master_role(): void
+    {
+        config(['registration.invite' => 'master-secret', 'registration.invite_role' => 'superadmin']);
+
+        $this->expectException(NotFoundHttpException::class);
+        $this->service->resolve('master-secret');
+    }
+
+    #[Test]
+    public function resolve_aborts_for_disallowed_invite_role(): void
+    {
+        $invite = $this->service->create(User::factory()->create());
+        $invite->forceFill(['role' => 'superadmin'])->save();
+
+        $this->expectException(NotFoundHttpException::class);
+        $this->service->resolve($invite->token);
+    }
+
+    #[Test]
+    public function create_aborts_for_disallowed_role(): void
+    {
+        $this->expectException(NotFoundHttpException::class);
+        $this->service->create(User::factory()->create(), 'superadmin');
+    }
+
+    #[Test]
     public function resolve_returns_usable_invite(): void
     {
         $invite = $this->service->create(User::factory()->create(), 'user', 'buddy');
@@ -102,6 +128,29 @@ class RegistrationInviteServiceTest extends TestCase
         $this->service->consume(null, User::factory()->create());
 
         $this->assertSame(0, RegistrationInvite::query()->whereNotNull('used_at')->count());
+    }
+
+    #[Test]
+    public function consume_aborts_when_invite_already_used(): void
+    {
+        $invite = $this->service->create(User::factory()->create());
+        $first = User::factory()->create();
+        $second = User::factory()->create();
+
+        $this->service->consume($invite, $first);
+
+        $this->expectException(NotFoundHttpException::class);
+        $this->service->consume($invite, $second);
+    }
+
+    #[Test]
+    public function resolve_for_update_aborts_after_invite_is_consumed(): void
+    {
+        $invite = $this->service->create(User::factory()->create());
+        $this->service->consume($invite, User::factory()->create());
+
+        $this->expectException(NotFoundHttpException::class);
+        $this->service->resolve($invite->token, forUpdate: true);
     }
 
     #[Test]

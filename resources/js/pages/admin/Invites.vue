@@ -20,8 +20,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const page = usePage();
-const flashUrl = computed(() => (page.props.flash as { invite_url?: string | null })?.invite_url ?? null);
+const flashUrl = computed(() => page.props.flash.invite_url ?? null);
 const copiedId = ref<number | 'flash' | null>(null);
+const mutating = ref(false);
 
 const form = useForm({
     note: '',
@@ -51,13 +52,24 @@ const mailtoHref = (url: string) => {
 };
 
 const revoke = async (id: number) => {
+    if (mutating.value) return;
     const ok = await confirmDialog({
         title: 'Revoke this invite?',
         confirmLabel: 'Revoke',
         variant: 'destructive',
     });
     if (!ok) return;
-    router.post(route('admin.invites.revoke', id), {}, { preserveScroll: true });
+    mutating.value = true;
+    router.post(
+        route('admin.invites.revoke', id),
+        {},
+        {
+            preserveScroll: true,
+            onFinish: () => {
+                mutating.value = false;
+            },
+        },
+    );
 };
 </script>
 
@@ -154,7 +166,7 @@ const revoke = async (id: number) => {
                             <Button type="button" size="sm" variant="outline" as-child>
                                 <a :href="mailtoHref(invite.url)">Email</a>
                             </Button>
-                            <Button type="button" size="sm" variant="ghost" @click="revoke(invite.id)">Revoke</Button>
+                            <Button type="button" size="sm" variant="ghost" :disabled="mutating" @click="revoke(invite.id)">Revoke</Button>
                         </div>
                     </div>
                 </li>

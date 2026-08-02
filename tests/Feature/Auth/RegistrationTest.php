@@ -79,4 +79,84 @@ class RegistrationTest extends TestCase
 
         $this->get('/register?invite='.$invite->token)->assertNotFound();
     }
+
+    public function test_expired_invite_is_rejected_on_register(): void
+    {
+        $admin = User::factory()->withRole('admin')->create();
+        $invite = app(RegistrationInviteService::class)->create($admin, 'user');
+        $invite->forceFill(['expires_at' => now()->subMinute()])->save();
+
+        $this->get('/register?invite='.$invite->token)->assertNotFound();
+
+        $this->post('/register', [
+            'name' => 'Expired',
+            'email' => 'expired@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'invite' => $invite->token,
+        ])->assertNotFound();
+
+        $this->assertGuest();
+        $this->assertNull(User::where('email', 'expired@example.com')->first());
+    }
+
+    public function test_registration_consumes_invite_atomically_with_user(): void
+    {
+        $admin = User::factory()->withRole('admin')->create();
+        $invite = app(RegistrationInviteService::class)->create($admin, 'user');
+
+        $this->post('/register', [
+            'name' => 'Atomic',
+            'email' => 'atomic@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'invite' => $invite->token,
+        ])->assertRedirect(route('dashboard', absolute: false));
+
+        $user = User::where('email', 'atomic@example.com')->firstOrFail();
+        $invite->refresh();
+
+        $this->assertNotNull($invite->used_at);
+        $this->assertSame($user->id, $invite->used_by);
+        $this->assertTrue($user->hasRole('user'));
+    }
+
+    public function test_registration_rejects_invite_with_disallowed_role(): void
+    {
+        $admin = User::factory()->withRole('admin')->create();
+        $invite = app(RegistrationInviteService::class)->create($admin, 'user');
+        $invite->forceFill(['role' => 'superadmin'])->save();
+
+        $this->post('/register', [
+            'name' => 'Bad Role',
+            'email' => 'badrole@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'invite' => $invite->token,
+        ])->assertNotFound();
+
+        $this->assertGuest();
+        $this->assertNull(User::where('email', 'badrole@example.com')->first());
+    }
+
+    public function test_registration_is_rate_limited(): void
+    {
+        for ($i = 0; $i < 6; $i++) {
+            $this->post('/register', [
+                'name' => "User {$i}",
+                'email' => "ratelimit{$i}@example.com",
+                'password' => 'password',
+                'password_confirmation' => 'password',
+                'invite' => 'nope',
+            ]);
+        }
+
+        $this->post('/register', [
+            'name' => 'Throttled',
+            'email' => 'throttled@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'invite' => 'nope',
+        ])->assertStatus(429);
+    }
 }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Link, router, usePage } from '@inertiajs/vue3';
+import { Link, router, useForm, usePage } from '@inertiajs/vue3';
 import { Dumbbell, History, LayoutGrid, LogOut, Palette, Settings, Shield, UserRound } from 'lucide-vue-next';
 import { computed, type Component } from 'vue';
 import { route as ziggyRoute } from 'ziggy-js';
@@ -20,6 +20,7 @@ const page = usePage();
 const path = computed(() => page.url.split('?')[0]);
 const isAdmin = computed(() => Boolean(page.props.auth.user?.is_admin));
 const labeled = computed(() => props.variant === 'drawer');
+const logoutForm = useForm({});
 
 const route = (name: string, params?: Record<string, unknown>, absolute?: boolean) => ziggyRoute(name, params, absolute, page.props.ziggy);
 
@@ -40,8 +41,11 @@ const iconClass = computed(() => (labeled.value ? 'size-5 shrink-0' : 'size-6 sh
 const onNavigate = () => emit('navigate');
 
 const logout = () => {
+    if (logoutForm.processing) {
+        return;
+    }
     router.flushAll();
-    router.post(route('logout'));
+    logoutForm.post(route('logout'));
     onNavigate();
 };
 
@@ -128,6 +132,7 @@ const settingsLinks: NavLink[] = [
             :class="[itemClass(false), labeled ? 'justify-start' : '']"
             aria-label="Log out"
             :title="labeled ? undefined : 'Log out'"
+            :disabled="logoutForm.processing"
             @click="logout"
         >
             <LogOut :class="iconClass" />

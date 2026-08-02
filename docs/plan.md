@@ -113,8 +113,8 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 - **Frontend dedupe / component opportunities** — examine repeated Vue patterns (forms, optional number inputs, stage chrome, sheets) for shared components or helpers without over-abstracting
 - **Policy audit** — folded into full-app code review slices (see **Grill: Full app code review**)
 - **Full app code review** — staged domain passes; plan in **Grill: Full app code review** below
-- **FE double-submit guards** — add `form.processing` / busy disable (or server idempotency) on bare `router.post`/`delete` paths flagged in reviews (Dashboard start/finish, Play finish/abandon, etc.)
-- **Security sweep** — covered by Auth/Admin slice + severity ordering in that grill; keep as reminder until slice 3 done
+- **FE double-submit guards** — add `form.processing` / busy disable (or server idempotency) on bare `router.post`/`delete` paths flagged in reviews (Dashboard start/finish, Play finish/abandon; routine duplicate/delete done in slice 2)
+- **Security sweep** — Auth/Admin slice 3 done (ops leftover: master invite hygiene)
 - **GDPR compliance?** — clarify whether/what is required (privacy policy, data export/delete, retention, cookies); grill before building
 
 ## Grill: Full app code review
@@ -126,15 +126,42 @@ Cursor rule: `.cursor/rules/code-review.mdc` (same checklist; attach for `/code-
 **Do now (pick one start):**
 
 1. **Workouts** (~3–4h) — player, progression, history re-eval, policies, one-in-progress *(slice 1 fixes: PR #32)*
-2. **Routines** (~2–3h) — editor sync, duplicate, deload, dropsets/supersets
-3. **Auth + Admin** (~1.5–2h) — invite gate, roles, throttle, soft-fail, IDOR on slugs/ULIDs
-4. **Settings + Users** (~1–1.5h) — plates, training defaults, profile destroy
+2. **Routines** (~2–3h) — editor sync, duplicate, deload, dropsets/supersets *(slice 2 fixes: PR #36)*
+3. **Auth + Admin** (~1.5–2h) — invite gate, roles, throttle, soft-fail, IDOR on slugs/ULIDs *(slice 3 fixes: PR #35)*
+4. **Settings + Users** (~1–1.5h) — plates, training defaults, profile destroy *(slice 4 fixes: PR #37)*
 5. **Shared + FE shell** (~1–1.5h) — middleware, PWA SW, nav, catalog filter
+
+**Review findings — Slice 4 (Settings + Users):**
+
+1. **Fixed** — account destroy promoted custom exercises to shared catalog (`nullOnDelete`) → force-delete customs after owned routines/workouts; FK `restrictOnDelete`
+2. **Fixed** — duplicate plate denominations → DB 500 → soft-fail validation on `plates`
+3. **Fixed** — `training.reset` bare `router.post` → `useForm` + `processing` disable
+4. **Fixed** — thin tests → destroy cascade, empty bars, guest redirects on settings mutations
+5. **Parked (low)** — plate profile unique is `(user_id, name)` not `user_id` alone; concurrent `ensureProfile` race
+6. **Parked (low)** — dead email-verification UI (`User` ≠ `MustVerifyEmail`)
+7. **Parked (low)** — settings sidebar omits Training (lives in bottom nav)
 
 **Later:**
 
 - **Cross-cutting** (~1–2h) — ADR drift, DTO boundaries, test gaps, N+1, FE double-submit sweep
-- Park findings in one place (GitHub issue, Notion, or a **Review findings** subsection under this grill)
+
+### Review findings
+
+#### Slice 3 — Auth + Admin
+
+1. **High** — one-time invite TOCTOU — **fixed** (transaction + `lockForUpdate` + usable-only consume)
+2. **High (ops)** — master `REGISTRATION_INVITE` reusable → `admin` — ops only; leave empty after bootstrap
+3. **Medium** — no register throttle — **fixed** (`throttle:6,1` before invite middleware)
+4. **Medium** — register role allowlist — **fixed** (`ALLOWED_ROLES` + `findByName`)
+5. **Medium** — register not transactional — **fixed** (same as #1)
+6. **Low** — admin revoke/delete double-submit — **fixed** (`mutating` busy flag)
+7. **Low** — email verify unused — deferred (invite-only)
+
+### Review findings
+
+**Slice 2 (Routines) — fixed:** FE busy on duplicate/delete (editor + dashboard); `StoreRoutineData` Max/deload bounds match sync; save strips invalid warm-up steps (mobile 0/empty → no 422).
+
+**Slice 2 — parked:** last-write-wins editor sync / non-idempotent duplicate (cross-cutting); admin can open editor (`view`) but save 403 (intentional); Dashboard Start/Deload busy stays workouts/FE double-submit backlog.
 
 **Per-slice checklist:**
 

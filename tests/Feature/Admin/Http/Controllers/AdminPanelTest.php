@@ -58,6 +58,26 @@ class AdminPanelTest extends TestCase
     }
 
     #[Test]
+    public function admin_exercises_page_tolerates_soft_deleted_primary_muscle_group(): void
+    {
+        $exercise = Exercise::query()->shared()->with('primaryMuscleGroup')->firstOrFail();
+        $exercise->primaryMuscleGroup->delete();
+
+        $this->actingAs($this->adminUser)->get(route('admin.exercises'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('admin/Exercises')
+                ->loadDeferredProps(fn ($page) => $page
+                    ->where(
+                        'exercises',
+                        fn ($exercises): bool => collect($exercises)->contains(
+                            fn (array $row): bool => $row['slug'] === $exercise->getSlug()
+                                && $row['primary_muscle_group'] === 'Unknown',
+                        ),
+                    )));
+    }
+
+    #[Test]
     public function admins_can_create_and_revoke_invites(): void
     {
         $this->actingAs($this->adminUser)
@@ -86,6 +106,46 @@ class AdminPanelTest extends TestCase
         $this->actingAs($this->user)->get(route('admin.muscle-groups'))->assertForbidden();
         $this->actingAs($this->user)->get(route('admin.users'))->assertForbidden();
         $this->actingAs($this->user)->get(route('admin.invites'))->assertForbidden();
+    }
+
+    #[Test]
+    public function non_admins_cannot_create_or_revoke_invites(): void
+    {
+        $invite = RegistrationInvite::query()->create([
+            'token' => 'locked-token-'.uniqid(),
+            'created_by' => $this->adminUser->id,
+            'role' => 'user',
+            'expires_at' => now()->addDay(),
+        ]);
+
+        $this->actingAs($this->user)
+            ->post(route('admin.invites.store'), [
+                'note' => 'Nope',
+                'role' => 'user',
+                'expires_in_days' => 3,
+            ])
+            ->assertForbidden();
+
+        $this->actingAs($this->user)
+            ->post(route('admin.invites.revoke', $invite->id))
+            ->assertForbidden();
+
+        $this->assertNull($invite->fresh()->revoked_at);
+        $this->assertSame(1, RegistrationInvite::query()->count());
+    }
+
+    #[Test]
+    public function invite_store_rejects_invalid_role(): void
+    {
+        $this->actingAs($this->adminUser)
+            ->post(route('admin.invites.store'), [
+                'note' => 'Bad role',
+                'role' => 'superadmin',
+                'expires_in_days' => 3,
+            ])
+            ->assertSessionHasErrors('role');
+
+        $this->assertSame(0, RegistrationInvite::query()->count());
     }
 
     #[Test]

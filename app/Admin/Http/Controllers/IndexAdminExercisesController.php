@@ -40,8 +40,8 @@ class IndexAdminExercisesController extends Controller
                     'name' => $exercise->getName(),
                     'slug' => $exercise->getSlug(),
                     'equipment' => $exercise->equipment?->value,
-                    'primary_muscle_group' => $exercise->primaryMuscleGroup->getName(),
-                    'primary_muscle_group_slug' => $exercise->primaryMuscleGroup->getSlug(),
+                    'primary_muscle_group' => $exercise->primaryMuscleGroup?->getName() ?? 'Unknown',
+                    'primary_muscle_group_slug' => $exercise->primaryMuscleGroup?->getSlug() ?? '',
                     'secondary_muscle_group' => $exercise->secondaryMuscleGroup?->getName(),
                     'secondary_muscle_group_slug' => $exercise->secondaryMuscleGroup?->getSlug(),
                 ])

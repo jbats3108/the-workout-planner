@@ -238,6 +238,41 @@ class WorkoutHistoryControllerTest extends TestCase
         ]);
     }
 
+    #[Test]
+    public function deleting_latest_then_editing_prior_does_not_undo_past_later_carry_forward(): void
+    {
+        [$older, $routineExercise, $routine] = $this->createFinishedWorkout(reps: 6, weightGrams: 80000);
+        $older->update(['finished_at' => now()->subDay()]);
+        $progressionService = app(WorkoutProgressionService::class);
+        $session = $progressionService->reEvaluateProgression($older);
+        $progressionService->applyConfirmedBumps($older, $session->bumps, [$routineExercise->id]);
+        $this->assertSame(82500, $routineExercise->fresh()->working_weight_g);
+
+        $newer = app(WorkoutService::class)->createWorkout($routine);
+        $newerSet = $this->firstWorkingSet($newer->id);
+        app(WorkoutService::class)->completeSet($newerSet, reps: 5, weightGrams: 90000);
+        app(WorkoutService::class)->finishWorkout($newer);
+        $this->assertSame(90000, $routineExercise->fresh()->working_weight_g);
+
+        $this->actingAs($this->user)
+            ->delete(route('history.destroy', $newer))
+            ->assertRedirect(route('history.index'));
+
+        $this->assertTrue($older->fresh()->isEligibleForProgressionReEval());
+
+        $olderSet = $this->firstWorkingSet($older->id);
+        $this->actingAs($this->user)
+            ->put(route('history.sets.update', [$older, $olderSet]), [
+                'reps' => 3,
+                'weight_kg' => 80,
+            ])
+            ->assertRedirect();
+
+        $this->assertNull(session("workout_progression_undos.{$older->id}"));
+        $this->assertSame(90000, $routineExercise->fresh()->working_weight_g);
+        $this->assertNull($older->fresh()->bumpRecords->first()->undone_at);
+    }
+
     /**
      * @return array{0: Workout, 1: RoutineBlockExercise, 2: Routine}
      */

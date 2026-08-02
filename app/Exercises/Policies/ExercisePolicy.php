@@ -2,6 +2,7 @@
 
 namespace App\Exercises\Policies;
 
+use App\Exercises\Models\Exercise;
 use App\Users\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -9,9 +10,9 @@ class ExercisePolicy
 {
     use HandlesAuthorization;
 
-    public function delete(User $user): bool
+    public function delete(User $user, Exercise $exercise): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() && $exercise->isShared();
     }
 
     public function create(User $user): bool

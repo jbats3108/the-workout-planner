@@ -7,7 +7,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import AdminLayout from '@/layouts/admin/Layout.vue';
 import { confirmDialog } from '@/shared/lib/confirmDialog';
 import { type BreadcrumbItem } from '@/types';
-import { Head, router, useForm } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 import { watch } from 'vue';
 
 defineProps<{
@@ -37,14 +37,19 @@ const submit = () => {
     });
 };
 
+const deleteForm = useForm({});
+
 const remove = async (group: MuscleGroupRow) => {
+    if (deleteForm.processing) {
+        return;
+    }
     const ok = await confirmDialog({
         title: `Delete muscle group “${group.name}”?`,
         confirmLabel: 'Delete',
         variant: 'destructive',
     });
     if (!ok) return;
-    router.delete(route('muscle-groups.delete', group.id));
+    deleteForm.delete(route('muscle-groups.delete', group.id));
 };
 </script>
 
@@ -87,7 +92,14 @@ const remove = async (group: MuscleGroupRow) => {
                         <p class="font-medium">{{ group.name }}</p>
                         <p class="font-mono text-xs text-muted-foreground">{{ group.slug }}</p>
                     </div>
-                    <button type="button" class="text-sm text-destructive hover:underline" @click="remove(group)">Delete</button>
+                    <button
+                        type="button"
+                        class="text-sm text-destructive hover:underline disabled:opacity-50"
+                        :disabled="deleteForm.processing"
+                        @click="remove(group)"
+                    >
+                        Delete
+                    </button>
                 </li>
             </ul>
         </AdminLayout>

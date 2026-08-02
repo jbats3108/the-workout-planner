@@ -8,6 +8,7 @@ const props = defineProps<{
     routine: Routine;
     canStart: boolean;
     startBlockedReason: string | null;
+    mutating?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -66,6 +67,7 @@ const startTitle = (mode: 'normal' | 'deload') => {
                     class="text-muted-foreground hover:text-primary"
                     title="Duplicate routine"
                     aria-label="Duplicate routine"
+                    :disabled="mutating"
                     @click="emit('duplicate')"
                 >
                     <Copy class="size-5" />
@@ -77,6 +79,7 @@ const startTitle = (mode: 'normal' | 'deload') => {
                     class="text-destructive hover:text-destructive"
                     title="Delete routine"
                     aria-label="Delete routine"
+                    :disabled="mutating"
                     @click="emit('delete')"
                 >
                     <Trash2 class="size-5" />

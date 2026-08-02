@@ -1,4 +1,4 @@
-import { addWarmUpStep, clearWarmUp, removeWarmUpStep, setWarmUpText, warmUpText } from '@/routines/lib/warmUp';
+import { addWarmUpStep, clearWarmUp, removeWarmUpStep, sanitizeWarmUpStepsForSave, setWarmUpText, warmUpText } from '@/routines/lib/warmUp';
 import { block } from '@/test/factories';
 import { describe, expect, it } from 'vitest';
 
@@ -53,6 +53,23 @@ describe('setWarmUpText', () => {
         const b = block({ has_setup_after_warm_up: true });
         clearWarmUp(b);
         expect(b.has_setup_after_warm_up).toBe(false);
+    });
+});
+
+describe('sanitizeWarmUpStepsForSave', () => {
+    it('drops zero empty and non-finite steps', () => {
+        expect(
+            sanitizeWarmUpStepsForSave([
+                { percent: 40, reps: 5, has_setup_after: true },
+                { percent: 0, reps: 5 },
+                { percent: 60, reps: 0 },
+                { percent: Number.NaN, reps: 5 },
+                { percent: 80, reps: 1 },
+            ]),
+        ).toEqual([
+            { percent: 40, reps: 5, has_setup_after: true },
+            { percent: 80, reps: 1, has_setup_after: false },
+        ]);
     });
 });
 

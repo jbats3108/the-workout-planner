@@ -9,6 +9,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
@@ -46,16 +47,23 @@ class RegisteredUserController extends Controller
             'invite' => 'required|string',
         ]);
 
-        $resolved = $this->invites->resolve($request->string('invite')->toString());
+        $user = DB::transaction(function () use ($request): User {
+            $resolved = $this->invites->resolve(
+                $request->string('invite')->toString(),
+                forUpdate: true,
+            );
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
 
-        $user->assignRole(Role::findOrCreate($resolved['role'], 'web'));
-        $this->invites->consume($resolved['invite'], $user);
+            $user->assignRole(Role::findByName($resolved['role'], 'web'));
+            $this->invites->consume($resolved['invite'], $user);
+
+            return $user;
+        });
 
         event(new Registered($user));
 

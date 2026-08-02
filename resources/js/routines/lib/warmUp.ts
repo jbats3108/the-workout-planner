@@ -57,6 +57,21 @@ export function clearWarmUp(block: Block): void {
     syncWarmUpMeta(block);
 }
 
+/** Drop steps that would fail server Min(1) validation (cleared/zero mobile inputs). */
+export function sanitizeWarmUpStepsForSave(steps: WarmUpStep[]): WarmUpStep[] {
+    return steps
+        .filter(
+            (step) =>
+                typeof step.percent === 'number' &&
+                typeof step.reps === 'number' &&
+                Number.isFinite(step.percent) &&
+                Number.isFinite(step.reps) &&
+                step.percent >= 1 &&
+                step.reps >= 1,
+        )
+        .map((step) => normalizeWarmUpStep(step));
+}
+
 export function canSetupAfterWarmUpStep(block: Block, stepIndex: number): boolean {
     return stepIndex < block.warm_up.steps.length - 1;
 }

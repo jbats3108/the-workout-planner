@@ -3,13 +3,14 @@ import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { type NavItem } from '@/types';
-import { Link, router, usePage } from '@inertiajs/vue3';
+import { Link, router, useForm, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import { route as ziggyRoute } from 'ziggy-js';
 
 const page = usePage();
 const route = (name: string, params?: Record<string, unknown>, absolute?: boolean) => ziggyRoute(name, params, absolute, page.props.ziggy);
 const isAdmin = computed(() => Boolean(page.props.auth.user?.is_admin));
+const logoutForm = useForm({});
 
 const sidebarNavItems = computed((): NavItem[] => {
     const items: NavItem[] = [
@@ -34,8 +35,11 @@ const sidebarNavItems = computed((): NavItem[] => {
 const currentPath = computed(() => page.url.split('?')[0]);
 
 const logout = () => {
+    if (logoutForm.processing) {
+        return;
+    }
     router.flushAll();
-    router.post(route('logout'));
+    logoutForm.post(route('logout'));
 };
 </script>
 
@@ -57,7 +61,15 @@ const logout = () => {
                             {{ item.title }}
                         </Link>
                     </Button>
-                    <Button type="button" variant="ghost" class="w-full justify-start text-muted-foreground" @click="logout"> Log out </Button>
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        class="w-full justify-start text-muted-foreground"
+                        :disabled="logoutForm.processing"
+                        @click="logout"
+                    >
+                        Log out
+                    </Button>
                 </nav>
             </aside>
 

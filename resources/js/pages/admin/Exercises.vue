@@ -8,7 +8,7 @@ import AdminLayout from '@/layouts/admin/Layout.vue';
 import { useCatalogFilter } from '@/shared/composables/useCatalogFilter';
 import { confirmDialog } from '@/shared/lib/confirmDialog';
 import { type BreadcrumbItem } from '@/types';
-import { Deferred, Head, router, useForm } from '@inertiajs/vue3';
+import { Deferred, Head, useForm } from '@inertiajs/vue3';
 import { computed, watch } from 'vue';
 
 const props = defineProps<{
@@ -18,7 +18,13 @@ const props = defineProps<{
 }>();
 
 const catalog = computed(() => props.exercises ?? []);
-const { query, filtered } = useCatalogFilter(catalog, (e) => [e.name, e.slug, e.primary_muscle_group]);
+const { query, filtered } = useCatalogFilter(catalog, (e) => [
+    e.name,
+    e.slug,
+    e.primary_muscle_group,
+    e.secondary_muscle_group ?? '',
+    e.equipment ?? '',
+]);
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Admin', href: '/admin' },
@@ -50,14 +56,19 @@ const submit = () => {
     });
 };
 
+const deleteForm = useForm({});
+
 const remove = async (exercise: AdminExercise) => {
+    if (deleteForm.processing) {
+        return;
+    }
     const ok = await confirmDialog({
         title: `Delete “${exercise.name}” from the shared catalog?`,
         confirmLabel: 'Delete',
         variant: 'destructive',
     });
     if (!ok) return;
-    router.delete(route('exercises.delete', exercise.id));
+    deleteForm.delete(route('exercises.delete', exercise.id));
 };
 </script>
 
@@ -151,7 +162,14 @@ const remove = async (exercise: AdminExercise) => {
                                     <span v-if="exercise.equipment"> · {{ exercise.equipment }}</span>
                                 </p>
                             </div>
-                            <button type="button" class="text-sm text-destructive hover:underline" @click="remove(exercise)">Delete</button>
+                            <button
+                                type="button"
+                                class="text-sm text-destructive hover:underline disabled:opacity-50"
+                                :disabled="deleteForm.processing"
+                                @click="remove(exercise)"
+                            >
+                                Delete
+                            </button>
                         </li>
                     </ul>
                 </Deferred>

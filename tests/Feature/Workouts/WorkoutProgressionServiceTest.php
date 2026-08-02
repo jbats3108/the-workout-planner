@@ -212,6 +212,63 @@ class WorkoutProgressionServiceTest extends TestCase
     }
 
     #[Test]
+    public function confirmed_bumps_skip_when_routine_weight_already_changed(): void
+    {
+        [$routine, $routineExercise] = $this->seedRoutine(workingWeightG: 80000, prescribedReps: 6, achievementFloor: 4);
+        $workout = $this->workoutService->createWorkout($routine);
+        $set = $this->firstSet($workout->id);
+        $this->workoutService->completeSet($set, reps: 6, weightGrams: 80000);
+        $bumps = $this->workoutService->finishWorkout($workout);
+
+        $routineExercise->update(['working_weight_g' => 100000]);
+
+        $this->progressionService->applyConfirmedBumps($workout, $bumps, [$routineExercise->id]);
+
+        $this->assertSame(100000, $routineExercise->fresh()->working_weight_g);
+        $this->assertDatabaseMissing('bump_records', [
+            'workout_id' => $workout->id,
+            'routine_block_exercise_id' => $routineExercise->id,
+        ]);
+    }
+
+    #[Test]
+    public function confirmed_undos_skip_when_routine_weight_no_longer_matches_bump(): void
+    {
+        [$routine, $routineExercise] = $this->seedRoutine(workingWeightG: 80000, prescribedReps: 6, achievementFloor: 4);
+        $workout = $this->workoutService->createWorkout($routine);
+        $set = $this->firstSet($workout->id);
+        $this->workoutService->completeSet($set, reps: 6, weightGrams: 80000);
+        $bumps = $this->workoutService->finishWorkout($workout);
+        $this->progressionService->applyConfirmedBumps($workout, $bumps, [$routineExercise->id]);
+
+        $routineExercise->update(['working_weight_g' => 90000]);
+        $recordId = $workout->fresh()->bumpRecords->first()->id;
+
+        $this->progressionService->applyConfirmedUndos($workout, [$recordId]);
+
+        $this->assertSame(90000, $routineExercise->fresh()->working_weight_g);
+        $this->assertNull($workout->fresh()->bumpRecords->first()->undone_at);
+    }
+
+    #[Test]
+    public function re_eval_omits_undo_when_routine_weight_moved_past_bump(): void
+    {
+        [$routine, $routineExercise] = $this->seedRoutine(workingWeightG: 80000, prescribedReps: 6, achievementFloor: 4);
+        $workout = $this->workoutService->createWorkout($routine);
+        $set = $this->firstSet($workout->id);
+        $this->workoutService->completeSet($set, reps: 6, weightGrams: 80000);
+        $bumps = $this->workoutService->finishWorkout($workout);
+        $this->progressionService->applyConfirmedBumps($workout, $bumps, [$routineExercise->id]);
+
+        $routineExercise->update(['working_weight_g' => 90000]);
+        $set->update(['reps' => 4]);
+
+        $session = $this->progressionService->reEvaluateProgression($workout->fresh());
+
+        $this->assertCount(0, $session->undos);
+    }
+
+    #[Test]
     public function finish_ignores_dropsets_for_carry_forward_and_bumps(): void
     {
         [$routine, $routineExercise] = $this->seedRoutine(workingWeightG: 80000, prescribedReps: 6, achievementFloor: 4);

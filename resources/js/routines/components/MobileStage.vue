@@ -35,6 +35,7 @@ const {
     achievementFloorDefault,
     save,
     deleteRoutine,
+    mutating,
 } = useRoutineEditor();
 </script>
 
@@ -334,7 +335,8 @@ const {
             </Link>
             <button
                 type="button"
-                class="rounded-full border border-destructive/50 bg-background px-4 py-3 text-sm text-destructive"
+                class="rounded-full border border-destructive/50 bg-background px-4 py-3 text-sm text-destructive disabled:opacity-50"
+                :disabled="mutating || form.processing"
                 @click="deleteRoutine"
             >
                 Delete
@@ -342,7 +344,7 @@ const {
             <button
                 type="button"
                 class="rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground disabled:opacity-50"
-                :disabled="form.processing"
+                :disabled="form.processing || mutating"
                 @click="save"
             >
                 Save

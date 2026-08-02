@@ -1,8 +1,9 @@
 import { createRoutineEditor } from '@/routines/composables/useRoutineEditor';
+import * as confirmDialog from '@/shared/lib/confirmDialog';
 import { exerciseOption, routinePayload } from '@/test/factories';
 import { inertiaMocks } from '@/test/inertiaMocks';
 import { mount } from '@vue/test-utils';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick } from 'vue';
 
 function mountEditor(props = {}) {
@@ -27,6 +28,9 @@ function mountEditor(props = {}) {
 describe('createRoutineEditor', () => {
     beforeEach(() => {
         inertiaMocks().inertiaFormPut.mockClear();
+        inertiaMocks().routerMocks.post.mockClear();
+        inertiaMocks().routerMocks.delete.mockClear();
+        vi.spyOn(confirmDialog, 'confirmDialog').mockResolvedValue(true);
     });
 
     it('adds blocks and selects the new block', () => {
@@ -149,5 +153,37 @@ describe('createRoutineEditor', () => {
         const editor = mountEditor();
         editor.save();
         expect(inertiaMocks().inertiaFormPut).toHaveBeenCalled();
+    });
+
+    it('guards duplicate against double-submit', async () => {
+        inertiaMocks().routerMocks.post.mockImplementation((_url, _data, options) => {
+            expect(options?.onFinish).toEqual(expect.any(Function));
+        });
+        const editor = mountEditor();
+        await editor.duplicateRoutine();
+        expect(editor.mutating.value).toBe(true);
+        expect(inertiaMocks().routerMocks.post).toHaveBeenCalledTimes(1);
+
+        await editor.duplicateRoutine();
+        expect(inertiaMocks().routerMocks.post).toHaveBeenCalledTimes(1);
+
+        inertiaMocks().routerMocks.post.mock.calls[0][2].onFinish();
+        expect(editor.mutating.value).toBe(false);
+    });
+
+    it('guards delete against double-submit', async () => {
+        inertiaMocks().routerMocks.delete.mockImplementation((_url, options) => {
+            expect(options?.onFinish).toEqual(expect.any(Function));
+        });
+        const editor = mountEditor();
+        await editor.deleteRoutine();
+        expect(editor.mutating.value).toBe(true);
+        expect(inertiaMocks().routerMocks.delete).toHaveBeenCalledTimes(1);
+
+        await editor.deleteRoutine();
+        expect(inertiaMocks().routerMocks.delete).toHaveBeenCalledTimes(1);
+
+        inertiaMocks().routerMocks.delete.mock.calls[0][1].onFinish();
+        expect(editor.mutating.value).toBe(false);
     });
 });

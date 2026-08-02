@@ -140,4 +140,16 @@ class TrainingDefaultsTest extends TestCase
         $this->assertNull($this->user->fresh()->warm_up_steps_default);
         $this->assertSame(User::fallbackWarmUpSteps(), $this->user->fresh()->resolvedWarmUpStepsDefault());
     }
+
+    #[Test]
+    public function guests_are_redirected_from_training_mutations(): void
+    {
+        $this->put(route('training.update'), [
+            'warm_up_steps_default' => [['percent' => 40, 'reps' => 5]],
+            'warm_up_defaults_scope' => WarmUpDefaultsScope::AllBlocks->value,
+            'bump_when_default' => BumpWhen::AnySet->value,
+        ])->assertRedirect(route('login'));
+
+        $this->post(route('training.reset'))->assertRedirect(route('login'));
+    }
 }

@@ -3,7 +3,7 @@ import InputError from '@/components/InputError.vue';
 import { useRoutineEditor } from '@/routines/composables/useRoutineEditor';
 import { Link } from '@inertiajs/vue3';
 
-const { form, errorList, save, duplicateRoutine, deleteRoutine } = useRoutineEditor();
+const { form, errorList, save, duplicateRoutine, deleteRoutine, mutating } = useRoutineEditor();
 </script>
 
 <template>
@@ -27,14 +27,16 @@ const { form, errorList, save, duplicateRoutine, deleteRoutine } = useRoutineEdi
                 </Link>
                 <button
                     type="button"
-                    class="rounded-full border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                    class="rounded-full border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
+                    :disabled="mutating || form.processing"
                     @click="duplicateRoutine"
                 >
                     Duplicate
                 </button>
                 <button
                     type="button"
-                    class="rounded-full border border-destructive/50 px-4 py-2 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10"
+                    class="rounded-full border border-destructive/50 px-4 py-2 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10 disabled:opacity-50"
+                    :disabled="mutating || form.processing"
                     @click="deleteRoutine"
                 >
                     Delete
@@ -42,7 +44,7 @@ const { form, errorList, save, duplicateRoutine, deleteRoutine } = useRoutineEdi
                 <button
                     type="button"
                     class="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-50"
-                    :disabled="form.processing"
+                    :disabled="form.processing || mutating"
                     @click="save"
                 >
                     Save

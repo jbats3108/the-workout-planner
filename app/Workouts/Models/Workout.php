@@ -101,6 +101,7 @@ class Workout extends Model
             ->finished()
             ->where('mode', '!=', WorkoutMode::Deload)
             ->orderByDesc('finished_at')
+            ->orderByDesc('id')
             ->first();
     }
 

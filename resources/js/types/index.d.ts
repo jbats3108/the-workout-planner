@@ -23,6 +23,7 @@ export type AppPageProps<T extends Record<string, unknown> = Record<string, unkn
     flash: {
         success: string | null;
         error: string | null;
+        invite_url: string | null;
     };
     ziggy: Config & { location: string };
     sidebarOpen: boolean;

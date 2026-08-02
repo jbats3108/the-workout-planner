@@ -24,6 +24,14 @@ class ShowProgressionController extends Controller
                 ->with('error', 'Progression is only available for finished workouts.');
         }
 
+        if (! $workout->isEligibleForProgressionReEval()) {
+            $progressionService->forgetProgressionSession($workout);
+
+            return redirect()
+                ->route('dashboard')
+                ->with('error', 'Progression is only available for the latest finished workout.');
+        }
+
         if (! $progressionService->hasProgressionSession($workout)) {
             return redirect()
                 ->route('dashboard')
