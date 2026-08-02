@@ -101,7 +101,7 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 
 ### Polish & mobile integration
 
-- **Log sheet polish** — mobile UX on shipped complete-then-log: sheet swipe/backdrop dismiss; auto-focus weight/reps; redesign **+ Set** / **− Set** placement
+- 
 
 ### Bugfixes
 
@@ -110,11 +110,8 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 ### Code quality & security
 
 - **Frontend dedupe / component opportunities** — examine repeated Vue patterns (forms, optional number inputs, stage chrome, sheets) for shared components or helpers without over-abstracting
-- **Security / ops leftover** — master `REGISTRATION_INVITE` reusable → `admin`; leave empty after bootstrap
 - **GDPR compliance?** — clarify whether/what is required (privacy policy, data export/delete, retention, cookies); grill before building
 - **Finish/discard `lockForUpdate`** — low TOCTOU on workout finish/abandon (FE busy guards in place)
 - **Plate profile ensure race** — unique is `(user_id, name)` not `user_id` alone; concurrent `ensureProfile` race (low)
-- **Dead email-verification UI** — `User` ≠ `MustVerifyEmail` (low)
-- **Settings sidebar omits Training** — lives in bottom nav (low)
 - **Editor last-write-wins / non-idempotent duplicate** — parked from Routines slice 2 (low)
 
