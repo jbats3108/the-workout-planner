@@ -1,8 +1,12 @@
 # Validation & Forms Best Practices
 
+## Spatie Laravel Data (this app)
+
+HTTP boundaries use Spatie Data DTOs (`App\{Domain}\Data\...`), not Form Requests. Constructor/`#[Present]`/`#[ArrayType]` rules live in `docs/adr/0001-spatie-laravel-data-http-boundaries.md` — follow that ADR; do not restate them here.
+
 ## Use Form Request Classes
 
-Extract validation from controllers into dedicated Form Request classes.
+Extract validation from controllers into dedicated Form Request classes when Form Requests are used (rare here — prefer Spatie Data above).
 
 Incorrect:
 ```php
