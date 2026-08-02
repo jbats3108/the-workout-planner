@@ -109,13 +109,13 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 
 ### Code quality & security
 
-- **Audit agent guidance for duplication** — Spatie Data DTO rules (and likely other conventions) are repeated across `AGENTS.md`, ADRs, and `.cursor/skills/...`; consolidate so agents load one source of truth and keep context light
 - **Frontend dedupe / component opportunities** — examine repeated Vue patterns (forms, optional number inputs, stage chrome, sheets) for shared components or helpers without over-abstracting
 - **Policy audit** — folded into full-app code review slices (see **Grill: Full app code review**)
 - **Full app code review** — staged domain passes; plan in **Grill: Full app code review** below
 - **FE double-submit guards** — add `form.processing` / busy disable (or server idempotency) on bare `router.post`/`delete` paths flagged in reviews (Dashboard start/finish, Play finish/abandon; routine duplicate/delete done in slice 2)
 - **Security sweep** — Auth/Admin slice 3 done (ops leftover: master invite hygiene)
 - **GDPR compliance?** — clarify whether/what is required (privacy policy, data export/delete, retention, cookies); grill before building
+- **Agent guidance SoT** — ~~Spatie Data / FE domain rules restated in AGENTS + skills~~ done (path-scoped `.cursor/rules` + ADR 0001 / 0005; thin Boost `validation.md` pointers in `.cursor`/`.agents`/`.github`)
 
 ## Grill: Full app code review
 
