@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useWorkoutPlayer } from '@/workouts/composables/useWorkoutPlayer';
 
-const { workout, progressLabel, finishWorkout, abandonWorkout, leaveWorkout } = useWorkoutPlayer();
+const { workout, progressLabel, finishWorkout, abandonWorkout, leaveWorkout, mutating } = useWorkoutPlayer();
 </script>
 
 <template>
@@ -15,7 +15,8 @@ const { workout, progressLabel, finishWorkout, abandonWorkout, leaveWorkout } = 
             <button
                 v-if="workout.status === 'in_progress'"
                 type="button"
-                class="rounded-md border border-border px-3 py-1.5 text-sm text-foreground hover:bg-secondary"
+                class="rounded-md border border-border px-3 py-1.5 text-sm text-foreground hover:bg-secondary disabled:opacity-50"
+                :disabled="mutating"
                 @click="finishWorkout"
             >
                 Finish
@@ -23,7 +24,8 @@ const { workout, progressLabel, finishWorkout, abandonWorkout, leaveWorkout } = 
             <button
                 v-if="workout.status === 'in_progress'"
                 type="button"
-                class="rounded-md border border-destructive/40 px-3 py-1.5 text-sm text-destructive"
+                class="rounded-md border border-destructive/40 px-3 py-1.5 text-sm text-destructive disabled:opacity-50"
+                :disabled="mutating"
                 @click="abandonWorkout"
             >
                 Abandon

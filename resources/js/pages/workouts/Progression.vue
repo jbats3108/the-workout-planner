@@ -2,7 +2,7 @@
 import AppLayout from '@/layouts/AppLayout.vue';
 import { formatGramsToKg } from '@/lib/plateCalculator';
 import type { Bump, UndoBump } from '@/workouts/types';
-import { Head, router, useForm } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
@@ -18,8 +18,10 @@ const selectedBumps = ref<number[]>(props.progression.bumps.map((b) => b.routine
 const selectedUndos = ref<number[]>(props.progression.undos.map((u) => u.bump_record_id));
 
 const form = useForm({});
+const skipForm = useForm({});
 
 const hasActions = computed(() => props.progression.bumps.length > 0 || props.progression.undos.length > 0);
+const busy = computed(() => form.processing || skipForm.processing);
 
 const toggleBump = (id: number) => {
     if (selectedBumps.value.includes(id)) {
@@ -38,6 +40,9 @@ const toggleUndo = (id: number) => {
 };
 
 const confirm = () => {
+    if (busy.value) {
+        return;
+    }
     // Omit empty lists — Spatie infers `required`, and Laravel treats [] as empty.
     form.transform(() => ({
         ...(selectedBumps.value.length > 0 ? { routine_block_exercise_ids: selectedBumps.value } : {}),
@@ -46,7 +51,10 @@ const confirm = () => {
 };
 
 const skip = () => {
-    router.post(route('workouts.progression.skip', props.progression.workout_id));
+    if (busy.value) {
+        return;
+    }
+    skipForm.post(route('workouts.progression.skip', props.progression.workout_id));
 };
 </script>
 
@@ -117,14 +125,15 @@ const skip = () => {
                 <button
                     type="button"
                     class="rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-40"
-                    :disabled="(selectedBumps.length === 0 && selectedUndos.length === 0) || form.processing"
+                    :disabled="(selectedBumps.length === 0 && selectedUndos.length === 0) || busy"
                     @click="confirm"
                 >
                     Confirm
                 </button>
                 <button
                     type="button"
-                    class="rounded-md px-5 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                    class="rounded-md px-5 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40"
+                    :disabled="busy"
                     @click="skip"
                 >
                     Skip

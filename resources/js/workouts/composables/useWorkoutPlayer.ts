@@ -43,6 +43,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
     const draftSegments = ref<Array<{ weight_kg: number }>>([]);
     const restSecondsLeft = ref(0);
     const leaveConfirmed = ref(false);
+    const mutating = ref(false);
     const logSheetOpen = ref(false);
     /** Stage "Use nearest" override; cleared when focus moves to another set. */
     const stageWeightOverrideKg = ref<number | null>(null);
@@ -403,16 +404,20 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
     );
 
     const promoteToDropset = () => {
-        if (!current.value || !canPromoteToDropset.value) {
+        if (mutating.value || !current.value || !canPromoteToDropset.value) {
             return;
         }
         const entry = current.value;
+        mutating.value = true;
         router.post(
             route('workouts.sets.promote-dropset', { workout: props.workout.id, set: entry.set.id }),
             { segments: defaultPromoteSegments(workingWeightForSet(entry)) },
             {
                 preserveScroll: true,
                 only: ['workout'],
+                onFinish: () => {
+                    mutating.value = false;
+                },
             },
         );
     };
@@ -549,7 +554,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
     });
 
     const finishWorkout = async () => {
-        if (props.workout.status !== 'in_progress') {
+        if (mutating.value || props.workout.status !== 'in_progress') {
             return;
         }
         const incomplete = flatSets.value.some(({ set }) => !set.completed);
@@ -563,11 +568,15 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
                 return;
             }
         }
+        mutating.value = true;
         leaveConfirmed.value = true;
         router.post(
             route('workouts.finish', props.workout.id),
             {},
             {
+                onFinish: () => {
+                    mutating.value = false;
+                },
                 onError: () => {
                     leaveConfirmed.value = false;
                 },
@@ -576,7 +585,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
     };
 
     const abandonWorkout = async () => {
-        if (props.workout.status !== 'in_progress') {
+        if (mutating.value || props.workout.status !== 'in_progress') {
             return;
         }
         const ok = await confirmDialog({
@@ -588,11 +597,15 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         if (!ok) {
             return;
         }
+        mutating.value = true;
         leaveConfirmed.value = true;
         router.post(
             route('workouts.discard', props.workout.id),
             {},
             {
+                onFinish: () => {
+                    mutating.value = false;
+                },
                 onError: () => {
                     leaveConfirmed.value = false;
                 },
@@ -629,26 +642,34 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
     });
 
     const addWorkingSet = () => {
-        if (!current.value) {
+        if (mutating.value || !current.value) {
             return;
         }
+        mutating.value = true;
         router.post(
             route('workouts.working-sets.add', [props.workout.id, current.value.block.id]),
             {},
             {
                 preserveScroll: true,
                 only: ['workout'],
+                onFinish: () => {
+                    mutating.value = false;
+                },
             },
         );
     };
 
     const removeWorkingSet = () => {
-        if (!current.value || !canRemoveWorkingSet.value) {
+        if (mutating.value || !current.value || !canRemoveWorkingSet.value) {
             return;
         }
+        mutating.value = true;
         router.delete(route('workouts.sets.remove', [props.workout.id, current.value.set.id]), {
             preserveScroll: true,
             only: ['workout'],
+            onFinish: () => {
+                mutating.value = false;
+            },
         });
     };
 
@@ -750,6 +771,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         restSecondsLeft,
         restLabel,
         logSheetOpen,
+        mutating,
         progressLabel,
         upcoming,
         setupHint,

@@ -28,6 +28,7 @@ const {
     workout,
     current,
     setForm,
+    mutating,
     draftSegments,
     logSheetOpen,
     logProgressionHints,
@@ -92,7 +93,8 @@ const unlockInput = (event: PointerEvent) => {
                 <button
                     v-if="canAddWorkingSet"
                     type="button"
-                    class="inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 px-3.5 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
+                    class="inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 px-3.5 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-primary/20 disabled:opacity-50"
+                    :disabled="mutating || setForm.processing"
                     @click="addWorkingSet"
                 >
                     <span class="text-xl leading-none font-semibold">+</span>
@@ -101,7 +103,8 @@ const unlockInput = (event: PointerEvent) => {
                 <button
                     v-if="canPromoteToDropset"
                     type="button"
-                    class="rounded-full border border-border px-3.5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
+                    class="rounded-full border border-border px-3.5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary disabled:opacity-50"
+                    :disabled="mutating || setForm.processing"
                     @click="promoteToDropset"
                 >
                     Promote to dropset
@@ -109,7 +112,8 @@ const unlockInput = (event: PointerEvent) => {
                 <button
                     v-if="canRemoveWorkingSet"
                     type="button"
-                    class="inline-flex items-center gap-1.5 rounded-full border border-destructive/40 bg-destructive/10 px-3.5 py-2.5 text-sm font-medium text-destructive transition-colors hover:bg-destructive/20"
+                    class="inline-flex items-center gap-1.5 rounded-full border border-destructive/40 bg-destructive/10 px-3.5 py-2.5 text-sm font-medium text-destructive transition-colors hover:bg-destructive/20 disabled:opacity-50"
+                    :disabled="mutating || setForm.processing"
                     @click="removeWorkingSet"
                 >
                     <span class="text-xl leading-none font-semibold">−</span>
