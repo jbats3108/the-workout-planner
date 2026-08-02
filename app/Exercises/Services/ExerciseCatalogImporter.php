@@ -11,9 +11,9 @@ use RuntimeException;
 class ExerciseCatalogImporter
 {
     /**
-     * @return array{muscle_groups: int, created: int, updated: int, skipped: int}
+     * @return array{muscle_groups: int, created: int, updated: int, skipped: int, pruned: int}
      */
-    public function importFromPath(string $path): array
+    public function importFromPath(string $path, bool $prune = true): array
     {
         if (! is_readable($path)) {
             throw new InvalidArgumentException("Catalog file is not readable: {$path}");
@@ -25,14 +25,14 @@ class ExerciseCatalogImporter
             throw new RuntimeException("Catalog file is not valid JSON: {$path}");
         }
 
-        return $this->import($decoded);
+        return $this->import($decoded, $prune);
     }
 
     /**
      * @param  array{muscle_groups?: list<array{name: string, slug: string}>, exercises?: list<array{name: string, slug: string, primary: string, secondary?: ?string, equipment?: ?string}>}  $catalog
-     * @return array{muscle_groups: int, created: int, updated: int, skipped: int}
+     * @return array{muscle_groups: int, created: int, updated: int, skipped: int, pruned: int}
      */
-    public function import(array $catalog): array
+    public function import(array $catalog, bool $prune = true): array
     {
         $groupsCreated = 0;
         $groupIdsBySlug = [];
@@ -64,6 +64,8 @@ class ExerciseCatalogImporter
         $created = 0;
         $updated = 0;
         $skipped = 0;
+        /** @var list<string> $catalogSlugs */
+        $catalogSlugs = [];
 
         foreach ($catalog['exercises'] ?? [] as $row) {
             $slug = $row['slug'] ?? null;
@@ -110,6 +112,8 @@ class ExerciseCatalogImporter
             }
             $exercise->save();
 
+            $catalogSlugs[] = $slug;
+
             if ($isNew) {
                 $created++;
             } else {
@@ -117,17 +121,39 @@ class ExerciseCatalogImporter
             }
         }
 
+        $pruned = 0;
+        if ($prune) {
+            $pruned = $this->pruneSharedNotInCatalog($catalogSlugs);
+        }
+
         return [
             'muscle_groups' => $groupsCreated,
             'created' => $created,
             'updated' => $updated,
             'skipped' => $skipped,
+            'pruned' => $pruned,
         ];
     }
 
     public static function defaultPath(): string
     {
         return database_path('data/exercises.json');
+    }
+
+    /**
+     * Soft-delete shared exercises whose slug is absent from the catalog.
+     *
+     * @param  list<string>  $catalogSlugs
+     */
+    private function pruneSharedNotInCatalog(array $catalogSlugs): int
+    {
+        $query = Exercise::query()->shared();
+
+        if ($catalogSlugs === []) {
+            return $query->delete();
+        }
+
+        return $query->whereNotIn('slug', $catalogSlugs)->delete();
     }
 
     private function parseEquipment(mixed $value): ?ExerciseEquipment
