@@ -24,7 +24,8 @@ Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domai
 
 Gym-test 2026-07-28 + 2026-07-26 + remaining product history. Newest first within each batch where noted.
 
-1. **Nicer confirms** — ~~replace browser `confirm`/`alert` with in-app dialogs~~ done (`confirmDialog` + `ConfirmDialogHost`; RestStage inline skip unchanged)
+1. **Exercise catalog curation** — curated 174 shared lifts (original short list + selective free-exercise-db); `exercises:import` soft-deletes extras unless `--no-prune`
+2. **Nicer confirms** — ~~replace browser `confirm`/`alert` with in-app dialogs~~ done (`confirmDialog` + `ConfirmDialogHost`; RestStage inline skip unchanged)
 2. **"Block" naming** — ~~UI/copy only: Play/History drop “Block N” (show `Superset` when needed); Up next drops Block N; setup hints use exercise names; editor/settings leftover noun = Exercise; domain `Block` unchanged~~ done
 3. **Set x/y in exercise header (Play)** — ~~set progress in the big exercise header (and log sheet), labeled Warm-up / Working~~ done
 4. **Bump when mode** — ~~Settings “Bump when”: Any set / Last set at top weight; snapshotted on workout start; Floor kept for carry-forward; Bump = prescribed Target (no separate Progression Target / editor Bump); log sheet `Floor X. Bump @ Y`; confirm on finish + history re-eval~~ done
@@ -84,7 +85,6 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 ### Features (FAQ)
 
 - **Tutorial / welcome guide** — help new users find Settings, progression defaults, editor overrides, and bump confirmation; inbox: start with FAQ, then create/play walkthrough
-- **Exercise catalog curation** — too many near-duplicate variants (esp. deadlift); trim or group so find/pick stays usable
 - **Post-hoc workout record** — log a full finished workout in one pass (no Play); pick routine or ad-hoc structure; assign `finished_at` to a past date; grill scope (progression re-eval, warm-ups, deload flag)
 - **Switch exercise for deload** — swap the exercise used when starting a deload (same structure, different lift)
 - **Strava integration** — connect account; export finished workouts (and/or sync activity metadata); grill scope (OAuth, fields, privacy)
