@@ -103,7 +103,7 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 
 ### Polish & mobile integration
 
-- **Log sheet polish** — mobile UX on shipped complete-then-log: sheet swipe/backdrop dismiss; auto-focus weight/reps; redesign **+ Set** / **− Set** placement
+- 
 
 ### Bugfixes
 
@@ -118,69 +118,7 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 - **FE DRY: auth submit + password fields** — `AuthSubmitButton` (processing spinner); prefer `PasswordInput` / shared confirm fields across auth + Profile
 - **FE DRY: mobile editor accordion** — `EditorDisclosure` for Dropsets / Progression / Warm-up / Deload expanders
 - **FE DRY: tiny shared utils** — `formatDate` (Dashboard + History); import `BreadcrumbItem` from `@/types` in Breadcrumbs; optional rest-format core math share
-- **Admin slug-named CRUD shell** — ~~shared create card / name-slug fields / named list + `useSlugNamedForm` / `useAdminDelete` for Exercises ↔ MuscleGroups~~ done
-- **Policy audit** — folded into full-app code review slices (see **Grill: Full app code review**)
-- **Full app code review** — staged domain passes; plan in **Grill: Full app code review** below
-- **FE double-submit guards** — add `form.processing` / busy disable (or server idempotency) on bare `router.post`/`delete` paths flagged in reviews (Dashboard start/finish, Play finish/abandon; routine duplicate/delete done in slice 2)
-- **Security sweep** — Auth/Admin slice 3 done (ops leftover: master invite hygiene)
 - **GDPR compliance?** — clarify whether/what is required (privacy policy, data export/delete, retention, cookies); grill before building
-- **Agent guidance SoT** — ~~Spatie Data / FE domain rules restated in AGENTS + skills~~ done (path-scoped `.cursor/rules` + ADR 0001 / 0005; thin Boost `validation.md` pointers in `.cursor`/`.agents`/`.github`)
-
-## Grill: Full app code review
-
-Read-only `/code-review` passes. Not Bugbot/Security-diff tools (those only cover a diff). Base on `main`. One new chat per slice. Findings only: severity → path → cause → fix. No drive-by refactors.
-
-Cursor rule: `.cursor/rules/code-review.mdc` (same checklist; attach for `/code-review` chats).
-
-**Do now (pick one start):**
-
-1. **Workouts** (~3–4h) — player, progression, history re-eval, policies, one-in-progress _(slice 1 fixes: PR #32)_
-2. **Routines** (~2–3h) — editor sync, duplicate, deload, dropsets/supersets _(slice 2 fixes: PR #36)_
-3. **Auth + Admin** (~1.5–2h) — invite gate, roles, throttle, soft-fail, IDOR on slugs/ULIDs _(slice 3 fixes: PR #35)_
-4. **Settings + Users** (~1–1.5h) — plates, training defaults, profile destroy _(slice 4 fixes: PR #37)_
-5. **Shared + FE shell** (~1–1.5h) — middleware, PWA SW, nav, catalog filter
-
-**Review findings — Slice 4 (Settings + Users):**
-
-1. **Fixed** — account destroy promoted custom exercises to shared catalog (`nullOnDelete`) → force-delete customs after owned routines/workouts; FK `restrictOnDelete`
-2. **Fixed** — duplicate plate denominations → DB 500 → soft-fail validation on `plates`
-3. **Fixed** — `training.reset` bare `router.post` → `useForm` + `processing` disable
-4. **Fixed** — thin tests → destroy cascade, empty bars, guest redirects on settings mutations
-5. **Parked (low)** — plate profile unique is `(user_id, name)` not `user_id` alone; concurrent `ensureProfile` race
-6. **Parked (low)** — dead email-verification UI (`User` ≠ `MustVerifyEmail`)
-7. **Parked (low)** — settings sidebar omits Training (lives in bottom nav)
-
-**Later:**
-
-- **Cross-cutting** (~1–2h) — ADR drift, DTO boundaries, test gaps, N+1, FE double-submit sweep
-
-### Review findings
-
-#### Slice 3 — Auth + Admin
-
-1. **High** — one-time invite TOCTOU — **fixed** (transaction + `lockForUpdate` + usable-only consume)
-2. **High (ops)** — master `REGISTRATION_INVITE` reusable → `admin` — ops only; leave empty after bootstrap
-3. **Medium** — no register throttle — **fixed** (`throttle:6,1` before invite middleware)
-4. **Medium** — register role allowlist — **fixed** (`ALLOWED_ROLES` + `findByName`)
-5. **Medium** — register not transactional — **fixed** (same as #1)
-6. **Low** — admin revoke/delete double-submit — **fixed** (`mutating` busy flag)
-7. **Low** — email verify unused — deferred (invite-only)
-
-### Review findings
-
-**Slice 2 (Routines) — fixed:** FE busy on duplicate/delete (editor + dashboard); `StoreRoutineData` Max/deload bounds match sync; save strips invalid warm-up steps (mobile 0/empty → no 422).
-
-**Slice 2 — parked:** last-write-wins editor sync / non-idempotent duplicate (cross-cutting); admin can open editor (`view`) but save 403 (intentional); Dashboard Start/Deload busy stays workouts/FE double-submit backlog.
-
-**Per-slice checklist:**
-
-1. Routes + policies → ownership / IDOR
-2. Services → rules vs `CONTEXT.md` + ADRs
-3. Mutations → validation, race, soft-fail vs hard fail
-4. Matching FE (`resources/js/{domain}/`) → client/server drift
-5. **Double-submit** — `useForm` + `:disabled="form.processing"` (or busy flag) on every mutating control; flag bare `router.post`/`put`/`delete` with no guard; note whether server also rejects duplicates
-6. Tests → happy / fail / edge; note gaps
-
-**Severity order:** security → data corruption (progression/snapshot/history) → Play/editor bugs → missing tests on those → ADR drift last
-
-**Chat prompt template:** `/code-review` slice N: {Domain}. Read-only. Prioritize bugs, security, missing tests, FE double-submit. Base: `main`.
+- **Finish/discard `lockForUpdate`** — low TOCTOU on workout finish/abandon (FE busy guards in place)
+- **Plate profile ensure race** — unique is `(user_id, name)` not `user_id` alone; concurrent `ensureProfile` race (low)
+- **Editor last-write-wins / non-idempotent duplicate** — parked from Routines slice 2 (low)

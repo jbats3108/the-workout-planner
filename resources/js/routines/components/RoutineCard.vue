@@ -34,7 +34,7 @@ const startTitle = (mode: 'normal' | 'deload') => {
         <p v-if="!routine.can_start" class="mt-3 text-xs text-muted-foreground">Add exercises in the editor before starting.</p>
         <div class="mt-4 flex flex-wrap items-center justify-between gap-2">
             <div class="flex flex-wrap items-center gap-2">
-                <Button type="button" size="pill" :disabled="!canStart" :title="startTitle('normal')" @click="emit('start', 'normal')">
+                <Button type="button" size="pill" :disabled="!canStart || mutating" :title="startTitle('normal')" @click="emit('start', 'normal')">
                     Start
                 </Button>
                 <Button
@@ -42,7 +42,7 @@ const startTitle = (mode: 'normal' | 'deload') => {
                     variant="outline"
                     size="pill"
                     class="text-foreground/80"
-                    :disabled="!canStart"
+                    :disabled="!canStart || mutating"
                     :title="startTitle('deload')"
                     @click="emit('start', 'deload')"
                 >

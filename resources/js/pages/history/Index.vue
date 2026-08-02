@@ -3,7 +3,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { confirmDialog } from '@/shared/lib/confirmDialog';
 import { type BreadcrumbItem } from '@/types';
 import type { HistoryWorkout } from '@/workouts/types';
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import { Trash2 } from 'lucide-vue-next';
 
 defineProps<{
@@ -15,6 +15,7 @@ defineProps<{
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'History', href: '/history' }];
+const deleteForm = useForm({});
 
 const filterByRoutine = (routineSlug: string | null) => {
     if (routineSlug === null) {
@@ -30,6 +31,9 @@ const formatDate = (iso: string) => {
 };
 
 const deleteWorkout = async (workout: HistoryWorkout) => {
+    if (deleteForm.processing) {
+        return;
+    }
     const ok = await confirmDialog({
         title: `Remove “${workout.routine_name}” from history?`,
         description: 'This cannot be undone.',
@@ -39,7 +43,7 @@ const deleteWorkout = async (workout: HistoryWorkout) => {
     if (!ok) {
         return;
     }
-    router.delete(route('history.destroy', workout.id));
+    deleteForm.delete(route('history.destroy', workout.id));
 };
 </script>
 
@@ -82,8 +86,9 @@ const deleteWorkout = async (workout: HistoryWorkout) => {
                     </Link>
                     <button
                         type="button"
-                        class="mr-3 shrink-0 rounded-md p-2 text-destructive transition-opacity hover:opacity-80"
+                        class="mr-3 shrink-0 rounded-md p-2 text-destructive transition-opacity hover:opacity-80 disabled:opacity-50"
                         :aria-label="`Delete ${workout.routine_name}`"
+                        :disabled="deleteForm.processing"
                         @click="deleteWorkout(workout)"
                     >
                         <Trash2 class="size-4" />

@@ -43,7 +43,7 @@ Active product backlog: `docs/plan.md`. Prefer updating that file over inventing
 
 ### Code review
 
-Staged full-app / domain-slice reviews: `docs/plan.md` → **Grill: Full app code review**, and `.cursor/rules/code-review.mdc`. Checklist includes FE double-submit (`form.processing` vs bare `router.post`/`delete`) alongside authz, races, and tests.
+Staged full-app / domain-slice reviews use `.cursor/rules/code-review.mdc` (authz, races, tests, FE double-submit). Domain slices 1–5 + cross-cutting FE guards are done; remaining parked items live under **Code quality & security** in `docs/plan.md`.
 
 ### Git branches
 

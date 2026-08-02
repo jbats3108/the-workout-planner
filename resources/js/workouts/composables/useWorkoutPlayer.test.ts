@@ -485,13 +485,28 @@ describe('createWorkoutPlayer', () => {
         expect(inertiaMocks().routerMocks.post).toHaveBeenCalledWith(
             '/workouts.working-sets.add',
             {},
-            expect.objectContaining({ preserveScroll: true, only: ['workout'] }),
+            expect.objectContaining({ preserveScroll: true, only: ['workout'], onFinish: expect.any(Function) }),
         );
+        player.mutating.value = false;
         player.removeWorkingSet();
         expect(inertiaMocks().routerMocks.delete).toHaveBeenCalledWith(
             '/workouts.sets.remove',
-            expect.objectContaining({ preserveScroll: true, only: ['workout'] }),
+            expect.objectContaining({ preserveScroll: true, only: ['workout'], onFinish: expect.any(Function) }),
         );
+    });
+
+    it('ignores overlapping structure mutations while busy', () => {
+        const player = mountPlayer({
+            blocks: [
+                playerBlock({
+                    id: 5,
+                    sets: [playerSet({ id: 1, set_index: 0, completed: false }), playerSet({ id: 2, set_index: 1, completed: false })],
+                }),
+            ],
+        });
+        player.addWorkingSet();
+        player.addWorkingSet();
+        expect(inertiaMocks().routerMocks.post).toHaveBeenCalledTimes(1);
     });
 
     it('hides remove on the last working set so it cannot skip the block', () => {

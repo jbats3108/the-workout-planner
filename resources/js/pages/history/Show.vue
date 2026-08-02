@@ -4,7 +4,7 @@ import { confirmDialog } from '@/shared/lib/confirmDialog';
 import { type BreadcrumbItem } from '@/types';
 import { historyBlockTitle, historyRowsForBlock, historyWarmUpGroups } from '@/workouts/lib/historyDisplay';
 import type { WorkoutPayload } from '@/workouts/types';
-import { Head, router, useForm } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 import { Trash2 } from 'lucide-vue-next';
 import { computed } from 'vue';
 
@@ -32,6 +32,8 @@ const forms = Object.fromEntries(
     ]),
 );
 
+const deleteForm = useForm({});
+
 const blockRows = computed(() =>
     props.history.workout.blocks.map((block) => ({
         block,
@@ -46,6 +48,9 @@ const saveSet = (setId: number) => {
 };
 
 const deleteWorkout = async () => {
+    if (deleteForm.processing) {
+        return;
+    }
     const name = props.history.workout.routine_name;
     const ok = await confirmDialog({
         title: `Remove “${name}” from history?`,
@@ -56,7 +61,7 @@ const deleteWorkout = async () => {
     if (!ok) {
         return;
     }
-    router.delete(route('history.destroy', props.history.workout.id));
+    deleteForm.delete(route('history.destroy', props.history.workout.id));
 };
 </script>
 
@@ -73,7 +78,8 @@ const deleteWorkout = async () => {
                 </div>
                 <button
                     type="button"
-                    class="inline-flex items-center gap-1.5 rounded-md bg-destructive px-3 py-2 text-sm font-semibold text-destructive-foreground transition-colors hover:bg-destructive/90"
+                    class="inline-flex items-center gap-1.5 rounded-md bg-destructive px-3 py-2 text-sm font-semibold text-destructive-foreground transition-colors hover:bg-destructive/90 disabled:opacity-50"
+                    :disabled="deleteForm.processing"
                     @click="deleteWorkout"
                 >
                     <Trash2 class="size-4" />

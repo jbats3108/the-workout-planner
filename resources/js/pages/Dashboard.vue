@@ -20,6 +20,8 @@ const props = defineProps<{
 const page = usePage();
 const formErrors = computed(() => Object.values(page.props.errors ?? {}));
 const routineMutating = ref(false);
+const workoutMutating = ref(false);
+const cardBusy = computed(() => routineMutating.value || workoutMutating.value);
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -29,7 +31,19 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const startWorkout = (routineSlug: string, mode: 'normal' | 'deload' = 'normal') => {
-    router.post(route('workouts.store', { routine: routineSlug }), { mode });
+    if (workoutMutating.value || routineMutating.value) {
+        return;
+    }
+    workoutMutating.value = true;
+    router.post(
+        route('workouts.store', { routine: routineSlug }),
+        { mode },
+        {
+            onFinish: () => {
+                workoutMutating.value = false;
+            },
+        },
+    );
 };
 
 const canStart = (routine: Routine) => !props.data.in_progress_workout && routine.can_start === true;
@@ -46,19 +60,28 @@ const startBlockedReason = (routine: Routine) => {
 
 const finishInProgress = async () => {
     const workout = props.data.in_progress_workout;
-    if (!workout) return;
+    if (!workout || workoutMutating.value) return;
     const ok = await confirmDialog({
         title: 'Finish this workout now?',
         description: 'Incomplete sets stay incomplete.',
         confirmLabel: 'Finish',
     });
     if (!ok) return;
-    router.post(route('workouts.finish', workout.id));
+    workoutMutating.value = true;
+    router.post(
+        route('workouts.finish', workout.id),
+        {},
+        {
+            onFinish: () => {
+                workoutMutating.value = false;
+            },
+        },
+    );
 };
 
 const abandonInProgress = async () => {
     const workout = props.data.in_progress_workout;
-    if (!workout) return;
+    if (!workout || workoutMutating.value) return;
     const ok = await confirmDialog({
         title: 'Abandon this workout?',
         description: 'Logged sets are kept but it will not count as finished.',
@@ -66,7 +89,16 @@ const abandonInProgress = async () => {
         variant: 'destructive',
     });
     if (!ok) return;
-    router.post(route('workouts.discard', workout.id));
+    workoutMutating.value = true;
+    router.post(
+        route('workouts.discard', workout.id),
+        {},
+        {
+            onFinish: () => {
+                workoutMutating.value = false;
+            },
+        },
+    );
 };
 
 const duplicateRoutine = (routine: Routine) => {
@@ -134,8 +166,15 @@ const formatFinishedAt = (iso: string) => {
                     <Button size="pill" as-child>
                         <Link :href="route('workouts.play', data.in_progress_workout.id)">Resume</Link>
                     </Button>
-                    <Button type="button" variant="outline" size="pill" @click="finishInProgress">Finish</Button>
-                    <Button type="button" variant="outline" size="pill" class="border-destructive/40 text-destructive" @click="abandonInProgress">
+                    <Button type="button" variant="outline" size="pill" :disabled="workoutMutating" @click="finishInProgress">Finish</Button>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        size="pill"
+                        class="border-destructive/40 text-destructive"
+                        :disabled="workoutMutating"
+                        @click="abandonInProgress"
+                    >
                         Abandon
                     </Button>
                 </div>
@@ -173,7 +212,7 @@ const formatFinishedAt = (iso: string) => {
                     :routine="routine"
                     :can-start="canStart(routine)"
                     :start-blocked-reason="startBlockedReason(routine)"
-                    :mutating="routineMutating"
+                    :mutating="cardBusy"
                     @start="(mode) => startWorkout(routine.slug, mode)"
                     @duplicate="duplicateRoutine(routine)"
                     @delete="deleteRoutine(routine)"
