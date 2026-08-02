@@ -2,11 +2,7 @@
 
 ## Spatie Laravel Data (this app)
 
-HTTP boundaries use Spatie Data DTOs (`App\{Domain}\Data\...`), not Form Requests. See `docs/adr/0001-spatie-laravel-data-http-boundaries.md`.
-
-- Constructor properties: always `public readonly`.
-- Prefer PHP types over redundant attributes — do not add `#[Present]` / `#[ArrayType]` just because a property is an `array`. Optional empty lists: default `= []` and omit the key when empty (inferred `required` rejects `[]`).
-- Use validation attributes only for constraints the type system cannot express (`#[Min]`, `#[Max]`, `#[Exists]`, `#[RequiredWithout]`, …). Prefer attributes over `rules()`; reserve `rules()` for nested/`*` cases.
+HTTP boundaries use Spatie Data DTOs (`App\{Domain}\Data\...`), not Form Requests. Constructor/`#[Present]`/`#[ArrayType]` rules live in `docs/adr/0001-spatie-laravel-data-http-boundaries.md` — follow that ADR; do not restate them here.
 
 ## Use Form Request Classes
 
