@@ -112,10 +112,11 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 - **Frontend dedupe / component opportunities** — examine repeated Vue patterns (forms, optional number inputs, stage chrome, sheets) for shared components or helpers without over-abstracting
 - **Policy audit** — folded into full-app code review slices (see **Grill: Full app code review**)
 - **Full app code review** — staged domain passes; plan in **Grill: Full app code review** below
-- **FE double-submit guards** — add `form.processing` / busy disable (or server idempotency) on bare `router.post`/`delete` paths flagged in reviews (Dashboard start/finish, Play finish/abandon; routine duplicate/delete done in slice 2)
+- **FE double-submit guards** — ~~Dashboard start/finish/abandon, Play finish/abandon/±set/promote, history delete, Progression skip~~ done (routine duplicate/delete slice 2; shell logout/admin deletes slice 5)
 - **Security sweep** — Auth/Admin slice 3 done (ops leftover: master invite hygiene)
 - **GDPR compliance?** — clarify whether/what is required (privacy policy, data export/delete, retention, cookies); grill before building
 - **Agent guidance SoT** — ~~Spatie Data / FE domain rules restated in AGENTS + skills~~ done (path-scoped `.cursor/rules` + ADR 0001 / 0005; thin Boost `validation.md` pointers in `.cursor`/`.agents`/`.github`)
+- **Cross-cutting review** — ~~ADR drift / DTO / N+1 / FE double-submit sweep~~ done (FE double-submit closed above; parked: finish/discard still no `lockForUpdate` TOCTOU — low)
 
 ## Grill: Full app code review
 
@@ -129,7 +130,13 @@ Cursor rule: `.cursor/rules/code-review.mdc` (same checklist; attach for `/code-
 2. **Routines** (~2–3h) — editor sync, duplicate, deload, dropsets/supersets *(slice 2 fixes: PR #36)*
 3. **Auth + Admin** (~1.5–2h) — invite gate, roles, throttle, soft-fail, IDOR on slugs/ULIDs *(slice 3 fixes: PR #35)*
 4. **Settings + Users** (~1–1.5h) — plates, training defaults, profile destroy *(slice 4 fixes: PR #37)*
-5. **Shared + FE shell** (~1–1.5h) — middleware, PWA SW, nav, catalog filter
+5. **Shared + FE shell** (~1–1.5h) — middleware, PWA SW, nav, catalog filter *(slice 5 fixes: PR #38)*
+
+**Review findings — Slice 5 (Shared + FE shell):**
+
+1. **Fixed** — muscle-group delete when exercises still reference it → soft-fail / blocked
+2. **Fixed** — shared exercise slug uniqueness; admin delete shared-only (403 on custom)
+3. **Fixed** — logout + admin catalog deletes → `form.processing` disable; reactive admin nav; `flash.invite_url` typing
 
 **Review findings — Slice 4 (Settings + Users):**
 
@@ -143,7 +150,7 @@ Cursor rule: `.cursor/rules/code-review.mdc` (same checklist; attach for `/code-
 
 **Later:**
 
-- **Cross-cutting** (~1–2h) — ADR drift, DTO boundaries, test gaps, N+1, FE double-submit sweep
+- **Cross-cutting** (~1–2h) — ~~ADR drift, DTO boundaries, test gaps, N+1, FE double-submit sweep~~ done (FE guards above; no new ADR/N+1 blockers; parked finish/discard `lockForUpdate`)
 
 ### Review findings
 
