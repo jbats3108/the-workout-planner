@@ -9,6 +9,7 @@ Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domai
 ## Now
 
 - **FAQ page** — public/help FAQ; draft bullets on Notion [FAQ Page](https://app.notion.com/p/3aae5dd99f0c8006a6cbf6df379661a8) (early-adopter forever-free, Ko-fi, what app is/isn't, beta, no AI/ad data sale, not a training app, backlog link)
+- **Since-last-deload counts** — per routine on dashboard (finished normals since that routine’s latest finished deload); soft Deload hint at ≥ **Deload Velocity** (`deload_every_n`, editor + Training defaults; 0 = never); no shared cycle counter
 
 ## Recently shipped (foundation)
 

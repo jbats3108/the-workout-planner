@@ -68,8 +68,12 @@ A durable record that a confirmed **Bump** was applied from a specific finished 
 _Avoid_: Bump event, progression audit, PR log
 
 **Deload Recipe**:
-Per-routine uniform factors (weight and reps) applied when starting in deload mode. Same factors for every exercise on the routine.
+Per-routine uniform factors (weight and reps) plus **Deload Velocity**, applied when starting in deload mode / deciding when to soft-suggest Deload. Same factors for every exercise on the routine. New routines seed from the user’s Training deload defaults.
 _Avoid_: Recovery recipe, easy recipe
+
+**Deload Velocity**:
+How many finished normal workouts on this routine before the dashboard soft-suggests Deload. Part of the **Deload Recipe**. `0` means never suggest. Independent per routine so rares/one-offs can opt out.
+_Avoid_: Deload schedule, deload cadence (as a calendar), deload frequency (as weeks)
 
 **Deload Mode**:
 A way to start a workout that applies the routine’s deload recipe to the snapshot. Deload workouts do not carry-forward or bump the routine’s normal working weights.

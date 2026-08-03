@@ -17,10 +17,16 @@ final class RoutineData extends Data
         public readonly ?float $deloadWeightFactor = null,
         public readonly ?float $deloadRepsFactor = null,
         public readonly bool $canStart = false,
+        public readonly int $normalsSinceDeload = 0,
+        public readonly bool $hasFinishedDeload = false,
+        public readonly int $deloadEveryN = 3,
     ) {}
 
-    public static function fromRoutine(Routine $routine): RoutineData
-    {
+    public static function fromRoutine(
+        Routine $routine,
+        int $normalsSinceDeload = 0,
+        bool $hasFinishedDeload = false,
+    ): RoutineData {
         $routine->loadMissing('blocks.blockExercises');
 
         $hasExercises = $routine->blocks->contains(
@@ -34,6 +40,9 @@ final class RoutineData extends Data
             $routine->deload_weight_factor !== null ? (float) $routine->deload_weight_factor : null,
             $routine->deload_reps_factor !== null ? (float) $routine->deload_reps_factor : null,
             canStart: $hasExercises,
+            normalsSinceDeload: $normalsSinceDeload,
+            hasFinishedDeload: $hasFinishedDeload,
+            deloadEveryN: (int) ($routine->deload_every_n ?? 3),
         );
     }
 }

@@ -34,5 +34,14 @@ class UpdateTrainingDefaultsData extends Data
 
         #[Enum(BumpWhen::class)]
         public readonly BumpWhen $bumpWhenDefault = BumpWhen::AnySet,
+
+        #[Min(0), Max(5)]
+        public readonly float $deloadWeightFactorDefault = 0.5,
+
+        #[Min(0), Max(10)]
+        public readonly float $deloadRepsFactorDefault = 2.0,
+
+        #[Min(0), Max(99)]
+        public readonly int $deloadEveryNDefault = 3,
     ) {}
 }

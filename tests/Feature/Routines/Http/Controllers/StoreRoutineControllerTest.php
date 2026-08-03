@@ -55,6 +55,26 @@ class StoreRoutineControllerTest extends TestCase
     }
 
     #[Test]
+    public function it_seeds_deload_settings_from_user_training_defaults(): void
+    {
+        $this->user->update([
+            'deload_weight_factor_default' => 0.7,
+            'deload_reps_factor_default' => 1.25,
+            'deload_every_n_default' => 4,
+        ]);
+
+        $this->actingAs($this->user)->post(route('routines.store'), [
+            'name' => 'From Defaults',
+        ])->assertRedirect();
+
+        $routine = Routine::query()->where('name', 'From Defaults')->first();
+        $this->assertNotNull($routine);
+        $this->assertSame('0.700', (string) $routine->deload_weight_factor);
+        $this->assertSame('1.250', (string) $routine->deload_reps_factor);
+        $this->assertSame(4, $routine->deload_every_n);
+    }
+
+    #[Test]
     public function it_rejects_an_overlong_name(): void
     {
         $before = Routine::query()->count();
@@ -81,6 +101,11 @@ class StoreRoutineControllerTest extends TestCase
             'name' => 'Test Routine',
             'deload_reps_factor' => 10.1,
         ])->assertSessionHasErrors('deload_reps_factor');
+
+        $this->actingAs($this->user)->post(route('routines.store'), [
+            'name' => 'Test Routine',
+            'deload_every_n' => 100,
+        ])->assertSessionHasErrors('deload_every_n');
 
         $this->assertSame($before, Routine::query()->count());
     }

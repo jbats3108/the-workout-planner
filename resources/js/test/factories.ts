@@ -19,6 +19,7 @@ export function routinePayload(overrides: Partial<RoutinePayload> = {}): Routine
         name: 'Test Routine',
         deload_weight_factor: 0.8,
         deload_reps_factor: 0.8,
+        deload_every_n: 3,
         updated_at: '2026-01-01T00:00:00+00:00',
         blocks: [emptyBlock()],
         ...overrides,

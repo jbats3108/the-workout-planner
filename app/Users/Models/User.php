@@ -35,6 +35,9 @@ class User extends Authenticatable
         'achievement_floor_default',
         'progression_target_default',
         'bump_when_default',
+        'deload_weight_factor_default',
+        'deload_reps_factor_default',
+        'deload_every_n_default',
         'warm_up_steps_default',
         'warm_up_defaults_scope',
     ];
@@ -57,6 +60,9 @@ class User extends Authenticatable
             'achievement_floor_default' => 'integer',
             'progression_target_default' => 'integer',
             'bump_when_default' => BumpWhen::class,
+            'deload_weight_factor_default' => 'decimal:3',
+            'deload_reps_factor_default' => 'decimal:3',
+            'deload_every_n_default' => 'integer',
             'warm_up_steps_default' => 'array',
             'warm_up_defaults_scope' => WarmUpDefaultsScope::class,
         ];

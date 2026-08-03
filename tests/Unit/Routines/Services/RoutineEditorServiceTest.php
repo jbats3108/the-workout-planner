@@ -39,6 +39,7 @@ class RoutineEditorServiceTest extends TestCase
             'name' => 'New Name',
             'deload_weight_factor' => 0.5,
             'deload_reps_factor' => 2,
+            'deload_every_n' => 4,
             'blocks' => [
                 $this->singleBlockPayload($exercise->id, [
                     'working_weight_kg' => 80,
@@ -58,6 +59,7 @@ class RoutineEditorServiceTest extends TestCase
         ]));
 
         $this->assertSame('New Name', $result->name);
+        $this->assertSame(4, $result->deload_every_n);
         $this->assertCount(1, $result->blocks);
         $block = $result->blocks->first();
         // Setup-after-block is disabled on the final routine block to avoid an end-of-workout pause.

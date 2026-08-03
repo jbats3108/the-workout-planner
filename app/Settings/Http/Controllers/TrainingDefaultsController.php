@@ -26,6 +26,9 @@ class TrainingDefaultsController extends Controller
             'using_app_fallback' => $user->warm_up_steps_default === null,
             'achievement_floor_default' => $user->achievement_floor_default,
             'bump_when_default' => ($user->bump_when_default ?? BumpWhen::AnySet)->value,
+            'deload_weight_factor_default' => (float) $user->deload_weight_factor_default,
+            'deload_reps_factor_default' => (float) $user->deload_reps_factor_default,
+            'deload_every_n_default' => (int) $user->deload_every_n_default,
             'plate_profile' => $profiles->profilePayloadFor($user),
         ]);
     }
@@ -49,6 +52,9 @@ class TrainingDefaultsController extends Controller
         $user->warm_up_defaults_scope = $data->warmUpDefaultsScope;
         $user->achievement_floor_default = $data->achievementFloorDefault;
         $user->bump_when_default = $data->bumpWhenDefault;
+        $user->deload_weight_factor_default = $data->deloadWeightFactorDefault;
+        $user->deload_reps_factor_default = $data->deloadRepsFactorDefault;
+        $user->deload_every_n_default = $data->deloadEveryNDefault;
         $user->save();
 
         return redirect()
