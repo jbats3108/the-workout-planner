@@ -45,7 +45,7 @@ class WorkoutHistoryService
             if ($set->isDropset() || $data->segments !== null) {
                 $this->updateDropset($set, $data);
             } else {
-                $this->updateNormalSet($set, $data);
+                $this->updateSingleSet($set, $data);
             }
 
             if ($set->completed_at === null) {
@@ -96,7 +96,7 @@ class WorkoutHistoryService
     /**
      * @throws WorkoutServiceException
      */
-    private function updateNormalSet(WorkoutSet $set, CompleteWorkoutSetData $data): void
+    private function updateSingleSet(WorkoutSet $set, CompleteWorkoutSetData $data): void
     {
         $weightGrams = $data->weightGrams();
 

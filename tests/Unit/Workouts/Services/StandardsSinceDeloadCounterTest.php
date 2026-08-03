@@ -7,28 +7,28 @@ use App\Users\Models\User;
 use App\Workouts\Enums\WorkoutMode;
 use App\Workouts\Enums\WorkoutStatus;
 use App\Workouts\Models\Workout;
-use App\Workouts\Services\NormalsSinceDeloadCounter;
+use App\Workouts\Services\StandardsSinceDeloadCounter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-class NormalsSinceDeloadCounterTest extends TestCase
+class StandardsSinceDeloadCounterTest extends TestCase
 {
     use RefreshDatabase;
 
     #[Test]
-    public function it_counts_all_finished_normals_when_never_deloaded(): void
+    public function it_counts_all_finished_standards_when_never_deloaded(): void
     {
         $user = User::factory()->create();
         $routine = Routine::factory()->create(['user_id' => $user->id]);
         $other = Routine::factory()->create(['user_id' => $user->id]);
 
-        $this->finishedWorkout($user, $routine, WorkoutMode::Normal, now()->subDays(3));
-        $this->finishedWorkout($user, $routine, WorkoutMode::Normal, now()->subDays(2));
-        $this->finishedWorkout($user, $other, WorkoutMode::Normal, now()->subDay());
+        $this->finishedWorkout($user, $routine, WorkoutMode::Standard, now()->subDays(3));
+        $this->finishedWorkout($user, $routine, WorkoutMode::Standard, now()->subDays(2));
+        $this->finishedWorkout($user, $other, WorkoutMode::Standard, now()->subDay());
 
-        $summaries = (new NormalsSinceDeloadCounter)->summarizeByRoutineId($user, [$routine->id, $other->id]);
+        $summaries = (new StandardsSinceDeloadCounter)->summarizeByRoutineId($user, [$routine->id, $other->id]);
 
         $this->assertSame(2, $summaries[$routine->id]['count']);
         $this->assertFalse($summaries[$routine->id]['has_finished_deload']);
@@ -43,15 +43,15 @@ class NormalsSinceDeloadCounterTest extends TestCase
         $a = Routine::factory()->create(['user_id' => $user->id]);
         $b = Routine::factory()->create(['user_id' => $user->id]);
 
-        $this->finishedWorkout($user, $a, WorkoutMode::Normal, now()->subDays(5));
+        $this->finishedWorkout($user, $a, WorkoutMode::Standard, now()->subDays(5));
         $this->finishedWorkout($user, $a, WorkoutMode::Deload, now()->subDays(4));
-        $this->finishedWorkout($user, $a, WorkoutMode::Normal, now()->subDays(3));
-        $this->finishedWorkout($user, $a, WorkoutMode::Normal, now()->subDays(2));
+        $this->finishedWorkout($user, $a, WorkoutMode::Standard, now()->subDays(3));
+        $this->finishedWorkout($user, $a, WorkoutMode::Standard, now()->subDays(2));
 
-        $this->finishedWorkout($user, $b, WorkoutMode::Normal, now()->subDays(5));
-        $this->finishedWorkout($user, $b, WorkoutMode::Normal, now()->subDays(1));
+        $this->finishedWorkout($user, $b, WorkoutMode::Standard, now()->subDays(5));
+        $this->finishedWorkout($user, $b, WorkoutMode::Standard, now()->subDays(1));
 
-        $summaries = (new NormalsSinceDeloadCounter)->summarizeByRoutineId($user, [$a->id, $b->id]);
+        $summaries = (new StandardsSinceDeloadCounter)->summarizeByRoutineId($user, [$a->id, $b->id]);
 
         $this->assertSame(2, $summaries[$a->id]['count']);
         $this->assertTrue($summaries[$a->id]['has_finished_deload']);
@@ -67,12 +67,12 @@ class NormalsSinceDeloadCounterTest extends TestCase
         $routine = Routine::factory()->create(['user_id' => $user->id]);
         $otherRoutine = Routine::factory()->create(['user_id' => $otherUser->id]);
 
-        $this->finishedWorkout($user, $routine, WorkoutMode::Normal, now()->subDay());
+        $this->finishedWorkout($user, $routine, WorkoutMode::Standard, now()->subDay());
 
         Workout::factory()->create([
             'user_id' => $user->id,
             'routine_id' => $routine->id,
-            'mode' => WorkoutMode::Normal,
+            'mode' => WorkoutMode::Standard,
             'status' => WorkoutStatus::InProgress,
             'started_at' => now(),
             'finished_at' => null,
@@ -81,15 +81,15 @@ class NormalsSinceDeloadCounterTest extends TestCase
         Workout::factory()->create([
             'user_id' => $user->id,
             'routine_id' => $routine->id,
-            'mode' => WorkoutMode::Normal,
+            'mode' => WorkoutMode::Standard,
             'status' => WorkoutStatus::Discarded,
             'started_at' => now()->subHours(2),
             'finished_at' => now()->subHour(),
         ]);
 
-        $this->finishedWorkout($otherUser, $otherRoutine, WorkoutMode::Normal, now());
+        $this->finishedWorkout($otherUser, $otherRoutine, WorkoutMode::Standard, now());
 
-        $summaries = (new NormalsSinceDeloadCounter)->summarizeByRoutineId($user, [$routine->id]);
+        $summaries = (new StandardsSinceDeloadCounter)->summarizeByRoutineId($user, [$routine->id]);
 
         $this->assertSame(1, $summaries[$routine->id]['count']);
         $this->assertFalse($summaries[$routine->id]['has_finished_deload']);

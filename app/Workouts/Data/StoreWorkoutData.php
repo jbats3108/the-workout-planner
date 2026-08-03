@@ -18,6 +18,6 @@ class StoreWorkoutData extends Data
 
     public function modeOrDefault(): WorkoutMode
     {
-        return $this->mode ?? WorkoutMode::Normal;
+        return $this->mode ?? WorkoutMode::Standard;
     }
 }

@@ -22,12 +22,16 @@ A block with exactly two exercises played as matched rounds: A → transition �
 _Avoid_: Circuit, giant set, pairing (as a noun for the block)
 
 **Set Group**:
-A bag of like sets on a block: either warm-up or working. One set count and one rest for the whole group (for a superset, rest is after the pair; transition sits between A and B). Warm-up steps are each a % of that exercise’s working weight with their own reps; each exercise on the block has its own working weight and prescribed rep target. Individual working-set slots may be normal or a **Dropset**.
+A bag of like sets on a block: either warm-up or working. One set count and one rest for the whole group (for a superset, rest is after the pair; transition sits between A and B). Warm-up steps are each a % of that exercise’s working weight with their own reps; each exercise on the block has its own working weight and prescribed rep target. Individual working-set slots may be **Single** or a **Dropset**.
 _Avoid_: Set scheme, wave, drop set (as a name for the Set Group itself)
 
 **Dropset**:
 A working-set *slot* with two or more absolute-weight segments that share one reps target. No rest between segments; the working Set Group’s rest runs after the whole slot. Not available on supersets. Ignored by progression (achievement floor / bump / carry-forward). “Run the rack” is only an editor helper that fills the segment list.
 _Avoid_: Drop set (as a Set Group type), strip set, burn-out set
+
+**Single**:
+A working-set *slot* with one weight and one reps target (the default opposite of a **Dropset**).
+_Avoid_: Normal set, straight set (as product labels)
 
 **Working Weight**:
 The absolute load prescribed for an exercise on a block’s working sets. The number progression updates. Warm-ups are derived from it. On a Dropset, the first segment may default from working weight, then segments are editable absolutes.
@@ -38,7 +42,7 @@ A named movement in the library. Either shared (master catalog) or owned by a us
 _Avoid_: Movement, lift, catalog exercise (as a separate type)
 
 **Workout**:
-One started instance of a routine (normal or deload mode). Snapshots the routine’s blocks at start so mid-session and later routine edits don’t rewrite history. At most one in-progress workout per user.
+One started instance of a routine (standard or deload mode). Snapshots the routine’s blocks at start so mid-session and later routine edits don’t rewrite history. At most one in-progress workout per user.
 _Avoid_: Session, log, activity
 
 ## Progression
@@ -72,12 +76,12 @@ Per-routine uniform factors (weight and reps) plus **Deload Velocity**, applied 
 _Avoid_: Recovery recipe, easy recipe
 
 **Deload Velocity**:
-How many finished normal workouts on this routine before the dashboard soft-suggests Deload. Part of the **Deload Recipe**. `0` means never suggest. Independent per routine so rares/one-offs can opt out.
+How many finished standard workouts on this routine before the dashboard soft-suggests Deload. Part of the **Deload Recipe**. `0` means never suggest. Independent per routine so rares/one-offs can opt out.
 _Avoid_: Deload schedule, deload cadence (as a calendar), deload frequency (as weeks)
 
 **Deload Mode**:
-A way to start a workout that applies the routine’s deload recipe to the snapshot. Deload workouts do not carry-forward or bump the routine’s normal working weights.
-_Avoid_: Easy mode, recovery mode
+A way to start a workout that applies the routine’s deload recipe to the snapshot. Deload workouts do not carry-forward or bump the routine’s usual working weights.
+_Avoid_: Easy mode, recovery mode, normal mode (use **standard**)
 
 ## Pauses
 

@@ -25,7 +25,7 @@ use RuntimeException;
  * | Barbell Strength | Barbell + plates, WU first block only, setup after WU |
  * | Dumbbell Accessories | Dumbbell + bodyweight dip @ 28.75, WU on every block |
  * | Superset Pump | Supersets, WU on some blocks only, mixed equipment |
- * | Dropset Finishers | Dropsets mixed with normal sets, barbell + DB |
+ * | Dropset Finishers | Dropsets mixed with single sets, barbell + DB |
  */
 class RoutineSeeder extends Seeder
 {
@@ -160,14 +160,14 @@ class RoutineSeeder extends Seeder
     {
         $routine = $this->createRoutine($user, 'Dropset Finishers');
 
-        // Set indexes 0–1 normal, index 2 dropset.
+        // Set indexes 0–1 single, index 2 dropset.
         $this->addBlock($routine, position: 1, exercises: [
             ['name' => 'Barbell Curl', 'equipment' => ExerciseEquipment::Barbell, 'kg' => 35, 'reps' => 10],
         ], workingSets: 3, workingRest: 90, warmUps: self::DEFAULT_WARM_UPS, dropsets: [
             2 => [35, 25, 15],
         ]);
 
-        // Set index 0 normal, index 1 dropset (mixed in one group).
+        // Set index 0 single, index 1 dropset (mixed in one group).
         $this->addBlock($routine, position: 2, exercises: [
             ['name' => 'Dumbbell Bench Press', 'equipment' => ExerciseEquipment::Dumbbell, 'kg' => 26, 'reps' => 10],
         ], workingSets: 2, workingRest: 90, warmUps: [], dropsets: [

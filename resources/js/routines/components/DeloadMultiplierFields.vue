@@ -25,7 +25,7 @@ const { form } = useRoutineEditor();
             <input v-model.number="form.deload_reps_factor" type="number" step="0.05" min="0" max="2" :class="d.input" />
         </label>
         <label :class="d.fieldLabel">
-            <span :class="d.fieldTitle">Every N normals</span>
+            <span :class="d.fieldTitle">Every N standards</span>
             <span :class="d.fieldHint">{{ d.everyHint }}</span>
             <input v-model.number="form.deload_every_n" type="number" step="1" min="0" max="99" :class="d.input" />
         </label>

@@ -4,6 +4,6 @@ namespace App\Workouts\Enums;
 
 enum WorkoutMode: string
 {
-    case Normal = 'normal';
+    case Standard = 'standard';
     case Deload = 'deload';
 }

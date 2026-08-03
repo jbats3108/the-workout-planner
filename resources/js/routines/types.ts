@@ -54,8 +54,8 @@ export type Routine = {
     deload_reps_factor?: number | null;
     deload_every_n?: number;
     can_start?: boolean;
-    /** Finished normal workouts since this routine's last finished deload (all normals if never deloaded). */
-    normals_since_deload?: number;
+    /** Finished standard workouts since this routine's last finished deload (all standards if never deloaded). */
+    standards_since_deload?: number;
     /** False until this routine has at least one finished deload workout. */
     has_finished_deload?: boolean;
 };

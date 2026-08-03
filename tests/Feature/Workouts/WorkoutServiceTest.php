@@ -65,7 +65,7 @@ class WorkoutServiceTest extends TestCase
         // Then
         $this->assertTrue($workout->routine->is($routine));
         $this->assertSame('in_progress', $workout->status->value);
-        $this->assertSame('normal', $workout->mode->value);
+        $this->assertSame('standard', $workout->mode->value);
     }
 
     #[Test]
@@ -146,7 +146,7 @@ class WorkoutServiceTest extends TestCase
         Workout::query()->create([
             'user_id' => $routine->user_id,
             'routine_id' => $routine->id,
-            'mode' => WorkoutMode::Normal,
+            'mode' => WorkoutMode::Standard,
             'status' => WorkoutStatus::InProgress,
             'started_at' => now(),
         ]);
@@ -335,7 +335,7 @@ class WorkoutServiceTest extends TestCase
     }
 
     #[Test]
-    public function it_promotes_a_normal_set_to_dropset(): void
+    public function it_promotes_a_single_set_to_dropset(): void
     {
         $routine = Routine::factory()->create();
         $this->seedRoutineBlockWithExercise($routine, setCount: 1);

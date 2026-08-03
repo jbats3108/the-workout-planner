@@ -8,11 +8,11 @@ use App\Workouts\Enums\WorkoutStatus;
 use App\Workouts\Models\Workout;
 use Illuminate\Support\Collection;
 
-final class NormalsSinceDeloadCounter
+final class StandardsSinceDeloadCounter
 {
     /**
-     * Finished normal workouts per routine since that routine's latest finished deload.
-     * If a routine has never had a finished deload, counts all of its finished normals
+     * Finished standard workouts per routine since that routine's latest finished deload.
+     * If a routine has never had a finished deload, counts all of its finished standards
      * and sets has_finished_deload to false (UI should not say "since deload").
      *
      * @param  Collection<int, int>|list<int>  $routineIds
@@ -35,7 +35,7 @@ final class NormalsSinceDeloadCounter
             ->where('user_id', $user->id)
             ->where('status', WorkoutStatus::Finished)
             ->whereIn('routine_id', $ids)
-            ->whereIn('mode', [WorkoutMode::Normal, WorkoutMode::Deload])
+            ->whereIn('mode', [WorkoutMode::Standard, WorkoutMode::Deload])
             ->orderBy('finished_at')
             ->orderBy('id')
             ->get(['routine_id', 'mode', 'finished_at']);
@@ -49,7 +49,7 @@ final class NormalsSinceDeloadCounter
         }
 
         foreach ($workouts as $workout) {
-            if ($workout->mode !== WorkoutMode::Normal || $workout->finished_at === null) {
+            if ($workout->mode !== WorkoutMode::Standard || $workout->finished_at === null) {
                 continue;
             }
 

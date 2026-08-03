@@ -56,10 +56,10 @@ describe('dropsets', () => {
         expect(dropsetSummary(b)).toBe('S1:60→50');
     });
 
-    it('reverts slot to normal', () => {
+    it('reverts slot to single', () => {
         const b = block();
         setSlotKind(b, 0, 'dropset');
-        setSlotKind(b, 0, 'normal');
+        setSlotKind(b, 0, 'single');
         expect(isDropsetSlot(b, 0)).toBe(false);
     });
 

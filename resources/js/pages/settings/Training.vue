@@ -216,7 +216,7 @@ const savePlates = () => {
                     <div class="space-y-4 border-t border-border pt-6">
                         <HeadingSmall
                             title="Deload"
-                            description="Defaults for new routines. A deload workout scales every exercise on that routine for one session; your normal working weights stay unchanged. Each routine can still override these in the editor."
+                            description="Defaults for new routines. A deload workout scales every exercise on that routine for one session; your usual working weights stay unchanged. Each routine can still override these in the editor."
                         />
 
                         <label class="flex flex-col gap-1 text-sm text-muted-foreground">
@@ -256,9 +256,9 @@ const savePlates = () => {
                         </label>
 
                         <label class="flex flex-col gap-1 text-sm text-muted-foreground">
-                            Every N normals
+                            Every N standards
                             <span class="text-xs text-muted-foreground/80">
-                                After this many finished normal workouts on a routine since its last deload, the dashboard soft-emphasizes Deload
+                                After this many finished standard workouts on a routine since its last deload, the dashboard soft-emphasizes Deload
                                 (e.g. 3 ≈ every 4th session). Set 0 to never suggest — useful for rares or one-offs. The count is per routine, not
                                 shared across all of them.
                             </span>
