@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Routines\Data\Editor;
+namespace App\Shared\Data;
 
 use App\Shared\Support\Weight;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Attributes\Validation\Min;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 
 #[MapName(SnakeCaseMapper::class)]
-class SyncDropsetSegmentData extends Data
+class WeightKgSegmentData extends Data
 {
     public function __construct(
         #[Min(0)]
@@ -19,5 +20,16 @@ class SyncDropsetSegmentData extends Data
     public function weightGrams(): int
     {
         return Weight::kgToGrams($this->weightKg);
+    }
+
+    /**
+     * @return list<int>
+     */
+    public static function gramsList(DataCollection $segments): array
+    {
+        return array_map(
+            static fn (self $segment): int => $segment->weightGrams(),
+            array_values($segments->all()),
+        );
     }
 }

@@ -5,6 +5,7 @@ namespace App\Routines\Data\Editor;
 use App\Routines\Models\Routine;
 use App\Routines\Models\RoutineBlock;
 use App\Routines\Models\RoutineBlockExercise;
+use App\Shared\Data\WeightKgSegmentData;
 use App\Shared\Enums\SetGroupType;
 use App\Shared\Support\Weight;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
@@ -55,9 +56,9 @@ class RoutineEditorPageData extends Data
                 ->filter(fn ($segments): bool => $segments->count() >= 2)
                 ->map(fn ($segments, $setIndex): SyncDropsetData => new SyncDropsetData(
                     setIndex: (int) $setIndex,
-                    segments: SyncDropsetSegmentData::collect(
+                    segments: WeightKgSegmentData::collect(
                         $segments->sortBy('position')->values()->map(
-                            fn ($segment): SyncDropsetSegmentData => new SyncDropsetSegmentData(
+                            fn ($segment): WeightKgSegmentData => new WeightKgSegmentData(
                                 weightKg: Weight::gramsToKg($segment->weight_g),
                             )
                         ),

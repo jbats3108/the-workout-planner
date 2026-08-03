@@ -2,6 +2,7 @@
 
 namespace App\Routines\Data\Editor;
 
+use App\Shared\Data\WeightKgSegmentData;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Attributes\Validation\Max;
@@ -14,13 +15,13 @@ use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 class SyncDropsetData extends Data
 {
     /**
-     * @param  DataCollection<int, SyncDropsetSegmentData>  $segments
+     * @param  DataCollection<int, WeightKgSegmentData>  $segments
      */
     public function __construct(
         #[Min(0), Max(19)]
         public readonly int $setIndex,
 
-        #[DataCollectionOf(SyncDropsetSegmentData::class)]
+        #[DataCollectionOf(WeightKgSegmentData::class)]
         #[Min(2), Max(20)]
         public readonly DataCollection $segments,
     ) {}
