@@ -2,13 +2,8 @@
 
 namespace Tests\Feature\Workouts;
 
-use App\Exercises\Models\Exercise;
 use App\Routines\Models\Routine;
-use App\Routines\Models\RoutineBlock;
-use App\Routines\Models\RoutineBlockExercise;
 use App\Routines\Models\RoutineDropsetSegment;
-use App\Routines\Models\RoutineSetGroup;
-use App\Shared\Enums\SetGroupType;
 use App\Workouts\Enums\WorkoutMode;
 use App\Workouts\Enums\WorkoutStatus;
 use App\Workouts\Exceptions\WorkoutServiceException;
@@ -18,10 +13,12 @@ use App\Workouts\Services\WorkoutService;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Helpers\CreatesPlayableWorkout;
 use Tests\TestCase;
 
 class WorkoutServiceTest extends TestCase
 {
+    use CreatesPlayableWorkout;
     use RefreshDatabase;
 
     private WorkoutService $workoutService;
@@ -57,7 +54,7 @@ class WorkoutServiceTest extends TestCase
     {
         // Given
         $routine = Routine::factory()->create();
-        $this->seedRoutineBlockWithExercise($routine);
+        $this->seedPlayableRoutineBlock($routine, restSeconds: null);
 
         // When
         $workout = $this->workoutService->createWorkout($routine);
@@ -73,7 +70,7 @@ class WorkoutServiceTest extends TestCase
     {
         // Given
         $routine = Routine::factory()->create();
-        $this->seedRoutineBlockWithExercise($routine);
+        $this->seedPlayableRoutineBlock($routine, restSeconds: null);
 
         // When
         $workout = $this->workoutService->createWorkout($routine);
@@ -87,7 +84,7 @@ class WorkoutServiceTest extends TestCase
     {
         // Given
         $routine = Routine::factory()->create();
-        $this->seedRoutineBlockWithExercise($routine, setCount: 4);
+        $this->seedPlayableRoutineBlock($routine, setCount: 4);
 
         // When
         $workout = $this->workoutService->createWorkout($routine);
@@ -107,7 +104,7 @@ class WorkoutServiceTest extends TestCase
             'deload_weight_factor' => 0.5,
             'deload_reps_factor' => 0.5,
         ]);
-        $this->seedRoutineBlockWithExercise($routine, setCount: 1);
+        $this->seedPlayableRoutineBlock($routine, setCount: 1);
 
         $workout = $this->workoutService->createWorkout($routine, WorkoutMode::Deload);
 
@@ -122,11 +119,11 @@ class WorkoutServiceTest extends TestCase
     public function it_rejects_a_second_in_progress_workout_for_the_same_user(): void
     {
         $routine = Routine::factory()->create();
-        $this->seedRoutineBlockWithExercise($routine);
+        $this->seedPlayableRoutineBlock($routine, restSeconds: null);
         $this->workoutService->createWorkout($routine);
 
         $other = Routine::factory()->create(['user_id' => $routine->user_id]);
-        $this->seedRoutineBlockWithExercise($other);
+        $this->seedPlayableRoutineBlock($other, restSeconds: null);
 
         $this->expectException(WorkoutServiceException::class);
         $this->expectExceptionMessage(WorkoutService::ALREADY_IN_PROGRESS_ERROR);
@@ -138,7 +135,7 @@ class WorkoutServiceTest extends TestCase
     public function unique_index_rejects_a_second_in_progress_row_for_the_same_user(): void
     {
         $routine = Routine::factory()->create();
-        $this->seedRoutineBlockWithExercise($routine);
+        $this->seedPlayableRoutineBlock($routine, restSeconds: null);
         $this->workoutService->createWorkout($routine);
 
         $this->expectException(UniqueConstraintViolationException::class);
@@ -156,7 +153,7 @@ class WorkoutServiceTest extends TestCase
     public function it_adds_a_working_set_round_to_the_block(): void
     {
         $routine = Routine::factory()->create();
-        $this->seedRoutineBlockWithExercise($routine, setCount: 2);
+        $this->seedPlayableRoutineBlock($routine, setCount: 2);
         $workout = $this->workoutService->createWorkout($routine);
         $block = $workout->blocks->first();
 
@@ -171,7 +168,7 @@ class WorkoutServiceTest extends TestCase
     public function it_removes_an_incomplete_working_set_round(): void
     {
         $routine = Routine::factory()->create();
-        $this->seedRoutineBlockWithExercise($routine, setCount: 2);
+        $this->seedPlayableRoutineBlock($routine, setCount: 2);
         $workout = $this->workoutService->createWorkout($routine);
         $set = WorkoutSet::query()
             ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workout->id))
@@ -189,7 +186,7 @@ class WorkoutServiceTest extends TestCase
     public function it_reindexes_remaining_sets_after_removing_an_earlier_round(): void
     {
         $routine = Routine::factory()->create();
-        $this->seedRoutineBlockWithExercise($routine, setCount: 3);
+        $this->seedPlayableRoutineBlock($routine, setCount: 3);
         $workout = $this->workoutService->createWorkout($routine);
         $first = WorkoutSet::query()
             ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workout->id))
@@ -212,7 +209,7 @@ class WorkoutServiceTest extends TestCase
     public function it_does_not_remove_the_last_working_set(): void
     {
         $routine = Routine::factory()->create();
-        $this->seedRoutineBlockWithExercise($routine, setCount: 1);
+        $this->seedPlayableRoutineBlock($routine, setCount: 1);
         $workout = $this->workoutService->createWorkout($routine);
         $set = WorkoutSet::query()
             ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workout->id))
@@ -228,7 +225,7 @@ class WorkoutServiceTest extends TestCase
     public function it_discards_an_in_progress_workout(): void
     {
         $routine = Routine::factory()->create();
-        $this->seedRoutineBlockWithExercise($routine);
+        $this->seedPlayableRoutineBlock($routine, restSeconds: null);
         $workout = $this->workoutService->createWorkout($routine);
 
         $this->workoutService->discardWorkout($workout);
@@ -241,7 +238,7 @@ class WorkoutServiceTest extends TestCase
     public function it_rejects_finishing_a_workout_that_is_no_longer_in_progress(): void
     {
         $routine = Routine::factory()->create();
-        $this->seedRoutineBlockWithExercise($routine);
+        $this->seedPlayableRoutineBlock($routine, restSeconds: null);
         $workout = $this->workoutService->createWorkout($routine);
         $this->workoutService->finishWorkout($workout);
 
@@ -255,7 +252,7 @@ class WorkoutServiceTest extends TestCase
     public function it_rejects_discarding_a_finished_workout(): void
     {
         $routine = Routine::factory()->create();
-        $this->seedRoutineBlockWithExercise($routine);
+        $this->seedPlayableRoutineBlock($routine, restSeconds: null);
         $workout = $this->workoutService->createWorkout($routine);
         $this->workoutService->finishWorkout($workout);
 
@@ -272,7 +269,7 @@ class WorkoutServiceTest extends TestCase
             'deload_weight_factor' => 0.5,
             'deload_reps_factor' => 1,
         ]);
-        $working = $this->seedRoutineBlockWithExercise($routine, setCount: 1);
+        [$working] = $this->seedPlayableRoutineBlock($routine, setCount: 1, restSeconds: null);
         RoutineDropsetSegment::create([
             'routine_set_group_id' => $working->id,
             'set_index' => 0,
@@ -306,7 +303,7 @@ class WorkoutServiceTest extends TestCase
     public function it_completes_a_dropset_with_segments(): void
     {
         $routine = Routine::factory()->create();
-        $working = $this->seedRoutineBlockWithExercise($routine, setCount: 1);
+        [$working] = $this->seedPlayableRoutineBlock($routine, setCount: 1, restSeconds: null);
         RoutineDropsetSegment::create([
             'routine_set_group_id' => $working->id,
             'set_index' => 0,
@@ -338,7 +335,7 @@ class WorkoutServiceTest extends TestCase
     public function it_promotes_a_single_set_to_dropset(): void
     {
         $routine = Routine::factory()->create();
-        $this->seedRoutineBlockWithExercise($routine, setCount: 1);
+        $this->seedPlayableRoutineBlock($routine, setCount: 1);
         $workout = $this->workoutService->createWorkout($routine);
         $set = WorkoutSet::query()
             ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workout->id))
@@ -351,27 +348,5 @@ class WorkoutServiceTest extends TestCase
         $set->refresh()->load('segments');
         $this->assertTrue($set->isDropset());
         $this->assertSame([20000, 15000], $set->segments->pluck('weight_g')->all());
-    }
-
-    private function seedRoutineBlockWithExercise(Routine $routine, int $setCount = 3): RoutineSetGroup
-    {
-        $block = RoutineBlock::create([
-            'routine_id' => $routine->id,
-            'position' => 1,
-        ]);
-
-        RoutineBlockExercise::create([
-            'routine_block_id' => $block->id,
-            'exercise_id' => Exercise::factory()->create()->id,
-            'position' => 1,
-            'working_weight_g' => 80000,
-            'prescribed_reps' => 6,
-        ]);
-
-        return RoutineSetGroup::create([
-            'routine_block_id' => $block->id,
-            'type' => SetGroupType::Working,
-            'set_count' => $setCount,
-        ]);
     }
 }

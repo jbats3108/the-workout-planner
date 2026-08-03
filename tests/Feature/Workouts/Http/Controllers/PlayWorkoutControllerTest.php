@@ -11,17 +11,18 @@ use App\Routines\Models\RoutineSetGroup;
 use App\Routines\Models\RoutineWarmUpStep;
 use App\Shared\Enums\SetGroupType;
 use App\Workouts\Enums\WorkoutStatus;
-use App\Workouts\Models\Workout;
 use App\Workouts\Models\WorkoutSet;
 use App\Workouts\Services\WorkoutService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Helpers\CreatesPlayableWorkout;
 use Tests\Helpers\UserHelper;
 use Tests\TestCase;
 
 class PlayWorkoutControllerTest extends TestCase
 {
+    use CreatesPlayableWorkout;
     use RefreshDatabase;
     use UserHelper;
 
@@ -34,7 +35,7 @@ class PlayWorkoutControllerTest extends TestCase
     #[Test]
     public function it_renders_the_player_for_the_owner(): void
     {
-        $workout = $this->createWorkoutForUser();
+        $workout = $this->createPlayableWorkout();
 
         $this->actingAs($this->user)
             ->get(route('workouts.play', $workout))
@@ -57,7 +58,7 @@ class PlayWorkoutControllerTest extends TestCase
             'achievement_floor_default' => 4,
             'progression_target_default' => 99,
         ]);
-        $workout = $this->createWorkoutForUser();
+        $workout = $this->createPlayableWorkout();
         $prescribed = $workout->blocks->first()->blockExercises->first()->prescribed_reps;
 
         $this->actingAs($this->user)
@@ -74,7 +75,7 @@ class PlayWorkoutControllerTest extends TestCase
     #[Test]
     public function it_soft_fails_other_users(): void
     {
-        $workout = $this->createWorkoutForUser();
+        $workout = $this->createPlayableWorkout();
 
         $this->actingAs($this->secondUser)
             ->get(route('workouts.play', $workout))
@@ -85,7 +86,7 @@ class PlayWorkoutControllerTest extends TestCase
     #[Test]
     public function it_completes_a_set_and_finishes_the_workout(): void
     {
-        $workout = $this->createWorkoutForUser();
+        $workout = $this->createPlayableWorkout();
         $set = WorkoutSet::query()
             ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workout->id))
             ->firstOrFail();
@@ -112,7 +113,7 @@ class PlayWorkoutControllerTest extends TestCase
     #[Test]
     public function it_rejects_recompleting_an_already_logged_set(): void
     {
-        $workout = $this->createWorkoutForUser();
+        $workout = $this->createPlayableWorkout();
         $set = WorkoutSet::query()
             ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workout->id))
             ->firstOrFail();
@@ -143,7 +144,7 @@ class PlayWorkoutControllerTest extends TestCase
     #[Test]
     public function it_accepts_fractional_kilogram_weights(): void
     {
-        $workout = $this->createWorkoutForUser();
+        $workout = $this->createPlayableWorkout();
         $set = WorkoutSet::query()
             ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workout->id))
             ->firstOrFail();
@@ -359,7 +360,7 @@ class PlayWorkoutControllerTest extends TestCase
     #[Test]
     public function it_promotes_a_set_to_dropset_via_http(): void
     {
-        $workout = $this->createWorkoutForUser();
+        $workout = $this->createPlayableWorkout();
         $set = WorkoutSet::query()
             ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workout->id))
             ->firstOrFail();
@@ -376,29 +377,5 @@ class PlayWorkoutControllerTest extends TestCase
         $set->refresh()->load('segments');
         $this->assertTrue($set->isDropset());
         $this->assertSame([80000, 60000], $set->segments->pluck('weight_g')->all());
-    }
-
-    private function createWorkoutForUser(): Workout
-    {
-        $routine = Routine::factory()->withUser($this->user)->create();
-        $block = RoutineBlock::create([
-            'routine_id' => $routine->id,
-            'position' => 1,
-        ]);
-        RoutineBlockExercise::create([
-            'routine_block_id' => $block->id,
-            'exercise_id' => Exercise::factory()->create()->id,
-            'position' => 1,
-            'working_weight_g' => 80000,
-            'prescribed_reps' => 6,
-        ]);
-        RoutineSetGroup::create([
-            'routine_block_id' => $block->id,
-            'type' => SetGroupType::Working,
-            'set_count' => 1,
-            'rest_seconds' => 90,
-        ]);
-
-        return app(WorkoutService::class)->createWorkout($routine);
     }
 }

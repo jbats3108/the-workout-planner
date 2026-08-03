@@ -2,24 +2,18 @@
 
 namespace Tests\Feature\Workouts\Http\Controllers;
 
-use App\Exercises\Models\Exercise;
-use App\Routines\Models\Routine;
-use App\Routines\Models\RoutineBlock;
-use App\Routines\Models\RoutineBlockExercise;
-use App\Routines\Models\RoutineSetGroup;
-use App\Shared\Enums\SetGroupType;
-use App\Workouts\Models\Workout;
-use App\Workouts\Models\WorkoutSet;
 use App\Workouts\Services\WorkoutProgressionService;
 use App\Workouts\Services\WorkoutService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Helpers\CreatesPlayableWorkout;
 use Tests\Helpers\UserHelper;
 use Tests\TestCase;
 
 class WorkoutHistoryControllerTest extends TestCase
 {
+    use CreatesPlayableWorkout;
     use RefreshDatabase;
     use UserHelper;
 
@@ -33,7 +27,7 @@ class WorkoutHistoryControllerTest extends TestCase
     public function index_lists_finished_workouts_only(): void
     {
         [$finished] = $this->createFinishedWorkout();
-        $discarded = $this->createInProgressWorkout();
+        $discarded = $this->createPlayableWorkout();
         app(WorkoutService::class)->discardWorkout($discarded);
 
         $this->actingAs($this->user)
@@ -79,7 +73,7 @@ class WorkoutHistoryControllerTest extends TestCase
     #[Test]
     public function show_redirects_for_in_progress_workout(): void
     {
-        $workout = $this->createInProgressWorkout();
+        $workout = $this->createPlayableWorkout();
 
         $this->actingAs($this->user)
             ->get(route('history.show', $workout))
@@ -204,7 +198,7 @@ class WorkoutHistoryControllerTest extends TestCase
     #[Test]
     public function in_progress_workout_cannot_be_deleted_from_history(): void
     {
-        $workout = $this->createInProgressWorkout();
+        $workout = $this->createPlayableWorkout();
 
         $this->actingAs($this->user)
             ->delete(route('history.destroy', $workout))
@@ -271,76 +265,5 @@ class WorkoutHistoryControllerTest extends TestCase
         $this->assertNull(session("workout_progression_undos.{$older->id}"));
         $this->assertSame(90000, $routineExercise->fresh()->working_weight_g);
         $this->assertNull($older->fresh()->bumpRecords->first()->undone_at);
-    }
-
-    /**
-     * @return array{0: Workout, 1: RoutineBlockExercise, 2: Routine}
-     */
-    private function createFinishedWorkout(int $reps = 6, int $weightGrams = 80000): array
-    {
-        $this->user->update([
-            'progression_target_default' => 6,
-            'achievement_floor_default' => 4,
-        ]);
-
-        $routine = Routine::factory()->withUser($this->user)->create();
-        $block = RoutineBlock::create([
-            'routine_id' => $routine->id,
-            'position' => 1,
-        ]);
-        $routineExercise = RoutineBlockExercise::create([
-            'routine_block_id' => $block->id,
-            'exercise_id' => Exercise::factory()->create()->id,
-            'position' => 1,
-            'working_weight_g' => 80000,
-            'prescribed_reps' => 6,
-            'progression_target_override' => 6,
-            'achievement_floor_override' => 4,
-        ]);
-        RoutineSetGroup::create([
-            'routine_block_id' => $block->id,
-            'type' => SetGroupType::Working,
-            'set_count' => 1,
-            'rest_seconds' => 90,
-        ]);
-
-        $workout = app(WorkoutService::class)->createWorkout($routine);
-        $set = $this->firstWorkingSet($workout->id);
-        app(WorkoutService::class)->completeSet($set, reps: $reps, weightGrams: $weightGrams);
-        app(WorkoutService::class)->finishWorkout($workout);
-
-        return [$workout->fresh(), $routineExercise, $routine];
-    }
-
-    private function createInProgressWorkout(): Workout
-    {
-        $routine = Routine::factory()->withUser($this->user)->create();
-        $block = RoutineBlock::create([
-            'routine_id' => $routine->id,
-            'position' => 1,
-        ]);
-        RoutineBlockExercise::create([
-            'routine_block_id' => $block->id,
-            'exercise_id' => Exercise::factory()->create()->id,
-            'position' => 1,
-            'working_weight_g' => 80000,
-            'prescribed_reps' => 6,
-        ]);
-        RoutineSetGroup::create([
-            'routine_block_id' => $block->id,
-            'type' => SetGroupType::Working,
-            'set_count' => 1,
-            'rest_seconds' => 90,
-        ]);
-
-        return app(WorkoutService::class)->createWorkout($routine);
-    }
-
-    private function firstWorkingSet(int $workoutId): WorkoutSet
-    {
-        return WorkoutSet::query()
-            ->whereHas('setGroup', fn ($q) => $q->where('type', SetGroupType::Working))
-            ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workoutId))
-            ->firstOrFail();
     }
 }
