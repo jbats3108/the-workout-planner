@@ -71,13 +71,19 @@ class Exercise extends Model
         return $this->user_id === null;
     }
 
-    /** @param  Builder<Exercise>  $query */
+    /**
+     * @param  Builder<Exercise>  $query
+     * @return Builder<Exercise>
+     */
     public function scopeShared(Builder $query): Builder
     {
         return $query->whereNull('user_id');
     }
 
-    /** @param  Builder<Exercise>  $query */
+    /**
+     * @param  Builder<Exercise>  $query
+     * @return Builder<Exercise>
+     */
     public function scopeForUser(Builder $query, User $user): Builder
     {
         return $query->where(function (Builder $q) use ($user): void {
@@ -85,7 +91,10 @@ class Exercise extends Model
         });
     }
 
-    /** @param  Builder<Exercise>  $query */
+    /**
+     * @param  Builder<Exercise>  $query
+     * @return Builder<Exercise>
+     */
     public function scopeWhereMuscleGroup(Builder $query, MuscleGroup $muscleGroup): Builder
     {
         return $query

@@ -22,6 +22,7 @@ class WorkoutProgressionService
     /** Default bump when no plate calculator step is available yet (2.5 kg). */
     public const DEFAULT_BUMP_G = 2500;
 
+    /** @return DataCollection<int, BumpProposalData> */
     public function applyCarryForwardAndCollectBumps(Workout $workout): DataCollection
     {
         return $this->reEvaluateProgression($workout, collectNewBumps: true)->bumps;

@@ -8,6 +8,7 @@ use App\MuscleGroups\Models\MuscleGroup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
+use Illuminate\Testing\PendingCommand;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -104,8 +105,8 @@ class AuditExercisesCommandTest extends TestCase
             ],
         ], JSON_THROW_ON_ERROR));
 
-        $this->artisan('exercises:audit', ['--catalog' => $path])
-            ->assertSuccessful()
-            ->expectsOutputToContain('look aligned');
+        $command = $this->artisan('exercises:audit', ['--catalog' => $path]);
+        $this->assertInstanceOf(PendingCommand::class, $command);
+        $command->expectsOutputToContain('look aligned')->assertSuccessful()->run();
     }
 }

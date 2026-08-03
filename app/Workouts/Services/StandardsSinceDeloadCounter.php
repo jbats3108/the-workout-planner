@@ -42,23 +42,33 @@ final class StandardsSinceDeloadCounter
 
         $lastDeloadAt = [];
         foreach ($workouts as $workout) {
+            $routineId = $workout->routine_id;
+            if (! array_key_exists((string) $routineId, $summaries)) {
+                continue;
+            }
+
             if ($workout->mode === WorkoutMode::Deload && $workout->finished_at !== null) {
-                $lastDeloadAt[$workout->routine_id] = $workout->finished_at;
-                $summaries[$workout->routine_id]['has_finished_deload'] = true;
+                $lastDeloadAt[$routineId] = $workout->finished_at;
+                $summaries[$routineId]['has_finished_deload'] = true;
             }
         }
 
         foreach ($workouts as $workout) {
-            if ($workout->mode !== WorkoutMode::Standard || $workout->finished_at === null) {
+            $routineId = $workout->routine_id;
+            if (
+                $workout->mode !== WorkoutMode::Standard
+                || $workout->finished_at === null
+                || ! array_key_exists((string) $routineId, $summaries)
+            ) {
                 continue;
             }
 
-            $cutoff = $lastDeloadAt[$workout->routine_id] ?? null;
+            $cutoff = $lastDeloadAt[$routineId] ?? null;
             if ($cutoff !== null && $workout->finished_at->lte($cutoff)) {
                 continue;
             }
 
-            $summaries[$workout->routine_id]['count']++;
+            $summaries[$routineId]['count']++;
         }
 
         return $summaries;

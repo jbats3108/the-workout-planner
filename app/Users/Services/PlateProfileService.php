@@ -29,23 +29,21 @@ class PlateProfileService
 
         return [
             'name' => $profile->name,
-            'bars' => $profile->bars
+            'bars' => array_values($profile->bars
                 ->map(fn (PlateProfileBar $bar): array => [
                     'name' => $bar->name,
                     'weight_g' => $bar->weight_g,
                     'is_default' => $bar->is_default,
                 ])
-                ->values()
-                ->all(),
-            'plates' => $profile->plates
+                ->all()),
+            'plates' => array_values($profile->plates
                 ->sortByDesc('denomination_g')
                 ->map(fn (PlateProfilePlate $plate): array => [
                     'denomination_g' => $plate->denomination_g,
                     'count' => $plate->count,
                     'colour' => $plate->colour,
                 ])
-                ->values()
-                ->all(),
+                ->all()),
         ];
     }
 
@@ -162,11 +160,11 @@ class PlateProfileService
             return null;
         }
 
-        $plates = $profile->plates->map(fn (PlateProfilePlate $plate): array => [
+        $plates = array_values($profile->plates->map(fn (PlateProfilePlate $plate): array => [
             'denomination_g' => $plate->denomination_g,
             'count' => $plate->count,
             'colour' => $plate->colour,
-        ])->all();
+        ])->all());
 
         $result = $this->calculator->nearest(
             (int) round($targetKg * 1000),

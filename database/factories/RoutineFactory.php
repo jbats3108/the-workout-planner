@@ -17,6 +17,7 @@ class RoutineFactory extends Factory
 
     public function definition(): array
     {
+        /** @var string $name */
         $name = $this->faker->unique()->words(3, true);
 
         return [
