@@ -28,6 +28,10 @@ jobs:
         with:
           # Required so auto-commit can push back to the PR branch.
           ref: ${{ github.head_ref || github.ref_name }}
+          # PAT so the quality push re-triggers CI without "Approve workflows".
+          # GITHUB_TOKEN pushes leave pull_request runs in an approval-required state.
+          # Falls back for fork PRs (secrets unavailable) — commit step already continue-on-error.
+          token: ${{ secrets.CI_PUSH_TOKEN || github.token }}
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
