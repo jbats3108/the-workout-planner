@@ -48,7 +48,7 @@ class RoutineEditorPageData extends Data
             $working = $block->setGroups->firstWhere('type', SetGroupType::Working);
             $warmUp = $block->setGroups->firstWhere('type', SetGroupType::WarmUp);
 
-            $dropsets = collect($working?->dropsetSegments ?? [])
+            $dropsets = collect($working !== null ? $working->dropsetSegments : [])
                 ->groupBy('set_index')
                 ->filter(fn ($segments) => $segments->count() >= 2)
                 ->map(fn ($segments, $setIndex) => new SyncDropsetData(
@@ -79,19 +79,21 @@ class RoutineEditorPageData extends Data
                     DataCollection::class,
                 ),
                 working: new SyncSetGroupData(
-                    setCount: $working?->set_count ?? 3,
-                    restSeconds: $working?->rest_seconds ?? 120,
+                    setCount: $working !== null ? $working->set_count : 3,
+                    restSeconds: $working !== null ? $working->rest_seconds : 120,
                     dropsets: SyncDropsetData::collect($dropsets, DataCollection::class),
                 ),
                 warmUp: new SyncWarmUpData(
-                    setCount: $warmUp?->set_count ?? 0,
-                    restSeconds: $warmUp?->rest_seconds ?? 60,
+                    setCount: $warmUp !== null ? $warmUp->set_count : 0,
+                    restSeconds: $warmUp !== null ? $warmUp->rest_seconds : 60,
                     steps: SyncWarmUpStepData::collect(
-                        $warmUp?->warmUpSteps->map(fn ($step) => new SyncWarmUpStepData(
-                            percent: (int) $step->percent_of_working,
-                            reps: (int) ($step->reps ?? 5),
-                            hasSetupAfter: (bool) $step->has_setup_after,
-                        )) ?? [],
+                        $warmUp !== null
+                            ? $warmUp->warmUpSteps->map(fn ($step) => new SyncWarmUpStepData(
+                                percent: (int) $step->percent_of_working,
+                                reps: (int) ($step->reps ?? 5),
+                                hasSetupAfter: (bool) $step->has_setup_after,
+                            ))
+                            : [],
                         DataCollection::class,
                     ),
                 ),

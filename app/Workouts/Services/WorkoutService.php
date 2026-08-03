@@ -245,7 +245,7 @@ class WorkoutService
         return DB::transaction(function () use ($set, $reps, $segmentWeightGrams): WorkoutSet {
             $set->segments()->delete();
 
-            foreach (array_values($segmentWeightGrams) as $index => $weightGrams) {
+            foreach ($segmentWeightGrams as $index => $weightGrams) {
                 WorkoutSetSegment::create([
                     'workout_set_id' => $set->id,
                     'position' => $index + 1,
@@ -300,7 +300,7 @@ class WorkoutService
         return DB::transaction(function () use ($set, $segmentWeightGrams): WorkoutSet {
             $set->segments()->delete();
 
-            foreach (array_values($segmentWeightGrams) as $index => $weightGrams) {
+            foreach ($segmentWeightGrams as $index => $weightGrams) {
                 WorkoutSetSegment::create([
                     'workout_set_id' => $set->id,
                     'position' => $index + 1,

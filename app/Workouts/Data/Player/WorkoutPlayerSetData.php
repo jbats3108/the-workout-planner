@@ -74,13 +74,15 @@ class WorkoutPlayerSetData extends Data
                 ? null
                 : round($targetWeightG / 1000, 3),
             targetReps: $groupType === SetGroupType::WarmUp
-                ? ($warmUpStep?->reps)
-                : ($groupType === SetGroupType::Working ? $prescribedReps : null),
+                ? ($warmUpStep !== null ? $warmUpStep->reps : null)
+                : $prescribedReps,
             loggedWeightKg: $set->weight_g !== null ? round($set->weight_g / 1000, 3) : null,
             loggedReps: $set->reps,
             completed: $set->completed_at !== null,
             restSeconds: $restSeconds,
-            hasSetupAfter: $groupType === SetGroupType::WarmUp && ($warmUpStep?->has_setup_after ?? false),
+            hasSetupAfter: $groupType === SetGroupType::WarmUp
+                && $warmUpStep !== null
+                && (bool) $warmUpStep->has_setup_after,
             isDropset: $isDropset,
             segments: WorkoutPlayerSetSegmentData::collect($segments, DataCollection::class),
         );

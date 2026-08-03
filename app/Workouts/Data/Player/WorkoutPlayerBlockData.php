@@ -43,11 +43,15 @@ class WorkoutPlayerBlockData extends Data
                 $warmUpSteps = $group->warmUpSteps->keyBy('position');
 
                 return $group->sets
-                    ->sortBy(fn (WorkoutSet $set) => sprintf(
-                        '%04d-%04d',
-                        $set->set_index,
-                        $exercisesById->get($set->workout_block_exercise_id)?->position ?? 0,
-                    ))
+                    ->sortBy(function (WorkoutSet $set) use ($exercisesById) {
+                        $exercise = $exercisesById->get($set->workout_block_exercise_id);
+
+                        return sprintf(
+                            '%04d-%04d',
+                            $set->set_index,
+                            $exercise !== null ? $exercise->position : 0,
+                        );
+                    })
                     ->map(function (WorkoutSet $set) use ($group, $exercisesById, $warmUpSteps) {
                         /** @var WorkoutBlockExercise $exercise */
                         $exercise = $exercisesById->get($set->workout_block_exercise_id);

@@ -25,7 +25,7 @@ class EditRoutineController extends Controller
         $page = RoutineEditorPageData::fromRoutine(
             $routine,
             RoutineEditorExerciseOptionData::collect([], DataCollection::class),
-            $user->weight_unit?->value ?? 'kg',
+            $user->weight_unit->value,
         );
 
         $payload = $page->toArray();
