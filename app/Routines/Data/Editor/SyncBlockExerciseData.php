@@ -3,6 +3,7 @@
 namespace App\Routines\Data\Editor;
 
 use App\Exercises\Models\Exercise;
+use App\Shared\Support\Weight;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Attributes\Validation\Exists;
 use Spatie\LaravelData\Attributes\Validation\Max;
@@ -33,6 +34,6 @@ class SyncBlockExerciseData extends Data
 
     public function workingWeightGrams(): int
     {
-        return (int) round($this->workingWeightKg * 1000);
+        return Weight::kgToGrams($this->workingWeightKg);
     }
 }

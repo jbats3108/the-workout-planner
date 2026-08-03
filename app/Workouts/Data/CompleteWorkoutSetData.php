@@ -2,6 +2,7 @@
 
 namespace App\Workouts\Data;
 
+use App\Shared\Support\Weight;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Attributes\Validation\Max;
@@ -38,7 +39,7 @@ class CompleteWorkoutSetData extends Data
             return null;
         }
 
-        return (int) round($this->weightKg * 1000);
+        return Weight::kgToGrams($this->weightKg);
     }
 
     /**

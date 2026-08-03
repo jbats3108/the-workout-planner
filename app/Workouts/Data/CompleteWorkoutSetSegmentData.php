@@ -2,6 +2,7 @@
 
 namespace App\Workouts\Data;
 
+use App\Shared\Support\Weight;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Attributes\Validation\Min;
 use Spatie\LaravelData\Data;
@@ -17,6 +18,6 @@ class CompleteWorkoutSetSegmentData extends Data
 
     public function weightGrams(): int
     {
-        return (int) round($this->weightKg * 1000);
+        return Weight::kgToGrams($this->weightKg);
     }
 }
