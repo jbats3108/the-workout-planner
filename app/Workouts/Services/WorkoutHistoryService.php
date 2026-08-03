@@ -26,11 +26,8 @@ class WorkoutHistoryService
      */
     public function updateWorkingSet(Workout $workout, WorkoutSet $set, CompleteWorkoutSetData $data): ?ProgressionSessionData
     {
-        $set->loadMissing(['setGroup.block.workout', 'segments']);
-
-        if ($set->setGroup->block->workout_id !== $workout->id) {
-            abort(404);
-        }
+        $set->assertBelongsToWorkout($workout);
+        $set->loadMissing('segments');
 
         if ($workout->status !== WorkoutStatus::Finished) {
             throw new WorkoutServiceException(self::WORKOUT_NOT_FINISHED_ERROR);

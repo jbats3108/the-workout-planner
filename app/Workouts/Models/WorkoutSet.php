@@ -63,6 +63,12 @@ class WorkoutSet extends Model
         return $this->segments()->count() >= 2;
     }
 
+    public function assertBelongsToWorkout(Workout $workout): void
+    {
+        $this->loadMissing('setGroup.block');
+        abort_unless($this->setGroup->block->workout_id === $workout->id, 404);
+    }
+
     /**
      * @param  list<int>  $weightGrams
      */

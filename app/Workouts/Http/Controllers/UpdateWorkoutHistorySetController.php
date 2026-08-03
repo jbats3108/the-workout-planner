@@ -3,6 +3,7 @@
 namespace App\Workouts\Http\Controllers;
 
 use App\Shared\Http\Controllers\Controller;
+use App\Shared\Http\DomainFail;
 use App\Workouts\Data\CompleteWorkoutSetData;
 use App\Workouts\Exceptions\WorkoutServiceException;
 use App\Workouts\Models\Workout;
@@ -21,7 +22,7 @@ class UpdateWorkoutHistorySetController extends Controller
         try {
             $session = $historyService->updateWorkingSet($workout, $set, $data);
         } catch (WorkoutServiceException $exception) {
-            return back()->withErrors(['set' => $exception->getMessage()]);
+            return DomainFail::back($exception, 'set');
         }
 
         if ($session !== null) {
