@@ -75,7 +75,7 @@ export function workoutPayload(overrides: Partial<WorkoutPayload> = {}): Workout
     return {
         id: '01TESTWORKOUTULID000000000',
         routine_name: 'Test',
-        mode: 'normal',
+        mode: 'standard',
         status: 'in_progress',
         weight_unit: 'kg',
         blocks: [playerBlock()],

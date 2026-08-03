@@ -14,12 +14,12 @@ export function defaultDropsetSegments(block: Block): DropsetSegment[] {
     return [{ weight_kg: working }, { weight_kg: Math.max(0, Math.round((working - step) * 2) / 2) }];
 }
 
-export function setSlotKind(block: Block, setIndex: number, kind: 'normal' | 'dropset'): void {
+export function setSlotKind(block: Block, setIndex: number, kind: 'single' | 'dropset'): void {
     if (block.is_superset) {
         return;
     }
     const existing = dropsetForIndex(block, setIndex);
-    if (kind === 'normal') {
+    if (kind === 'single') {
         block.working.dropsets = block.working.dropsets.filter((d) => d.set_index !== setIndex);
         return;
     }

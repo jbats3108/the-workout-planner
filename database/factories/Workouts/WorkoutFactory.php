@@ -22,7 +22,7 @@ class WorkoutFactory extends Factory
             'user_id' => User::factory(),
             'routine_id' => Routine::factory(),
             'ulid' => (string) Str::ulid(),
-            'mode' => WorkoutMode::Normal,
+            'mode' => WorkoutMode::Standard,
             'status' => WorkoutStatus::InProgress,
             'notes' => null,
             'created_at' => Carbon::now(),

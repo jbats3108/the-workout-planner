@@ -9,7 +9,7 @@ use App\Workouts\Data\History\HistoryWorkoutItemData;
 use App\Workouts\Data\InProgressWorkoutData;
 use App\Workouts\Enums\WorkoutStatus;
 use App\Workouts\Models\Workout;
-use App\Workouts\Services\NormalsSinceDeloadCounter;
+use App\Workouts\Services\StandardsSinceDeloadCounter;
 use Illuminate\Support\Collection;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Data;
@@ -28,7 +28,7 @@ final class DashboardData extends Data
         public readonly Collection $recentFinishedWorkouts,
     ) {}
 
-    public static function fromUser(User $user, NormalsSinceDeloadCounter $normalsSinceDeloadCounter): DashboardData
+    public static function fromUser(User $user, StandardsSinceDeloadCounter $standardsSinceDeloadCounter): DashboardData
     {
         $user->loadMissing(['routines.blocks.blockExercises']);
 
@@ -46,11 +46,11 @@ final class DashboardData extends Data
             ->get()
             ->map(fn (Workout $workout): HistoryWorkoutItemData => HistoryWorkoutItemData::fromWorkout($workout));
 
-        $normalsSinceDeload = $normalsSinceDeloadCounter->summarizeByRoutineId($user, $user->routines->pluck('id'));
+        $standardsSinceDeload = $standardsSinceDeloadCounter->summarizeByRoutineId($user, $user->routines->pluck('id'));
 
         return new self(
-            routines: $user->routines->map(function (Routine $routine) use ($normalsSinceDeload): RoutineData {
-                $summary = $normalsSinceDeload[$routine->id] ?? ['count' => 0, 'has_finished_deload' => false];
+            routines: $user->routines->map(function (Routine $routine) use ($standardsSinceDeload): RoutineData {
+                $summary = $standardsSinceDeload[$routine->id] ?? ['count' => 0, 'has_finished_deload' => false];
 
                 return RoutineData::fromRoutine(
                     $routine,

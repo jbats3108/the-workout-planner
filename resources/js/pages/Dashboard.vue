@@ -33,7 +33,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const startWorkout = (routineSlug: string, mode: 'normal' | 'deload' = 'normal') => {
+const startWorkout = (routineSlug: string, mode: 'standard' | 'deload' = 'standard') => {
     if (workoutMutating.value || routineMutating.value) {
         return;
     }

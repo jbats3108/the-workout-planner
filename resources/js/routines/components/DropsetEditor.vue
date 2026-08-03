@@ -24,10 +24,10 @@ const { isDropsetSlot, setSlotKind, dropsetForIndex, removeDropsetSegment, addDr
             <span :class="d.setLabel">Set {{ setIndex }}</span>
             <select
                 :class="d.select"
-                :value="isDropsetSlot(block, setIndex - 1) ? 'dropset' : 'normal'"
-                @change="setSlotKind(block, setIndex - 1, ($event.target as HTMLSelectElement).value as 'normal' | 'dropset')"
+                :value="isDropsetSlot(block, setIndex - 1) ? 'dropset' : 'single'"
+                @change="setSlotKind(block, setIndex - 1, ($event.target as HTMLSelectElement).value as 'single' | 'dropset')"
             >
-                <option value="normal">Normal</option>
+                <option value="single">Single</option>
                 <option value="dropset">Dropset</option>
             </select>
         </div>

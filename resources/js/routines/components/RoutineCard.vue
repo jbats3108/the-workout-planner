@@ -13,17 +13,17 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-    start: [mode: 'normal' | 'deload'];
+    start: [mode: 'standard' | 'deload'];
     duplicate: [];
     delete: [];
 }>();
 
-const normalsSinceDeload = computed(() => props.routine.normals_since_deload ?? 0);
+const standardsSinceDeload = computed(() => props.routine.standards_since_deload ?? 0);
 const hasFinishedDeload = computed(() => props.routine.has_finished_deload === true);
 const deloadEveryN = computed(() => props.routine.deload_every_n ?? 3);
-const suggestDeload = computed(() => deloadEveryN.value > 0 && normalsSinceDeload.value >= deloadEveryN.value);
+const suggestDeload = computed(() => deloadEveryN.value > 0 && standardsSinceDeload.value >= deloadEveryN.value);
 
-const startTitle = (mode: 'normal' | 'deload') => {
+const startTitle = (mode: 'standard' | 'deload') => {
     if (props.startBlockedReason) {
         return props.startBlockedReason;
     }
@@ -39,14 +39,20 @@ const startTitle = (mode: 'normal' | 'deload') => {
                 Deload {{ routine.deload_weight_factor }}w / {{ routine.deload_reps_factor }}r
                 <template v-if="hasFinishedDeload">
                     <span class="text-border">·</span>
-                    <span :class="suggestDeload ? 'text-primary' : undefined">{{ normalsSinceDeload }} since deload</span>
+                    <span :class="suggestDeload ? 'text-primary' : undefined">{{ standardsSinceDeload }} since deload</span>
                 </template>
             </p>
         </div>
         <p v-if="!routine.can_start" class="mt-3 text-xs text-muted-foreground">Add exercises in the editor before starting.</p>
         <div class="mt-4 flex flex-wrap items-center justify-between gap-2">
             <div class="flex flex-wrap items-center gap-2">
-                <Button type="button" size="pill" :disabled="!canStart || mutating" :title="startTitle('normal')" @click="emit('start', 'normal')">
+                <Button
+                    type="button"
+                    size="pill"
+                    :disabled="!canStart || mutating"
+                    :title="startTitle('standard')"
+                    @click="emit('start', 'standard')"
+                >
                     Start
                 </Button>
                 <Button

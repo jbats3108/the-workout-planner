@@ -40,7 +40,7 @@ export const deloadSettingsDensity: Record<EditorDensity, DeloadSettingsDensity>
         input: 'mt-1.5 w-full rounded border border-border bg-card px-2 py-1.5 font-mono text-sm',
         weightHint: '× working weight',
         repsHint: '× target reps',
-        everyHint: 'Hint after N normals (0 = off)',
+        everyHint: 'Hint after N standards (0 = off)',
     },
     mobile: {
         fieldsGrid: '',

@@ -57,7 +57,7 @@ class WorkoutService
     /**
      * @throws WorkoutServiceException
      */
-    public function createWorkout(Routine $routine, WorkoutMode $mode = WorkoutMode::Normal): Workout
+    public function createWorkout(Routine $routine, WorkoutMode $mode = WorkoutMode::Standard): Workout
     {
         $routine->load([
             'user',

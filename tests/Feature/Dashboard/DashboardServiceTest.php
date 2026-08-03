@@ -91,12 +91,12 @@ class DashboardServiceTest extends TestCase
 
         $this->assertCount(1, $dashboardData->recentFinishedWorkouts);
         $this->assertSame($workout->ulid, $dashboardData->recentFinishedWorkouts->first()->id);
-        $this->assertSame(1, $dashboardData->routines->first()->normalsSinceDeload);
+        $this->assertSame(1, $dashboardData->routines->first()->standardsSinceDeload);
         $this->assertFalse($dashboardData->routines->first()->hasFinishedDeload);
     }
 
     #[Test]
-    public function it_exposes_per_routine_normals_since_deload(): void
+    public function it_exposes_per_routine_standards_since_deload(): void
     {
         $a = Routine::factory()->withUser($this->user)->create();
         $b = Routine::factory()->withUser($this->user)->create();
@@ -112,7 +112,7 @@ class DashboardServiceTest extends TestCase
         Workout::factory()->create([
             'user_id' => $this->user->id,
             'routine_id' => $a->id,
-            'mode' => WorkoutMode::Normal,
+            'mode' => WorkoutMode::Standard,
             'status' => WorkoutStatus::Finished,
             'started_at' => now()->subDays(2),
             'finished_at' => now()->subDays(2),
@@ -120,7 +120,7 @@ class DashboardServiceTest extends TestCase
         Workout::factory()->create([
             'user_id' => $this->user->id,
             'routine_id' => $a->id,
-            'mode' => WorkoutMode::Normal,
+            'mode' => WorkoutMode::Standard,
             'status' => WorkoutStatus::Finished,
             'started_at' => now()->subDay(),
             'finished_at' => now()->subDay(),
@@ -128,7 +128,7 @@ class DashboardServiceTest extends TestCase
         Workout::factory()->create([
             'user_id' => $this->user->id,
             'routine_id' => $b->id,
-            'mode' => WorkoutMode::Normal,
+            'mode' => WorkoutMode::Standard,
             'status' => WorkoutStatus::Finished,
             'started_at' => now()->subDays(3),
             'finished_at' => now()->subDays(3),
@@ -137,9 +137,9 @@ class DashboardServiceTest extends TestCase
         $dashboardData = app(DashboardService::class)->getDashboardData($this->user);
         $byId = $dashboardData->routines->keyBy('id');
 
-        $this->assertSame(2, $byId[$a->id]->normalsSinceDeload);
+        $this->assertSame(2, $byId[$a->id]->standardsSinceDeload);
         $this->assertTrue($byId[$a->id]->hasFinishedDeload);
-        $this->assertSame(1, $byId[$b->id]->normalsSinceDeload);
+        $this->assertSame(1, $byId[$b->id]->standardsSinceDeload);
         $this->assertFalse($byId[$b->id]->hasFinishedDeload);
     }
 }
