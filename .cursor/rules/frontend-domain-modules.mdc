@@ -13,4 +13,22 @@ Inertia pages under `resources/js/pages/` stay thin entrypoints. Domain types, `
 - Page session state: create + provide/inject composable stores (not Pinia, not module singletons) — e.g. `useRoutineEditor` / `useWorkoutPlayer`.
 - Pure transforms: `{domain}/lib/`.
 
+## Vue props defaults
+
+Do **not** destructure `withDefaults(defineProps(...), …)`. That disables reactive destructure (Vite warning).
+
+Prefer destructure defaults:
+
+```ts
+const { variant = 'desktop' } = defineProps<{ variant?: EditorDensity }>();
+```
+
+Or keep a non-destructured props object:
+
+```ts
+const props = withDefaults(defineProps<{ variant?: EditorDensity }>(), {
+    variant: 'desktop',
+});
+```
+
 Full decision: `docs/adr/0005-frontend-domain-modules.md`.

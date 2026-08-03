@@ -4,13 +4,10 @@ import { dropsetEditorDensity } from '@/routines/lib/editorDensity';
 import type { Block, EditorDensity } from '@/routines/types';
 import { computed } from 'vue';
 
-const { block, variant = 'desktop' } = withDefaults(
-    defineProps<{
-        block: Block;
-        variant?: EditorDensity;
-    }>(),
-    { variant: 'desktop' },
-);
+const { block, variant = 'desktop' } = defineProps<{
+    block: Block;
+    variant?: EditorDensity;
+}>();
 
 const d = computed(() => dropsetEditorDensity[variant]);
 
