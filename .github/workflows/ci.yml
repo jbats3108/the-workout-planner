@@ -40,7 +40,10 @@ jobs:
           npm ci
 
       - name: Check PHP style (Pint)
-        run: vendor/bin/pint --test
+        run: composer lint:check
+
+      - name: Analyse PHP (PHPStan)
+        run: composer analyse
 
       - name: Check frontend formatting (Prettier)
         run: npm run format:check

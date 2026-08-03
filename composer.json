@@ -77,7 +77,38 @@
         "test": [
             "@php artisan config:clear --ansi",
             "@php artisan test"
+        ],
+        "lint": [
+            "@php vendor/bin/pint --ansi"
+        ],
+        "lint:check": [
+            "@php vendor/bin/pint --test --ansi"
+        ],
+        "analyse": [
+            "Composer\\Config::disableProcessTimeout",
+            "@php vendor/bin/phpstan analyse --memory-limit=2G --ansi"
+        ],
+        "refactor": [
+            "Composer\\Config::disableProcessTimeout",
+            "@php vendor/bin/rector process --ansi"
+        ],
+        "refactor:dry": [
+            "Composer\\Config::disableProcessTimeout",
+            "@php vendor/bin/rector process --dry-run --ansi"
+        ],
+        "quality": [
+            "Composer\\Config::disableProcessTimeout",
+            "@lint:check",
+            "@analyse"
         ]
+    },
+    "scripts-descriptions": {
+        "lint": "Fix PHP code style with Pint.",
+        "lint:check": "Check PHP code style with Pint (no writes).",
+        "analyse": "Run PHPStan / Larastan static analysis.",
+        "refactor": "Apply Rector refactors.",
+        "refactor:dry": "Preview Rector refactors without writing files.",
+        "quality": "Run Pint and PHPStan (CI parity)."
     },
     "extra": {
         "laravel": {
