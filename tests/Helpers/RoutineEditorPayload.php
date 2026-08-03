@@ -20,11 +20,7 @@ final class RoutineEditorPayload
             'progression_target' => $overrides['progression_target'] ?? null,
         ];
 
-        if (isset($overrides['exercises'])) {
-            $exercises = $overrides['exercises'];
-        } else {
-            $exercises = [$exercise];
-        }
+        $exercises = $overrides['exercises'] ?? [$exercise];
 
         return [
             'is_superset' => $overrides['is_superset'] ?? false,
