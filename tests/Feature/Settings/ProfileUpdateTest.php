@@ -4,13 +4,15 @@ namespace Tests\Feature\Settings;
 
 use App\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ProfileUpdateTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_profile_page_is_displayed(): void
+    #[Test]
+    public function it_displays_the_profile_page(): void
     {
         $user = User::factory()->create();
 
@@ -21,7 +23,8 @@ class ProfileUpdateTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_profile_information_can_be_updated(): void
+    #[Test]
+    public function it_updates_profile_information(): void
     {
         $user = User::factory()->create();
 
@@ -43,7 +46,8 @@ class ProfileUpdateTest extends TestCase
         $this->assertNull($user->email_verified_at);
     }
 
-    public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(): void
+    #[Test]
+    public function email_verification_status_is_unchanged_when_the_email_address_is_unchanged(): void
     {
         $user = User::factory()->create();
 
@@ -61,7 +65,8 @@ class ProfileUpdateTest extends TestCase
         $this->assertNotNull($user->refresh()->email_verified_at);
     }
 
-    public function test_user_can_delete_their_account(): void
+    #[Test]
+    public function users_can_delete_their_account(): void
     {
         $user = User::factory()->create();
 
@@ -79,7 +84,8 @@ class ProfileUpdateTest extends TestCase
         $this->assertNull($user->fresh());
     }
 
-    public function test_correct_password_must_be_provided_to_delete_account(): void
+    #[Test]
+    public function correct_password_must_be_provided_to_delete_account(): void
     {
         $user = User::factory()->create();
 
@@ -97,7 +103,8 @@ class ProfileUpdateTest extends TestCase
         $this->assertNotNull($user->fresh());
     }
 
-    public function test_guests_are_redirected_from_profile_mutations(): void
+    #[Test]
+    public function guests_are_redirected_from_profile_mutations(): void
     {
         $this->patch('/settings/profile', [
             'name' => 'Hacker',
