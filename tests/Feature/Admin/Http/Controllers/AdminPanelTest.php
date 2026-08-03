@@ -103,10 +103,8 @@ class AdminPanelTest extends TestCase
         $invite = RegistrationInvite::query()->firstOrFail();
         $this->assertSame('buddy@example.com', $invite->email);
 
-        Mail::assertSent(RegistrationInviteMail::class, function (RegistrationInviteMail $mail): bool {
-            return $mail->hasTo('buddy@example.com')
-                && $mail->hasReplyTo($this->adminUser->email);
-        });
+        Mail::assertSent(RegistrationInviteMail::class, fn (RegistrationInviteMail $mail): bool => $mail->hasTo('buddy@example.com')
+            && $mail->hasReplyTo($this->adminUser->email));
 
         $this->actingAs($this->adminUser)
             ->post(route('admin.invites.revoke', $invite->id))

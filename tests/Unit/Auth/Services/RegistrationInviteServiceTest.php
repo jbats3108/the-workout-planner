@@ -9,6 +9,7 @@ use App\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Mail\PendingMail;
 use Illuminate\Support\Facades\Mail;
+use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use RuntimeException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -182,17 +183,15 @@ class RegistrationInviteServiceTest extends TestCase
 
         $this->assertSame('buddy@example.com', $invite->email);
         $this->assertDatabaseHas('registration_invites', ['id' => $invite->id]);
-        Mail::assertSent(RegistrationInviteMail::class, function (RegistrationInviteMail $mail) use ($creator): bool {
-            return $mail->hasTo('buddy@example.com')
-                && $mail->hasReplyTo($creator->email)
-                && $mail->inviterName === 'Jamie';
-        });
+        Mail::assertSent(RegistrationInviteMail::class, fn (RegistrationInviteMail $mail): bool => $mail->hasTo('buddy@example.com')
+            && $mail->hasReplyTo($creator->email)
+            && $mail->inviterName === 'Jamie');
     }
 
     #[Test]
     public function create_and_send_rolls_back_when_mail_fails(): void
     {
-        $pending = \Mockery::mock(PendingMail::class);
+        $pending = Mockery::mock(PendingMail::class);
         $pending->shouldReceive('send')->once()->andThrow(new RuntimeException('smtp down'));
         Mail::shouldReceive('to')->once()->with('buddy@example.com')->andReturn($pending);
 
