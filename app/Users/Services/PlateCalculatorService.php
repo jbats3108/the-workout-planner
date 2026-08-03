@@ -54,7 +54,7 @@ class PlateCalculatorService
         $bestSide = null;
         $bestDelta = null;
 
-        foreach ($achievableSides as $sideG => $_combo) {
+        foreach (array_keys($achievableSides) as $sideG) {
             $totalG = $barG + (2 * $sideG);
             $delta = abs($totalG - $targetG);
             if ($bestDelta === null

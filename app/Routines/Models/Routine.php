@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Override;
 
 class Routine extends Model
 {
@@ -23,6 +24,7 @@ class Routine extends Model
     use HasSlug;
     use SoftDeletes;
 
+    #[Override]
     protected $fillable = [
         'user_id',
         'name',
@@ -32,6 +34,7 @@ class Routine extends Model
         'deload_every_n',
     ];
 
+    #[Override]
     protected static function booted(): void
     {
         static::creating(function (Routine $routine): void {
@@ -48,12 +51,14 @@ class Routine extends Model
         });
     }
 
+    #[Override]
     public function getRouteKeyName(): string
     {
         return 'slug';
     }
 
     /** @return array<string, string> */
+    #[Override]
     protected function casts(): array
     {
         return [

@@ -4,9 +4,11 @@ namespace App\Routines\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Override;
 
 class RoutineWarmUpStep extends Model
 {
+    #[Override]
     protected $fillable = [
         'routine_set_group_id',
         'position',
@@ -16,6 +18,7 @@ class RoutineWarmUpStep extends Model
     ];
 
     /** @return array<string, string> */
+    #[Override]
     protected function casts(): array
     {
         return [

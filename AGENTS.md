@@ -15,7 +15,7 @@ This is **OVRLOAD** (repo: the-workout-planner): a Laravel 13 (PHP 8.5) backend 
 ### Testing / linting / building (see `composer.json`, `package.json`, CI in `.github/workflows/`)
 - Tests: `./vendor/bin/phpunit` (or `composer test`). Uses an in-memory SQLite DB.
   - Gotcha: several feature tests render Inertia pages and require the Vite manifest. Run `npm run build` at least once before `phpunit`, otherwise ~8 tests fail with "Vite manifest not found". CI builds assets before running tests.
-- Backend lint: `vendor/bin/pint` (format) / `vendor/bin/pint --test` (check only).
+- Backend quality: `composer quality-fix` (Rector→Pint×2) / `composer quality` (fix then PHPStan) / `composer analyse` / `composer refactor` / `composer refactor:dry`. CI applies fixes (Rector→Pint×2, ESLint→Prettier) and auto-commits; PHPStan and `vue-tsc` are advisory (`continue-on-error`). Larastan level 5 with `parseModelCastsMethod: true`. Rector skips coding-style rules so Pint owns formatting.
 - Frontend lint/format: `npm run lint` (eslint) and `npm run format:check` / `npm run format` (prettier).
 - Frontend tests: `npm run test` (Vitest unit/component), `npm run test:coverage`, `npm run typecheck`, `npm run test:e2e` (Playwright; runs migrations + seed via `e2e/global-setup.ts`).
 

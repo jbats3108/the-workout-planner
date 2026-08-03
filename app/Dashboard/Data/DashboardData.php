@@ -3,10 +3,12 @@
 namespace App\Dashboard\Data;
 
 use App\Routines\Data\RoutineData;
+use App\Routines\Models\Routine;
 use App\Users\Models\User;
 use App\Workouts\Data\History\HistoryWorkoutItemData;
 use App\Workouts\Data\InProgressWorkoutData;
 use App\Workouts\Enums\WorkoutStatus;
+use App\Workouts\Models\Workout;
 use App\Workouts\Services\NormalsSinceDeloadCounter;
 use Illuminate\Support\Collection;
 use Spatie\LaravelData\Attributes\MapName;
@@ -42,12 +44,12 @@ final class DashboardData extends Data
             ->orderByDesc('finished_at')
             ->limit(5)
             ->get()
-            ->map(fn ($workout) => HistoryWorkoutItemData::fromWorkout($workout));
+            ->map(fn (Workout $workout): HistoryWorkoutItemData => HistoryWorkoutItemData::fromWorkout($workout));
 
         $normalsSinceDeload = $normalsSinceDeloadCounter->summarizeByRoutineId($user, $user->routines->pluck('id'));
 
         return new self(
-            routines: $user->routines->map(function ($routine) use ($normalsSinceDeload) {
+            routines: $user->routines->map(function (Routine $routine) use ($normalsSinceDeload): RoutineData {
                 $summary = $normalsSinceDeload[$routine->id] ?? ['count' => 0, 'has_finished_deload' => false];
 
                 return RoutineData::fromRoutine(

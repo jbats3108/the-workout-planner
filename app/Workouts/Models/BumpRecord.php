@@ -5,9 +5,11 @@ namespace App\Workouts\Models;
 use App\Routines\Models\RoutineBlockExercise;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Override;
 
 class BumpRecord extends Model
 {
+    #[Override]
     protected $fillable = [
         'workout_id',
         'routine_block_exercise_id',
@@ -17,6 +19,7 @@ class BumpRecord extends Model
     ];
 
     /** @return array<string, string> */
+    #[Override]
     protected function casts(): array
     {
         return [

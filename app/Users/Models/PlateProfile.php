@@ -5,9 +5,11 @@ namespace App\Users\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Override;
 
 class PlateProfile extends Model
 {
+    #[Override]
     protected $fillable = [
         'user_id',
         'name',

@@ -5,13 +5,16 @@ namespace App\Exercises\Console;
 use App\Exercises\Models\Exercise;
 use App\Exercises\Services\ExerciseCatalogImporter;
 use Illuminate\Console\Command;
+use Override;
 
 class AuditExercisesCommand extends Command
 {
+    #[Override]
     protected $signature = 'exercises:audit
                             {--catalog= : Catalog JSON path (defaults to database/data/exercises.json)}
                             {--json : Print machine-readable JSON instead of tables}';
 
+    #[Override]
     protected $description = 'Audit shared exercises: missing equipment, orphaned vs catalog, catalog not yet imported';
 
     public function handle(): int

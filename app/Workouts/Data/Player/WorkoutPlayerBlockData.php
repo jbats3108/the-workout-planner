@@ -38,17 +38,21 @@ class WorkoutPlayerBlockData extends Data
         $exercisesById = $block->blockExercises->keyBy('id');
 
         $setRows = $block->setGroups
-            ->sortBy(fn ($group) => $group->type === SetGroupType::WarmUp ? 0 : 1)
+            ->sortBy(fn ($group): int => $group->type === SetGroupType::WarmUp ? 0 : 1)
             ->flatMap(function ($group) use ($exercisesById) {
                 $warmUpSteps = $group->warmUpSteps->keyBy('position');
 
                 return $group->sets
-                    ->sortBy(fn (WorkoutSet $set) => sprintf(
-                        '%04d-%04d',
-                        $set->set_index,
-                        $exercisesById->get($set->workout_block_exercise_id)?->position ?? 0,
-                    ))
-                    ->map(function (WorkoutSet $set) use ($group, $exercisesById, $warmUpSteps) {
+                    ->sortBy(function (WorkoutSet $set) use ($exercisesById): string {
+                        $exercise = $exercisesById->get($set->workout_block_exercise_id);
+
+                        return sprintf(
+                            '%04d-%04d',
+                            $set->set_index,
+                            $exercise !== null ? $exercise->position : 0,
+                        );
+                    })
+                    ->map(function (WorkoutSet $set) use ($group, $exercisesById, $warmUpSteps): WorkoutPlayerSetData {
                         /** @var WorkoutBlockExercise $exercise */
                         $exercise = $exercisesById->get($set->workout_block_exercise_id);
 
@@ -77,7 +81,7 @@ class WorkoutPlayerBlockData extends Data
             hasSetupAfter: $block->has_setup_after,
             hasSetupAfterWarmUp: $block->has_setup_after_warm_up,
             exercises: WorkoutPlayerExerciseData::collect(
-                $block->blockExercises->map(fn (WorkoutBlockExercise $exercise) => WorkoutPlayerExerciseData::fromBlockExercise($exercise)),
+                $block->blockExercises->map(fn (WorkoutBlockExercise $exercise): WorkoutPlayerExerciseData => WorkoutPlayerExerciseData::fromBlockExercise($exercise)),
                 DataCollection::class,
             ),
             sets: WorkoutPlayerSetData::collect($setRows, DataCollection::class),

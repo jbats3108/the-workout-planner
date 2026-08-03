@@ -52,7 +52,7 @@ class DashboardServiceTest extends TestCase
         $routineData = $routines
             ->sortBy('id')
             ->values()
-            ->map(fn (Routine $routine) => RoutineData::fromRoutine($routine));
+            ->map(fn (Routine $routine): RoutineData => RoutineData::fromRoutine($routine));
 
         $this->assertEquals(
             $routineData->all(),

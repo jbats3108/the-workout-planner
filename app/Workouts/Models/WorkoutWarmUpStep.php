@@ -4,9 +4,11 @@ namespace App\Workouts\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Override;
 
 class WorkoutWarmUpStep extends Model
 {
+    #[Override]
     protected $fillable = [
         'workout_set_group_id',
         'position',
@@ -16,6 +18,7 @@ class WorkoutWarmUpStep extends Model
     ];
 
     /** @return array<string, string> */
+    #[Override]
     protected function casts(): array
     {
         return [

@@ -4,9 +4,11 @@ namespace App\Users\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Override;
 
 class PlateProfileBar extends Model
 {
+    #[Override]
     protected $fillable = [
         'plate_profile_id',
         'name',
@@ -15,6 +17,7 @@ class PlateProfileBar extends Model
     ];
 
     /** @return array<string, string> */
+    #[Override]
     protected function casts(): array
     {
         return [

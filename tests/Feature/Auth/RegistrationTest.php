@@ -6,6 +6,7 @@ use App\Auth\Services\RegistrationInviteService;
 use App\Users\Models\User;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class RegistrationTest extends TestCase
@@ -19,13 +20,15 @@ class RegistrationTest extends TestCase
         config(['registration.invite' => null]);
     }
 
-    public function test_registration_is_closed_without_invite(): void
+    #[Test]
+    public function registration_is_closed_without_invite(): void
     {
         $this->get('/register')->assertNotFound();
         $this->get('/register?invite=nope')->assertNotFound();
     }
 
-    public function test_master_invite_can_register_admin(): void
+    #[Test]
+    public function master_invite_can_register_admin(): void
     {
         config(['registration.invite' => 'master-secret', 'registration.invite_role' => 'admin']);
 
@@ -43,7 +46,8 @@ class RegistrationTest extends TestCase
         $this->assertTrue(User::where('email', 'test@example.com')->first()->hasRole('admin'));
     }
 
-    public function test_one_time_invite_can_register_and_is_consumed(): void
+    #[Test]
+    public function one_time_invite_can_register_and_is_consumed(): void
     {
         $admin = User::factory()->withRole('admin')->create();
         $invite = app(RegistrationInviteService::class)->create($admin, 'user', 'buddy', 7);
@@ -71,7 +75,8 @@ class RegistrationTest extends TestCase
         ])->assertNotFound();
     }
 
-    public function test_revoked_invite_is_rejected(): void
+    #[Test]
+    public function revoked_invite_is_rejected(): void
     {
         $admin = User::factory()->withRole('admin')->create();
         $invite = app(RegistrationInviteService::class)->create($admin);
@@ -80,7 +85,8 @@ class RegistrationTest extends TestCase
         $this->get('/register?invite='.$invite->token)->assertNotFound();
     }
 
-    public function test_expired_invite_is_rejected_on_register(): void
+    #[Test]
+    public function expired_invite_is_rejected_on_register(): void
     {
         $admin = User::factory()->withRole('admin')->create();
         $invite = app(RegistrationInviteService::class)->create($admin, 'user');
@@ -100,7 +106,8 @@ class RegistrationTest extends TestCase
         $this->assertNull(User::where('email', 'expired@example.com')->first());
     }
 
-    public function test_registration_consumes_invite_atomically_with_user(): void
+    #[Test]
+    public function registration_consumes_invite_atomically_with_user(): void
     {
         $admin = User::factory()->withRole('admin')->create();
         $invite = app(RegistrationInviteService::class)->create($admin, 'user');
@@ -121,7 +128,8 @@ class RegistrationTest extends TestCase
         $this->assertTrue($user->hasRole('user'));
     }
 
-    public function test_registration_rejects_invite_with_disallowed_role(): void
+    #[Test]
+    public function registration_rejects_invite_with_disallowed_role(): void
     {
         $admin = User::factory()->withRole('admin')->create();
         $invite = app(RegistrationInviteService::class)->create($admin, 'user');
@@ -139,7 +147,8 @@ class RegistrationTest extends TestCase
         $this->assertNull(User::where('email', 'badrole@example.com')->first());
     }
 
-    public function test_registration_is_rate_limited(): void
+    #[Test]
+    public function registration_is_rate_limited(): void
     {
         for ($i = 0; $i < 6; $i++) {
             $this->post('/register', [

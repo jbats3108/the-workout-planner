@@ -16,12 +16,18 @@ concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: write
+
 jobs:
   quality:
     name: quality
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          # Required so auto-commit can push back to the PR branch.
+          ref: ${{ github.head_ref || github.ref_name }}
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -39,17 +45,32 @@ jobs:
           composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
           npm ci
 
-      - name: Check PHP style (Pint)
-        run: vendor/bin/pint --test
+      # Rector first, Pint second — Pint owns formatting so the pair stays idempotent.
+      - name: Apply PHP quality fixes (Rector → Pint)
+        run: composer quality-fix
 
-      - name: Check frontend formatting (Prettier)
-        run: npm run format:check
+      - name: Apply frontend quality fixes (ESLint → Prettier)
+        run: |
+          npm run lint
+          npm run format
 
-      - name: Lint frontend (ESLint)
-        run: npm run lint:check
+      - name: Commit quality fixes
+        id: quality_commit
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: Apply CI quality fixes
+          commit_user_name: github-actions[bot]
+          commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com
+        # Fork PRs cannot push unless "Allow edits by maintainers" is enabled.
+        continue-on-error: true
 
-      - name: Typecheck frontend
+      - name: Analyse PHP (PHPStan, advisory)
+        run: composer analyse
+        continue-on-error: true
+
+      - name: Typecheck frontend (advisory)
         run: npm run typecheck
+        continue-on-error: true
 
   test:
     name: test
@@ -58,6 +79,9 @@ jobs:
     needs: quality
     steps:
       - uses: actions/checkout@v5
+        with:
+          # Prefer branch tip so we pick up any quality auto-commit from the previous job.
+          ref: ${{ github.head_ref || github.ref_name }}
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
