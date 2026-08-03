@@ -68,7 +68,7 @@ A durable record that a confirmed **Bump** was applied from a specific finished 
 _Avoid_: Bump event, progression audit, PR log
 
 **Deload Recipe**:
-Per-routine uniform factors (weight and reps) plus **Deload Velocity**, applied when starting in deload mode / deciding when to soft-suggest Deload. Same factors for every exercise on the routine.
+Per-routine uniform factors (weight and reps) plus **Deload Velocity**, applied when starting in deload mode / deciding when to soft-suggest Deload. Same factors for every exercise on the routine. New routines seed from the user’s Training deload defaults.
 _Avoid_: Recovery recipe, easy recipe
 
 **Deload Velocity**:

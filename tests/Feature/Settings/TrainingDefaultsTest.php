@@ -33,6 +33,9 @@ class TrainingDefaultsTest extends TestCase
             ->where('warm_up_defaults_scope', 'all_blocks')
             ->where('achievement_floor_default', null)
             ->where('bump_when_default', 'any_set')
+            ->where('deload_weight_factor_default', 0.5)
+            ->where('deload_reps_factor_default', 2)
+            ->where('deload_every_n_default', 3)
             ->missing('progression_target_default')
             ->has('warm_up_steps_default', 3)
             ->has('plate_profile'));
@@ -125,6 +128,54 @@ class TrainingDefaultsTest extends TestCase
 
         $this->user->refresh();
         $this->assertSame(BumpWhen::LastAtTopWeight, $this->user->bump_when_default);
+    }
+
+    #[Test]
+    public function it_saves_deload_defaults(): void
+    {
+        $response = $this->actingAs($this->user)->put(route('training.update'), [
+            'warm_up_steps_default' => [
+                ['percent' => 40, 'reps' => 5],
+            ],
+            'warm_up_defaults_scope' => 'all_blocks',
+            'bump_when_default' => 'any_set',
+            'deload_weight_factor_default' => 0.7,
+            'deload_reps_factor_default' => 1.5,
+            'deload_every_n_default' => 4,
+        ]);
+
+        $response->assertRedirect(route('training.edit'));
+
+        $this->user->refresh();
+        $this->assertSame('0.700', (string) $this->user->deload_weight_factor_default);
+        $this->assertSame('1.500', (string) $this->user->deload_reps_factor_default);
+        $this->assertSame(4, $this->user->deload_every_n_default);
+    }
+
+    #[Test]
+    public function it_rejects_out_of_range_deload_defaults(): void
+    {
+        $this->actingAs($this->user)->put(route('training.update'), [
+            'warm_up_steps_default' => [
+                ['percent' => 40, 'reps' => 5],
+            ],
+            'warm_up_defaults_scope' => 'all_blocks',
+            'bump_when_default' => 'any_set',
+            'deload_weight_factor_default' => 5.1,
+            'deload_reps_factor_default' => 1,
+            'deload_every_n_default' => 3,
+        ])->assertSessionHasErrors('deload_weight_factor_default');
+
+        $this->actingAs($this->user)->put(route('training.update'), [
+            'warm_up_steps_default' => [
+                ['percent' => 40, 'reps' => 5],
+            ],
+            'warm_up_defaults_scope' => 'all_blocks',
+            'bump_when_default' => 'any_set',
+            'deload_weight_factor_default' => 0.5,
+            'deload_reps_factor_default' => 1,
+            'deload_every_n_default' => 100,
+        ])->assertSessionHasErrors('deload_every_n_default');
     }
 
     #[Test]
