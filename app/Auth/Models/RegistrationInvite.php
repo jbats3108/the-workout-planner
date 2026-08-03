@@ -16,6 +16,7 @@ class RegistrationInvite extends Model
         'created_by',
         'role',
         'note',
+        'email',
         'expires_at',
         'used_at',
         'used_by',

@@ -4,6 +4,7 @@ use App\Admin\Http\Controllers\IndexAdminExercisesController;
 use App\Admin\Http\Controllers\IndexAdminInvitesController;
 use App\Admin\Http\Controllers\IndexAdminMuscleGroupsController;
 use App\Admin\Http\Controllers\IndexAdminUsersController;
+use App\Admin\Http\Controllers\ResendAdminInviteController;
 use App\Admin\Http\Controllers\RevokeAdminInviteController;
 use App\Admin\Http\Controllers\ShowAdminController;
 use App\Admin\Http\Controllers\StoreAdminInviteController;
@@ -163,6 +164,7 @@ Route::middleware('auth')->group(function (): void {
         Route::get('/users', IndexAdminUsersController::class)->name('admin.users');
         Route::get('/invites', IndexAdminInvitesController::class)->name('admin.invites');
         Route::post('/invites', StoreAdminInviteController::class)->name('admin.invites.store');
+        Route::post('/invites/{invite}/resend', ResendAdminInviteController::class)->name('admin.invites.resend');
         Route::post('/invites/{invite}/revoke', RevokeAdminInviteController::class)->name('admin.invites.revoke');
     });
 });
