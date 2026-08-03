@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { confirmDialog } from '@/shared/lib/confirmDialog';
 import { type BreadcrumbItem } from '@/types';
 import { historyBlockTitle, historyRowsForBlock, historyWarmUpGroups } from '@/workouts/lib/historyDisplay';
+import { useHistoryDelete } from '@/workouts/lib/historyMutations';
 import type { WorkoutPayload } from '@/workouts/types';
 import { Head, useForm } from '@inertiajs/vue3';
 import { Trash2 } from 'lucide-vue-next';
@@ -32,7 +32,7 @@ const forms = Object.fromEntries(
     ]),
 );
 
-const deleteForm = useForm({});
+const { deleteForm, destroy: deleteWorkout } = useHistoryDelete();
 
 const blockRows = computed(() =>
     props.history.workout.blocks.map((block) => ({
@@ -47,22 +47,7 @@ const saveSet = (setId: number) => {
     forms[setId].put(route('history.sets.update', [props.history.workout.id, setId]));
 };
 
-const deleteWorkout = async () => {
-    if (deleteForm.processing) {
-        return;
-    }
-    const name = props.history.workout.routine_name;
-    const ok = await confirmDialog({
-        title: `Remove “${name}” from history?`,
-        description: 'This cannot be undone.',
-        confirmLabel: 'Remove',
-        variant: 'destructive',
-    });
-    if (!ok) {
-        return;
-    }
-    deleteForm.delete(route('history.destroy', props.history.workout.id));
-};
+const removeWorkout = () => deleteWorkout(props.history.workout.id, props.history.workout.routine_name);
 </script>
 
 <template>
@@ -80,7 +65,7 @@ const deleteWorkout = async () => {
                     type="button"
                     class="inline-flex items-center gap-1.5 rounded-md bg-destructive px-3 py-2 text-sm font-semibold text-destructive-foreground transition-colors hover:bg-destructive/90 disabled:opacity-50"
                     :disabled="deleteForm.processing"
-                    @click="deleteWorkout"
+                    @click="removeWorkout"
                 >
                     <Trash2 class="size-4" />
                     Delete

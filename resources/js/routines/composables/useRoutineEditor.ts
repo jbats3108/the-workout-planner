@@ -10,11 +10,12 @@ import {
     trimDropsetsToSetCount,
 } from '@/routines/lib/dropsets';
 import { formatRest } from '@/routines/lib/formatRest';
+import { deleteRoutine as deleteRoutineMutation, duplicateRoutine as duplicateRoutineMutation } from '@/routines/lib/routineMutations';
 import { addWarmUpStep, clearWarmUp, removeWarmUpStep, sanitizeWarmUpStepsForSave, setWarmUpText, warmUpText } from '@/routines/lib/warmUp';
 import type { Block, ExerciseOption, RoutinePayload, WarmUpStep } from '@/routines/types';
 import type { WarmUpDefaultsScope } from '@/settings/types';
 import { confirmDialog } from '@/shared/lib/confirmDialog';
-import { router, useForm } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
 import { computed, inject, ref, watch, type InjectionKey } from 'vue';
 
 export type EditRoutineProps = {
@@ -46,6 +47,7 @@ export function createRoutineEditor(props: EditRoutineProps) {
         name: props.routine.name,
         deload_weight_factor: props.routine.deload_weight_factor,
         deload_reps_factor: props.routine.deload_reps_factor,
+        expected_updated_at: props.routine.updated_at,
         // Inertia props are nested reactive proxies — structuredClone cannot clone them
         blocks: props.routine.blocks.length
             ? (() => {
@@ -188,50 +190,29 @@ export function createRoutineEditor(props: EditRoutineProps) {
     };
 
     const duplicateRoutine = async () => {
-        if (mutating.value || form.processing) {
+        if (form.processing) {
             return;
         }
-        if (form.isDirty) {
-            const ok = await confirmDialog({
-                title: 'Duplicate the last saved version?',
-                description: 'Unsaved edits will not be included.',
-                confirmLabel: 'Duplicate',
-            });
-            if (!ok) {
-                return;
-            }
-        }
-        mutating.value = true;
-        router.post(
-            route('routines.duplicate', props.routine.slug),
-            {},
-            {
-                onFinish: () => {
-                    mutating.value = false;
-                },
+        await duplicateRoutineMutation(props.routine.slug, {
+            mutating,
+            confirm: async () => {
+                if (!form.isDirty) {
+                    return true;
+                }
+                return confirmDialog({
+                    title: 'Duplicate the last saved version?',
+                    description: 'Unsaved edits will not be included.',
+                    confirmLabel: 'Duplicate',
+                });
             },
-        );
+        });
     };
 
     const deleteRoutine = async () => {
-        if (mutating.value || form.processing) {
+        if (form.processing) {
             return;
         }
-        const ok = await confirmDialog({
-            title: `Delete “${form.name || 'this routine'}”?`,
-            description: 'It will be archived and removed from your list.',
-            confirmLabel: 'Delete',
-            variant: 'destructive',
-        });
-        if (!ok) {
-            return;
-        }
-        mutating.value = true;
-        router.delete(route('routines.delete', props.routine.slug), {
-            onFinish: () => {
-                mutating.value = false;
-            },
-        });
+        await deleteRoutineMutation(props.routine.slug, form.name || 'this routine', mutating);
     };
 
     const errorList = computed(() => Object.values(form.errors));

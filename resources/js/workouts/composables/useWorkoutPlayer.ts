@@ -23,6 +23,7 @@ import {
     workingRoundsInBlock,
     workingWeightForSet,
 } from '@/workouts/lib/sets';
+import { abandonWorkout as abandonWorkoutMutation, finishWorkout as finishWorkoutMutation } from '@/workouts/lib/workoutMutations';
 import type { Focus, PlateProfile, WorkoutPayload } from '@/workouts/types';
 import { router, useForm } from '@inertiajs/vue3';
 import { computed, inject, onBeforeUnmount, onMounted, ref, watch, type InjectionKey } from 'vue';
@@ -554,63 +555,41 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
     });
 
     const finishWorkout = async () => {
-        if (mutating.value || props.workout.status !== 'in_progress') {
+        if (props.workout.status !== 'in_progress') {
             return;
         }
-        const incomplete = flatSets.value.some(({ set }) => !set.completed);
-        if (incomplete) {
-            const ok = await confirmDialog({
-                title: 'Finish now?',
-                description: 'Incomplete sets stay incomplete.',
-                confirmLabel: 'Finish',
-            });
-            if (!ok) {
-                return;
-            }
-        }
-        mutating.value = true;
-        leaveConfirmed.value = true;
-        router.post(
-            route('workouts.finish', props.workout.id),
-            {},
-            {
-                onFinish: () => {
-                    mutating.value = false;
-                },
-                onError: () => {
-                    leaveConfirmed.value = false;
-                },
+        await finishWorkoutMutation(props.workout.id, {
+            mutating,
+            leaveConfirmed,
+            confirm: async () => {
+                const incomplete = flatSets.value.some(({ set }) => !set.completed);
+                if (!incomplete) {
+                    return true;
+                }
+                return confirmDialog({
+                    title: 'Finish now?',
+                    description: 'Incomplete sets stay incomplete.',
+                    confirmLabel: 'Finish',
+                });
             },
-        );
+        });
     };
 
     const abandonWorkout = async () => {
-        if (mutating.value || props.workout.status !== 'in_progress') {
+        if (props.workout.status !== 'in_progress') {
             return;
         }
-        const ok = await confirmDialog({
-            title: 'Abandon this workout?',
-            description: 'It will not count as finished.',
-            confirmLabel: 'Abandon',
-            variant: 'destructive',
+        await abandonWorkoutMutation(props.workout.id, {
+            mutating,
+            leaveConfirmed,
+            confirm: async () =>
+                confirmDialog({
+                    title: 'Abandon this workout?',
+                    description: 'It will not count as finished.',
+                    confirmLabel: 'Abandon',
+                    variant: 'destructive',
+                }),
         });
-        if (!ok) {
-            return;
-        }
-        mutating.value = true;
-        leaveConfirmed.value = true;
-        router.post(
-            route('workouts.discard', props.workout.id),
-            {},
-            {
-                onFinish: () => {
-                    mutating.value = false;
-                },
-                onError: () => {
-                    leaveConfirmed.value = false;
-                },
-            },
-        );
     };
 
     const roundsInBlock = computed(() => (current.value ? workingRoundsInBlock(current.value.block) : 0));

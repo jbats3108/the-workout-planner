@@ -2,7 +2,7 @@ import { plateProfile, playerBlock, playerSet, workoutPayload } from '@/test/fac
 import { inertiaMocks } from '@/test/inertiaMocks';
 import CompleteStage from '@/workouts/components/CompleteStage.vue';
 import { createWorkoutPlayer, workoutPlayerKey } from '@/workouts/composables/useWorkoutPlayer';
-import { mount } from '@vue/test-utils';
+import { flushPromises, mount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, provide } from 'vue';
 
@@ -60,12 +60,13 @@ describe('CompleteStage', () => {
         expect(wrapper.text()).toContain('Leave');
     });
 
-    it('finishes the workout from the primary CTA', () => {
+    it('finishes the workout from the primary CTA', async () => {
         const { wrapper } = mountCompleteStage();
         const button = wrapper.findAll('button').find((b) => b.text() === 'Finish workout');
 
         expect(button).toBeDefined();
-        button!.trigger('click');
+        await button!.trigger('click');
+        await flushPromises();
 
         expect(inertiaMocks().routerMocks.post).toHaveBeenCalledWith('/workouts.finish', {}, expect.any(Object));
     });

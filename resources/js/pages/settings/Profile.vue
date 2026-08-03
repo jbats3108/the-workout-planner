@@ -5,12 +5,14 @@ import { ref } from 'vue';
 import DeleteUser from '@/components/DeleteUser.vue';
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';
+import PasswordInput from '@/components/PasswordInput.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { type BreadcrumbItem, type User } from '@/types';
+import type { ComponentPublicInstance } from 'vue';
 
 interface Props {
     mustVerifyEmail: boolean;
@@ -40,8 +42,8 @@ const submit = () => {
     });
 };
 
-const passwordInput = ref<HTMLInputElement | null>(null);
-const currentPasswordInput = ref<HTMLInputElement | null>(null);
+const passwordInput = ref<(ComponentPublicInstance & { focus: () => void }) | null>(null);
+const currentPasswordInput = ref<(ComponentPublicInstance & { focus: () => void }) | null>(null);
 
 const passwordForm = useForm({
     current_password: '',
@@ -135,11 +137,10 @@ const updatePassword = () => {
                 <form class="space-y-6" @submit.prevent="updatePassword">
                     <div class="grid gap-2">
                         <Label for="current_password">Current password</Label>
-                        <Input
+                        <PasswordInput
                             id="current_password"
                             ref="currentPasswordInput"
                             v-model="passwordForm.current_password"
-                            type="password"
                             class="mt-1 block w-full"
                             autocomplete="current-password"
                             placeholder="Current password"
@@ -149,11 +150,10 @@ const updatePassword = () => {
 
                     <div class="grid gap-2">
                         <Label for="password">New password</Label>
-                        <Input
+                        <PasswordInput
                             id="password"
                             ref="passwordInput"
                             v-model="passwordForm.password"
-                            type="password"
                             class="mt-1 block w-full"
                             autocomplete="new-password"
                             placeholder="New password"
@@ -163,10 +163,9 @@ const updatePassword = () => {
 
                     <div class="grid gap-2">
                         <Label for="password_confirmation">Confirm password</Label>
-                        <Input
+                        <PasswordInput
                             id="password_confirmation"
                             v-model="passwordForm.password_confirmation"
-                            type="password"
                             class="mt-1 block w-full"
                             autocomplete="new-password"
                             placeholder="Confirm password"

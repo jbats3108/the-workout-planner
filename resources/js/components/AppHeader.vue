@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
+import { useZiggyRoute } from '@/shared/composables/useZiggyRoute';
 import type { BreadcrumbItem } from '@/types';
-import { Link, usePage } from '@inertiajs/vue3';
-import { route as ziggyRoute } from 'ziggy-js';
+import { Link } from '@inertiajs/vue3';
 
 interface Props {
     breadcrumbs?: BreadcrumbItem[];
@@ -12,8 +12,7 @@ withDefaults(defineProps<Props>(), {
     breadcrumbs: () => [],
 });
 
-const page = usePage();
-const route = (name: string, params?: Record<string, unknown>, absolute?: boolean) => ziggyRoute(name, params, absolute, page.props.ziggy);
+const route = useZiggyRoute();
 </script>
 
 <template>

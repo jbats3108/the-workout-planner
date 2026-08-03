@@ -2,35 +2,17 @@
 import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { type NavItem } from '@/types';
+import { useZiggyRoute } from '@/shared/composables/useZiggyRoute';
+import { isPathActive, settingsNavItems } from '@/shared/lib/appNav';
 import { Link, router, useForm, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import { route as ziggyRoute } from 'ziggy-js';
 
 const page = usePage();
-const route = (name: string, params?: Record<string, unknown>, absolute?: boolean) => ziggyRoute(name, params, absolute, page.props.ziggy);
+const route = useZiggyRoute();
 const isAdmin = computed(() => Boolean(page.props.auth.user?.is_admin));
 const logoutForm = useForm({});
 
-const sidebarNavItems = computed((): NavItem[] => {
-    const items: NavItem[] = [
-        {
-            title: 'Profile',
-            href: route('profile.edit'),
-        },
-        {
-            title: 'Appearance',
-            href: route('appearance'),
-        },
-    ];
-    if (isAdmin.value) {
-        items.push({
-            title: 'Admin',
-            href: route('admin.index'),
-        });
-    }
-    return items;
-});
+const sidebarNavItems = computed(() => settingsNavItems(route, { isAdmin: isAdmin.value }));
 
 const currentPath = computed(() => page.url.split('?')[0]);
 
@@ -54,11 +36,11 @@ const logout = () => {
                         v-for="item in sidebarNavItems"
                         :key="item.href"
                         variant="ghost"
-                        :class="['w-full justify-start', { 'bg-muted': currentPath === item.href }]"
+                        :class="['w-full justify-start', { 'bg-muted': isPathActive(currentPath, item.match) }]"
                         as-child
                     >
                         <Link :href="item.href">
-                            {{ item.title }}
+                            {{ item.label }}
                         </Link>
                     </Button>
                     <Button

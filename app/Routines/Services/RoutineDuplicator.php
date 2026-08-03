@@ -20,6 +20,9 @@ class RoutineDuplicator
     public function duplicate(Routine $source, User $owner): Routine
     {
         return DB::transaction(function () use ($source, $owner): Routine {
+            // Serialize duplicates per owner so concurrent POSTs cannot interleave slug/create work.
+            User::query()->whereKey($owner->id)->lockForUpdate()->firstOrFail();
+
             $source->loadMissing([
                 'blocks.blockExercises',
                 'blocks.setGroups.warmUpSteps',

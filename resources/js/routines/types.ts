@@ -40,6 +40,7 @@ export type RoutinePayload = {
     name: string;
     deload_weight_factor: number;
     deload_reps_factor: number;
+    updated_at: string;
     blocks: Block[];
 };
 
@@ -51,4 +52,31 @@ export type Routine = {
     deload_weight_factor?: number | null;
     deload_reps_factor?: number | null;
     can_start?: boolean;
+};
+
+export type EditorDensity = 'desktop' | 'mobile';
+
+export type DropsetEditorDensity = {
+    card: string;
+    setLabel: string;
+    select: string;
+    segmentRow: string;
+    weightInput: string;
+    addDropContainer: string;
+    addDropButton: string;
+    rackControls: string;
+    rackLabel: string;
+    rackInput: string;
+    rackFillButton: string;
+    rackFillLabel: string;
+};
+
+export type DeloadSettingsDensity = {
+    fieldsGrid: string;
+    fieldLabel: string;
+    fieldTitle: string;
+    fieldHint: string;
+    input: string;
+    weightHint: string;
+    repsHint: string;
 };

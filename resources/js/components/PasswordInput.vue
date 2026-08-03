@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Input } from '@/components/ui/input';
 import { Eye, EyeOff } from 'lucide-vue-next';
-import { ref } from 'vue';
+import { ref, type HTMLAttributes } from 'vue';
 
 defineProps<{
     id?: string;
@@ -9,14 +9,21 @@ defineProps<{
     tabindex?: number | string;
     autocomplete?: string;
     required?: boolean;
+    autofocus?: boolean;
+    class?: HTMLAttributes['class'];
 }>();
 
 const model = defineModel<string>({ required: true });
 const showPassword = ref(false);
+const root = ref<HTMLElement | null>(null);
+
+defineExpose({
+    focus: () => root.value?.querySelector('input')?.focus(),
+});
 </script>
 
 <template>
-    <div class="relative">
+    <div ref="root" class="relative">
         <Input
             :id="id"
             v-model="model"
@@ -25,7 +32,8 @@ const showPassword = ref(false);
             :tabindex="tabindex"
             :autocomplete="autocomplete"
             :placeholder="placeholder"
-            class="pr-10"
+            :autofocus="autofocus"
+            :class="['pr-10', $props.class]"
         />
         <button
             type="button"

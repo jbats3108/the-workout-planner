@@ -111,14 +111,5 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 
 ### Code quality & security
 
-- **FE DRY: routine editor fields** — extract shared block field/option groups from `DesktopBlockList.vue` ↔ `MobileStage.vue` (weight/reps/sets/rest/WU + setup checkboxes); keep layout shells separate
-- **FE DRY: DropsetEditor + DeloadSettings** — collapse desktop|mobile forks into one form body + density classes / shared accordion chrome
-- **FE DRY: mutation helpers** — centralize finish/abandon workout + delete/duplicate routine + history delete (Dashboard / player / editor / history copies diverge slightly)
-- **FE DRY: app nav config** — single source for primary/settings links used by `AppNavIcons`, `AppBottomNav`, settings layout (+ shared Ziggy route helper)
-- **FE DRY: auth submit + password fields** — `AuthSubmitButton` (processing spinner); prefer `PasswordInput` / shared confirm fields across auth + Profile
-- **FE DRY: mobile editor accordion** — `EditorDisclosure` for Dropsets / Progression / Warm-up / Deload expanders
-- **FE DRY: tiny shared utils** — `formatDate` (Dashboard + History); import `BreadcrumbItem` from `@/types` in Breadcrumbs; optional rest-format core math share
+- **Check test function name conventions** — audit PHPUnit / Vitest names for consistency (`it_…` / `test_…` / describe+it wording) and align or document the house style
 - **GDPR compliance?** — clarify whether/what is required (privacy policy, data export/delete, retention, cookies); grill before building
-- **Finish/discard `lockForUpdate`** — low TOCTOU on workout finish/abandon (FE busy guards in place)
-- **Plate profile ensure race** — unique is `(user_id, name)` not `user_id` alone; concurrent `ensureProfile` race (low)
-- **Editor last-write-wins / non-idempotent duplicate** — parked from Routines slice 2 (low)

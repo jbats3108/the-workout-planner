@@ -398,16 +398,17 @@ class WorkoutService
      */
     public function finishWorkout(Workout $workout): DataCollection
     {
-        if ($workout->status !== WorkoutStatus::InProgress) {
-            throw new WorkoutServiceException(self::WORKOUT_NOT_IN_PROGRESS_ERROR);
-        }
-
         return DB::transaction(function () use ($workout): DataCollection {
-            $workout->status = WorkoutStatus::Finished;
-            $workout->finished_at = now();
-            $workout->save();
+            $locked = $this->lockInProgressWorkout($workout);
 
-            return $this->progressionService->applyCarryForwardAndCollectBumps($workout);
+            $locked->status = WorkoutStatus::Finished;
+            $locked->finished_at = now();
+            $locked->save();
+
+            $workout->status = $locked->status;
+            $workout->finished_at = $locked->finished_at;
+
+            return $this->progressionService->applyCarryForwardAndCollectBumps($locked);
         });
     }
 
@@ -416,11 +417,27 @@ class WorkoutService
      */
     public function discardWorkout(Workout $workout): void
     {
-        if ($workout->status !== WorkoutStatus::InProgress) {
+        DB::transaction(function () use ($workout): void {
+            $locked = $this->lockInProgressWorkout($workout);
+
+            $locked->status = WorkoutStatus::Discarded;
+            $locked->save();
+
+            $workout->status = $locked->status;
+        });
+    }
+
+    /**
+     * @throws WorkoutServiceException
+     */
+    private function lockInProgressWorkout(Workout $workout): Workout
+    {
+        $locked = Workout::query()->whereKey($workout->id)->lockForUpdate()->firstOrFail();
+
+        if ($locked->status !== WorkoutStatus::InProgress) {
             throw new WorkoutServiceException(self::WORKOUT_NOT_IN_PROGRESS_ERROR);
         }
 
-        $workout->status = WorkoutStatus::Discarded;
-        $workout->save();
+        return $locked;
     }
 }

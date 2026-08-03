@@ -57,6 +57,14 @@ class PlateProfileService
         }
 
         return DB::transaction(function () use ($user): PlateProfile {
+            // Serialize create-per-user; unique is (user_id, name) so a lock is required.
+            User::query()->whereKey($user->id)->lockForUpdate()->firstOrFail();
+
+            $existing = $user->plateProfile()->with(['bars', 'plates'])->first();
+            if ($existing !== null) {
+                return $existing;
+            }
+
             $defaults = PlateCalculatorService::defaultProfilePayload();
             $profile = PlateProfile::create([
                 'user_id' => $user->id,
@@ -88,6 +96,8 @@ class PlateProfileService
     public function upsert(User $user, UpsertPlateProfileData $data): PlateProfile
     {
         return DB::transaction(function () use ($user, $data): PlateProfile {
+            User::query()->whereKey($user->id)->lockForUpdate()->firstOrFail();
+
             $profile = $user->plateProfile()->first();
             if ($profile === null) {
                 $profile = PlateProfile::create([

@@ -25,6 +25,7 @@ class RoutineEditorPageData extends Data
         public readonly string $name,
         public readonly float $deloadWeightFactor,
         public readonly float $deloadRepsFactor,
+        public readonly string $updatedAt,
         #[DataCollectionOf(RoutineEditorBlockData::class)]
         public readonly DataCollection $blocks,
         #[DataCollectionOf(RoutineEditorExerciseOptionData::class)]
@@ -103,6 +104,7 @@ class RoutineEditorPageData extends Data
             name: $routine->getName(),
             deloadWeightFactor: (float) $routine->deload_weight_factor,
             deloadRepsFactor: (float) $routine->deload_reps_factor,
+            updatedAt: $routine->updated_at?->toIso8601String() ?? now()->toIso8601String(),
             blocks: RoutineEditorBlockData::collect($blocks, DataCollection::class),
             exercises: $exercises,
             weightUnit: $weightUnit,

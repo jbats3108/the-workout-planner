@@ -73,6 +73,33 @@ class UpdateRoutineControllerTest extends TestCase
     }
 
     #[Test]
+    public function owner_update_rejects_stale_expected_updated_at(): void
+    {
+        $routine = Routine::factory()->withUser($this->user)->create();
+        $exercise = Exercise::factory()->create();
+
+        $this->actingAs($this->user)->put(route('routines.update', $routine), [
+            'name' => 'Stale Save',
+            'expected_updated_at' => now()->subMinute()->toIso8601String(),
+            'blocks' => [
+                [
+                    'is_superset' => false,
+                    'has_setup_after' => false,
+                    'exercises' => [
+                        [
+                            'exercise_id' => $exercise->id,
+                            'working_weight_kg' => 80,
+                            'prescribed_reps' => 6,
+                        ],
+                    ],
+                    'working' => ['set_count' => 3, 'rest_seconds' => 180],
+                    'warm_up' => ['set_count' => 0, 'rest_seconds' => 60, 'steps' => []],
+                ],
+            ],
+        ])->assertSessionHasErrors('expected_updated_at');
+    }
+
+    #[Test]
     public function owner_can_save_progression_overrides(): void
     {
         $routine = Routine::factory()->withUser($this->user)->create();

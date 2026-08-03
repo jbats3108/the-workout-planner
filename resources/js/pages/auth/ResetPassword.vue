@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import AuthSubmitButton from '@/components/AuthSubmitButton.vue';
 import InputError from '@/components/InputError.vue';
-import { Button } from '@/components/ui/button';
+import PasswordInput from '@/components/PasswordInput.vue';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
-import { LoaderCircle } from 'lucide-vue-next';
 
 interface Props {
     token: string;
@@ -44,10 +44,8 @@ const submit = () => {
 
                 <div class="grid gap-2">
                     <Label for="password">Password</Label>
-                    <Input
+                    <PasswordInput
                         id="password"
-                        type="password"
-                        name="password"
                         autocomplete="new-password"
                         v-model="form.password"
                         class="mt-1 block w-full"
@@ -59,10 +57,8 @@ const submit = () => {
 
                 <div class="grid gap-2">
                     <Label for="password_confirmation"> Confirm Password </Label>
-                    <Input
+                    <PasswordInput
                         id="password_confirmation"
-                        type="password"
-                        name="password_confirmation"
                         autocomplete="new-password"
                         v-model="form.password_confirmation"
                         class="mt-1 block w-full"
@@ -71,10 +67,7 @@ const submit = () => {
                     <InputError :message="form.errors.password_confirmation" />
                 </div>
 
-                <Button type="submit" class="mt-4 w-full" :disabled="form.processing">
-                    <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-                    Reset password
-                </Button>
+                <AuthSubmitButton class="mt-4" :processing="form.processing">Reset password</AuthSubmitButton>
             </div>
         </form>
     </AuthLayout>
