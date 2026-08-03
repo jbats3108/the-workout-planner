@@ -7,7 +7,6 @@ use App\Routines\Models\Routine;
 use App\Users\Models\User;
 use App\Workouts\Data\History\HistoryWorkoutItemData;
 use App\Workouts\Data\InProgressWorkoutData;
-use App\Workouts\Enums\WorkoutStatus;
 use App\Workouts\Models\Workout;
 use App\Workouts\Services\StandardsSinceDeloadCounter;
 use Illuminate\Support\Collection;
@@ -34,13 +33,13 @@ final class DashboardData extends Data
 
         $inProgress = $user->workouts()
             ->with('routine')
-            ->where('status', WorkoutStatus::InProgress)
+            ->inProgress()
             ->latest('started_at')
             ->first();
 
         $recentFinished = $user->workouts()
             ->with('routine')
-            ->where('status', WorkoutStatus::Finished)
+            ->finished()
             ->orderByDesc('finished_at')
             ->limit(5)
             ->get()

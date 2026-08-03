@@ -179,11 +179,7 @@ class WorkoutService
 
     public function inProgressFor(User $user): ?Workout
     {
-        return Workout::query()
-            ->where('user_id', $user->id)
-            ->where('status', WorkoutStatus::InProgress)
-            ->latest('started_at')
-            ->first();
+        return Workout::inProgressForUser($user);
     }
 
     /**

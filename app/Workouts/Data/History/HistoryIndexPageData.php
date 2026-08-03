@@ -4,7 +4,6 @@ namespace App\Workouts\Data\History;
 
 use App\Routines\Models\Routine;
 use App\Users\Models\User;
-use App\Workouts\Enums\WorkoutStatus;
 use App\Workouts\Models\Workout;
 use Illuminate\Support\Collection;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
@@ -32,7 +31,7 @@ class HistoryIndexPageData extends Data
         $query = Workout::query()
             ->with('routine')
             ->where('user_id', $user->id)
-            ->where('status', WorkoutStatus::Finished)
+            ->finished()
             ->orderByDesc('finished_at');
 
         if ($routineId !== null) {

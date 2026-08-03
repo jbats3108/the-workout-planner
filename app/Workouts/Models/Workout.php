@@ -101,6 +101,23 @@ class Workout extends Model
         return $query->where('status', WorkoutStatus::Finished);
     }
 
+    /**
+     * @param  Builder<Workout>  $query
+     * @return Builder<Workout>
+     */
+    public function scopeInProgress(Builder $query): Builder
+    {
+        return $query->where('status', WorkoutStatus::InProgress);
+    }
+
+    public static function inProgressForUser(User $user): ?self
+    {
+        return $user->workouts()
+            ->inProgress()
+            ->latest('started_at')
+            ->first();
+    }
+
     public static function latestNonDeloadFinishedForRoutine(User $user, int $routineId): ?self
     {
         return self::query()
