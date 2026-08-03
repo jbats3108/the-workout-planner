@@ -2,32 +2,38 @@
 
 namespace App\Admin\Http\Controllers;
 
+use App\Auth\Data\StoreRegistrationInviteData;
 use App\Auth\Services\RegistrationInviteService;
 use App\Shared\Http\Controllers\Controller;
+use App\Users\Models\User;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use Throwable;
 
 class StoreAdminInviteController extends Controller
 {
-    public function __invoke(Request $request, RegistrationInviteService $invites): RedirectResponse
+    public function __invoke(StoreRegistrationInviteData $data, RegistrationInviteService $invites): RedirectResponse
     {
-        $data = $request->validate([
-            'note' => ['nullable', 'string', 'max:255'],
-            'role' => ['required', 'string', Rule::in(RegistrationInviteService::ALLOWED_ROLES)],
-            'expires_in_days' => ['nullable', 'integer', 'min:1', 'max:365'],
-        ]);
+        /** @var User $user */
+        $user = request()->user();
 
-        $invite = $invites->create(
-            $request->user(),
-            $data['role'],
-            $data['note'] ?? null,
-            array_key_exists('expires_in_days', $data) ? $data['expires_in_days'] : 7,
-        );
+        try {
+            $invite = $invites->createAndSend(
+                $user,
+                $data->email,
+                $data->role,
+                $data->note,
+                $data->expiresInDays,
+            );
+        } catch (Throwable) {
+            return redirect()
+                ->route('admin.invites')
+                ->withInput()
+                ->with('error', 'Could not send invite email. Nothing was saved — try again.');
+        }
 
         return redirect()
             ->route('admin.invites')
-            ->with('success', 'Invite created.')
+            ->with('success', 'Invite sent to '.$invite->email.'.')
             ->with('invite_url', $invites->registrationUrl($invite->token));
     }
 }

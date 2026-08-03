@@ -2,9 +2,14 @@
 
 namespace App\Auth\Services;
 
+use App\Auth\Mail\RegistrationInviteMail;
 use App\Auth\Models\RegistrationInvite;
 use App\Users\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use RuntimeException;
+use Throwable;
 
 class RegistrationInviteService
 {
@@ -100,14 +105,60 @@ class RegistrationInviteService
         string $role = 'user',
         ?string $note = null,
         ?int $expiresInDays = 7,
+        ?string $email = null,
     ): RegistrationInvite {
         return RegistrationInvite::create([
             'token' => Str::random(48),
             'created_by' => $creator->id,
             'role' => $this->assertAllowedRole($role),
             'note' => $note,
+            'email' => $email,
             'expires_at' => $expiresInDays !== null ? now()->addDays($expiresInDays) : null,
         ]);
+    }
+
+    /**
+     * Persist invite then send; rolls back the row if delivery throws.
+     *
+     * @throws Throwable
+     */
+    public function createAndSend(
+        User $creator,
+        string $email,
+        string $role = 'user',
+        ?string $note = null,
+        ?int $expiresInDays = 7,
+    ): RegistrationInvite {
+        return DB::transaction(function () use ($creator, $email, $role, $note, $expiresInDays): RegistrationInvite {
+            $invite = $this->create($creator, $role, $note, $expiresInDays, $email);
+            $this->send($invite);
+
+            return $invite;
+        });
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function send(RegistrationInvite $invite): void
+    {
+        if ($invite->email === null || $invite->email === '') {
+            throw new RuntimeException('Invite has no recipient email.');
+        }
+
+        $invite->loadMissing('creator');
+        $creator = $invite->creator;
+        if ($creator === null) {
+            throw new RuntimeException('Invite has no creator.');
+        }
+
+        Mail::to($invite->email)->send(new RegistrationInviteMail(
+            registrationUrl: $this->registrationUrl($invite->token),
+            inviterName: $creator->name,
+            replyToEmail: $creator->email,
+            replyToName: $creator->name,
+            expiresAt: $invite->expires_at,
+        ));
     }
 
     public function revoke(RegistrationInvite $invite): void

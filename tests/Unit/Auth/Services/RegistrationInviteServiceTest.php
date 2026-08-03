@@ -2,11 +2,15 @@
 
 namespace Tests\Unit\Auth\Services;
 
+use App\Auth\Mail\RegistrationInviteMail;
 use App\Auth\Models\RegistrationInvite;
 use App\Auth\Services\RegistrationInviteService;
 use App\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Mail\PendingMail;
+use Illuminate\Support\Facades\Mail;
 use PHPUnit\Framework\Attributes\Test;
+use RuntimeException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Tests\TestCase;
 
@@ -158,13 +162,59 @@ class RegistrationInviteServiceTest extends TestCase
     {
         $creator = User::factory()->create();
 
-        $invite = $this->service->create($creator, 'admin', 'note', 3);
+        $invite = $this->service->create($creator, 'admin', 'note', 3, 'invitee@example.com');
 
         $this->assertSame('admin', $invite->role);
         $this->assertSame('note', $invite->note);
+        $this->assertSame('invitee@example.com', $invite->email);
         $this->assertSame($creator->id, $invite->created_by);
         $this->assertNotNull($invite->expires_at);
         $this->assertTrue($invite->expires_at->isAfter(now()->addDays(2)));
+    }
+
+    #[Test]
+    public function create_and_send_persists_and_mails(): void
+    {
+        Mail::fake();
+        $creator = User::factory()->create(['name' => 'Jamie', 'email' => 'jamie@example.com']);
+
+        $invite = $this->service->createAndSend($creator, 'buddy@example.com', 'user', 'buddy', 5);
+
+        $this->assertSame('buddy@example.com', $invite->email);
+        $this->assertDatabaseHas('registration_invites', ['id' => $invite->id]);
+        Mail::assertSent(RegistrationInviteMail::class, function (RegistrationInviteMail $mail) use ($creator): bool {
+            return $mail->hasTo('buddy@example.com')
+                && $mail->hasReplyTo($creator->email)
+                && $mail->inviterName === 'Jamie';
+        });
+    }
+
+    #[Test]
+    public function create_and_send_rolls_back_when_mail_fails(): void
+    {
+        $pending = \Mockery::mock(PendingMail::class);
+        $pending->shouldReceive('send')->once()->andThrow(new RuntimeException('smtp down'));
+        Mail::shouldReceive('to')->once()->with('buddy@example.com')->andReturn($pending);
+
+        $creator = User::factory()->create();
+
+        try {
+            $this->service->createAndSend($creator, 'buddy@example.com');
+            $this->fail('Expected mail failure');
+        } catch (RuntimeException) {
+            // expected
+        }
+
+        $this->assertSame(0, RegistrationInvite::query()->count());
+    }
+
+    #[Test]
+    public function send_requires_recipient_email(): void
+    {
+        $invite = $this->service->create(User::factory()->create());
+
+        $this->expectException(RuntimeException::class);
+        $this->service->send($invite);
     }
 
     #[Test]

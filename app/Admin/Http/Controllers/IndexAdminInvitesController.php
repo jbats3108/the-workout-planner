@@ -21,6 +21,7 @@ class IndexAdminInvitesController extends Controller
             ->map(fn (RegistrationInvite $invite): array => [
                 'id' => $invite->id,
                 'note' => $invite->note,
+                'email' => $invite->email,
                 'role' => $invite->role,
                 'url' => $invites->registrationUrl($invite->token),
                 'created_by' => $invite->creator?->name,

@@ -14,6 +14,7 @@
         "inertiajs/inertia-laravel": "^3.0",
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0",
+        "resend/resend-php": "^1.7",
         "sentry/sentry-laravel": "^4.27",
         "spatie/laravel-data": "^4.17",
         "spatie/laravel-permission": "^6.25",
@@ -63,16 +64,26 @@
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite --kill-others"
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74,#86efac\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" \"composer run mailpit:follow\" --names=server,queue,logs,vite,mailpit --kill-others"
         ],
         "dev:lan": [
             "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve --host=0.0.0.0 --port=8000\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev:lan\" --names=server,queue,logs,vite --kill-others"
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74,#86efac\" \"php artisan serve --host=0.0.0.0 --port=8000\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev:lan\" \"composer run mailpit:follow\" --names=server,queue,logs,vite,mailpit --kill-others"
         ],
         "dev:ssr": [
             "npm run build:ssr",
             "Composer\\Config::disableProcessTimeout",
             "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"php artisan inertia:start-ssr\" --names=server,queue,logs,ssr --kill-others"
+        ],
+        "mailpit": [
+            "@composer mailpit:start",
+            "@php -r \"echo 'Mailpit UI → http://127.0.0.1:8026 (SMTP 127.0.0.1:2525)'.PHP_EOL;\""
+        ],
+        "mailpit:start": [
+            "docker start ovrload-mailpit 2>/dev/null || docker run -d --name ovrload-mailpit -p 2525:1025 -p 8026:8025 axllent/mailpit"
+        ],
+        "mailpit:follow": [
+            "bash -c 'if ! docker start ovrload-mailpit >/dev/null 2>&1 && ! docker run -d --name ovrload-mailpit -p 2525:1025 -p 8026:8025 axllent/mailpit >/dev/null 2>&1; then echo \"[mailpit] Docker unavailable — skipping catcher\"; exec sleep infinity; fi; echo \"[mailpit] UI → http://127.0.0.1:8026 (SMTP :2525)\"; exec docker logs -f --tail=0 ovrload-mailpit'"
         ],
         "test": [
             "@php artisan config:clear --ansi",

@@ -2,10 +2,12 @@
 
 namespace Tests\Feature\Admin\Http\Controllers;
 
+use App\Auth\Mail\RegistrationInviteMail;
 use App\Auth\Models\RegistrationInvite;
 use App\Exercises\Models\Exercise;
 use App\MuscleGroups\Models\MuscleGroup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Helpers\UserHelper;
 use Tests\TestCase;
@@ -85,22 +87,70 @@ class AdminPanelTest extends TestCase
     #[Test]
     public function admins_can_create_and_revoke_invites(): void
     {
+        Mail::fake();
+
         $this->actingAs($this->adminUser)
             ->post(route('admin.invites.store'), [
+                'email' => 'buddy@example.com',
                 'note' => 'Gym buddy',
                 'role' => 'user',
                 'expires_in_days' => 3,
             ])
             ->assertRedirect(route('admin.invites'))
-            ->assertSessionHas('invite_url');
+            ->assertSessionHas('invite_url')
+            ->assertSessionHas('success');
 
-        $inviteId = RegistrationInvite::query()->firstOrFail()->id;
+        $invite = RegistrationInvite::query()->firstOrFail();
+        $this->assertSame('buddy@example.com', $invite->email);
+
+        Mail::assertSent(RegistrationInviteMail::class, function (RegistrationInviteMail $mail): bool {
+            return $mail->hasTo('buddy@example.com')
+                && $mail->hasReplyTo($this->adminUser->email);
+        });
 
         $this->actingAs($this->adminUser)
-            ->post(route('admin.invites.revoke', $inviteId))
+            ->post(route('admin.invites.revoke', $invite->id))
             ->assertRedirect(route('admin.invites'));
 
-        $this->assertNotNull(RegistrationInvite::query()->find($inviteId)?->revoked_at);
+        $this->assertNotNull($invite->fresh()->revoked_at);
+    }
+
+    #[Test]
+    public function admins_can_resend_usable_invites(): void
+    {
+        Mail::fake();
+
+        $invite = RegistrationInvite::query()->create([
+            'token' => 'resend-token-'.uniqid(),
+            'created_by' => $this->adminUser->id,
+            'role' => 'user',
+            'email' => 'again@example.com',
+            'expires_at' => now()->addDay(),
+        ]);
+
+        $this->actingAs($this->adminUser)
+            ->post(route('admin.invites.resend', $invite->id))
+            ->assertRedirect(route('admin.invites'))
+            ->assertSessionHas('success');
+
+        Mail::assertSent(RegistrationInviteMail::class, fn (RegistrationInviteMail $mail): bool => $mail->hasTo('again@example.com'));
+    }
+
+    #[Test]
+    public function invite_store_requires_email(): void
+    {
+        Mail::fake();
+
+        $this->actingAs($this->adminUser)
+            ->post(route('admin.invites.store'), [
+                'note' => 'Missing email',
+                'role' => 'user',
+                'expires_in_days' => 3,
+            ])
+            ->assertSessionHasErrors('email');
+
+        $this->assertSame(0, RegistrationInvite::query()->count());
+        Mail::assertNothingSent();
     }
 
     #[Test]
@@ -116,15 +166,19 @@ class AdminPanelTest extends TestCase
     #[Test]
     public function non_admins_cannot_create_or_revoke_invites(): void
     {
+        Mail::fake();
+
         $invite = RegistrationInvite::query()->create([
             'token' => 'locked-token-'.uniqid(),
             'created_by' => $this->adminUser->id,
             'role' => 'user',
+            'email' => 'locked@example.com',
             'expires_at' => now()->addDay(),
         ]);
 
         $this->actingAs($this->user)
             ->post(route('admin.invites.store'), [
+                'email' => 'Nope@example.com',
                 'note' => 'Nope',
                 'role' => 'user',
                 'expires_in_days' => 3,
@@ -135,15 +189,23 @@ class AdminPanelTest extends TestCase
             ->post(route('admin.invites.revoke', $invite->id))
             ->assertForbidden();
 
+        $this->actingAs($this->user)
+            ->post(route('admin.invites.resend', $invite->id))
+            ->assertForbidden();
+
         $this->assertNull($invite->fresh()->revoked_at);
         $this->assertSame(1, RegistrationInvite::query()->count());
+        Mail::assertNothingSent();
     }
 
     #[Test]
     public function invite_store_rejects_invalid_role(): void
     {
+        Mail::fake();
+
         $this->actingAs($this->adminUser)
             ->post(route('admin.invites.store'), [
+                'email' => 'bad-role@example.com',
                 'note' => 'Bad role',
                 'role' => 'superadmin',
                 'expires_in_days' => 3,
@@ -151,6 +213,7 @@ class AdminPanelTest extends TestCase
             ->assertSessionHasErrors('role');
 
         $this->assertSame(0, RegistrationInvite::query()->count());
+        Mail::assertNothingSent();
     }
 
     #[Test]

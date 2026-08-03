@@ -28,6 +28,7 @@ export type MuscleGroupRow = {
 export type InviteRow = {
     id: number;
     note: string | null;
+    email: string | null;
     role: string;
     url: string;
     created_by: string | null;

@@ -25,6 +25,7 @@ const copiedId = ref<number | 'flash' | null>(null);
 const mutating = ref(false);
 
 const form = useForm({
+    email: '',
     note: '',
     role: 'user',
     expires_in_days: 7 as number | null,
@@ -33,7 +34,7 @@ const form = useForm({
 const submit = () => {
     form.post(route('admin.invites.store'), {
         preserveScroll: true,
-        onSuccess: () => form.reset('note'),
+        onSuccess: () => form.reset('email', 'note'),
     });
 };
 
@@ -45,10 +46,19 @@ const copyUrl = async (url: string, id: number | 'flash') => {
     }, 2000);
 };
 
-const mailtoHref = (url: string) => {
-    const subject = encodeURIComponent('Your OVRLOAD registration link');
-    const body = encodeURIComponent(`Use this link to create your account:\n\n${url}\n`);
-    return `mailto:?subject=${subject}&body=${body}`;
+const resend = (id: number) => {
+    if (mutating.value) return;
+    mutating.value = true;
+    router.post(
+        route('admin.invites.resend', id),
+        {},
+        {
+            preserveScroll: true,
+            onFinish: () => {
+                mutating.value = false;
+            },
+        },
+    );
 };
 
 const revoke = async (id: number) => {
@@ -79,7 +89,7 @@ const revoke = async (id: number) => {
         <AdminLayout>
             <HeadingSmall
                 title="Registration invites"
-                description="Create one-time links to send. Local leave REGISTRATION_INVITE empty so only these links work."
+                description="Create a one-time link and email it in one step. Local leave REGISTRATION_INVITE empty so only these links work."
             />
 
             <p v-if="master_enabled" class="rounded-xl border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
@@ -90,22 +100,31 @@ const revoke = async (id: number) => {
             </p>
 
             <div v-if="flashUrl" class="rounded-xl border border-primary/40 bg-primary/5 px-4 py-3">
-                <p class="text-sm font-medium">New invite link</p>
+                <p class="text-sm font-medium">Invite link (backup copy)</p>
                 <p class="mt-1 font-mono text-xs break-all text-muted-foreground">{{ flashUrl }}</p>
                 <div class="mt-3 flex flex-wrap gap-2">
                     <Button type="button" size="sm" @click="copyUrl(flashUrl, 'flash')">
                         {{ copiedId === 'flash' ? 'Copied' : 'Copy' }}
                     </Button>
-                    <Button type="button" size="sm" variant="outline" as-child>
-                        <a :href="mailtoHref(flashUrl)">Email</a>
-                    </Button>
                 </div>
             </div>
 
             <form class="space-y-3 rounded-xl border border-border p-4" @submit.prevent="submit">
-                <p class="text-sm font-semibold">Create invite</p>
+                <p class="text-sm font-semibold">Create &amp; send invite</p>
                 <label class="block text-xs text-muted-foreground">
-                    Note (optional)
+                    Recipient email
+                    <input
+                        v-model="form.email"
+                        type="email"
+                        required
+                        autocomplete="email"
+                        class="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
+                        placeholder="friend@example.com"
+                    />
+                </label>
+                <p v-if="form.errors.email" class="text-xs text-destructive">{{ form.errors.email }}</p>
+                <label class="block text-xs text-muted-foreground">
+                    Note (optional, admin-only)
                     <input
                         v-model="form.note"
                         type="text"
@@ -135,7 +154,7 @@ const revoke = async (id: number) => {
                         />
                     </label>
                 </div>
-                <Button type="submit" :disabled="form.processing">Create link</Button>
+                <Button type="submit" :disabled="form.processing">Create &amp; send</Button>
             </form>
 
             <ul class="divide-y divide-border rounded-xl border border-border">
@@ -146,6 +165,7 @@ const revoke = async (id: number) => {
                                 {{ invite.note || 'Invite' }}
                                 <span class="font-mono text-xs text-muted-foreground">· {{ invite.role }}</span>
                             </p>
+                            <p v-if="invite.email" class="text-xs text-muted-foreground">{{ invite.email }}</p>
                             <p class="text-xs text-muted-foreground">
                                 by {{ invite.created_by ?? '?' }}
                                 <span v-if="invite.created_at"> · {{ invite.created_at }}</span>
@@ -163,10 +183,10 @@ const revoke = async (id: number) => {
                             <Button type="button" size="sm" variant="outline" @click="copyUrl(invite.url, invite.id)">
                                 {{ copiedId === invite.id ? 'Copied' : 'Copy' }}
                             </Button>
-                            <Button type="button" size="sm" variant="outline" as-child>
-                                <a :href="mailtoHref(invite.url)">Email</a>
+                            <Button v-if="invite.email" type="button" size="sm" variant="outline" :disabled="mutating" @click="resend(invite.id)">
+                                Resend
                             </Button>
-                            <Button type="button" size="sm" variant="ghost" :disabled="mutating" @click="revoke(invite.id)">Revoke</Button>
+                            <Button type="button" size="sm" variant="ghost" :disabled="mutating" @click="revoke(invite.id)"> Revoke </Button>
                         </div>
                     </div>
                 </li>
