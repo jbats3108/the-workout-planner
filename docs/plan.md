@@ -115,6 +115,5 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 - **FE DRY: DropsetEditor + DeloadSettings** — collapse desktop|mobile forks into one form body + density classes / shared accordion chrome
 - **FE DRY: mutation helpers** — centralize finish/abandon workout + delete/duplicate routine + history delete (Dashboard / player / editor / history copies diverge slightly)
 - **FE DRY: app nav config** — single source for primary/settings links used by `AppNavIcons`, `AppBottomNav`, settings layout (+ shared Ziggy route helper)
-- **FE DRY: auth submit + password fields** — `AuthSubmitButton` (processing spinner); prefer `PasswordInput` / shared confirm fields across auth + Profile
 - **FE DRY: mobile editor accordion** — `EditorDisclosure` for Dropsets / Progression / Warm-up / Deload expanders
 - **GDPR compliance?** — clarify whether/what is required (privacy policy, data export/delete, retention, cookies); grill before building
