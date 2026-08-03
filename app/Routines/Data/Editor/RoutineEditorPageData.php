@@ -5,7 +5,9 @@ namespace App\Routines\Data\Editor;
 use App\Routines\Models\Routine;
 use App\Routines\Models\RoutineBlock;
 use App\Routines\Models\RoutineBlockExercise;
+use App\Shared\Data\WeightKgSegmentData;
 use App\Shared\Enums\SetGroupType;
+use App\Shared\Support\Weight;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Data;
@@ -54,10 +56,10 @@ class RoutineEditorPageData extends Data
                 ->filter(fn ($segments): bool => $segments->count() >= 2)
                 ->map(fn ($segments, $setIndex): SyncDropsetData => new SyncDropsetData(
                     setIndex: (int) $setIndex,
-                    segments: SyncDropsetSegmentData::collect(
+                    segments: WeightKgSegmentData::collect(
                         $segments->sortBy('position')->values()->map(
-                            fn ($segment): SyncDropsetSegmentData => new SyncDropsetSegmentData(
-                                weightKg: round($segment->weight_g / 1000, 3),
+                            fn ($segment): WeightKgSegmentData => new WeightKgSegmentData(
+                                weightKg: Weight::gramsToKg($segment->weight_g),
                             )
                         ),
                         DataCollection::class,
@@ -72,7 +74,7 @@ class RoutineEditorPageData extends Data
                 exercises: RoutineEditorBlockExerciseData::collect(
                     $block->blockExercises->map(fn (RoutineBlockExercise $row): RoutineEditorBlockExerciseData => new RoutineEditorBlockExerciseData(
                         exerciseId: $row->exercise_id,
-                        workingWeightKg: round($row->working_weight_g / 1000, 3),
+                        workingWeightKg: Weight::gramsToKg($row->working_weight_g),
                         prescribedReps: $row->prescribed_reps,
                         achievementFloor: $row->achievement_floor_override,
                         progressionTarget: $row->progression_target_override,

@@ -4,6 +4,7 @@ namespace App\Workouts\Http\Controllers;
 
 use App\Routines\Models\Routine;
 use App\Shared\Http\Controllers\Controller;
+use App\Shared\Http\DomainFail;
 use App\Workouts\Data\StoreWorkoutData;
 use App\Workouts\Exceptions\WorkoutServiceException;
 use App\Workouts\Services\WorkoutService;
@@ -16,7 +17,7 @@ class StoreWorkoutController extends Controller
         try {
             $workout = $workoutService->createWorkout($routine, $data->modeOrDefault());
         } catch (WorkoutServiceException $exception) {
-            return back()->withErrors(['workout' => $exception->getMessage()]);
+            return DomainFail::back($exception, 'workout');
         }
 
         return redirect()->route('workouts.play', $workout);

@@ -2,11 +2,13 @@
 
 namespace App\Routines\Data;
 
+use App\Shared\Data\Validation\DeloadEveryN;
+use App\Shared\Data\Validation\DeloadRepsFactor;
+use App\Shared\Data\Validation\DeloadWeightFactor;
 use App\Users\Models\User;
 use Spatie\LaravelData\Attributes\FromAuthenticatedUser;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Attributes\Validation\Max;
-use Spatie\LaravelData\Attributes\Validation\Min;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 
@@ -20,13 +22,13 @@ class StoreRoutineData extends Data
         #[FromAuthenticatedUser]
         public readonly User $user,
 
-        #[Min(0), Max(5)]
+        #[DeloadWeightFactor]
         public readonly ?float $deloadWeightFactor = null,
 
-        #[Min(0), Max(10)]
+        #[DeloadRepsFactor]
         public readonly ?float $deloadRepsFactor = null,
 
-        #[Min(0), Max(99)]
+        #[DeloadEveryN]
         public readonly ?int $deloadEveryN = null,
     ) {}
 }

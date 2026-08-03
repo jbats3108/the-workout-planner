@@ -5,7 +5,6 @@ namespace App\Routines\Services;
 use App\Exercises\Models\Exercise;
 use App\Routines\Data\Editor\SyncBlockExerciseData;
 use App\Routines\Data\Editor\SyncDropsetData;
-use App\Routines\Data\Editor\SyncDropsetSegmentData;
 use App\Routines\Data\Editor\SyncRoutineBlockData;
 use App\Routines\Data\Editor\SyncRoutineData;
 use App\Routines\Data\Editor\SyncWarmUpData;
@@ -16,6 +15,7 @@ use App\Routines\Models\RoutineBlockExercise;
 use App\Routines\Models\RoutineDropsetSegment;
 use App\Routines\Models\RoutineSetGroup;
 use App\Routines\Models\RoutineWarmUpStep;
+use App\Shared\Data\WeightKgSegmentData;
 use App\Shared\Enums\SetGroupType;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -90,7 +90,7 @@ class RoutineEditorService
 
         foreach (array_values($exercises) as $index => $exerciseData) {
             /** @var SyncBlockExerciseData $exerciseData */
-            $this->assertExerciseAvailable($routine, $exerciseData->exerciseId);
+            Exercise::assertAvailableFor($routine->user, $exerciseData->exerciseId);
 
             RoutineBlockExercise::create([
                 'routine_block_id' => $block->id,
@@ -162,7 +162,7 @@ class RoutineEditorService
             }
 
             foreach ($segments as $segmentIndex => $segment) {
-                /** @var SyncDropsetSegmentData $segment */
+                /** @var WeightKgSegmentData $segment */
                 RoutineDropsetSegment::create([
                     'routine_set_group_id' => $workingGroup->id,
                     'set_index' => $dropset->setIndex,
@@ -170,20 +170,6 @@ class RoutineEditorService
                     'weight_g' => $segment->weightGrams(),
                 ]);
             }
-        }
-    }
-
-    private function assertExerciseAvailable(Routine $routine, int $exerciseId): void
-    {
-        $exists = Exercise::query()
-            ->whereKey($exerciseId)
-            ->where(function ($query) use ($routine): void {
-                $query->whereNull('user_id')->orWhere('user_id', $routine->user_id);
-            })
-            ->exists();
-
-        if (! $exists) {
-            throw new InvalidArgumentException("Exercise {$exerciseId} is not available for this routine.");
         }
     }
 }

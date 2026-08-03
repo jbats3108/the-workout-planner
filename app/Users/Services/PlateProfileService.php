@@ -2,6 +2,7 @@
 
 namespace App\Users\Services;
 
+use App\Shared\Support\Weight;
 use App\Users\Data\UpsertPlateProfileData;
 use App\Users\Models\PlateProfile;
 use App\Users\Models\PlateProfileBar;
@@ -167,7 +168,7 @@ class PlateProfileService
         ])->all());
 
         $result = $this->calculator->nearest(
-            (int) round($targetKg * 1000),
+            Weight::kgToGrams($targetKg),
             $bar->weight_g,
             $plates,
         );
@@ -178,17 +179,17 @@ class PlateProfileService
 
         return [
             'exact' => $result['exact'],
-            'total_kg' => round($result['total_g'] / 1000, 3),
-            'bar_kg' => round($result['bar_g'] / 1000, 3),
+            'total_kg' => Weight::gramsToKg($result['total_g']),
+            'bar_kg' => Weight::gramsToKg($result['bar_g']),
             'per_side' => array_map(
                 static fn (array $step): array => [
-                    'kg' => round($step['denomination_g'] / 1000, 3),
+                    'kg' => Weight::gramsToKg($step['denomination_g']),
                     'count' => $step['count'],
                     'colour' => $step['colour'],
                 ],
                 $result['per_side'],
             ),
-            'delta_kg' => round($result['delta_g'] / 1000, 3),
+            'delta_kg' => Weight::gramsToKg($result['delta_g']),
         ];
     }
 }

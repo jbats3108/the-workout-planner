@@ -60,4 +60,9 @@ class WorkoutBlock extends Model
     {
         return $this->hasOne(WorkoutSetGroup::class)->where('type', 'working');
     }
+
+    public function assertBelongsToWorkout(Workout $workout): void
+    {
+        abort_unless($this->workout_id === $workout->id, 404);
+    }
 }

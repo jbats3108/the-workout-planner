@@ -63,6 +63,28 @@ class WorkoutSet extends Model
         return $this->segments()->count() >= 2;
     }
 
+    public function assertBelongsToWorkout(Workout $workout): void
+    {
+        $this->loadMissing('setGroup.block');
+        abort_unless($this->setGroup->block->workout_id === $workout->id, 404);
+    }
+
+    /**
+     * @param  list<int>  $weightGrams
+     */
+    public function replaceSegments(array $weightGrams): void
+    {
+        $this->segments()->delete();
+
+        foreach ($weightGrams as $index => $grams) {
+            WorkoutSetSegment::create([
+                'workout_set_id' => $this->id,
+                'position' => $index + 1,
+                'weight_g' => $grams,
+            ]);
+        }
+    }
+
     public function recordReps(int $reps): void
     {
         $this->reps = $reps;

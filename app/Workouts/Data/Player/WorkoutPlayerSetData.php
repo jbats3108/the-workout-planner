@@ -4,6 +4,7 @@ namespace App\Workouts\Data\Player;
 
 use App\Exercises\Enums\ExerciseEquipment;
 use App\Shared\Enums\SetGroupType;
+use App\Shared\Support\Weight;
 use App\Workouts\Models\WorkoutSet;
 use App\Workouts\Models\WorkoutWarmUpStep;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
@@ -55,7 +56,7 @@ class WorkoutPlayerSetData extends Data
             ->values()
             ->map(fn ($segment): WorkoutPlayerSetSegmentData => new WorkoutPlayerSetSegmentData(
                 position: $segment->position,
-                weightKg: round($segment->weight_g / 1000, 3),
+                weightKg: Weight::gramsToKg($segment->weight_g),
             ));
 
         $targetWeightG = $workingWeightG;
@@ -72,11 +73,11 @@ class WorkoutPlayerSetData extends Data
             groupType: $groupType->value,
             targetWeightKg: $isDropset
                 ? null
-                : round($targetWeightG / 1000, 3),
+                : Weight::gramsToKg($targetWeightG),
             targetReps: $groupType === SetGroupType::WarmUp
                 ? ($warmUpStep !== null ? $warmUpStep->reps : null)
                 : $prescribedReps,
-            loggedWeightKg: $set->weight_g !== null ? round($set->weight_g / 1000, 3) : null,
+            loggedWeightKg: $set->weight_g !== null ? Weight::gramsToKg($set->weight_g) : null,
             loggedReps: $set->reps,
             completed: $set->completed_at !== null,
             restSeconds: $restSeconds,

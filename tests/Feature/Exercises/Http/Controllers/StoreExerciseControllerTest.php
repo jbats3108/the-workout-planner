@@ -22,7 +22,7 @@ class StoreExerciseControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seedUsers();
+        $this->seedUsers(false);
 
         $this->validMuscleGroup = MuscleGroup::factory()->create();
     }

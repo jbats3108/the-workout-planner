@@ -2,6 +2,7 @@
 
 namespace App\Workouts\Data\Player;
 
+use App\Shared\Support\Weight;
 use App\Workouts\Models\WorkoutBlockExercise;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Data;
@@ -27,7 +28,7 @@ class WorkoutPlayerExerciseData extends Data
             id: $exercise->id,
             name: $exercise->exercise_name,
             equipment: $exercise->equipment?->value,
-            workingWeightKg: round($exercise->working_weight_g / 1000, 3),
+            workingWeightKg: Weight::gramsToKg($exercise->working_weight_g),
             prescribedReps: $exercise->prescribed_reps,
             achievementFloor: $exercise->achievement_floor,
             progressionTarget: $exercise->progression_target,

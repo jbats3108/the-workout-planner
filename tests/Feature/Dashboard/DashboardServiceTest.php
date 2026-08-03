@@ -27,7 +27,7 @@ class DashboardServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seedUsers();
+        $this->seedUsers(false);
 
         // Drop seeded routines
         Routine::truncate();

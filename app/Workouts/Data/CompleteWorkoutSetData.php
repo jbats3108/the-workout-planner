@@ -2,6 +2,8 @@
 
 namespace App\Workouts\Data;
 
+use App\Shared\Data\WeightKgSegmentData;
+use App\Shared\Support\Weight;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Attributes\Validation\Max;
@@ -16,7 +18,7 @@ use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 class CompleteWorkoutSetData extends Data
 {
     /**
-     * @param  DataCollection<int, CompleteWorkoutSetSegmentData>|null  $segments
+     * @param  DataCollection<int, WeightKgSegmentData>|null  $segments
      */
     public function __construct(
         #[Min(0), Max(100)]
@@ -27,7 +29,7 @@ class CompleteWorkoutSetData extends Data
         public readonly ?float $weightKg = null,
 
         #[Nullable]
-        #[DataCollectionOf(CompleteWorkoutSetSegmentData::class)]
+        #[DataCollectionOf(WeightKgSegmentData::class)]
         #[Min(2), Max(20)]
         public readonly ?DataCollection $segments = null,
     ) {}
@@ -38,7 +40,7 @@ class CompleteWorkoutSetData extends Data
             return null;
         }
 
-        return (int) round($this->weightKg * 1000);
+        return Weight::kgToGrams($this->weightKg);
     }
 
     /**
@@ -50,9 +52,6 @@ class CompleteWorkoutSetData extends Data
             return null;
         }
 
-        return array_map(
-            static fn (CompleteWorkoutSetSegmentData $segment): int => $segment->weightGrams(),
-            array_values($this->segments->all()),
-        );
+        return WeightKgSegmentData::gramsList($this->segments);
     }
 }

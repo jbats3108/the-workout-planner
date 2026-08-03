@@ -13,7 +13,6 @@ use App\Routines\Models\RoutineSetGroup;
 use App\Routines\Models\RoutineWarmUpStep;
 use App\Users\Models\User;
 use Illuminate\Support\Facades\DB;
-use InvalidArgumentException;
 
 class RoutineDuplicator
 {
@@ -74,7 +73,7 @@ class RoutineDuplicator
         ]);
 
         foreach ($block->blockExercises as $blockExercise) {
-            $this->assertExerciseAvailable($copy, $blockExercise->exercise_id);
+            Exercise::assertAvailableFor($copy->user, $blockExercise->exercise_id);
 
             RoutineBlockExercise::create([
                 'routine_block_id' => $newBlock->id,
@@ -118,20 +117,6 @@ class RoutineDuplicator
                 'position' => $segment->position,
                 'weight_g' => $segment->weight_g,
             ]);
-        }
-    }
-
-    private function assertExerciseAvailable(Routine $routine, int $exerciseId): void
-    {
-        $exists = Exercise::query()
-            ->whereKey($exerciseId)
-            ->where(function ($query) use ($routine): void {
-                $query->whereNull('user_id')->orWhere('user_id', $routine->user_id);
-            })
-            ->exists();
-
-        if (! $exists) {
-            throw new InvalidArgumentException("Exercise {$exerciseId} is not available for this routine.");
         }
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Workouts\Http\Controllers;
 
 use App\Shared\Http\Controllers\Controller;
+use App\Shared\Http\DomainFail;
 use App\Workouts\Data\Progression\ProgressionSessionData;
 use App\Workouts\Data\Progression\UndoBumpProposalData;
 use App\Workouts\Exceptions\WorkoutServiceException;
@@ -22,7 +23,7 @@ class FinishWorkoutController extends Controller
         try {
             $bumps = $workoutService->finishWorkout($workout);
         } catch (WorkoutServiceException $exception) {
-            return back()->withErrors(['workout' => $exception->getMessage()]);
+            return DomainFail::back($exception, 'workout');
         }
 
         $progressionService->forgetSiblingProgressionSessions($workout);

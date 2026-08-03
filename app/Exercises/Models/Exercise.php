@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use InvalidArgumentException;
 use Override;
 
 class Exercise extends Model
@@ -89,6 +90,21 @@ class Exercise extends Model
         return $query->where(function (Builder $q) use ($user): void {
             $q->whereNull('user_id')->orWhere('user_id', $user->id);
         });
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    public static function assertAvailableFor(User $user, int $exerciseId): void
+    {
+        $exists = static::query()
+            ->forUser($user)
+            ->whereKey($exerciseId)
+            ->exists();
+
+        if (! $exists) {
+            throw new InvalidArgumentException("Exercise {$exerciseId} is not available for this routine.");
+        }
     }
 
     /**

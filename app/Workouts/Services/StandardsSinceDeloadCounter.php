@@ -4,7 +4,6 @@ namespace App\Workouts\Services;
 
 use App\Users\Models\User;
 use App\Workouts\Enums\WorkoutMode;
-use App\Workouts\Enums\WorkoutStatus;
 use App\Workouts\Models\Workout;
 use Illuminate\Support\Collection;
 
@@ -33,7 +32,7 @@ final class StandardsSinceDeloadCounter
 
         $workouts = Workout::query()
             ->where('user_id', $user->id)
-            ->where('status', WorkoutStatus::Finished)
+            ->finished()
             ->whereIn('routine_id', $ids)
             ->whereIn('mode', [WorkoutMode::Standard, WorkoutMode::Deload])
             ->orderBy('finished_at')

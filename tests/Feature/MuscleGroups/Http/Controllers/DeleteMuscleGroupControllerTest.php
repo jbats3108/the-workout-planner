@@ -17,7 +17,7 @@ class DeleteMuscleGroupControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seedUsers();
+        $this->seedUsers(false);
     }
 
     #[Test]

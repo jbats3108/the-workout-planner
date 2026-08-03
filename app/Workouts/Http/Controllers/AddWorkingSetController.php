@@ -3,6 +3,7 @@
 namespace App\Workouts\Http\Controllers;
 
 use App\Shared\Http\Controllers\Controller;
+use App\Shared\Http\DomainFail;
 use App\Workouts\Exceptions\WorkoutServiceException;
 use App\Workouts\Models\Workout;
 use App\Workouts\Models\WorkoutBlock;
@@ -16,12 +17,12 @@ class AddWorkingSetController extends Controller
         WorkoutBlock $block,
         WorkoutService $workoutService,
     ): RedirectResponse {
-        abort_unless($block->workout_id === $workout->id, 404);
+        $block->assertBelongsToWorkout($workout);
 
         try {
             $workoutService->addWorkingSet($block);
         } catch (WorkoutServiceException $exception) {
-            return back()->withErrors(['workout' => $exception->getMessage()]);
+            return DomainFail::back($exception, 'workout');
         }
 
         return back();

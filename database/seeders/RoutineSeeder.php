@@ -11,6 +11,7 @@ use App\Routines\Models\RoutineDropsetSegment;
 use App\Routines\Models\RoutineSetGroup;
 use App\Routines\Models\RoutineWarmUpStep;
 use App\Shared\Enums\SetGroupType;
+use App\Shared\Support\Weight;
 use App\Users\Enums\WarmUpDefaultsScope;
 use App\Users\Models\User;
 use Illuminate\Database\Seeder;
@@ -240,7 +241,7 @@ class RoutineSeeder extends Seeder
                     'routine_block_id' => $block->id,
                     'exercise_id' => $this->resolveExercise($exercise['name'], $exercise['equipment'])->id,
                     'position' => $index + 1,
-                    'working_weight_g' => (int) round($exercise['kg'] * 1000),
+                    'working_weight_g' => Weight::kgToGrams($exercise['kg']),
                     'prescribed_reps' => $exercise['reps'],
                 ]);
             }
@@ -258,7 +259,7 @@ class RoutineSeeder extends Seeder
                         'routine_set_group_id' => $working->id,
                         'set_index' => $setIndex,
                         'position' => $segIndex + 1,
-                        'weight_g' => (int) round($kg * 1000),
+                        'weight_g' => Weight::kgToGrams($kg),
                     ]);
                 }
             }
