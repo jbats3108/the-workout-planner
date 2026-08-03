@@ -82,6 +82,11 @@ class StoreRoutineControllerTest extends TestCase
             'deload_reps_factor' => 10.1,
         ])->assertSessionHasErrors('deload_reps_factor');
 
+        $this->actingAs($this->user)->post(route('routines.store'), [
+            'name' => 'Test Routine',
+            'deload_every_n' => 100,
+        ])->assertSessionHasErrors('deload_every_n');
+
         $this->assertSame($before, Routine::query()->count());
     }
 }

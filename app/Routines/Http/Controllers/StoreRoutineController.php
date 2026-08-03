@@ -16,6 +16,7 @@ class StoreRoutineController extends Controller
             'name' => $request->name,
             'deload_weight_factor' => $request->deloadWeightFactor ?? 0.5,
             'deload_reps_factor' => $request->deloadRepsFactor ?? 2,
+            'deload_every_n' => $request->deloadEveryN ?? 3,
         ]);
 
         return redirect(route('routines.edit', $routine))->with('success', 'Routine has been created.');

@@ -44,6 +44,7 @@ class StoreRoutineDataTest extends TestCase
             'name' => 'Test Routine',
             'deload_weight_factor' => 0.75,
             'deload_reps_factor' => 1.5,
+            'deload_every_n' => 4,
         ];
 
         $this->be($this->user);
@@ -54,5 +55,6 @@ class StoreRoutineDataTest extends TestCase
         // Then
         $this->assertSame(0.75, $storeRoutineData->deloadWeightFactor);
         $this->assertSame(1.5, $storeRoutineData->deloadRepsFactor);
+        $this->assertSame(4, $storeRoutineData->deloadEveryN);
     }
 }

@@ -29,6 +29,7 @@ class Routine extends Model
         'slug',
         'deload_weight_factor',
         'deload_reps_factor',
+        'deload_every_n',
     ];
 
     protected static function booted(): void
@@ -58,6 +59,7 @@ class Routine extends Model
         return [
             'deload_weight_factor' => 'decimal:3',
             'deload_reps_factor' => 'decimal:3',
+            'deload_every_n' => 'integer',
         ];
     }
 

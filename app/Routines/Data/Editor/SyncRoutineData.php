@@ -26,6 +26,9 @@ class SyncRoutineData extends Data
         #[Min(0), Max(10)]
         public readonly ?float $deloadRepsFactor = null,
 
+        #[Min(0), Max(99)]
+        public readonly ?int $deloadEveryN = null,
+
         #[DataCollectionOf(SyncRoutineBlockData::class)]
         public readonly ?DataCollection $blocks = null,
 

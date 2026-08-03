@@ -37,6 +37,7 @@ class RoutineDuplicatorTest extends TestCase
             'name' => 'Barbell Strength',
             'deload_weight_factor' => 0.7,
             'deload_reps_factor' => 1.5,
+            'deload_every_n' => 4,
         ]);
         $squat = Exercise::factory()->create();
         $bench = Exercise::factory()->create();
@@ -46,6 +47,7 @@ class RoutineDuplicatorTest extends TestCase
             'name' => 'Barbell Strength',
             'deload_weight_factor' => 0.7,
             'deload_reps_factor' => 1.5,
+            'deload_every_n' => 4,
             'blocks' => [
                 [
                     'is_superset' => false,
@@ -113,6 +115,7 @@ class RoutineDuplicatorTest extends TestCase
         $this->assertNotSame($source->slug, $copy->slug);
         $this->assertSame('0.700', (string) $copy->deload_weight_factor);
         $this->assertSame('1.500', (string) $copy->deload_reps_factor);
+        $this->assertSame(4, $copy->deload_every_n);
         $this->assertCount(2, $copy->blocks);
 
         $first = $copy->blocks->sortBy('position')->values()[0];

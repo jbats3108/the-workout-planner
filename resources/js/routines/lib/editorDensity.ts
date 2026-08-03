@@ -33,13 +33,14 @@ export const dropsetEditorDensity: Record<EditorDensity, DropsetEditorDensity> =
 
 export const deloadSettingsDensity: Record<EditorDensity, DeloadSettingsDensity> = {
     desktop: {
-        fieldsGrid: 'mt-3 grid max-w-xl gap-3 sm:grid-cols-2',
+        fieldsGrid: 'mt-3 grid max-w-3xl gap-3 sm:grid-cols-3',
         fieldLabel: 'block text-sm',
         fieldTitle: 'text-muted-foreground',
         fieldHint: 'mt-0.5 block text-xs text-muted-foreground',
         input: 'mt-1.5 w-full rounded border border-border bg-card px-2 py-1.5 font-mono text-sm',
         weightHint: 'Working kg × factor (e.g. 0.8 → 80%)',
         repsHint: 'Target reps × factor (e.g. 0.8 → round down)',
+        everyHint: 'Normals before soft-suggesting Deload (0 = never)',
     },
     mobile: {
         fieldsGrid: '',
@@ -49,5 +50,6 @@ export const deloadSettingsDensity: Record<EditorDensity, DeloadSettingsDensity>
         input: 'mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-lg',
         weightHint: 'Working kg × factor (0.8 = 80%)',
         repsHint: 'Target reps × factor',
+        everyHint: 'Normals before suggesting Deload (0 = never)',
     },
 };

@@ -186,6 +186,7 @@ class RoutineSeeder extends Seeder
             'name' => $name,
             'deload_weight_factor' => 0.5,
             'deload_reps_factor' => 0.5,
+            'deload_every_n' => 3,
         ]);
     }
 

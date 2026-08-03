@@ -40,6 +40,7 @@ export type RoutinePayload = {
     name: string;
     deload_weight_factor: number;
     deload_reps_factor: number;
+    deload_every_n: number;
     updated_at: string;
     blocks: Block[];
 };
@@ -51,7 +52,12 @@ export type Routine = {
     name: string;
     deload_weight_factor?: number | null;
     deload_reps_factor?: number | null;
+    deload_every_n?: number;
     can_start?: boolean;
+    /** Finished normal workouts since this routine's last finished deload (all normals if never deloaded). */
+    normals_since_deload?: number;
+    /** False until this routine has at least one finished deload workout. */
+    has_finished_deload?: boolean;
 };
 
 export type EditorDensity = 'desktop' | 'mobile';
@@ -79,4 +85,5 @@ export type DeloadSettingsDensity = {
     input: string;
     weightHint: string;
     repsHint: string;
+    everyHint: string;
 };
