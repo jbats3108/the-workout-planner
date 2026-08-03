@@ -1,44 +1,34 @@
 <script setup lang="ts">
+import { useZiggyRoute } from '@/shared/composables/useZiggyRoute';
+import { isPathActive, isSettingsActive, primaryNavItems } from '@/shared/lib/appNav';
 import { Link, usePage } from '@inertiajs/vue3';
 import { Dumbbell, History, LayoutGrid, Settings } from 'lucide-vue-next';
 import { computed, type Component } from 'vue';
-import { route as ziggyRoute } from 'ziggy-js';
 
 const page = usePage();
+const route = useZiggyRoute();
 const path = computed(() => page.url.split('?')[0]);
 
-const route = (name: string, params?: Record<string, unknown>, absolute?: boolean) => ziggyRoute(name, params, absolute, page.props.ziggy);
-
-const isActive = (match: string) => path.value === match || path.value.startsWith(`${match}/`);
-
-const settingsActive = computed(() => path.value.startsWith('/settings/profile') || path.value.startsWith('/settings/appearance'));
+const tabIcons: Record<string, Component> = {
+    '/dashboard': LayoutGrid,
+    '/history': History,
+    '/settings/training': Dumbbell,
+};
 
 type Tab = { href: string; label: string; icon: Component; active: boolean };
 
 const tabs = computed((): Tab[] => [
-    {
-        href: route('dashboard'),
-        label: 'Dashboard',
-        icon: LayoutGrid,
-        active: isActive('/dashboard'),
-    },
-    {
-        href: route('history.index'),
-        label: 'History',
-        icon: History,
-        active: isActive('/history'),
-    },
-    {
-        href: route('training.edit'),
-        label: 'Training',
-        icon: Dumbbell,
-        active: isActive('/settings/training'),
-    },
+    ...primaryNavItems(route, { isAdmin: false }).map((link) => ({
+        href: link.href,
+        label: link.label,
+        icon: tabIcons[link.match],
+        active: isPathActive(path.value, link.match),
+    })),
     {
         href: route('profile.edit'),
         label: 'Settings',
         icon: Settings,
-        active: settingsActive.value,
+        active: isSettingsActive(path.value),
     },
 ]);
 </script>

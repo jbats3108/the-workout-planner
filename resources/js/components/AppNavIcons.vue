@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { useZiggyRoute } from '@/shared/composables/useZiggyRoute';
+import { isPathActive, isSettingsActive, primaryNavItems, settingsNavItems } from '@/shared/lib/appNav';
 import { Link, router, useForm, usePage } from '@inertiajs/vue3';
 import { Dumbbell, History, LayoutGrid, LogOut, Palette, Settings, Shield, UserRound } from 'lucide-vue-next';
 import { computed, type Component } from 'vue';
-import { route as ziggyRoute } from 'ziggy-js';
 
 const props = withDefaults(
     defineProps<{
@@ -17,16 +18,15 @@ const emit = defineEmits<{
 }>();
 
 const page = usePage();
+const route = useZiggyRoute();
 const path = computed(() => page.url.split('?')[0]);
 const isAdmin = computed(() => Boolean(page.props.auth.user?.is_admin));
 const labeled = computed(() => props.variant === 'drawer');
 const logoutForm = useForm({});
 
-const route = (name: string, params?: Record<string, unknown>, absolute?: boolean) => ziggyRoute(name, params, absolute, page.props.ziggy);
+const isActive = (match: string) => isPathActive(path.value, match);
 
-const isActive = (href: string) => path.value === href || path.value.startsWith(`${href}/`);
-
-const settingsActive = computed(() => path.value.startsWith('/settings/profile') || path.value.startsWith('/settings/appearance'));
+const settingsActive = computed(() => isSettingsActive(path.value));
 
 const itemClass = (active: boolean) =>
     [
@@ -49,24 +49,33 @@ const logout = () => {
     onNavigate();
 };
 
+const primaryIcons: Record<string, Component> = {
+    '/dashboard': LayoutGrid,
+    '/history': History,
+    '/settings/training': Dumbbell,
+    '/admin': Shield,
+};
+
+const settingsIcons: Record<string, Component> = {
+    '/settings/profile': UserRound,
+    '/settings/appearance': Palette,
+};
+
 type NavLink = { href: string; label: string; icon: Component; match: string };
 
-const primaryLinks = computed((): NavLink[] => {
-    const links: NavLink[] = [
-        { href: route('dashboard'), label: 'Dashboard', icon: LayoutGrid, match: '/dashboard' },
-        { href: route('history.index'), label: 'History', icon: History, match: '/history' },
-        { href: route('training.edit'), label: 'Training', icon: Dumbbell, match: '/settings/training' },
-    ];
-    if (isAdmin.value) {
-        links.push({ href: route('admin.index'), label: 'Admin', icon: Shield, match: '/admin' });
-    }
-    return links;
-});
+const primaryLinks = computed((): NavLink[] =>
+    primaryNavItems(route, { isAdmin: isAdmin.value }).map((link) => ({
+        ...link,
+        icon: primaryIcons[link.match],
+    })),
+);
 
-const settingsLinks: NavLink[] = [
-    { href: route('profile.edit'), label: 'Profile', icon: UserRound, match: '/settings/profile' },
-    { href: route('appearance'), label: 'Appearance', icon: Palette, match: '/settings/appearance' },
-];
+const settingsLinks = computed((): NavLink[] =>
+    settingsNavItems(route).map((link) => ({
+        ...link,
+        icon: settingsIcons[link.match],
+    })),
+);
 </script>
 
 <template>
