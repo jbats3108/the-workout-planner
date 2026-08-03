@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { confirmDialog } from '@/shared/lib/confirmDialog';
+import { formatDate } from '@/shared/lib/formatDate';
 import { type BreadcrumbItem } from '@/types';
 import type { HistoryWorkout } from '@/workouts/types';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
@@ -23,11 +24,6 @@ const filterByRoutine = (routineSlug: string | null) => {
         return;
     }
     router.get(route('history.index', { routine: routineSlug }));
-};
-
-const formatDate = (iso: string) => {
-    if (!iso) return '';
-    return new Date(iso).toLocaleDateString(undefined, { dateStyle: 'medium' });
 };
 
 const deleteWorkout = async (workout: HistoryWorkout) => {

@@ -4,6 +4,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import RoutineCard from '@/routines/components/RoutineCard.vue';
 import type { Routine } from '@/routines/types';
 import { confirmDialog } from '@/shared/lib/confirmDialog';
+import { formatDate } from '@/shared/lib/formatDate';
 import { type BreadcrumbItem } from '@/types';
 import type { HistoryWorkout, InProgressWorkout } from '@/workouts/types';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
@@ -138,10 +139,7 @@ const deleteRoutine = async (routine: Routine) => {
     });
 };
 
-const formatFinishedAt = (iso: string) => {
-    if (!iso) return '';
-    return new Date(iso).toLocaleDateString(undefined, { dateStyle: 'medium' });
-};
+const formatFinishedAt = formatDate;
 </script>
 
 <template>

@@ -117,5 +117,4 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 - **FE DRY: app nav config** — single source for primary/settings links used by `AppNavIcons`, `AppBottomNav`, settings layout (+ shared Ziggy route helper)
 - **FE DRY: auth submit + password fields** — `AuthSubmitButton` (processing spinner); prefer `PasswordInput` / shared confirm fields across auth + Profile
 - **FE DRY: mobile editor accordion** — `EditorDisclosure` for Dropsets / Progression / Warm-up / Deload expanders
-- **FE DRY: tiny shared utils** — `formatDate` (Dashboard + History); import `BreadcrumbItem` from `@/types` in Breadcrumbs; optional rest-format core math share
 - **GDPR compliance?** — clarify whether/what is required (privacy policy, data export/delete, retention, cookies); grill before building
