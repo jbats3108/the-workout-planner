@@ -90,7 +90,7 @@ class RoutineEditorService
 
         foreach (array_values($exercises) as $index => $exerciseData) {
             /** @var SyncBlockExerciseData $exerciseData */
-            $this->assertExerciseAvailable($routine, $exerciseData->exerciseId);
+            Exercise::assertAvailableFor($routine->user, $exerciseData->exerciseId);
 
             RoutineBlockExercise::create([
                 'routine_block_id' => $block->id,
@@ -170,20 +170,6 @@ class RoutineEditorService
                     'weight_g' => $segment->weightGrams(),
                 ]);
             }
-        }
-    }
-
-    private function assertExerciseAvailable(Routine $routine, int $exerciseId): void
-    {
-        $exists = Exercise::query()
-            ->whereKey($exerciseId)
-            ->where(function ($query) use ($routine): void {
-                $query->whereNull('user_id')->orWhere('user_id', $routine->user_id);
-            })
-            ->exists();
-
-        if (! $exists) {
-            throw new InvalidArgumentException("Exercise {$exerciseId} is not available for this routine.");
         }
     }
 }
