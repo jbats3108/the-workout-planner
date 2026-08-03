@@ -111,4 +111,5 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 
 ### Code quality & security
 
+- **Check test function name conventions** — audit PHPUnit / Vitest names for consistency (`it_…` / `test_…` / describe+it wording) and align or document the house style
 - **GDPR compliance?** — clarify whether/what is required (privacy policy, data export/delete, retention, cookies); grill before building

@@ -1,19 +1,4 @@
-export type EditorDensity = 'desktop' | 'mobile';
-
-export type DropsetEditorDensity = {
-    card: string;
-    setLabel: string;
-    select: string;
-    segmentRow: string;
-    weightInput: string;
-    addDropContainer: string;
-    addDropButton: string;
-    rackControls: string;
-    rackLabel: string;
-    rackInput: string;
-    rackFillButton: string;
-    rackFillLabel: string;
-};
+import type { DeloadSettingsDensity, DropsetEditorDensity, EditorDensity } from '@/routines/types';
 
 export const dropsetEditorDensity: Record<EditorDensity, DropsetEditorDensity> = {
     desktop: {
@@ -44,16 +29,6 @@ export const dropsetEditorDensity: Record<EditorDensity, DropsetEditorDensity> =
         rackFillButton: 'col-span-3 mt-2 w-full rounded-lg border border-primary/40 py-2 text-xs text-primary',
         rackFillLabel: 'Fill from rack',
     },
-};
-
-export type DeloadSettingsDensity = {
-    fieldsGrid: string;
-    fieldLabel: string;
-    fieldTitle: string;
-    fieldHint: string;
-    input: string;
-    weightHint: string;
-    repsHint: string;
 };
 
 export const deloadSettingsDensity: Record<EditorDensity, DeloadSettingsDensity> = {

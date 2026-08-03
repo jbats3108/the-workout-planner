@@ -3,7 +3,7 @@ import DeloadMultiplierFields from '@/routines/components/DeloadMultiplierFields
 import EditorDisclosure from '@/routines/components/EditorDisclosure.vue';
 import { useRoutineEditor } from '@/routines/composables/useRoutineEditor';
 import { formatDeloadSummary } from '@/routines/lib/deload';
-import type { EditorDensity } from '@/routines/lib/editorDensity';
+import type { EditorDensity } from '@/routines/types';
 import { computed } from 'vue';
 
 const { variant = 'desktop' } = defineProps<{

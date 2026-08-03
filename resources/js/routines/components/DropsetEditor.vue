@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoutineEditor } from '@/routines/composables/useRoutineEditor';
-import { dropsetEditorDensity, type EditorDensity } from '@/routines/lib/editorDensity';
-import type { Block } from '@/routines/types';
+import { dropsetEditorDensity } from '@/routines/lib/editorDensity';
+import type { Block, EditorDensity } from '@/routines/types';
 import { computed } from 'vue';
 
 const { block, variant = 'desktop' } = withDefaults(

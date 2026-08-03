@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useRoutineEditor } from '@/routines/composables/useRoutineEditor';
-import { deloadSettingsDensity, type EditorDensity } from '@/routines/lib/editorDensity';
+import { deloadSettingsDensity } from '@/routines/lib/editorDensity';
+import type { EditorDensity } from '@/routines/types';
 import { computed } from 'vue';
 
 const { variant = 'desktop' } = defineProps<{

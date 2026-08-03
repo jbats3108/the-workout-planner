@@ -53,3 +53,30 @@ export type Routine = {
     deload_reps_factor?: number | null;
     can_start?: boolean;
 };
+
+export type EditorDensity = 'desktop' | 'mobile';
+
+export type DropsetEditorDensity = {
+    card: string;
+    setLabel: string;
+    select: string;
+    segmentRow: string;
+    weightInput: string;
+    addDropContainer: string;
+    addDropButton: string;
+    rackControls: string;
+    rackLabel: string;
+    rackInput: string;
+    rackFillButton: string;
+    rackFillLabel: string;
+};
+
+export type DeloadSettingsDensity = {
+    fieldsGrid: string;
+    fieldLabel: string;
+    fieldTitle: string;
+    fieldHint: string;
+    input: string;
+    weightHint: string;
+    repsHint: string;
+};
