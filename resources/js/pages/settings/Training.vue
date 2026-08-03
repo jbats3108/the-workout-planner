@@ -214,52 +214,65 @@ const savePlates = () => {
                     </div>
 
                     <div class="space-y-4 border-t border-border pt-6">
-                        <HeadingSmall title="Deload" description="Seeded into new routines. Each routine can still override these in the editor." />
+                        <HeadingSmall
+                            title="Deload"
+                            description="Defaults for new routines. A deload workout scales every exercise on that routine for one session; your normal working weights stay unchanged. Each routine can still override these in the editor."
+                        />
 
-                        <div class="grid gap-4 sm:grid-cols-3">
-                            <label class="flex flex-col gap-1 text-sm text-muted-foreground">
-                                Weight multiplier
-                                <span class="text-xs text-muted-foreground/80">Working kg × factor</span>
-                                <input
-                                    v-model.number="form.deload_weight_factor_default"
-                                    type="number"
-                                    step="0.05"
-                                    min="0"
-                                    max="5"
-                                    class="mt-1 w-full rounded border border-border bg-card px-3 py-2 font-mono text-foreground"
-                                    required
-                                />
-                                <InputError :message="form.errors.deload_weight_factor_default" />
-                            </label>
-                            <label class="flex flex-col gap-1 text-sm text-muted-foreground">
-                                Reps multiplier
-                                <span class="text-xs text-muted-foreground/80">Target reps × factor</span>
-                                <input
-                                    v-model.number="form.deload_reps_factor_default"
-                                    type="number"
-                                    step="0.05"
-                                    min="0"
-                                    max="10"
-                                    class="mt-1 w-full rounded border border-border bg-card px-3 py-2 font-mono text-foreground"
-                                    required
-                                />
-                                <InputError :message="form.errors.deload_reps_factor_default" />
-                            </label>
-                            <label class="flex flex-col gap-1 text-sm text-muted-foreground">
-                                Every N normals
-                                <span class="text-xs text-muted-foreground/80">Soft-suggest Deload (0 = never)</span>
-                                <input
-                                    v-model.number="form.deload_every_n_default"
-                                    type="number"
-                                    step="1"
-                                    min="0"
-                                    max="99"
-                                    class="mt-1 w-full rounded border border-border bg-card px-3 py-2 font-mono text-foreground"
-                                    required
-                                />
-                                <InputError :message="form.errors.deload_every_n_default" />
-                            </label>
-                        </div>
+                        <label class="flex flex-col gap-1 text-sm text-muted-foreground">
+                            Weight multiplier
+                            <span class="text-xs text-muted-foreground/80">
+                                Applied to working weight when you start a deload (e.g. 0.5 → half the usual load). Same factor for every exercise on
+                                the routine.
+                            </span>
+                            <input
+                                v-model.number="form.deload_weight_factor_default"
+                                type="number"
+                                step="0.05"
+                                min="0"
+                                max="5"
+                                class="mt-1 w-28 rounded border border-border bg-card px-3 py-2 font-mono text-foreground"
+                                required
+                            />
+                            <InputError :message="form.errors.deload_weight_factor_default" />
+                        </label>
+
+                        <label class="flex flex-col gap-1 text-sm text-muted-foreground">
+                            Reps multiplier
+                            <span class="text-xs text-muted-foreground/80">
+                                Applied to prescribed (Target) reps on a deload start (e.g. 0.5 → half the usual reps, rounded down). Same factor for
+                                every exercise.
+                            </span>
+                            <input
+                                v-model.number="form.deload_reps_factor_default"
+                                type="number"
+                                step="0.05"
+                                min="0"
+                                max="10"
+                                class="mt-1 w-28 rounded border border-border bg-card px-3 py-2 font-mono text-foreground"
+                                required
+                            />
+                            <InputError :message="form.errors.deload_reps_factor_default" />
+                        </label>
+
+                        <label class="flex flex-col gap-1 text-sm text-muted-foreground">
+                            Every N normals
+                            <span class="text-xs text-muted-foreground/80">
+                                After this many finished normal workouts on a routine since its last deload, the dashboard soft-emphasizes Deload
+                                (e.g. 3 ≈ every 4th session). Set 0 to never suggest — useful for rares or one-offs. The count is per routine, not
+                                shared across all of them.
+                            </span>
+                            <input
+                                v-model.number="form.deload_every_n_default"
+                                type="number"
+                                step="1"
+                                min="0"
+                                max="99"
+                                class="mt-1 w-28 rounded border border-border bg-card px-3 py-2 font-mono text-foreground"
+                                required
+                            />
+                            <InputError :message="form.errors.deload_every_n_default" />
+                        </label>
                     </div>
 
                     <div class="flex flex-wrap gap-3 pt-2">
