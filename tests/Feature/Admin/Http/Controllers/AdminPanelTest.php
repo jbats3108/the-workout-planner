@@ -70,10 +70,15 @@ class AdminPanelTest extends TestCase
                 ->loadDeferredProps(fn ($page) => $page
                     ->where(
                         'exercises',
-                        fn ($exercises): bool => collect($exercises)->contains(
-                            fn (array $row): bool => $row['slug'] === $exercise->getSlug()
-                                && $row['primary_muscle_group'] === 'Unknown',
-                        ),
+                        function (mixed $exercises) use ($exercise): bool {
+                            /** @var list<array{slug: string, primary_muscle_group: string}> $rows */
+                            $rows = is_array($exercises) ? $exercises : [];
+
+                            return collect($rows)->contains(
+                                fn (array $row): bool => $row['slug'] === $exercise->getSlug()
+                                    && $row['primary_muscle_group'] === 'Unknown',
+                            );
+                        },
                     )));
     }
 

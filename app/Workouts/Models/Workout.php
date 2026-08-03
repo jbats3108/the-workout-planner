@@ -92,7 +92,10 @@ class Workout extends Model
         return $this->hasMany(BumpRecord::class);
     }
 
-    /** @param  Builder<Workout>  $query */
+    /**
+     * @param  Builder<Workout>  $query
+     * @return Builder<Workout>
+     */
     public function scopeFinished(Builder $query): Builder
     {
         return $query->where('status', WorkoutStatus::Finished);
