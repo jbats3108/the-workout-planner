@@ -11,6 +11,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Helpers\RoutineEditorPayload;
 use Tests\Helpers\UserHelper;
 use Tests\TestCase;
 
@@ -22,7 +23,7 @@ class DuplicateRoutineControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seedUsers();
+        $this->seedUsers(false);
     }
 
     #[Test]
@@ -101,38 +102,23 @@ class DuplicateRoutineControllerTest extends TestCase
             'deload_weight_factor' => 0.5,
             'deload_reps_factor' => 2,
             'blocks' => [
-                [
-                    'is_superset' => false,
+                RoutineEditorPayload::block($exercise->id, [
+                    'working_weight_kg' => 50,
+                    'prescribed_reps' => 8,
                     'has_setup_after' => true,
-                    'has_setup_after_warm_up' => false,
-                    'exercises' => [
-                        [
-                            'exercise_id' => $exercise->id,
-                            'working_weight_kg' => 50,
-                            'prescribed_reps' => 8,
-                        ],
-                    ],
                     'working' => ['set_count' => 3, 'rest_seconds' => 90],
                     'warm_up' => [
                         'set_count' => 1,
                         'rest_seconds' => 45,
                         'steps' => [['percent' => 50, 'reps' => 5]],
                     ],
-                ],
-                [
-                    'is_superset' => false,
-                    'has_setup_after' => false,
-                    'has_setup_after_warm_up' => false,
-                    'exercises' => [
-                        [
-                            'exercise_id' => $exercise->id,
-                            'working_weight_kg' => 40,
-                            'prescribed_reps' => 10,
-                        ],
-                    ],
+                ]),
+                RoutineEditorPayload::block($exercise->id, [
+                    'working_weight_kg' => 40,
+                    'prescribed_reps' => 10,
                     'working' => ['set_count' => 2, 'rest_seconds' => 60],
                     'warm_up' => ['set_count' => 0, 'rest_seconds' => 30, 'steps' => []],
-                ],
+                ]),
             ],
         ]));
 

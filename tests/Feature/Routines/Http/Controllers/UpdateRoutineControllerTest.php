@@ -6,6 +6,7 @@ use App\Exercises\Models\Exercise;
 use App\Routines\Models\Routine;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Helpers\RoutineEditorPayload;
 use Tests\Helpers\UserHelper;
 use Tests\TestCase;
 
@@ -17,7 +18,7 @@ class UpdateRoutineControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seedUsers();
+        $this->seedUsers(false);
     }
 
     #[Test]
@@ -53,19 +54,10 @@ class UpdateRoutineControllerTest extends TestCase
             'deload_weight_factor' => 0.5,
             'deload_reps_factor' => 2,
             'blocks' => [
-                [
-                    'is_superset' => false,
-                    'has_setup_after' => false,
-                    'exercises' => [
-                        [
-                            'exercise_id' => $exercise->id,
-                            'working_weight_kg' => 80,
-                            'prescribed_reps' => 6,
-                        ],
-                    ],
+                RoutineEditorPayload::block($exercise->id, [
+                    'working_weight_kg' => 80,
                     'working' => ['set_count' => 3, 'rest_seconds' => 180],
-                    'warm_up' => ['set_count' => 0, 'rest_seconds' => 60, 'steps' => []],
-                ],
+                ]),
             ],
         ])
             ->assertRedirect(route('dashboard'))
@@ -82,19 +74,10 @@ class UpdateRoutineControllerTest extends TestCase
             'name' => 'Stale Save',
             'expected_updated_at' => now()->subMinute()->toIso8601String(),
             'blocks' => [
-                [
-                    'is_superset' => false,
-                    'has_setup_after' => false,
-                    'exercises' => [
-                        [
-                            'exercise_id' => $exercise->id,
-                            'working_weight_kg' => 80,
-                            'prescribed_reps' => 6,
-                        ],
-                    ],
+                RoutineEditorPayload::block($exercise->id, [
+                    'working_weight_kg' => 80,
                     'working' => ['set_count' => 3, 'rest_seconds' => 180],
-                    'warm_up' => ['set_count' => 0, 'rest_seconds' => 60, 'steps' => []],
-                ],
+                ]),
             ],
         ])->assertSessionHasErrors('expected_updated_at');
     }
@@ -110,21 +93,13 @@ class UpdateRoutineControllerTest extends TestCase
             'deload_weight_factor' => 0.9,
             'deload_reps_factor' => 1,
             'blocks' => [
-                [
-                    'is_superset' => false,
-                    'has_setup_after' => false,
-                    'exercises' => [
-                        [
-                            'exercise_id' => $exercise->id,
-                            'working_weight_kg' => 80,
-                            'prescribed_reps' => 5,
-                            'achievement_floor' => 3,
-                            'progression_target' => null,
-                        ],
-                    ],
+                RoutineEditorPayload::block($exercise->id, [
+                    'working_weight_kg' => 80,
+                    'prescribed_reps' => 5,
+                    'achievement_floor' => 3,
+                    'progression_target' => null,
                     'working' => ['set_count' => 3, 'rest_seconds' => 180],
-                    'warm_up' => ['set_count' => 0, 'rest_seconds' => 60, 'steps' => []],
-                ],
+                ]),
             ],
         ])->assertRedirect(route('dashboard'));
 
@@ -143,9 +118,8 @@ class UpdateRoutineControllerTest extends TestCase
         $this->actingAs($this->user)->put(route('routines.update', $routine), [
             'name' => 'Bad Superset Dropset',
             'blocks' => [
-                [
+                RoutineEditorPayload::block($exerciseA->id, [
                     'is_superset' => true,
-                    'has_setup_after' => false,
                     'exercises' => [
                         [
                             'exercise_id' => $exerciseA->id,
@@ -171,8 +145,7 @@ class UpdateRoutineControllerTest extends TestCase
                             ],
                         ],
                     ],
-                    'warm_up' => ['set_count' => 0, 'rest_seconds' => 60, 'steps' => []],
-                ],
+                ]),
             ],
         ])
             ->assertRedirect()
@@ -188,16 +161,9 @@ class UpdateRoutineControllerTest extends TestCase
         $this->actingAs($this->user)->put(route('routines.update', $routine), [
             'name' => 'Dropset Finisher',
             'blocks' => [
-                [
-                    'is_superset' => false,
-                    'has_setup_after' => false,
-                    'exercises' => [
-                        [
-                            'exercise_id' => $exercise->id,
-                            'working_weight_kg' => 20,
-                            'prescribed_reps' => 12,
-                        ],
-                    ],
+                RoutineEditorPayload::block($exercise->id, [
+                    'working_weight_kg' => 20,
+                    'prescribed_reps' => 12,
                     'working' => [
                         'set_count' => 2,
                         'rest_seconds' => 90,
@@ -211,8 +177,7 @@ class UpdateRoutineControllerTest extends TestCase
                             ],
                         ],
                     ],
-                    'warm_up' => ['set_count' => 0, 'rest_seconds' => 60, 'steps' => []],
-                ],
+                ]),
             ],
         ])->assertRedirect(route('dashboard'));
 

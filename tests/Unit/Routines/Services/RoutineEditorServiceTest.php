@@ -15,6 +15,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Test;
 use Spatie\LaravelData\DataCollection;
+use Tests\Helpers\RoutineEditorPayload;
 use Tests\TestCase;
 
 class RoutineEditorServiceTest extends TestCase
@@ -41,7 +42,7 @@ class RoutineEditorServiceTest extends TestCase
             'deload_reps_factor' => 2,
             'deload_every_n' => 4,
             'blocks' => [
-                $this->singleBlockPayload($exercise->id, [
+                RoutineEditorPayload::block($exercise->id, [
                     'working_weight_kg' => 80,
                     'prescribed_reps' => 6,
                     'warm_up' => [
@@ -85,7 +86,7 @@ class RoutineEditorServiceTest extends TestCase
             'deload_weight_factor' => 0.8,
             'deload_reps_factor' => 0.8,
             'blocks' => [
-                $this->singleBlockPayload($exercise->id, [
+                RoutineEditorPayload::block($exercise->id, [
                     'warm_up' => [
                         'set_count' => 2,
                         'rest_seconds' => 60,
@@ -114,8 +115,8 @@ class RoutineEditorServiceTest extends TestCase
             'deload_weight_factor' => 0.8,
             'deload_reps_factor' => 0.8,
             'blocks' => [
-                $this->singleBlockPayload($exercise->id, ['has_setup_after' => false]),
-                $this->singleBlockPayload($exercise->id, ['has_setup_after' => true]),
+                RoutineEditorPayload::block($exercise->id, ['has_setup_after' => false]),
+                RoutineEditorPayload::block($exercise->id, ['has_setup_after' => true]),
             ],
         ]));
 
@@ -133,7 +134,7 @@ class RoutineEditorServiceTest extends TestCase
         $result = $this->service->sync($routine, SyncRoutineData::from([
             'name' => 'No Warmups',
             'blocks' => [
-                $this->singleBlockPayload($exercise->id, [
+                RoutineEditorPayload::block($exercise->id, [
                     'warm_up' => ['set_count' => 0, 'rest_seconds' => 60, 'steps' => []],
                 ]),
             ],
@@ -152,7 +153,7 @@ class RoutineEditorServiceTest extends TestCase
         $result = $this->service->sync($routine, SyncRoutineData::from([
             'name' => 'Dropset Finisher',
             'blocks' => [
-                $this->singleBlockPayload($exercise->id, [
+                RoutineEditorPayload::block($exercise->id, [
                     'working_weight_kg' => 20,
                     'prescribed_reps' => 12,
                     'working' => [
@@ -306,7 +307,7 @@ class RoutineEditorServiceTest extends TestCase
         $this->service->sync($routine, SyncRoutineData::from([
             'name' => 'Short Dropset',
             'blocks' => [
-                $this->singleBlockPayload($exercise->id, [
+                RoutineEditorPayload::block($exercise->id, [
                     'working' => [
                         'set_count' => 2,
                         'rest_seconds' => 90,
@@ -336,7 +337,7 @@ class RoutineEditorServiceTest extends TestCase
         $this->service->sync($routine, SyncRoutineData::from([
             'name' => 'Out Of Range',
             'blocks' => [
-                $this->singleBlockPayload($exercise->id, [
+                RoutineEditorPayload::block($exercise->id, [
                     'working' => [
                         'set_count' => 2,
                         'rest_seconds' => 90,
@@ -367,7 +368,7 @@ class RoutineEditorServiceTest extends TestCase
         $this->service->sync($routine, SyncRoutineData::from([
             'name' => 'Dup Dropset',
             'blocks' => [
-                $this->singleBlockPayload($exercise->id, [
+                RoutineEditorPayload::block($exercise->id, [
                     'working' => [
                         'set_count' => 2,
                         'rest_seconds' => 90,
@@ -407,7 +408,7 @@ class RoutineEditorServiceTest extends TestCase
         $this->service->sync($routine, SyncRoutineData::from([
             'name' => 'Foreign Exercise',
             'blocks' => [
-                $this->singleBlockPayload($foreignExercise->id),
+                RoutineEditorPayload::block($foreignExercise->id),
             ],
         ]));
     }
@@ -423,7 +424,7 @@ class RoutineEditorServiceTest extends TestCase
         $data = SyncRoutineData::from([
             'name' => 'Clamped',
             'blocks' => [
-                $this->singleBlockPayload($exercise->id, [
+                RoutineEditorPayload::block($exercise->id, [
                     'warm_up' => [
                         'set_count' => 1,
                         'rest_seconds' => 60,
@@ -479,32 +480,8 @@ class RoutineEditorServiceTest extends TestCase
             'name' => 'New Name',
             'expected_updated_at' => now()->subMinute()->toIso8601String(),
             'blocks' => [
-                $this->singleBlockPayload($exercise->id),
+                RoutineEditorPayload::block($exercise->id),
             ],
         ]));
-    }
-
-    /**
-     * @param  array<string, mixed>  $overrides
-     * @return array<string, mixed>
-     */
-    private function singleBlockPayload(int $exerciseId, array $overrides = []): array
-    {
-        $exercise = [
-            'exercise_id' => $exerciseId,
-            'working_weight_kg' => $overrides['working_weight_kg'] ?? 60,
-            'prescribed_reps' => $overrides['prescribed_reps'] ?? 6,
-            'achievement_floor' => $overrides['achievement_floor'] ?? null,
-            'progression_target' => $overrides['progression_target'] ?? null,
-        ];
-
-        return [
-            'is_superset' => false,
-            'has_setup_after' => $overrides['has_setup_after'] ?? false,
-            'has_setup_after_warm_up' => $overrides['has_setup_after_warm_up'] ?? false,
-            'exercises' => [$exercise],
-            'working' => $overrides['working'] ?? ['set_count' => 3, 'rest_seconds' => 120],
-            'warm_up' => $overrides['warm_up'] ?? ['set_count' => 0, 'rest_seconds' => 60, 'steps' => []],
-        ];
     }
 }

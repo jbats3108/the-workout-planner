@@ -1,0 +1,38 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests\Helpers;
+
+final class RoutineEditorPayload
+{
+    /**
+     * @param  array<string, mixed>  $overrides
+     * @return array<string, mixed>
+     */
+    public static function block(int $exerciseId, array $overrides = []): array
+    {
+        $exercise = [
+            'exercise_id' => $exerciseId,
+            'working_weight_kg' => $overrides['working_weight_kg'] ?? 60,
+            'prescribed_reps' => $overrides['prescribed_reps'] ?? 6,
+            'achievement_floor' => $overrides['achievement_floor'] ?? null,
+            'progression_target' => $overrides['progression_target'] ?? null,
+        ];
+
+        if (isset($overrides['exercises'])) {
+            $exercises = $overrides['exercises'];
+        } else {
+            $exercises = [$exercise];
+        }
+
+        return [
+            'is_superset' => $overrides['is_superset'] ?? false,
+            'has_setup_after' => $overrides['has_setup_after'] ?? false,
+            'has_setup_after_warm_up' => $overrides['has_setup_after_warm_up'] ?? false,
+            'exercises' => $exercises,
+            'working' => $overrides['working'] ?? ['set_count' => 3, 'rest_seconds' => 120],
+            'warm_up' => $overrides['warm_up'] ?? ['set_count' => 0, 'rest_seconds' => 60, 'steps' => []],
+        ];
+    }
+}
