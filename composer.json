@@ -96,9 +96,16 @@
             "Composer\\Config::disableProcessTimeout",
             "@php vendor/bin/rector process --dry-run --ansi"
         ],
+        "quality-fix": [
+            "Composer\\Config::disableProcessTimeout",
+            "@refactor",
+            "@lint",
+            "@refactor",
+            "@lint"
+        ],
         "quality": [
             "Composer\\Config::disableProcessTimeout",
-            "@lint:check",
+            "@quality-fix",
             "@analyse"
         ]
     },
@@ -108,7 +115,8 @@
         "analyse": "Run PHPStan / Larastan static analysis.",
         "refactor": "Apply Rector refactors.",
         "refactor:dry": "Preview Rector refactors without writing files.",
-        "quality": "Run Pint and PHPStan (CI parity)."
+        "quality-fix": "Apply Rector→Pint twice so import reordering cannot leave a one-pass Rector leftover.",
+        "quality": "Apply Rector + Pint, then run PHPStan."
     },
     "extra": {
         "laravel": {

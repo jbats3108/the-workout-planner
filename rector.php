@@ -14,10 +14,10 @@ return RectorConfig::configure()
         __DIR__.'/routes',
         __DIR__.'/tests',
     ])
+    // Style is owned by Pint — keep Rector off coding-style rules so the two do not fight.
     ->withPhpSets()
     ->withTypeCoverageLevel(53)
     ->withDeadCodeLevel(53)
     ->withCodeQualityLevel(53)
-    ->withCodingStyleLevel(25)
     ->withImportNames()
     ->withComposerBased(phpunit: true, laravel: true);
