@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import DeloadSettings from '@/routines/components/DeloadSettings.vue';
 import DropsetEditor from '@/routines/components/DropsetEditor.vue';
+import EditorDisclosure from '@/routines/components/EditorDisclosure.vue';
 import ExercisePicker from '@/routines/components/ExercisePicker.vue';
 import { useRoutineEditor } from '@/routines/composables/useRoutineEditor';
 import { canSetupAfterBlock } from '@/routines/lib/blocks';
 import { optionalRepsPlaceholder, parseOptionalReps } from '@/routines/lib/optionalReps';
 import { Link } from '@inertiajs/vue3';
-import { ChevronDown } from 'lucide-vue-next';
 
 const {
     form,
@@ -122,46 +122,18 @@ const {
                     </label>
                 </div>
 
-                <div v-if="!activeBlock.is_superset" class="mt-3 border-t border-border pt-3">
-                    <button
-                        type="button"
-                        class="flex w-full items-center justify-between gap-2 text-left"
-                        :aria-expanded="dropsetsExpanded"
-                        @click="toggleDropsetsExpanded"
-                    >
-                        <span class="min-w-0">
-                            <span class="block text-xs text-muted-foreground">Dropsets</span>
-                            <span class="block truncate font-mono text-sm text-foreground">
-                                {{ dropsetSummary(activeBlock) || 'None' }}
-                            </span>
-                        </span>
-                        <ChevronDown
-                            class="size-4 shrink-0 text-muted-foreground transition-transform"
-                            :class="dropsetsExpanded ? 'rotate-180' : ''"
-                        />
-                    </button>
-                    <div v-if="dropsetsExpanded" class="mt-3 space-y-3">
-                        <DropsetEditor :block="activeBlock" variant="mobile" />
-                    </div>
-                </div>
+                <EditorDisclosure
+                    v-if="!activeBlock.is_superset"
+                    :expanded="dropsetsExpanded"
+                    label="Dropsets"
+                    :summary="dropsetSummary(activeBlock) || 'None'"
+                    @toggle="toggleDropsetsExpanded"
+                >
+                    <DropsetEditor :block="activeBlock" variant="mobile" />
+                </EditorDisclosure>
 
-                <div class="mt-3 border-t border-border pt-3">
-                    <button
-                        type="button"
-                        class="flex w-full items-center justify-between gap-2 text-left"
-                        :aria-expanded="progressionExpanded"
-                        @click="toggleProgressionExpanded"
-                    >
-                        <span class="min-w-0">
-                            <span class="block text-xs text-muted-foreground">Progression</span>
-                            <span class="block truncate font-mono text-sm text-foreground"> Floor override </span>
-                        </span>
-                        <ChevronDown
-                            class="size-4 shrink-0 text-muted-foreground transition-transform"
-                            :class="progressionExpanded ? 'rotate-180' : ''"
-                        />
-                    </button>
-                    <div v-if="progressionExpanded" class="mt-3 space-y-4">
+                <EditorDisclosure :expanded="progressionExpanded" label="Progression" summary="Floor override" @toggle="toggleProgressionExpanded">
+                    <div class="space-y-4">
                         <div v-for="(ex, ei) in activeBlock.exercises" :key="ei" class="space-y-2">
                             <p v-if="activeBlock.is_superset" class="font-mono text-xs text-muted-foreground">
                                 {{ ei === 0 ? 'A' : 'B' }}
@@ -181,24 +153,15 @@ const {
                         </div>
                         <p class="text-xs text-muted-foreground">Empty inherits Settings → Training. Bump is always the exercise Target (reps).</p>
                     </div>
-                </div>
+                </EditorDisclosure>
 
-                <div class="mt-3 border-t border-border pt-3">
-                    <button
-                        type="button"
-                        class="flex w-full items-center justify-between gap-2 text-left"
-                        :aria-expanded="warmUpExpanded"
-                        @click="toggleWarmUpExpanded"
-                    >
-                        <span class="min-w-0">
-                            <span class="block text-xs text-muted-foreground">Warm-up</span>
-                            <span class="block truncate font-mono text-sm text-foreground">
-                                {{ activeBlock.warm_up.steps.length ? warmUpText(activeBlock) : 'None' }}
-                            </span>
-                        </span>
-                        <ChevronDown class="size-4 shrink-0 text-muted-foreground transition-transform" :class="warmUpExpanded ? 'rotate-180' : ''" />
-                    </button>
-                    <div v-if="warmUpExpanded" class="mt-3 space-y-2">
+                <EditorDisclosure
+                    :expanded="warmUpExpanded"
+                    label="Warm-up"
+                    :summary="activeBlock.warm_up.steps.length ? warmUpText(activeBlock) : 'None'"
+                    @toggle="toggleWarmUpExpanded"
+                >
+                    <div class="space-y-2">
                         <label class="block">
                             <span class="text-xs text-muted-foreground">Compact (40x5, 60x3)</span>
                             <input
@@ -263,7 +226,7 @@ const {
                             </button>
                         </div>
                     </div>
-                </div>
+                </EditorDisclosure>
 
                 <DeloadSettings variant="mobile" />
 
