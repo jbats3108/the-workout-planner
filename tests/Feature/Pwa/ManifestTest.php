@@ -25,7 +25,10 @@ class ManifestTest extends TestCase
 
         $this->assertFileExists($path);
 
-        $manifest = json_decode(file_get_contents($path), true, flags: JSON_THROW_ON_ERROR);
+        $json = file_get_contents($path);
+        $this->assertNotFalse($json);
+
+        $manifest = json_decode($json, true, flags: JSON_THROW_ON_ERROR);
 
         $this->assertSame('OVRLOAD', $manifest['name']);
         $this->assertSame('standalone', $manifest['display']);

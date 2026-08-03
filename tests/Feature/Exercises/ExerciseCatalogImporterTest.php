@@ -8,6 +8,7 @@ use App\MuscleGroups\Models\MuscleGroup;
 use App\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\File;
+use Illuminate\Testing\PendingCommand;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -160,8 +161,9 @@ class ExerciseCatalogImporterTest extends TestCase
             ],
         ], JSON_THROW_ON_ERROR));
 
-        $this->artisan('exercises:import', ['path' => $path])
-            ->assertSuccessful();
+        $command = $this->artisan('exercises:import', ['path' => $path]);
+        $this->assertInstanceOf(PendingCommand::class, $command);
+        $command->assertSuccessful()->run();
 
         $this->assertDatabaseHas('exercises', [
             'slug' => 'test-press',
@@ -191,8 +193,9 @@ class ExerciseCatalogImporterTest extends TestCase
             ],
         ], JSON_THROW_ON_ERROR));
 
-        $this->artisan('exercises:import', ['path' => $path])
-            ->assertSuccessful();
+        $command = $this->artisan('exercises:import', ['path' => $path]);
+        $this->assertInstanceOf(PendingCommand::class, $command);
+        $command->assertSuccessful()->run();
 
         $this->assertDatabaseHas('exercises', [
             'slug' => 'db-press',

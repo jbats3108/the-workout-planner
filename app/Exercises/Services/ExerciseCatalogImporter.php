@@ -35,6 +35,7 @@ class ExerciseCatalogImporter
     public function import(array $catalog, bool $prune = true): array
     {
         $groupsCreated = 0;
+        /** @var array<string, int<0, max>> $groupIdsBySlug */
         $groupIdsBySlug = [];
 
         foreach ($catalog['muscle_groups'] ?? [] as $group) {
@@ -81,7 +82,7 @@ class ExerciseCatalogImporter
             }
 
             $primaryId = $groupIdsBySlug[$primarySlug] ?? null;
-            if ($primaryId === null) {
+            if ($primaryId === null || $primaryId < 0) {
                 $skipped++;
 
                 continue;
@@ -90,7 +91,7 @@ class ExerciseCatalogImporter
             $secondaryId = null;
             if (is_string($secondarySlug) && $secondarySlug !== '') {
                 $secondaryId = $groupIdsBySlug[$secondarySlug] ?? null;
-                if ($secondaryId === null) {
+                if ($secondaryId === null || $secondaryId < 0) {
                     $skipped++;
 
                     continue;

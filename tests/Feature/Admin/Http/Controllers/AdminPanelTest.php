@@ -71,12 +71,14 @@ class AdminPanelTest extends TestCase
                     ->where(
                         'exercises',
                         function (mixed $exercises) use ($exercise): bool {
-                            /** @var list<array{slug: string, primary_muscle_group: string}> $rows */
-                            $rows = is_array($exercises) ? $exercises : [];
+                            $rows = collect(is_iterable($exercises) ? $exercises : []);
 
-                            return collect($rows)->contains(
-                                fn (array $row): bool => $row['slug'] === $exercise->getSlug()
-                                    && $row['primary_muscle_group'] === 'Unknown',
+                            return $rows->contains(
+                                function (mixed $row) use ($exercise): bool {
+                                    return is_array($row)
+                                        && ($row['slug'] ?? null) === $exercise->getSlug()
+                                        && ($row['primary_muscle_group'] ?? null) === 'Unknown';
+                                },
                             );
                         },
                     )));
