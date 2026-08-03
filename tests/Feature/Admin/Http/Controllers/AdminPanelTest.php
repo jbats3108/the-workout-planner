@@ -74,11 +74,9 @@ class AdminPanelTest extends TestCase
                             $rows = collect(is_iterable($exercises) ? $exercises : []);
 
                             return $rows->contains(
-                                function (mixed $row) use ($exercise): bool {
-                                    return is_array($row)
-                                        && ($row['slug'] ?? null) === $exercise->getSlug()
-                                        && ($row['primary_muscle_group'] ?? null) === 'Unknown';
-                                },
+                                fn (mixed $row): bool => is_array($row)
+                                    && ($row['slug'] ?? null) === $exercise->getSlug()
+                                    && ($row['primary_muscle_group'] ?? null) === 'Unknown',
                             );
                         },
                     )));
