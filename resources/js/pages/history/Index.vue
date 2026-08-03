@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { confirmDialog } from '@/shared/lib/confirmDialog';
 import { formatDate } from '@/shared/lib/formatDate';
 import { type BreadcrumbItem } from '@/types';
+import { useHistoryDelete } from '@/workouts/lib/historyMutations';
 import type { HistoryWorkout } from '@/workouts/types';
-import { Head, Link, router, useForm } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import { Trash2 } from 'lucide-vue-next';
 
 defineProps<{
@@ -16,7 +16,7 @@ defineProps<{
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'History', href: '/history' }];
-const deleteForm = useForm({});
+const { deleteForm, destroy: deleteWorkout } = useHistoryDelete();
 
 const filterByRoutine = (routineSlug: string | null) => {
     if (routineSlug === null) {
@@ -26,21 +26,7 @@ const filterByRoutine = (routineSlug: string | null) => {
     router.get(route('history.index', { routine: routineSlug }));
 };
 
-const deleteWorkout = async (workout: HistoryWorkout) => {
-    if (deleteForm.processing) {
-        return;
-    }
-    const ok = await confirmDialog({
-        title: `Remove “${workout.routine_name}” from history?`,
-        description: 'This cannot be undone.',
-        confirmLabel: 'Remove',
-        variant: 'destructive',
-    });
-    if (!ok) {
-        return;
-    }
-    deleteForm.delete(route('history.destroy', workout.id));
-};
+const removeWorkout = (workout: HistoryWorkout) => deleteWorkout(workout.id, workout.routine_name);
 </script>
 
 <template>
@@ -85,7 +71,7 @@ const deleteWorkout = async (workout: HistoryWorkout) => {
                         class="mr-3 shrink-0 rounded-md p-2 text-destructive transition-opacity hover:opacity-80 disabled:opacity-50"
                         :aria-label="`Delete ${workout.routine_name}`"
                         :disabled="deleteForm.processing"
-                        @click="deleteWorkout(workout)"
+                        @click="removeWorkout(workout)"
                     >
                         <Trash2 class="size-4" />
                     </button>

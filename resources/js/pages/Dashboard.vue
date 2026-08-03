@@ -2,10 +2,12 @@
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/AppLayout.vue';
 import RoutineCard from '@/routines/components/RoutineCard.vue';
+import { deleteRoutine as deleteRoutineMutation, duplicateRoutine as duplicateRoutineMutation } from '@/routines/lib/routineMutations';
 import type { Routine } from '@/routines/types';
 import { confirmDialog } from '@/shared/lib/confirmDialog';
 import { formatDate } from '@/shared/lib/formatDate';
 import { type BreadcrumbItem } from '@/types';
+import { abandonWorkout, finishWorkout } from '@/workouts/lib/workoutMutations';
 import type { HistoryWorkout, InProgressWorkout } from '@/workouts/types';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
@@ -61,82 +63,43 @@ const startBlockedReason = (routine: Routine) => {
 
 const finishInProgress = async () => {
     const workout = props.data.in_progress_workout;
-    if (!workout || workoutMutating.value) return;
-    const ok = await confirmDialog({
-        title: 'Finish this workout now?',
-        description: 'Incomplete sets stay incomplete.',
-        confirmLabel: 'Finish',
+    if (!workout) {
+        return;
+    }
+    await finishWorkout(workout.id, {
+        mutating: workoutMutating,
+        confirm: async () =>
+            confirmDialog({
+                title: 'Finish this workout now?',
+                description: 'Incomplete sets stay incomplete.',
+                confirmLabel: 'Finish',
+            }),
     });
-    if (!ok) return;
-    workoutMutating.value = true;
-    router.post(
-        route('workouts.finish', workout.id),
-        {},
-        {
-            onFinish: () => {
-                workoutMutating.value = false;
-            },
-        },
-    );
 };
 
 const abandonInProgress = async () => {
     const workout = props.data.in_progress_workout;
-    if (!workout || workoutMutating.value) return;
-    const ok = await confirmDialog({
-        title: 'Abandon this workout?',
-        description: 'Logged sets are kept but it will not count as finished.',
-        confirmLabel: 'Abandon',
-        variant: 'destructive',
+    if (!workout) {
+        return;
+    }
+    await abandonWorkout(workout.id, {
+        mutating: workoutMutating,
+        confirm: async () =>
+            confirmDialog({
+                title: 'Abandon this workout?',
+                description: 'Logged sets are kept but it will not count as finished.',
+                confirmLabel: 'Abandon',
+                variant: 'destructive',
+            }),
     });
-    if (!ok) return;
-    workoutMutating.value = true;
-    router.post(
-        route('workouts.discard', workout.id),
-        {},
-        {
-            onFinish: () => {
-                workoutMutating.value = false;
-            },
-        },
-    );
 };
 
 const duplicateRoutine = (routine: Routine) => {
-    if (routineMutating.value) {
-        return;
-    }
-    routineMutating.value = true;
-    router.post(
-        route('routines.duplicate', routine.slug),
-        {},
-        {
-            onFinish: () => {
-                routineMutating.value = false;
-            },
-        },
-    );
+    duplicateRoutineMutation(routine.slug, { mutating: routineMutating });
 };
 
 const deleteRoutine = async (routine: Routine) => {
-    if (routineMutating.value) {
-        return;
-    }
-    const ok = await confirmDialog({
-        title: `Delete “${routine.name}”?`,
-        description: 'It will be archived and removed from your list.',
-        confirmLabel: 'Delete',
-        variant: 'destructive',
-    });
-    if (!ok) {
-        return;
-    }
-    routineMutating.value = true;
-    router.delete(route('routines.delete', routine.slug), {
-        onFinish: () => {
-            routineMutating.value = false;
-        },
-    });
+    await deleteRoutineMutation(routine.slug, routine.name, routineMutating);
 };
 
 const formatFinishedAt = formatDate;

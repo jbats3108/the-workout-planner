@@ -114,5 +114,4 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 - **FE DRY: routine editor fields** — extract shared block field/option groups from `DesktopBlockList.vue` ↔ `MobileStage.vue` (weight/reps/sets/rest/WU + setup checkboxes); keep layout shells separate
 - **FE DRY: DropsetEditor + DeloadSettings** — collapse desktop|mobile forks into one form body + density classes / shared accordion chrome
 - **FE DRY: mutation helpers** — centralize finish/abandon workout + delete/duplicate routine + history delete (Dashboard / player / editor / history copies diverge slightly)
-- **FE DRY: app nav config** — single source for primary/settings links used by `AppNavIcons`, `AppBottomNav`, settings layout (+ shared Ziggy route helper)
 - **GDPR compliance?** — clarify whether/what is required (privacy policy, data export/delete, retention, cookies); grill before building
