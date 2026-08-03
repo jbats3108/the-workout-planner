@@ -243,15 +243,7 @@ class WorkoutService
         }
 
         return DB::transaction(function () use ($set, $reps, $segmentWeightGrams): WorkoutSet {
-            $set->segments()->delete();
-
-            foreach ($segmentWeightGrams as $index => $weightGrams) {
-                WorkoutSetSegment::create([
-                    'workout_set_id' => $set->id,
-                    'position' => $index + 1,
-                    'weight_g' => $weightGrams,
-                ]);
-            }
+            $set->replaceSegments($segmentWeightGrams);
 
             $set->reps = $reps;
             $set->weight_g = null;
@@ -298,15 +290,7 @@ class WorkoutService
         }
 
         return DB::transaction(function () use ($set, $segmentWeightGrams): WorkoutSet {
-            $set->segments()->delete();
-
-            foreach ($segmentWeightGrams as $index => $weightGrams) {
-                WorkoutSetSegment::create([
-                    'workout_set_id' => $set->id,
-                    'position' => $index + 1,
-                    'weight_g' => $weightGrams,
-                ]);
-            }
+            $set->replaceSegments($segmentWeightGrams);
 
             return $set->fresh(['segments']);
         });

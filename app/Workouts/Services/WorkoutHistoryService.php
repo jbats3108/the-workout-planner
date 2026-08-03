@@ -9,7 +9,6 @@ use App\Workouts\Enums\WorkoutStatus;
 use App\Workouts\Exceptions\WorkoutServiceException;
 use App\Workouts\Models\Workout;
 use App\Workouts\Models\WorkoutSet;
-use App\Workouts\Models\WorkoutSetSegment;
 use Illuminate\Support\Facades\DB;
 
 class WorkoutHistoryService
@@ -79,15 +78,7 @@ class WorkoutHistoryService
             throw new WorkoutServiceException(WorkoutService::DROPSET_REQUIRES_SEGMENTS_ERROR);
         }
 
-        $set->segments()->delete();
-
-        foreach ($segmentWeights as $index => $weightGrams) {
-            WorkoutSetSegment::create([
-                'workout_set_id' => $set->id,
-                'position' => $index + 1,
-                'weight_g' => $weightGrams,
-            ]);
-        }
+        $set->replaceSegments($segmentWeights);
 
         $set->reps = $data->reps;
         $set->weight_g = null;
@@ -104,7 +95,7 @@ class WorkoutHistoryService
             throw new WorkoutServiceException(WorkoutService::PLANNED_DROPSET_REQUIRES_SEGMENTS_ERROR);
         }
 
-        $set->segments()->delete();
+        $set->replaceSegments([]);
         $set->reps = $data->reps;
         $set->weight_g = $weightGrams;
     }
