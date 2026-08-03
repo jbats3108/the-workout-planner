@@ -9,7 +9,7 @@ use App\Workouts\Services\NormalsSinceDeloadCounter;
 class DashboardService
 {
     public function __construct(
-        private NormalsSinceDeloadCounter $normalsSinceDeloadCounter,
+        private readonly NormalsSinceDeloadCounter $normalsSinceDeloadCounter,
     ) {}
 
     public function getDashboardData(User $user): DashboardData
