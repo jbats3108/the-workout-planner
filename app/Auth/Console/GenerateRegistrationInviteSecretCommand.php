@@ -4,12 +4,15 @@ namespace App\Auth\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
+use Override;
 
 class GenerateRegistrationInviteSecretCommand extends Command
 {
+    #[Override]
     protected $signature = 'registration:invite-secret
                             {--write : Write REGISTRATION_INVITE into .env}';
 
+    #[Override]
     protected $description = 'Generate a REGISTRATION_INVITE secret for bootstrap / master invite links';
 
     public function handle(): int

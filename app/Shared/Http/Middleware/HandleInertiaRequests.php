@@ -5,6 +5,7 @@ namespace App\Shared\Http\Middleware;
 use App\Users\Data\SharedUserData;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Override;
 use Tighten\Ziggy\Ziggy;
 
 class HandleInertiaRequests extends Middleware
@@ -16,6 +17,7 @@ class HandleInertiaRequests extends Middleware
      *
      * @var string
      */
+    #[Override]
     protected $rootView = 'app';
 
     /**
@@ -23,6 +25,7 @@ class HandleInertiaRequests extends Middleware
      *
      * @see https://inertiajs.com/asset-versioning
      */
+    #[Override]
     public function version(Request $request): ?string
     {
         return parent::version($request);
@@ -35,6 +38,7 @@ class HandleInertiaRequests extends Middleware
      *
      * @return array<string, mixed>
      */
+    #[Override]
     public function share(Request $request): array
     {
         return [

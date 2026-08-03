@@ -11,6 +11,7 @@ use App\Routines\Models\RoutineSetGroup;
 use App\Routines\Models\RoutineWarmUpStep;
 use App\Shared\Enums\SetGroupType;
 use App\Workouts\Enums\WorkoutStatus;
+use App\Workouts\Models\Workout;
 use App\Workouts\Models\WorkoutSet;
 use App\Workouts\Services\WorkoutService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -38,7 +39,7 @@ class PlayWorkoutControllerTest extends TestCase
         $this->actingAs($this->user)
             ->get(route('workouts.play', $workout))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (Assert $page): Assert => $page
                 ->component('workouts/Play')
                 ->where('workout.id', $workout->ulid)
                 ->where('workout.routine_name', $workout->routine->getName())
@@ -62,7 +63,7 @@ class PlayWorkoutControllerTest extends TestCase
         $this->actingAs($this->user)
             ->get(route('workouts.play', $workout))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (Assert $page): Assert => $page
                 ->component('workouts/Play')
                 ->where('workout.blocks.0.exercises.0.achievement_floor', 4)
                 ->where('workout.blocks.0.exercises.0.progression_target', $prescribed)
@@ -193,7 +194,7 @@ class PlayWorkoutControllerTest extends TestCase
         $this->actingAs($this->user)
             ->get(route('workouts.play', $workout))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (Assert $page): Assert => $page
                 ->component('workouts/Play')
                 ->where('workout.blocks.0.has_setup_after_warm_up', true)
             );
@@ -246,7 +247,7 @@ class PlayWorkoutControllerTest extends TestCase
         $this->actingAs($this->user)
             ->get(route('workouts.play', $workout))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (Assert $page): Assert => $page
                 ->component('workouts/Play')
                 ->where('workout.blocks.0.sets.0.has_setup_after', true)
                 ->where('workout.blocks.0.sets.1.has_setup_after', false)
@@ -282,7 +283,7 @@ class PlayWorkoutControllerTest extends TestCase
         $this->actingAs($this->user)
             ->get(route('workouts.play', $workout))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (Assert $page): Assert => $page
                 ->component('workouts/Play')
                 ->where('workout.blocks.0.sets.0.equipment', 'dumbbell')
                 ->where('workout.blocks.0.exercises.0.equipment', 'dumbbell')
@@ -331,7 +332,7 @@ class PlayWorkoutControllerTest extends TestCase
         $this->actingAs($this->user)
             ->get(route('workouts.play', $workout))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (Assert $page): Assert => $page
                 ->component('workouts/Play')
                 ->where('workout.blocks.0.sets.0.is_dropset', true)
                 ->where('workout.blocks.0.sets.0.segments.0.weight_kg', 20)
@@ -377,7 +378,7 @@ class PlayWorkoutControllerTest extends TestCase
         $this->assertSame([80000, 60000], $set->segments->pluck('weight_g')->all());
     }
 
-    private function createWorkoutForUser()
+    private function createWorkoutForUser(): Workout
     {
         $routine = Routine::factory()->withUser($this->user)->create();
         $block = RoutineBlock::create([

@@ -44,18 +44,18 @@ class RoutineEditorPageData extends Data
             'blocks.setGroups.dropsetSegments',
         ]);
 
-        $blocks = $routine->blocks->map(function (RoutineBlock $block) {
+        $blocks = $routine->blocks->map(function (RoutineBlock $block): RoutineEditorBlockData {
             $working = $block->setGroups->firstWhere('type', SetGroupType::Working);
             $warmUp = $block->setGroups->firstWhere('type', SetGroupType::WarmUp);
 
-            $dropsets = collect($working?->dropsetSegments ?? [])
+            $dropsets = collect($working !== null ? $working->dropsetSegments : [])
                 ->groupBy('set_index')
-                ->filter(fn ($segments) => $segments->count() >= 2)
-                ->map(fn ($segments, $setIndex) => new SyncDropsetData(
+                ->filter(fn ($segments): bool => $segments->count() >= 2)
+                ->map(fn ($segments, $setIndex): SyncDropsetData => new SyncDropsetData(
                     setIndex: (int) $setIndex,
                     segments: SyncDropsetSegmentData::collect(
                         $segments->sortBy('position')->values()->map(
-                            fn ($segment) => new SyncDropsetSegmentData(
+                            fn ($segment): SyncDropsetSegmentData => new SyncDropsetSegmentData(
                                 weightKg: round($segment->weight_g / 1000, 3),
                             )
                         ),
@@ -69,7 +69,7 @@ class RoutineEditorPageData extends Data
                 hasSetupAfter: $block->has_setup_after,
                 hasSetupAfterWarmUp: $block->has_setup_after_warm_up,
                 exercises: RoutineEditorBlockExerciseData::collect(
-                    $block->blockExercises->map(fn (RoutineBlockExercise $row) => new RoutineEditorBlockExerciseData(
+                    $block->blockExercises->map(fn (RoutineBlockExercise $row): RoutineEditorBlockExerciseData => new RoutineEditorBlockExerciseData(
                         exerciseId: $row->exercise_id,
                         workingWeightKg: round($row->working_weight_g / 1000, 3),
                         prescribedReps: $row->prescribed_reps,
@@ -79,19 +79,21 @@ class RoutineEditorPageData extends Data
                     DataCollection::class,
                 ),
                 working: new SyncSetGroupData(
-                    setCount: $working?->set_count ?? 3,
-                    restSeconds: $working?->rest_seconds ?? 120,
+                    setCount: $working !== null ? $working->set_count : 3,
+                    restSeconds: $working !== null ? $working->rest_seconds : 120,
                     dropsets: SyncDropsetData::collect($dropsets, DataCollection::class),
                 ),
                 warmUp: new SyncWarmUpData(
-                    setCount: $warmUp?->set_count ?? 0,
-                    restSeconds: $warmUp?->rest_seconds ?? 60,
+                    setCount: $warmUp !== null ? $warmUp->set_count : 0,
+                    restSeconds: $warmUp !== null ? $warmUp->rest_seconds : 60,
                     steps: SyncWarmUpStepData::collect(
-                        $warmUp?->warmUpSteps->map(fn ($step) => new SyncWarmUpStepData(
-                            percent: (int) $step->percent_of_working,
-                            reps: (int) ($step->reps ?? 5),
-                            hasSetupAfter: (bool) $step->has_setup_after,
-                        )) ?? [],
+                        $warmUp !== null
+                            ? $warmUp->warmUpSteps->map(fn ($step): SyncWarmUpStepData => new SyncWarmUpStepData(
+                                percent: (int) $step->percent_of_working,
+                                reps: (int) ($step->reps ?? 5),
+                                hasSetupAfter: (bool) $step->has_setup_after,
+                            ))
+                            : [],
                         DataCollection::class,
                     ),
                 ),

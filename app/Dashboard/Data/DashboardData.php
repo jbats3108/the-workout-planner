@@ -3,10 +3,12 @@
 namespace App\Dashboard\Data;
 
 use App\Routines\Data\RoutineData;
+use App\Routines\Models\Routine;
 use App\Users\Models\User;
 use App\Workouts\Data\History\HistoryWorkoutItemData;
 use App\Workouts\Data\InProgressWorkoutData;
 use App\Workouts\Enums\WorkoutStatus;
+use App\Workouts\Models\Workout;
 use Illuminate\Support\Collection;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Data;
@@ -41,10 +43,10 @@ final class DashboardData extends Data
             ->orderByDesc('finished_at')
             ->limit(5)
             ->get()
-            ->map(fn ($workout) => HistoryWorkoutItemData::fromWorkout($workout));
+            ->map(fn (Workout $workout): HistoryWorkoutItemData => HistoryWorkoutItemData::fromWorkout($workout));
 
         return new self(
-            routines: $user->routines->map(fn ($routine) => RoutineData::fromRoutine($routine)),
+            routines: $user->routines->map(fn (Routine $routine): RoutineData => RoutineData::fromRoutine($routine)),
             inProgressWorkout: $inProgress === null ? null : new InProgressWorkoutData(
                 id: $inProgress->ulid,
                 routineName: $inProgress->routine->getName(),

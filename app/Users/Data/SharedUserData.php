@@ -3,7 +3,7 @@
 namespace App\Users\Data;
 
 use App\Users\Models\User;
-use Illuminate\Support\Carbon;
+use Carbon\CarbonInterface;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Mappers\SnakeCaseMapper;
@@ -15,9 +15,9 @@ final class SharedUserData extends Data
         public readonly int $id,
         public readonly string $name,
         public readonly string $email,
-        public readonly ?Carbon $emailVerifiedAt,
-        public readonly Carbon $createdAt,
-        public readonly Carbon $updatedAt,
+        public readonly ?CarbonInterface $emailVerifiedAt,
+        public readonly CarbonInterface $createdAt,
+        public readonly CarbonInterface $updatedAt,
         public readonly bool $isAdmin,
     ) {}
 

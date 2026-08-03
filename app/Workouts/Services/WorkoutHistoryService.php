@@ -81,7 +81,7 @@ class WorkoutHistoryService
 
         $set->segments()->delete();
 
-        foreach (array_values($segmentWeights) as $index => $weightGrams) {
+        foreach ($segmentWeights as $index => $weightGrams) {
             WorkoutSetSegment::create([
                 'workout_set_id' => $set->id,
                 'position' => $index + 1,

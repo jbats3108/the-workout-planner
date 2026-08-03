@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Override;
 
 class WorkoutBlock extends Model
 {
+    #[Override]
     protected $fillable = [
         'workout_id',
         'position',
@@ -18,6 +20,7 @@ class WorkoutBlock extends Model
     ];
 
     /** @return array<string, string> */
+    #[Override]
     protected function casts(): array
     {
         return [

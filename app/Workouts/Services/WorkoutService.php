@@ -173,7 +173,7 @@ class WorkoutService
                 return $workout->fresh(['blocks']);
             });
         } catch (UniqueConstraintViolationException $exception) {
-            throw new WorkoutServiceException(self::ALREADY_IN_PROGRESS_ERROR, previous: $exception);
+            throw new WorkoutServiceException(self::ALREADY_IN_PROGRESS_ERROR, $exception->getCode(), previous: $exception);
         }
     }
 
@@ -245,7 +245,7 @@ class WorkoutService
         return DB::transaction(function () use ($set, $reps, $segmentWeightGrams): WorkoutSet {
             $set->segments()->delete();
 
-            foreach (array_values($segmentWeightGrams) as $index => $weightGrams) {
+            foreach ($segmentWeightGrams as $index => $weightGrams) {
                 WorkoutSetSegment::create([
                     'workout_set_id' => $set->id,
                     'position' => $index + 1,
@@ -300,7 +300,7 @@ class WorkoutService
         return DB::transaction(function () use ($set, $segmentWeightGrams): WorkoutSet {
             $set->segments()->delete();
 
-            foreach (array_values($segmentWeightGrams) as $index => $weightGrams) {
+            foreach ($segmentWeightGrams as $index => $weightGrams) {
                 WorkoutSetSegment::create([
                     'workout_set_id' => $set->id,
                     'position' => $index + 1,
@@ -340,7 +340,7 @@ class WorkoutService
                 ]);
             }
 
-            $workingGroup->set_count = $workingGroup->set_count + 1;
+            $workingGroup->set_count += 1;
             $workingGroup->save();
 
             return $block->fresh(['blockExercises', 'setGroups.sets']);

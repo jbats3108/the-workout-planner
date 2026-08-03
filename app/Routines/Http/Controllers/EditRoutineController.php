@@ -25,7 +25,7 @@ class EditRoutineController extends Controller
         $page = RoutineEditorPageData::fromRoutine(
             $routine,
             RoutineEditorExerciseOptionData::collect([], DataCollection::class),
-            $user->weight_unit?->value ?? 'kg',
+            $user->weight_unit->value,
         );
 
         $payload = $page->toArray();
@@ -37,7 +37,7 @@ class EditRoutineController extends Controller
                 ->forUser($user)
                 ->orderBy('name')
                 ->get()
-                ->map(fn (Exercise $exercise) => new RoutineEditorExerciseOptionData(
+                ->map(fn (Exercise $exercise): RoutineEditorExerciseOptionData => new RoutineEditorExerciseOptionData(
                     id: $exercise->id,
                     name: $exercise->getName(),
                     primaryMuscleGroup: $exercise->primaryMuscleGroup->getName(),

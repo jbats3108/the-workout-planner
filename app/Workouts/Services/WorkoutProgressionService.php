@@ -321,13 +321,11 @@ class WorkoutProgressionService
     private function completedWorkingSets(WorkoutBlockExercise $workoutExercise): Collection
     {
         return $workoutExercise->sets
-            ->filter(function (WorkoutSet $set): bool {
-                return $set->completed_at !== null
-                    && $set->setGroup?->type === SetGroupType::Working
-                    && $set->reps !== null
-                    && $set->weight_g !== null
-                    && ! $set->isDropset();
-            })
+            ->filter(fn (WorkoutSet $set): bool => $set->completed_at !== null
+                && $set->setGroup?->type === SetGroupType::Working
+                && $set->reps !== null
+                && $set->weight_g !== null
+                && ! $set->isDropset())
             ->values();
     }
 
