@@ -119,6 +119,5 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 - **FE DRY: mobile editor accordion** — `EditorDisclosure` for Dropsets / Progression / Warm-up / Deload expanders
 - **FE DRY: tiny shared utils** — `formatDate` (Dashboard + History); import `BreadcrumbItem` from `@/types` in Breadcrumbs; optional rest-format core math share
 - **GDPR compliance?** — clarify whether/what is required (privacy policy, data export/delete, retention, cookies); grill before building
-- **Finish/discard `lockForUpdate`** — low TOCTOU on workout finish/abandon (FE busy guards in place)
 - **Plate profile ensure race** — unique is `(user_id, name)` not `user_id` alone; concurrent `ensureProfile` race (low)
 - **Editor last-write-wins / non-idempotent duplicate** — parked from Routines slice 2 (low)

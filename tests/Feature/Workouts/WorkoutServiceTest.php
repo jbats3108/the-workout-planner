@@ -238,6 +238,34 @@ class WorkoutServiceTest extends TestCase
     }
 
     #[Test]
+    public function it_rejects_finishing_a_workout_that_is_no_longer_in_progress(): void
+    {
+        $routine = Routine::factory()->create();
+        $this->seedRoutineBlockWithExercise($routine);
+        $workout = $this->workoutService->createWorkout($routine);
+        $this->workoutService->finishWorkout($workout);
+
+        $this->expectException(WorkoutServiceException::class);
+        $this->expectExceptionMessage(WorkoutService::WORKOUT_NOT_IN_PROGRESS_ERROR);
+
+        $this->workoutService->finishWorkout($workout->fresh());
+    }
+
+    #[Test]
+    public function it_rejects_discarding_a_finished_workout(): void
+    {
+        $routine = Routine::factory()->create();
+        $this->seedRoutineBlockWithExercise($routine);
+        $workout = $this->workoutService->createWorkout($routine);
+        $this->workoutService->finishWorkout($workout);
+
+        $this->expectException(WorkoutServiceException::class);
+        $this->expectExceptionMessage(WorkoutService::WORKOUT_NOT_IN_PROGRESS_ERROR);
+
+        $this->workoutService->discardWorkout($workout->fresh());
+    }
+
+    #[Test]
     public function it_snapshots_dropset_segments_and_scales_them_on_deload(): void
     {
         $routine = Routine::factory()->create([
