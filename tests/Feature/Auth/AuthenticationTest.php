@@ -4,20 +4,23 @@ namespace Tests\Feature\Auth;
 
 use App\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_login_screen_can_be_rendered(): void
+    #[Test]
+    public function it_renders_the_login_screen(): void
     {
         $response = $this->get('/login');
 
         $response->assertStatus(200);
     }
 
-    public function test_authenticated_users_are_redirected_from_login_to_dashboard(): void
+    #[Test]
+    public function authenticated_users_are_redirected_from_login_to_dashboard(): void
     {
         $user = User::factory()->create();
 
@@ -26,7 +29,8 @@ class AuthenticationTest extends TestCase
         $response->assertRedirect(route('dashboard', absolute: false));
     }
 
-    public function test_authenticated_users_are_redirected_from_home_to_dashboard(): void
+    #[Test]
+    public function authenticated_users_are_redirected_from_home_to_dashboard(): void
     {
         $user = User::factory()->create();
 
@@ -35,14 +39,16 @@ class AuthenticationTest extends TestCase
         $response->assertRedirect(route('dashboard', absolute: false));
     }
 
-    public function test_guests_can_visit_home(): void
+    #[Test]
+    public function guests_can_visit_home(): void
     {
         $response = $this->get('/');
 
         $response->assertStatus(200);
     }
 
-    public function test_users_can_authenticate_using_the_login_screen(): void
+    #[Test]
+    public function users_can_authenticate_using_the_login_screen(): void
     {
         $user = User::factory()->create();
 
@@ -55,7 +61,8 @@ class AuthenticationTest extends TestCase
         $response->assertRedirect(route('dashboard', absolute: false));
     }
 
-    public function test_users_can_not_authenticate_with_invalid_password(): void
+    #[Test]
+    public function users_cannot_authenticate_with_invalid_password(): void
     {
         $user = User::factory()->create();
 
@@ -67,7 +74,8 @@ class AuthenticationTest extends TestCase
         $this->assertGuest();
     }
 
-    public function test_users_can_logout(): void
+    #[Test]
+    public function users_can_logout(): void
     {
         $user = User::factory()->create();
 
