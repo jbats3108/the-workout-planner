@@ -7,6 +7,7 @@ use App\Routines\Data\Editor\SyncRoutineBlockData;
 use App\Routines\Data\Editor\SyncRoutineData;
 use App\Routines\Data\Editor\SyncWarmUpData;
 use App\Routines\Data\Editor\SyncWarmUpStepData;
+use App\Routines\Exceptions\RoutineStaleException;
 use App\Routines\Models\Routine;
 use App\Routines\Services\RoutineEditorService;
 use App\Users\Models\User;
@@ -462,6 +463,23 @@ class RoutineEditorServiceTest extends TestCase
         $step = $result->blocks->first()->warmUpSetGroup->warmUpSteps->first();
         $this->assertSame(100, $step->percent_of_working);
         $this->assertSame(100, $step->reps);
+    }
+
+    #[Test]
+    public function sync_rejects_stale_expected_updated_at(): void
+    {
+        $routine = Routine::factory()->create(['name' => 'Old']);
+        $exercise = Exercise::factory()->create();
+
+        $this->expectException(RoutineStaleException::class);
+
+        $this->service->sync($routine, SyncRoutineData::from([
+            'name' => 'New Name',
+            'expected_updated_at' => now()->subMinute()->toIso8601String(),
+            'blocks' => [
+                $this->singleBlockPayload($exercise->id),
+            ],
+        ]));
     }
 
     /**

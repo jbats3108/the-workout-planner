@@ -9,6 +9,7 @@ use App\Routines\Data\Editor\SyncDropsetSegmentData;
 use App\Routines\Data\Editor\SyncRoutineBlockData;
 use App\Routines\Data\Editor\SyncRoutineData;
 use App\Routines\Data\Editor\SyncWarmUpData;
+use App\Routines\Exceptions\RoutineStaleException;
 use App\Routines\Models\Routine;
 use App\Routines\Models\RoutineBlock;
 use App\Routines\Models\RoutineBlockExercise;
@@ -16,6 +17,7 @@ use App\Routines\Models\RoutineDropsetSegment;
 use App\Routines\Models\RoutineSetGroup;
 use App\Routines\Models\RoutineWarmUpStep;
 use App\Shared\Enums\SetGroupType;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
@@ -24,13 +26,22 @@ class RoutineEditorService
     public function sync(Routine $routine, SyncRoutineData $data): Routine
     {
         return DB::transaction(function () use ($routine, $data): Routine {
-            $routine->update([
+            $locked = Routine::query()->whereKey($routine->id)->lockForUpdate()->firstOrFail();
+
+            if ($data->expectedUpdatedAt !== null) {
+                $expected = Carbon::parse($data->expectedUpdatedAt);
+                if ($locked->updated_at === null || $locked->updated_at->getTimestamp() !== $expected->getTimestamp()) {
+                    throw new RoutineStaleException;
+                }
+            }
+
+            $locked->update([
                 'name' => $data->name,
-                'deload_weight_factor' => $data->deloadWeightFactor ?? $routine->deload_weight_factor,
-                'deload_reps_factor' => $data->deloadRepsFactor ?? $routine->deload_reps_factor,
+                'deload_weight_factor' => $data->deloadWeightFactor ?? $locked->deload_weight_factor,
+                'deload_reps_factor' => $data->deloadRepsFactor ?? $locked->deload_reps_factor,
             ]);
 
-            $routine->blocks()->each(function (RoutineBlock $block): void {
+            $locked->blocks()->each(function (RoutineBlock $block): void {
                 $block->delete();
             });
 
@@ -39,14 +50,14 @@ class RoutineEditorService
 
             foreach ($blocks as $index => $blockData) {
                 /** @var SyncRoutineBlockData $blockData */
-                $this->createBlock($routine, $index + 1, $blockData, $index === $lastIndex);
+                $this->createBlock($locked, $index + 1, $blockData, $index === $lastIndex);
             }
 
-            return $routine->fresh([
+            return $locked->fresh([
                 'blocks.blockExercises.exercise',
                 'blocks.setGroups.warmUpSteps',
                 'blocks.setGroups.dropsetSegments',
-            ]) ?? $routine;
+            ]) ?? $locked;
         });
     }
 

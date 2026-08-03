@@ -28,5 +28,7 @@ class SyncRoutineData extends Data
 
         #[DataCollectionOf(SyncRoutineBlockData::class)]
         public readonly ?DataCollection $blocks = null,
+
+        public readonly ?string $expectedUpdatedAt = null,
     ) {}
 }

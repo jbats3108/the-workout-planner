@@ -3,6 +3,7 @@
 namespace App\Routines\Http\Controllers;
 
 use App\Routines\Data\Editor\SyncRoutineData;
+use App\Routines\Exceptions\RoutineStaleException;
 use App\Routines\Models\Routine;
 use App\Routines\Services\RoutineEditorService;
 use App\Shared\Http\Controllers\Controller;
@@ -16,6 +17,8 @@ class UpdateRoutineController extends Controller
     {
         try {
             $editor->sync($routine, $data);
+        } catch (RoutineStaleException $e) {
+            throw ValidationException::withMessages(['expected_updated_at' => $e->getMessage()]);
         } catch (InvalidArgumentException $e) {
             throw ValidationException::withMessages(['blocks' => $e->getMessage()]);
         }

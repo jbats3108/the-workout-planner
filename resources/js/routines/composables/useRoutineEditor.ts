@@ -46,6 +46,7 @@ export function createRoutineEditor(props: EditRoutineProps) {
         name: props.routine.name,
         deload_weight_factor: props.routine.deload_weight_factor,
         deload_reps_factor: props.routine.deload_reps_factor,
+        expected_updated_at: props.routine.updated_at,
         // Inertia props are nested reactive proxies — structuredClone cannot clone them
         blocks: props.routine.blocks.length
             ? (() => {

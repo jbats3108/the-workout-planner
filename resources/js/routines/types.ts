@@ -40,6 +40,7 @@ export type RoutinePayload = {
     name: string;
     deload_weight_factor: number;
     deload_reps_factor: number;
+    updated_at: string;
     blocks: Block[];
 };
 
