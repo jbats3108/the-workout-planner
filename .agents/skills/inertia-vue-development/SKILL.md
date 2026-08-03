@@ -372,17 +372,16 @@ import { Link } from '@inertiajs/vue3'
 
 ### Layout Props
 
-Share dynamic data between pages and persistent layouts:
+Share dynamic data between pages and persistent layouts.
+
+Prefer destructure defaults (`const { title = 'My App' } = defineProps(...)`) over destructuring `withDefaults()` — the latter disables reactive destructure (Vite warning). Non-destructured `withDefaults` is fine.
 
 <!-- Layout Props in Layout -->
 ```vue
 <script setup>
-withDefaults(defineProps({
+const { title = 'My App', showSidebar = true } = defineProps({
     title: String,
     showSidebar: Boolean,
-}), {
-    title: 'My App',
-    showSidebar: true,
 })
 </script>
 
