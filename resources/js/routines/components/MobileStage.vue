@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import BlockSetupOptions from '@/routines/components/BlockSetupOptions.vue';
 import DeloadSettings from '@/routines/components/DeloadSettings.vue';
 import DropsetEditor from '@/routines/components/DropsetEditor.vue';
 import EditorDisclosure from '@/routines/components/EditorDisclosure.vue';
 import ExercisePicker from '@/routines/components/ExercisePicker.vue';
 import { useRoutineEditor } from '@/routines/composables/useRoutineEditor';
-import { canSetupAfterBlock } from '@/routines/lib/blocks';
 import { optionalRepsPlaceholder, parseOptionalReps } from '@/routines/lib/optionalReps';
 import { Link } from '@inertiajs/vue3';
 
@@ -30,7 +30,6 @@ const {
     addWarmUpStep,
     removeWarmUpStep,
     clearWarmUp,
-    toggleSuperset,
     dropsetSummary,
     achievementFloorDefault,
     save,
@@ -230,27 +229,8 @@ const {
 
                 <DeloadSettings variant="mobile" />
 
-                <div class="mt-3 flex flex-wrap gap-4 border-t border-border pt-3 text-sm">
-                    <label class="flex items-center gap-2">
-                        <input type="checkbox" :checked="activeBlock.is_superset" @change="toggleSuperset(activeBlock)" />
-                        Superset
-                    </label>
-                    <label
-                        class="flex items-center gap-2"
-                        :class="activeBlock.warm_up.steps.length ? '' : 'opacity-40'"
-                        :title="activeBlock.warm_up.steps.length ? undefined : 'Add warm-up steps first'"
-                    >
-                        <input v-model="activeBlock.has_setup_after_warm_up" type="checkbox" :disabled="!activeBlock.warm_up.steps.length" />
-                        Setup before working
-                    </label>
-                    <label
-                        class="flex items-center gap-2"
-                        :class="canSetupAfterBlock(active, form.blocks.length) ? '' : 'opacity-40'"
-                        :title="canSetupAfterBlock(active, form.blocks.length) ? undefined : 'Not on the final exercise'"
-                    >
-                        <input v-model="activeBlock.has_setup_after" type="checkbox" :disabled="!canSetupAfterBlock(active, form.blocks.length)" />
-                        Setup after exercise
-                    </label>
+                <div class="mt-3 border-t border-border pt-3">
+                    <BlockSetupOptions :block-index="active" variant="mobile" />
                 </div>
             </div>
 

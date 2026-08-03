@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import BlockSetupOptions from '@/routines/components/BlockSetupOptions.vue';
 import DeloadSettings from '@/routines/components/DeloadSettings.vue';
 import DropsetEditor from '@/routines/components/DropsetEditor.vue';
 import ExercisePicker from '@/routines/components/ExercisePicker.vue';
 import { useRoutineEditor } from '@/routines/composables/useRoutineEditor';
-import { canSetupAfterBlock } from '@/routines/lib/blocks';
 import { optionalRepsPlaceholder, parseOptionalReps } from '@/routines/lib/optionalReps';
 
 const {
@@ -15,7 +15,6 @@ const {
     warmUpText,
     setWarmUpText,
     clearWarmUp,
-    toggleSuperset,
     removeBlock,
     addBlock,
     trimDropsetsToSetCount,
@@ -159,32 +158,7 @@ const {
                                 />
                             </td>
                             <td class="px-2 py-2">
-                                <div v-if="ei === 0" class="flex flex-col gap-1 text-xs">
-                                    <label class="flex items-center gap-1.5 whitespace-nowrap">
-                                        <input type="checkbox" :checked="block.is_superset" @change="toggleSuperset(block)" />
-                                        Superset
-                                    </label>
-                                    <label
-                                        class="flex items-center gap-1.5 whitespace-nowrap"
-                                        :class="block.warm_up.steps.length ? '' : 'opacity-40'"
-                                        :title="block.warm_up.steps.length ? undefined : 'Add warm-up steps first'"
-                                    >
-                                        <input v-model="block.has_setup_after_warm_up" type="checkbox" :disabled="!block.warm_up.steps.length" />
-                                        Setup before working
-                                    </label>
-                                    <label
-                                        class="flex items-center gap-1"
-                                        :class="canSetupAfterBlock(bi, form.blocks.length) ? '' : 'opacity-40'"
-                                        :title="canSetupAfterBlock(bi, form.blocks.length) ? undefined : 'Not on the final exercise'"
-                                    >
-                                        <input
-                                            v-model="block.has_setup_after"
-                                            type="checkbox"
-                                            :disabled="!canSetupAfterBlock(bi, form.blocks.length)"
-                                        />
-                                        Setup→next
-                                    </label>
-                                </div>
+                                <BlockSetupOptions v-if="ei === 0" :block-index="bi" variant="desktop" />
                             </td>
                             <td class="px-2 py-2">
                                 <button

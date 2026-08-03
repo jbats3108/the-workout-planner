@@ -111,6 +111,4 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 
 ### Code quality & security
 
-- **FE DRY: routine editor fields** — extract shared block field/option groups from `DesktopBlockList.vue` ↔ `MobileStage.vue` (weight/reps/sets/rest/WU + setup checkboxes); keep layout shells separate
-- **FE DRY: mutation helpers** — centralize finish/abandon workout + delete/duplicate routine + history delete (Dashboard / player / editor / history copies diverge slightly)
 - **GDPR compliance?** — clarify whether/what is required (privacy policy, data export/delete, retention, cookies); grill before building
