@@ -7,9 +7,11 @@ use App\Exercises\Models\Exercise;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Override;
 
 class WorkoutBlockExercise extends Model
 {
+    #[Override]
     protected $fillable = [
         'workout_block_id',
         'exercise_id',
@@ -23,6 +25,7 @@ class WorkoutBlockExercise extends Model
     ];
 
     /** @return array<string, string> */
+    #[Override]
     protected function casts(): array
     {
         return [

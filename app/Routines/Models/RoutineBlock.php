@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Override;
 
 class RoutineBlock extends Model
 {
+    #[Override]
     protected $fillable = [
         'routine_id',
         'position',
@@ -18,6 +20,7 @@ class RoutineBlock extends Model
     ];
 
     /** @return array<string, string> */
+    #[Override]
     protected function casts(): array
     {
         return [

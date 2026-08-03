@@ -8,6 +8,7 @@ use Database\Factories\MuscleGroupFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Override;
 
 class MuscleGroup extends Model
 {
@@ -18,6 +19,7 @@ class MuscleGroup extends Model
     use HasSlug;
     use SoftDeletes;
 
+    #[Override]
     protected $fillable = [
         'name',
         'slug',

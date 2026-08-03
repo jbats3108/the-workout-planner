@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Override;
 
 class Workout extends Model
 {
@@ -23,6 +24,7 @@ class Workout extends Model
 
     use SoftDeletes;
 
+    #[Override]
     protected $fillable = [
         'user_id',
         'routine_id',
@@ -35,6 +37,7 @@ class Workout extends Model
         'finished_at',
     ];
 
+    #[Override]
     protected static function booted(): void
     {
         static::creating(function (Workout $workout): void {
@@ -46,12 +49,14 @@ class Workout extends Model
         });
     }
 
+    #[Override]
     public function getRouteKeyName(): string
     {
         return 'ulid';
     }
 
     /** @return array<string, string> */
+    #[Override]
     protected function casts(): array
     {
         return [

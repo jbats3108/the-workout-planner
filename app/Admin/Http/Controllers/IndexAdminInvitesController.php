@@ -18,7 +18,7 @@ class IndexAdminInvitesController extends Controller
             ->latest()
             ->limit(50)
             ->get()
-            ->map(fn (RegistrationInvite $invite) => [
+            ->map(fn (RegistrationInvite $invite): array => [
                 'id' => $invite->id,
                 'note' => $invite->note,
                 'role' => $invite->role,

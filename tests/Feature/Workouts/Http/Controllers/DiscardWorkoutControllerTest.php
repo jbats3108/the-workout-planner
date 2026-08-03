@@ -9,6 +9,7 @@ use App\Routines\Models\RoutineBlockExercise;
 use App\Routines\Models\RoutineSetGroup;
 use App\Shared\Enums\SetGroupType;
 use App\Workouts\Enums\WorkoutStatus;
+use App\Workouts\Models\Workout;
 use App\Workouts\Services\WorkoutService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
@@ -49,7 +50,7 @@ class DiscardWorkoutControllerTest extends TestCase
             ->assertForbidden();
     }
 
-    private function createWorkoutForUser()
+    private function createWorkoutForUser(): Workout
     {
         $routine = Routine::factory()->withUser($this->user)->create();
         $block = RoutineBlock::create([

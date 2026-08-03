@@ -173,7 +173,7 @@ class WorkoutService
                 return $workout->fresh(['blocks']);
             });
         } catch (UniqueConstraintViolationException $exception) {
-            throw new WorkoutServiceException(self::ALREADY_IN_PROGRESS_ERROR, previous: $exception);
+            throw new WorkoutServiceException(self::ALREADY_IN_PROGRESS_ERROR, $exception->getCode(), previous: $exception);
         }
     }
 
@@ -340,7 +340,7 @@ class WorkoutService
                 ]);
             }
 
-            $workingGroup->set_count = $workingGroup->set_count + 1;
+            $workingGroup->set_count += 1;
             $workingGroup->save();
 
             return $block->fresh(['blockExercises', 'setGroups.sets']);

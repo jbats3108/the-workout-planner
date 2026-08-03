@@ -39,7 +39,7 @@ class HistoryIndexPageData extends Data
             $query->where('routine_id', $routineId);
         }
 
-        $workouts = $query->get()->map(fn (Workout $workout) => HistoryWorkoutItemData::fromWorkout($workout));
+        $workouts = $query->get()->map(fn (Workout $workout): HistoryWorkoutItemData => HistoryWorkoutItemData::fromWorkout($workout));
 
         $routineFilterOptions = Routine::query()
             ->where('user_id', $user->id)

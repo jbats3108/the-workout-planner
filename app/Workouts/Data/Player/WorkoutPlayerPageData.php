@@ -43,7 +43,7 @@ class WorkoutPlayerPageData extends Data
             status: $workout->status->value,
             weightUnit: $user->weight_unit->value,
             blocks: WorkoutPlayerBlockData::collect(
-                $workout->blocks->map(fn (WorkoutBlock $block) => WorkoutPlayerBlockData::fromBlock($block)),
+                $workout->blocks->map(fn (WorkoutBlock $block): WorkoutPlayerBlockData => WorkoutPlayerBlockData::fromBlock($block)),
                 DataCollection::class,
             ),
         );

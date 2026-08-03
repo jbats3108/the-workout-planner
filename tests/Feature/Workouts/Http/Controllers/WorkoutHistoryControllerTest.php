@@ -39,7 +39,7 @@ class WorkoutHistoryControllerTest extends TestCase
         $this->actingAs($this->user)
             ->get(route('history.index'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (Assert $page): Assert => $page
                 ->component('history/Index')
                 ->has('history.workouts', 1)
                 ->where('history.workouts.0.id', $finished->ulid));
@@ -54,7 +54,7 @@ class WorkoutHistoryControllerTest extends TestCase
         $this->actingAs($this->user)
             ->get(route('history.index', ['routine' => $routineB->slug]))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (Assert $page): Assert => $page
                 ->has('history.workouts', 1)
                 ->where('history.workouts.0.id', $workoutB->ulid)
                 ->where('history.routine_slug', $routineB->slug));
@@ -70,7 +70,7 @@ class WorkoutHistoryControllerTest extends TestCase
         $this->actingAs($this->user)
             ->get(route('history.show', $workout))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (Assert $page): Assert => $page
                 ->component('history/Show')
                 ->where('history.workout.id', $workout->ulid)
                 ->where('history.can_re_evaluate', true));
@@ -186,7 +186,7 @@ class WorkoutHistoryControllerTest extends TestCase
         $this->actingAs($this->user)
             ->get(route('history.index'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page->has('history.workouts', 0));
+            ->assertInertia(fn (Assert $page): Assert => $page->has('history.workouts', 0));
     }
 
     #[Test]

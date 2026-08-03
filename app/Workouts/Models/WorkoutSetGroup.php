@@ -6,9 +6,11 @@ use App\Shared\Enums\SetGroupType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Override;
 
 class WorkoutSetGroup extends Model
 {
+    #[Override]
     protected $fillable = [
         'workout_block_id',
         'type',
@@ -17,6 +19,7 @@ class WorkoutSetGroup extends Model
     ];
 
     /** @return array<string, string> */
+    #[Override]
     protected function casts(): array
     {
         return [

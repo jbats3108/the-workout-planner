@@ -58,7 +58,7 @@ class ProgressionControllerTest extends TestCase
         $this->actingAs($this->user)
             ->get(route('workouts.progression', $workout))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (Assert $page): Assert => $page
                 ->component('workouts/Progression')
                 ->where('progression.workout_id', $workout->ulid)
                 ->has('progression.bumps', 1));
@@ -84,7 +84,7 @@ class ProgressionControllerTest extends TestCase
         $this->actingAs($this->user)
             ->get(route('workouts.progression', $workout))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (Assert $page): Assert => $page
                 ->has('progression.undos', 1));
     }
 

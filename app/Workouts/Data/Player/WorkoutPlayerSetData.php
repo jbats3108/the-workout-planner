@@ -53,7 +53,7 @@ class WorkoutPlayerSetData extends Data
         $segments = $set->segments
             ->sortBy('position')
             ->values()
-            ->map(fn ($segment) => new WorkoutPlayerSetSegmentData(
+            ->map(fn ($segment): WorkoutPlayerSetSegmentData => new WorkoutPlayerSetSegmentData(
                 position: $segment->position,
                 weightKg: round($segment->weight_g / 1000, 3),
             ));
