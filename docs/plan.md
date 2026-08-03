@@ -114,8 +114,3 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 
 - **Check test function name conventions** — audit PHPUnit / Vitest names for consistency (`it_…` / `test_…` / describe+it wording) and align or document the house style
 - **GDPR compliance?** — clarify whether/what is required (privacy policy, data export/delete, retention, cookies); grill before building
-- **Backend DRY: SoftFail-style catch + ownership assert** — thin helper for `WorkoutServiceException` → `back()->withErrors` (~8 controllers); nested set/block→workout `abort_unless` → model assert or scoped binding
-- **Backend DRY: deload attrs + segment Data** — shared Min/Max deload attributes across Store/Sync/TrainingDefaults Data; unify `CompleteWorkoutSetSegmentData` ≡ `SyncDropsetSegmentData` and `segmentWeightGrams()` helpers
-- **Backend DRY: workout status scopes** — use `Workout::finished()` (exists unused); centralize in-progress queries vs reimplemented Dashboard/History patterns
-- **Backend DRY (tests): playable + finished fixtures** — shared trait / factory states for routine→workout graph (~11 files) and finished-workout helpers (Progression ≈ History)
-- **Backend DRY (tests): editor payloads + seedUsers** — shared editor sync payload helper; default `seedUsers(false)` where catalog/demo routines unused
