@@ -24,6 +24,7 @@ use App\Routines\Http\Controllers\StoreRoutineController;
 use App\Routines\Http\Controllers\UpdateRoutineController;
 use App\Shared\Http\Controllers\ShowBetaTesterFaqsController;
 use App\Shared\Http\Controllers\ShowHomeController;
+use App\Shared\Http\Controllers\ShowPrivacyController;
 use App\Workouts\Http\Controllers\AddWorkingSetController;
 use App\Workouts\Http\Controllers\ApplyProgressionBumpsController;
 use App\Workouts\Http\Controllers\CompleteWorkoutSetController;
@@ -45,6 +46,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', ShowHomeController::class)->name('home');
 
 Route::get('beta-tester-faqs', ShowBetaTesterFaqsController::class)->name('beta-tester-faqs');
+
+Route::get('privacy', ShowPrivacyController::class)->name('privacy');
 
 Route::middleware('auth')->group(function (): void {
 
