@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import DarkModeToggle from '@/components/DarkModeToggle.vue';
+import PublicSiteHeader from '@/components/PublicSiteHeader.vue';
 import { Head, Link } from '@inertiajs/vue3';
 </script>
 
@@ -9,9 +9,7 @@ import { Head, Link } from '@inertiajs/vue3';
     <div class="home relative flex min-h-dvh flex-col overflow-hidden bg-background text-foreground">
         <div class="home-atmosphere pointer-events-none absolute inset-0" aria-hidden="true" />
 
-        <header class="relative z-10 flex items-center justify-end px-6 py-5 sm:px-10">
-            <DarkModeToggle />
-        </header>
+        <PublicSiteHeader current="home" />
 
         <main class="relative z-10 flex flex-1 flex-col items-center justify-center px-6 pb-16 text-center sm:px-10">
             <h1 class="home-brand text-6xl font-bold tracking-wide sm:text-7xl md:text-8xl lg:text-9xl">
@@ -28,14 +26,6 @@ import { Head, Link } from '@inertiajs/vue3';
                     Log in
                 </Link>
             </div>
-
-            <nav
-                class="home-links mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-muted-foreground"
-                aria-label="Secondary"
-            >
-                <Link :href="route('beta-tester-faqs')" class="underline-offset-4 hover:text-foreground hover:underline"> Beta testers </Link>
-                <Link :href="route('privacy')" class="underline-offset-4 hover:text-foreground hover:underline"> Privacy </Link>
-            </nav>
         </main>
     </div>
 </template>
@@ -59,10 +49,6 @@ import { Head, Link } from '@inertiajs/vue3';
 
 .home-cta {
     animation: home-rise 0.7s ease-out 0.24s both;
-}
-
-.home-links {
-    animation: home-rise 0.7s ease-out 0.36s both;
 }
 
 @keyframes home-rise {
@@ -89,8 +75,7 @@ import { Head, Link } from '@inertiajs/vue3';
     .home-atmosphere,
     .home-brand,
     .home-line,
-    .home-cta,
-    .home-links {
+    .home-cta {
         animation: none;
     }
 }

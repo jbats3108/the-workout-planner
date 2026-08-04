@@ -3,8 +3,7 @@ import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 
 describe('Home', () => {
-    it('links to beta tester FAQs and privacy under the login CTA', () => {
-        // Stub Ziggy's global `route()` for this test (see `resources/js/test/setup.ts`).
+    it('links to beta tester FAQs and privacy in the site header', () => {
         const route = vi.fn((name: string) => `/${name}`);
         vi.stubGlobal('route', route);
 

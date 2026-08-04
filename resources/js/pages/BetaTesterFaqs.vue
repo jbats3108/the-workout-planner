@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import BrandName from '@/components/BrandName.vue';
-import DarkModeToggle from '@/components/DarkModeToggle.vue';
+import PublicSiteHeader from '@/components/PublicSiteHeader.vue';
 import { Head, Link } from '@inertiajs/vue3';
 
 defineProps<{
@@ -34,12 +34,7 @@ const backlogItems = [
     <div class="faq relative min-h-dvh bg-background text-foreground">
         <div class="faq-atmosphere pointer-events-none absolute inset-0" aria-hidden="true" />
 
-        <header class="relative z-10 flex items-center justify-between px-6 py-5 sm:px-10">
-            <p class="text-lg">
-                <BrandName />
-            </p>
-            <DarkModeToggle />
-        </header>
+        <PublicSiteHeader current="beta-tester-faqs" />
 
         <main class="relative z-10 mx-auto w-full max-w-2xl px-6 pb-20 sm:px-10">
             <p class="text-sm font-medium tracking-widest text-primary uppercase">Beta Testers</p>
