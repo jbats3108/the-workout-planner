@@ -23,8 +23,12 @@ use App\Routines\Http\Controllers\ShowRoutineController;
 use App\Routines\Http\Controllers\StoreRoutineController;
 use App\Routines\Http\Controllers\UpdateRoutineController;
 use App\Shared\Http\Controllers\ShowBetaTesterFaqsController;
+use App\Shared\Http\Controllers\ShowFeedbackController;
 use App\Shared\Http\Controllers\ShowHomeController;
+use App\Shared\Http\Controllers\ShowInviteRequestController;
 use App\Shared\Http\Controllers\ShowPrivacyController;
+use App\Shared\Http\Controllers\StoreFeedbackController;
+use App\Shared\Http\Controllers\StoreInviteRequestController;
 use App\Workouts\Http\Controllers\AddWorkingSetController;
 use App\Workouts\Http\Controllers\ApplyProgressionBumpsController;
 use App\Workouts\Http\Controllers\CompleteWorkoutSetController;
@@ -46,6 +50,16 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', ShowHomeController::class)->name('home');
 
 Route::get('beta-tester-faqs', ShowBetaTesterFaqsController::class)->name('beta-tester-faqs');
+
+Route::get('invite-request', ShowInviteRequestController::class)->name('invite-request');
+Route::post('invite-request', StoreInviteRequestController::class)
+    ->middleware('throttle:5,1')
+    ->name('invite-request.store');
+
+Route::get('feedback', ShowFeedbackController::class)->name('feedback');
+Route::post('feedback', StoreFeedbackController::class)
+    ->middleware('throttle:5,1')
+    ->name('feedback.store');
 
 Route::get('privacy', ShowPrivacyController::class)->name('privacy');
 
