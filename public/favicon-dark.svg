@@ -5,14 +5,14 @@
       .text-ovr {
         font-family: 'Space Grotesk', sans-serif;
         font-weight: 700;
-        font-size: 190px;
+        font-size: 150px;
         fill: #CCFF00;
         letter-spacing: -0.05em;
       }
       .text-load {
         font-family: 'Space Grotesk', sans-serif;
         font-weight: 700;
-        font-size: 190px;
+        font-size: 150px;
         fill: #ECECEA;
         letter-spacing: -0.05em;
       }
@@ -20,7 +20,7 @@
   </defs>
   <rect width="512" height="512" fill="#0F0F0F"/>
   <g text-anchor="middle">
-    <text x="256" y="215" class="text-ovr">OVR</text>
-    <text x="256" y="395" class="text-load">LOAD</text>
+    <text x="256" y="200" class="text-ovr">OVR</text>
+    <text x="256" y="360" class="text-load">LOAD</text>
   </g>
 </svg>

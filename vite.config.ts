@@ -112,9 +112,10 @@ export default defineConfig(({ mode, isSsrBuild }) => {
                     navigateFallback: null,
                     cleanupOutdatedCaches: true,
                     additionalManifestEntries: [
-                        { url: '/manifest.webmanifest', revision: '1' },
-                        { url: '/pwa-192x192.png', revision: '1' },
-                        { url: '/pwa-512x512.png', revision: '1' },
+                        { url: '/manifest.webmanifest', revision: '2' },
+                        { url: '/pwa-192x192.png', revision: '2' },
+                        { url: '/pwa-512x512.png', revision: '2' },
+                        { url: '/pwa-512x512-maskable.png', revision: '2' },
                     ],
                 },
                 devOptions: {

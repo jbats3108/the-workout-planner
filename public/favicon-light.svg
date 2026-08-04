@@ -6,7 +6,7 @@
       .text-load {
         font-family: 'Space Grotesk', sans-serif;
         font-weight: 700;
-        font-size: 190px;
+        font-size: 150px;
         fill: #0F0F0F;
         letter-spacing: -0.05em;
       }
@@ -15,7 +15,7 @@
   <!-- Inverted plate: primary yellow field, dark type — readable on light browser chrome -->
   <rect width="512" height="512" fill="#CCFF00"/>
   <g text-anchor="middle">
-    <text x="256" y="215" class="text-ovr">OVR</text>
-    <text x="256" y="395" class="text-load">LOAD</text>
+    <text x="256" y="200" class="text-ovr">OVR</text>
+    <text x="256" y="360" class="text-load">LOAD</text>
   </g>
 </svg>
