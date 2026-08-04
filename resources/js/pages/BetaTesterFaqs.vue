@@ -145,8 +145,16 @@ const backlogItems = [
                             as a personal project, and if it stays that way, I'm happy to pay the small amount it costs me each month to maintain.
                         </p>
                         <p>
-                            However, if you <em>do</em> want to support the app financially, I have a Ko-Fi page where you can donate to the upkeep of
-                            <BrandName />.
+                            However, if you <em>do</em> want to support the app financially, I have a
+                            <a
+                                href="https://ko-fi.com/jamieb3108"
+                                class="font-medium text-primary underline-offset-2 hover:underline"
+                                rel="noopener noreferrer"
+                                target="_blank"
+                            >
+                                Ko-Fi page
+                            </a>
+                            where you can donate to the upkeep of <BrandName />.
                         </p>
                     </div>
                 </article>
