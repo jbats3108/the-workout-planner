@@ -4,11 +4,6 @@ import BrandName from '@/components/BrandName.vue';
 import PublicSiteHeader from '@/components/PublicSiteHeader.vue';
 import { Head, Link } from '@inertiajs/vue3';
 
-defineProps<{
-    interestFormUrl: string | null;
-    feedbackFormUrl: string | null;
-}>();
-
 const backlogItems = [
     {
         title: 'Tutorial',
@@ -150,8 +145,16 @@ const backlogItems = [
                             as a personal project, and if it stays that way, I'm happy to pay the small amount it costs me each month to maintain.
                         </p>
                         <p>
-                            However, if you <em>do</em> want to support the app financially, I have a Ko-Fi page where you can donate to the upkeep of
-                            <BrandName />.
+                            However, if you <em>do</em> want to support the app financially, I have a
+                            <a
+                                href="https://ko-fi.com/jamieb3108"
+                                class="font-medium text-primary underline-offset-2 hover:underline"
+                                rel="noopener noreferrer"
+                                target="_blank"
+                            >
+                                Ko-Fi page
+                            </a>
+                            where you can donate to the upkeep of <BrandName />.
                         </p>
                     </div>
                 </article>
@@ -174,18 +177,12 @@ const backlogItems = [
                     email address.
                 </p>
                 <p class="mt-5">
-                    <a
-                        v-if="interestFormUrl"
-                        :href="interestFormUrl"
+                    <Link
+                        :href="route('invite-request')"
                         class="inline-flex rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
-                        rel="noopener noreferrer"
-                        target="_blank"
                     >
                         Request an invite
-                    </a>
-                    <span v-else class="inline-flex rounded-md border border-primary/50 bg-primary/20 px-4 py-2 text-sm font-medium text-primary">
-                        [Interest form link TBD]
-                    </span>
+                    </Link>
                 </p>
             </section>
 
@@ -212,18 +209,12 @@ const backlogItems = [
                     what's missing, use the form below.
                 </p>
                 <p class="mt-5">
-                    <a
-                        v-if="feedbackFormUrl"
-                        :href="feedbackFormUrl"
+                    <Link
+                        :href="route('feedback')"
                         class="inline-flex rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
-                        rel="noopener noreferrer"
-                        target="_blank"
                     >
                         Submit feedback
-                    </a>
-                    <span v-else class="inline-flex rounded-md border border-primary/50 bg-primary/20 px-4 py-2 text-sm font-medium text-primary">
-                        [Feedback form link TBD]
-                    </span>
+                    </Link>
                 </p>
             </section>
         </main>

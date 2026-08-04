@@ -4,16 +4,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Beta FAQ form URLs (Tally)
+    | Domain mailboxes
     |--------------------------------------------------------------------------
     |
-    | Public Tally form links for invite interest and feedback on
-    | /beta-tester-faqs. Leave empty to show TBD placeholders.
+    | Public form notifications and general contact. Prod defaults assume
+    | Resend receiving on ovr-load.co.uk.
     |
     */
 
-    'interest_form_url' => env('OVRLOAD_INTEREST_FORM_URL'),
-
-    'feedback_form_url' => env('OVRLOAD_FEEDBACK_FORM_URL'),
+    'mailboxes' => [
+        'admin' => env('OVRLOAD_ADMIN_MAILBOX', 'admin@ovr-load.co.uk'),
+        'invite' => env('OVRLOAD_INVITE_MAILBOX', 'invite@ovr-load.co.uk'),
+        'feedback' => env('OVRLOAD_FEEDBACK_MAILBOX', 'feedback@ovr-load.co.uk'),
+    ],
 
 ];
