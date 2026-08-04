@@ -9,7 +9,7 @@ Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domai
 ## Now
 
 - **Invite email (Resend)** — create+send requires recipient; see **Grill: Invite email**
-- **FAQ page** — public/help FAQ; draft bullets on Notion [FAQ Page](https://app.notion.com/p/3aae5dd99f0c8006a6cbf6df379661a8) (early-adopter forever-free, Ko-fi, what app is/isn't, beta, no AI/ad data sale, not a training app, backlog link)
+- **FAQ page** — scaffold at `/beta-tester-faqs` (public, noindex, not linked from `/`); fill copy + interest form URL (invite requests) + feedback form URL; draft on Notion [FAQ Page](https://app.notion.com/p/3aae5dd99f0c8006a6cbf6df379661a8)
 - **Since-last-deload counts** — per routine on dashboard (finished standards since that routine’s latest finished deload); soft Deload hint at ≥ **Deload Velocity** (`deload_every_n`, editor + Training defaults; 0 = never); no shared cycle counter
 
 ## Grill: Invite email
@@ -100,19 +100,24 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 
 ### Features (FAQ)
 
-- **Tutorial / welcome guide** — help new users find Settings, progression defaults, editor overrides, and bump confirmation; inbox: start with FAQ, then create/play walkthrough
-- **Post-hoc workout record** — log a full finished workout in one pass (no Play); pick routine or ad-hoc structure; assign `finished_at` to a past date; grill scope (progression re-eval, warm-ups, deload flag)
-- **Switch exercise for deload** — swap the exercise used when starting a deload (same structure, different lift)
-- **Strava integration** — connect account; export finished workouts (and/or sync activity metadata); grill scope (OAuth, fields, privacy)
-- **Garmin sync** — long-term; watch functionality too; prefer after Strava
-- **Per-exercise strength-over-time** — charts / PR timeline; needs its own grill
-- **History extensions** — warm-up edits; discarded workouts in list; structure edits on finished workouts
+Public order matches `/beta-tester-faqs`.
+
+1. **Tutorial** — walkthrough for settings, routines, create/manage
+2. **Add Historical Workouts** — log a past workout without Play (date/time + weights on one screen); grill: progression re-eval, warm-ups, deload flag
+3. **Better History Edits** — warm-up edits; discarded in History; add/remove exercises and sets on a logged workout
+4. **Support for lbs** — end-to-end preferred unit (API still kg-centric today)
+5. **Choose an alternate exercise for Deload sessions** — swap lift only on deload starts
+6. **Gym dumbbell / rack inventory** — full rack range for run-the-rack / planning
+7. **Viewable Progression Data** — charts/tables/export; large feature, own grill later
+
+### Parked (internal — not on public FAQ)
+
+- **Strava integration** — OAuth / export / privacy grill later
+- **Garmin sync** — after Strava
 - **Demote dropset → single in Play**
 - **Ad-hoc setup from player** — beyond planned `has_setup_after`
-- **Transition duration preference** — stored user pref (today client-side for supersets)
-- **lb display/conversion** — end-to-end (API still kg-centric like the editor)
+- **Transition duration preference** — stored pref for A→B pause in supersets (today client-side)
 - **Dropsets on supersets**
-- **Gym dumbbell / rack inventory** — min, max, step for run-the-rack helper
 - **Flaky-network drafts** — best-effort offline/queue for player logging
 
 ### Polish & mobile integration
@@ -126,4 +131,4 @@ Single triage list — reprioritize across buckets as needed. **Features (FAQ)**
 ### Code quality & security
 
 - **Check test function name conventions** — audit PHPUnit / Vitest names for consistency (`it_…` / `test_…` / describe+it wording) and align or document the house style
-- **GDPR compliance?** — clarify whether/what is required (privacy policy, data export/delete, retention, cookies); grill before building
+- **GDPR (public launch)** — re-grill retention, cookie CMP, and processor DPAs before open registration; beta: privacy page + Settings export/delete + invite cascade done

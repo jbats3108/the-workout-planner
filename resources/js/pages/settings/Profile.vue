@@ -188,6 +188,17 @@ const updatePassword = () => {
                 </form>
             </div>
 
+            <div class="space-y-6">
+                <HeadingSmall title="Download your data" description="Export a JSON copy of your profile, routines, workouts, and preferences" />
+                <p class="text-sm text-muted-foreground">
+                    Includes account details (not your password), training defaults, plate profile, custom exercises, routines, and workout logs.
+                    Copies held by email or error providers may remain under their retention policies.
+                </p>
+                <Button as-child variant="secondary">
+                    <a :href="route('profile.data-export')">Download my data</a>
+                </Button>
+            </div>
+
             <DeleteUser />
         </SettingsLayout>
     </AppLayout>
