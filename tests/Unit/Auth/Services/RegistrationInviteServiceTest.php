@@ -189,6 +189,22 @@ class RegistrationInviteServiceTest extends TestCase
     }
 
     #[Test]
+    public function create_and_send_uses_configured_reply_to_when_set(): void
+    {
+        Mail::fake();
+        config([
+            'mail.reply_to.address' => 'admin@ovr-load.co.uk',
+            'mail.reply_to.name' => 'OVRLOAD',
+        ]);
+        $creator = User::factory()->create(['name' => 'Jamie', 'email' => 'jamie@example.com']);
+
+        $this->service->createAndSend($creator, 'buddy@example.com');
+
+        Mail::assertSent(RegistrationInviteMail::class, fn (RegistrationInviteMail $mail): bool => $mail->hasReplyTo('admin@ovr-load.co.uk', 'OVRLOAD')
+            && $mail->inviterName === 'Jamie');
+    }
+
+    #[Test]
     public function create_and_send_rolls_back_when_mail_fails(): void
     {
         $pending = Mockery::mock(PendingMail::class);

@@ -152,11 +152,18 @@ class RegistrationInviteService
             throw new RuntimeException('Invite has no creator.');
         }
 
+        $replyToAddress = config('mail.reply_to.address');
+        $replyToName = config('mail.reply_to.name');
+
         Mail::to($invite->email)->send(new RegistrationInviteMail(
             registrationUrl: $this->registrationUrl($invite->token),
             inviterName: $creator->name,
-            replyToEmail: $creator->email,
-            replyToName: $creator->name,
+            replyToEmail: is_string($replyToAddress) && $replyToAddress !== ''
+                ? $replyToAddress
+                : $creator->email,
+            replyToName: is_string($replyToName) && $replyToName !== ''
+                ? $replyToName
+                : $creator->name,
             expiresAt: $invite->expires_at,
         ));
     }

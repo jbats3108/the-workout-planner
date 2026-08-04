@@ -113,4 +113,20 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Global "Reply-To" Address
+    |--------------------------------------------------------------------------
+    |
+    | Optional Reply-To used by transactional mail (e.g. registration invites).
+    | When unset, invite mail falls back to the inviting admin's account email.
+    | Prod: admin@ovr-load.co.uk (Resend receiving on the domain).
+    |
+    */
+
+    'reply_to' => [
+        'address' => env('MAIL_REPLY_TO_ADDRESS'),
+        'name' => env('MAIL_REPLY_TO_NAME'),
+    ],
+
 ];
