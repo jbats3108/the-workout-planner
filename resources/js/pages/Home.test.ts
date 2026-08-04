@@ -4,20 +4,21 @@ import { describe, expect, it, vi } from 'vitest';
 
 describe('Home', () => {
     it('links to beta tester FAQs and privacy under the login CTA', () => {
+        // Stub Ziggy's global `route()` for this test (see `resources/js/test/setup.ts`).
         const route = vi.fn((name: string) => `/${name}`);
+        vi.stubGlobal('route', route);
 
         const wrapper = mount(Home, {
             global: {
                 stubs: {
                     DarkModeToggle: true,
+                    Link: {
+                        props: ['href'],
+                        template: '<a :href="href"><slot /></a>',
+                    },
                 },
                 mocks: {
                     route,
-                },
-                config: {
-                    globalProperties: {
-                        route,
-                    },
                 },
             },
         });
