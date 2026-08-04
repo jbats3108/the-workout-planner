@@ -148,10 +148,15 @@ import { Head, Link } from '@inertiajs/vue3';
                                     <td class="py-2 pr-3">Application error monitoring</td>
                                     <td class="py-2">Technical error context; we keep default PII sending off</td>
                                 </tr>
-                                <tr class="align-top">
+                                <tr class="border-b border-border/60 align-top">
                                     <td class="py-2 pr-3 text-foreground">Bunny Fonts</td>
                                     <td class="py-2 pr-3">Serves web fonts to your browser</td>
                                     <td class="py-2">Connection metadata (e.g. IP) as with any CDN request</td>
+                                </tr>
+                                <tr class="align-top">
+                                    <td class="py-2 pr-3 text-foreground">Tally</td>
+                                    <td class="py-2 pr-3">Invite-interest and feedback forms (when linked from the beta FAQ)</td>
+                                    <td class="py-2">Whatever you submit on those forms (e.g. name, email, message)</td>
                                 </tr>
                             </tbody>
                         </table>
