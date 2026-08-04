@@ -9,20 +9,40 @@ defineProps<{
 }>();
 
 const backlogItems = [
-    'Tutorial / welcome guide',
-    'Post-hoc workout record',
-    'Switch exercise for deload',
-    'Strava integration',
-    'Garmin sync',
-    'Per-exercise strength-over-time',
-    'History extensions',
-    'Demote dropset → single in Play',
-    'Ad-hoc setup from player',
-    'Transition duration preference',
-    'lb display/conversion',
-    'Dropsets on supersets',
-    'Gym dumbbell / rack inventory',
-    'Flaky-network drafts',
+    {
+        title: 'Tutorial',
+        description:
+            'A tutorial / walkthrough to help new users understand how to use OVRLOAD, what the different settings do, and how to create and manage your Routines.',
+    },
+    {
+        title: 'Add Historical Workouts',
+        description:
+            "Allow creating a workout that wasn't logged at the time, without needing to run through the entire Play routine. Select a date and time, and enter all the weights you lifted on one screen.",
+    },
+    {
+        title: 'Better History Edits',
+        description:
+            'Allow editing more details of past workouts, such as warmup weights; see discarded workouts in history, even add or remove exercises and sets from a logged workout.',
+    },
+    {
+        title: 'Support for lbs as your preferred unit of weight',
+        description:
+            "OVRLOAD currently only supports KG as the unit to measure how heavy you're lifting. This will allow you to choose to use LBs instead.",
+    },
+    {
+        title: 'Choose an alternate exercise for Deload sessions',
+        description: "Allow users to select a 'swap' exercise in a routine that only appears when doing a 'Deload' version of the routine.",
+    },
+    {
+        title: 'Gym dumbbell / rack inventory',
+        description:
+            "Let users store all the dumbbell weights at their gym — from smallest to largest — to help with 'run-the-rack' dropsets and planning your routines.",
+    },
+    {
+        title: 'Viewable Progression Data',
+        description:
+            'Being able to see, and export, your data on how your strength has progressed over time, with charts and tables and spreadsheets, oh my!',
+    },
 ] as const;
 </script>
 
@@ -171,15 +191,17 @@ const backlogItems = [
             <section class="mt-14 border-t border-border pt-10" aria-labelledby="backlog-heading">
                 <h2 id="backlog-heading" class="text-2xl font-bold tracking-tight">Current backlog</h2>
                 <p class="mt-3 text-muted-foreground">
-                    This shows all the features that are currently on the backlog to build. This list isn't exhaustive, and some — like Strava
-                    integration and so on — are less likely to happen soon, as they are bigger features with more considerations to be made. Some of
-                    these things I might never build. However, before you request or suggest a feature, please take a look below and see if it's
-                    already on my radar. If it's already here, and it's important to you, please tell me, and I'll be more likely to add it!
+                    This shows features currently on the backlog. The list isn't exhaustive, and some items — especially bigger ones near the bottom —
+                    may take a while or never ship. Before you request or suggest a feature, please check below. If it's already here and it matters
+                    to you, tell me — that makes it more likely I'll prioritise it.
                 </p>
 
-                <ul class="mt-6 list-disc space-y-2 pl-5 text-muted-foreground">
-                    <li v-for="item in backlogItems" :key="item">{{ item }}</li>
-                </ul>
+                <ol class="mt-6 list-decimal space-y-5 pl-5 text-muted-foreground">
+                    <li v-for="item in backlogItems" :key="item.title" class="pl-1">
+                        <p class="font-medium text-foreground">{{ item.title }}</p>
+                        <p class="mt-1">{{ item.description }}</p>
+                    </li>
+                </ol>
             </section>
 
             <section class="mt-12 border-t border-border pt-10" aria-labelledby="feedback-heading">
