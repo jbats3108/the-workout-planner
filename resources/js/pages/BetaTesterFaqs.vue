@@ -141,8 +141,8 @@ const backlogItems = [
                             feedback, which is always a good thing.
                         </p>
                         <p>
-                            At the moment, it doesn't cost me much to run, and it doesn't cost me any more to have 1 person using it or 30. It started
-                            as a personal project, and if it stays that way, I'm happy to pay the small amount it costs me each month to maintain.
+                            At the moment, it doesn't cost me much to run. It started as a personal project, and if it stays that way, I'm happy to
+                            pay the small amount it costs me each month to maintain.
                         </p>
                         <p>
                             However, if you <em>do</em> want to support the app financially, I have a
