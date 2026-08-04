@@ -15,7 +15,7 @@ import { Head } from '@inertiajs/vue3';
         <main class="relative z-10 mx-auto w-full max-w-2xl px-6 pb-20 sm:px-10">
             <p class="text-sm font-medium tracking-widest text-primary uppercase">Legal</p>
             <h1 class="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Privacy policy</h1>
-            <p class="mt-2 text-sm text-muted-foreground">Last updated: 3 August 2026</p>
+            <p class="mt-2 text-sm text-muted-foreground">Last updated: 4 August 2026</p>
 
             <div class="mt-10 space-y-10 text-muted-foreground">
                 <section class="space-y-3" aria-labelledby="who-heading">
@@ -23,7 +23,7 @@ import { Head } from '@inertiajs/vue3';
                     <p><BrandName /> is an invite-only workout planning and logging app.</p>
                     <p>
                         The data controller is <span class="text-foreground">Jamie Batabyal</span>. Questions or privacy requests:
-                        <a class="text-primary underline-offset-2 hover:underline" href="mailto:jamiebatabyal@gmail.com">jamiebatabyal@gmail.com</a>.
+                        <a class="text-primary underline-offset-2 hover:underline" href="mailto:admin@ovr-load.co.uk">admin@ovr-load.co.uk</a>.
                     </p>
                 </section>
 
@@ -56,6 +56,13 @@ import { Head } from '@inertiajs/vue3';
                     <p class="font-medium text-foreground">Invites (admin-created)</p>
                     <ul class="list-disc space-y-1 pl-5">
                         <li>Invitee email, token, expiry, who created/used the invite, optional note</li>
+                    </ul>
+                    <p class="font-medium text-foreground">Public forms (invite request &amp; feedback)</p>
+                    <ul class="list-disc space-y-1 pl-5">
+                        <li>Name, email address, and message you submit</li>
+                        <li>Form type (invite interest or feedback)</li>
+                        <li>For feedback: category (bug / feature / general)</li>
+                        <li>Technical metadata: IP address and browser user agent at submit time</li>
                     </ul>
                     <p class="font-medium text-foreground">Technical</p>
                     <ul class="list-disc space-y-1 pl-5">
@@ -96,6 +103,11 @@ import { Head } from '@inertiajs/vue3';
                                     <td class="py-2 pr-3">Invites, password reset (and verification if enabled)</td>
                                     <td class="py-2">Contract / legitimate interests — necessary to operate the account</td>
                                 </tr>
+                                <tr class="border-b border-border/60 align-top">
+                                    <td class="py-2 pr-3">Beta forms</td>
+                                    <td class="py-2 pr-3">Invite requests and feedback submissions</td>
+                                    <td class="py-2">Legitimate interests — run the beta and respond to you</td>
+                                </tr>
                                 <tr class="align-top">
                                     <td class="py-2 pr-3">Fix bugs</td>
                                     <td class="py-2 pr-3">Error reports via Sentry (configured not to send default PII)</td>
@@ -129,27 +141,22 @@ import { Head } from '@inertiajs/vue3';
                                 <tr class="border-b border-border/60 align-top">
                                     <td class="py-2 pr-3 text-foreground">Laravel Cloud</td>
                                     <td class="py-2 pr-3">Hosts the application and database</td>
-                                    <td class="py-2">Account and app data you store in <BrandName /></td>
+                                    <td class="py-2">Account, app data, and public form submissions you store in <BrandName /></td>
                                 </tr>
                                 <tr class="border-b border-border/60 align-top">
                                     <td class="py-2 pr-3 text-foreground">Resend</td>
-                                    <td class="py-2 pr-3">Sends transactional email</td>
-                                    <td class="py-2">Email address; invite/reset message content</td>
+                                    <td class="py-2 pr-3">Sends transactional email; may receive mail to domain addresses</td>
+                                    <td class="py-2">Email address; invite/reset/form notification content</td>
                                 </tr>
                                 <tr class="border-b border-border/60 align-top">
                                     <td class="py-2 pr-3 text-foreground">Sentry</td>
                                     <td class="py-2 pr-3">Application error monitoring</td>
                                     <td class="py-2">Technical error context; we keep default PII sending off</td>
                                 </tr>
-                                <tr class="border-b border-border/60 align-top">
+                                <tr class="align-top">
                                     <td class="py-2 pr-3 text-foreground">Bunny Fonts</td>
                                     <td class="py-2 pr-3">Serves web fonts to your browser</td>
                                     <td class="py-2">Connection metadata (e.g. IP) as with any CDN request</td>
-                                </tr>
-                                <tr class="align-top">
-                                    <td class="py-2 pr-3 text-foreground">Tally</td>
-                                    <td class="py-2 pr-3">Invite-interest and feedback forms (when linked from the beta FAQ)</td>
-                                    <td class="py-2">Whatever you submit on those forms (e.g. name, email, message)</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -205,6 +212,11 @@ import { Head } from '@inertiajs/vue3';
                     <h2 id="retention-heading" class="text-lg font-semibold text-foreground">7. How long we keep it</h2>
                     <ul class="list-disc space-y-2 pl-5">
                         <li><span class="text-foreground">Account and app data:</span> for as long as your account exists.</li>
+                        <li>
+                            <span class="text-foreground">Public form submissions:</span> until we have handled them and no longer need them for the
+                            beta (or sooner if you ask us to erase a submission). They are not removed by deleting an app account, because many
+                            submitters do not have an account.
+                        </li>
                         <li><span class="text-foreground">Sessions:</span> up to about 30 days of idle lifetime (then they expire).</li>
                         <li>
                             <span class="text-foreground">When you delete your account:</span> we permanently remove your account and associated app
@@ -225,12 +237,13 @@ import { Head } from '@inertiajs/vue3';
                     <ul class="list-disc space-y-2 pl-5">
                         <li>
                             <span class="text-foreground">Access / export</span> — download a copy of your data from Settings → Profile, or email
-                            <a class="text-primary underline-offset-2 hover:underline" href="mailto:jamiebatabyal@gmail.com"
-                                >jamiebatabyal@gmail.com</a
-                            >
+                            <a class="text-primary underline-offset-2 hover:underline" href="mailto:admin@ovr-load.co.uk">admin@ovr-load.co.uk</a>
                         </li>
                         <li><span class="text-foreground">Rectify</span> — update name/email and prefs in Settings</li>
-                        <li><span class="text-foreground">Erase</span> — delete your account in Settings (password required)</li>
+                        <li>
+                            <span class="text-foreground">Erase</span> — delete your account in Settings (password required); for a form submission
+                            without an account, email us
+                        </li>
                         <li><span class="text-foreground">Restrict or object</span> — email us and we will consider the request for this beta</li>
                         <li>
                             <span class="text-foreground">Complain</span> — UK:
@@ -264,7 +277,7 @@ import { Head } from '@inertiajs/vue3';
                     </p>
                     <p>
                         If something here is unclear, email
-                        <a class="text-primary underline-offset-2 hover:underline" href="mailto:jamiebatabyal@gmail.com">jamiebatabyal@gmail.com</a>
+                        <a class="text-primary underline-offset-2 hover:underline" href="mailto:admin@ovr-load.co.uk">admin@ovr-load.co.uk</a>
                         — short questions welcome.
                     </p>
                 </section>
