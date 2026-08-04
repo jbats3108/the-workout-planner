@@ -2,6 +2,7 @@
 
 namespace App\Users\Models;
 
+use App\Auth\Models\RegistrationInvite;
 use App\Exercises\Models\Exercise;
 use App\Routines\Models\Routine;
 use App\Users\Enums\BumpWhen;
@@ -14,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Override;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -116,6 +118,16 @@ class User extends Authenticatable
             $user->workouts()->withTrashed()->get()->each->forceDelete();
             $user->routines()->withTrashed()->get()->each->forceDelete();
             $user->customExercises()->withTrashed()->forceDelete();
+
+            DB::table('sessions')->where('user_id', $user->id)->delete();
+            DB::table('password_reset_tokens')->where('email', $user->email)->delete();
+
+            RegistrationInvite::query()
+                ->where(function ($query) use ($user): void {
+                    $query->where('email', $user->email)
+                        ->orWhere('used_by', $user->id);
+                })
+                ->delete();
         });
     }
 

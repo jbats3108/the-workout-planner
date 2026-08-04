@@ -1,5 +1,6 @@
 <?php
 
+use App\Settings\Http\Controllers\ExportUserDataController;
 use App\Settings\Http\Controllers\PasswordController;
 use App\Settings\Http\Controllers\ProfileController;
 use App\Settings\Http\Controllers\TrainingDefaultsController;
@@ -13,6 +14,7 @@ Route::middleware('auth')->group(function (): void {
     Route::get('settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('settings/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('settings/data-export', ExportUserDataController::class)->name('profile.data-export');
 
     Route::get('settings/password', [PasswordController::class, 'edit'])->name('password.edit');
 

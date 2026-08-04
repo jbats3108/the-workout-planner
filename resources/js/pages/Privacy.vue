@@ -224,8 +224,7 @@ import { Head } from '@inertiajs/vue3';
                     <p>Depending on where you live (UK / EEA and similar), you can:</p>
                     <ul class="list-disc space-y-2 pl-5">
                         <li>
-                            <span class="text-foreground">Access / export</span> — download a copy of your data from Settings (when available) or
-                            email
+                            <span class="text-foreground">Access / export</span> — download a copy of your data from Settings → Profile, or email
                             <a class="text-primary underline-offset-2 hover:underline" href="mailto:jamiebatabyal@gmail.com"
                                 >jamiebatabyal@gmail.com</a
                             >

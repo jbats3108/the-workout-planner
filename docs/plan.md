@@ -131,4 +131,4 @@ Public order matches `/beta-tester-faqs`.
 ### Code quality & security
 
 - **Check test function name conventions** — audit PHPUnit / Vitest names for consistency (`it_…` / `test_…` / describe+it wording) and align or document the house style
-- **GDPR compliance?** — clarify whether/what is required (privacy policy, data export/delete, retention, cookies); grill before building
+- **GDPR (public launch)** — re-grill retention, cookie CMP, and processor DPAs before open registration; beta: privacy page + Settings export/delete + invite cascade done
