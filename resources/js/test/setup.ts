@@ -50,6 +50,11 @@ vi.mock('@inertiajs/vue3', () => ({
         props: ['title'],
         setup: () => () => null,
     },
+    Link: {
+        name: 'Link',
+        props: ['href'],
+        template: '<a :href="href"><slot /></a>',
+    },
 }));
 
 (globalThis as typeof globalThis & { __inertiaMocks: typeof inertia }).__inertiaMocks = inertia;

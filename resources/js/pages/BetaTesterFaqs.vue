@@ -55,16 +55,6 @@ const backlogItems = [
                 <h1 id="faq-heading" class="text-3xl font-bold tracking-tight sm:text-4xl">FAQs</h1>
 
                 <article class="border-t border-border pt-6">
-                    <h2 class="text-lg font-semibold">Do I have to pay to use this?</h2>
-                    <div class="mt-2 space-y-3 text-muted-foreground">
-                        <p>
-                            No. And you never will. If I ever feel the need to charge a fee to users of this app, Beta testers will be exempt, for as
-                            long as they have an account.
-                        </p>
-                    </div>
-                </article>
-
-                <article class="border-t border-border pt-6">
                     <h2 class="text-lg font-semibold">What exactly <em>is</em> <BrandName />?</h2>
                     <div class="mt-2 space-y-3 text-muted-foreground">
                         <p>
@@ -111,6 +101,27 @@ const backlogItems = [
                 </article>
 
                 <article class="border-t border-border pt-6">
+                    <h2 class="text-lg font-semibold">Do I have to pay to use this?</h2>
+                    <div class="mt-2 space-y-3 text-muted-foreground">
+                        <p>
+                            No. And you never will. If I ever feel the need to charge a fee to users of this app, Beta testers will be exempt, for as
+                            long as they have an account.
+                        </p>
+                    </div>
+                </article>
+
+                <article class="border-t border-border pt-6">
+                    <h2 class="text-lg font-semibold">What do you get out of me being a Beta Tester?</h2>
+                    <div class="mt-2 space-y-3 text-muted-foreground">
+                        <p>As much as you're willing to give. You're welcome to simply use it and (hopefully) enjoy everything it has to offer.</p>
+                        <p>
+                            However, I'd really appreciate you providing feedback using the form linked at the bottom of this page, to let me know
+                            what you think, what's good about <BrandName />, and what's missing.
+                        </p>
+                    </div>
+                </article>
+
+                <article class="border-t border-border pt-6">
                     <h2 class="text-lg font-semibold">This is cool! How can I support <BrandName />?</h2>
                     <div class="mt-2 space-y-3 text-muted-foreground">
                         <p>The best way you can support this app is to use it and provide feedback (more on that below).</p>
@@ -135,17 +146,6 @@ const backlogItems = [
                         <p>
                             See the
                             <Link :href="route('privacy')" class="font-medium text-primary underline-offset-2 hover:underline">privacy policy</Link>.
-                        </p>
-                    </div>
-                </article>
-
-                <article class="border-t border-border pt-6">
-                    <h2 class="text-lg font-semibold">What do you get out of me being a Beta Tester?</h2>
-                    <div class="mt-2 space-y-3 text-muted-foreground">
-                        <p>As much as you're willing to give. You're welcome to simply use it and (hopefully) enjoy everything it has to offer.</p>
-                        <p>
-                            However, I'd really appreciate you providing feedback using the form linked at the bottom of this page, to let me know
-                            what you think, what's good about <BrandName />, and what's missing.
                         </p>
                     </div>
                 </article>

@@ -35,11 +35,10 @@ class ShowBetaTesterFaqsControllerTest extends TestCase
     }
 
     #[Test]
-    public function the_home_page_does_not_link_to_beta_tester_faqs(): void
+    public function the_home_page_renders_for_guests(): void
     {
         $this->get(route('home'))
             ->assertOk()
-            ->assertDontSee('href="/beta-tester-faqs"', false)
-            ->assertDontSee("href='/beta-tester-faqs'", false);
+            ->assertInertia(fn (Assert $page): Assert => $page->component('Home'));
     }
 }

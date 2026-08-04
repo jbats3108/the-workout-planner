@@ -28,6 +28,14 @@ import { Head, Link } from '@inertiajs/vue3';
                     Log in
                 </Link>
             </div>
+
+            <nav
+                class="home-links mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-muted-foreground"
+                aria-label="Secondary"
+            >
+                <Link :href="route('beta-tester-faqs')" class="underline-offset-4 hover:text-foreground hover:underline"> Beta testers </Link>
+                <Link :href="route('privacy')" class="underline-offset-4 hover:text-foreground hover:underline"> Privacy </Link>
+            </nav>
         </main>
     </div>
 </template>
@@ -51,6 +59,10 @@ import { Head, Link } from '@inertiajs/vue3';
 
 .home-cta {
     animation: home-rise 0.7s ease-out 0.24s both;
+}
+
+.home-links {
+    animation: home-rise 0.7s ease-out 0.36s both;
 }
 
 @keyframes home-rise {
@@ -77,7 +89,8 @@ import { Head, Link } from '@inertiajs/vue3';
     .home-atmosphere,
     .home-brand,
     .home-line,
-    .home-cta {
+    .home-cta,
+    .home-links {
         animation: none;
     }
 }
