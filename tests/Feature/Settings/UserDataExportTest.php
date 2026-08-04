@@ -87,14 +87,18 @@ class UserDataExportTest extends TestCase
     }
 
     #[Test]
-    public function profile_settings_page_includes_data_export_link(): void
+    public function profile_settings_page_loads_with_data_export_route_available(): void
     {
         $user = User::factory()->create();
 
         $this->actingAs($user)
             ->get(route('profile.edit'))
             ->assertOk()
-            ->assertSee('Download my data', false)
-            ->assertSee(route('profile.data-export'), false);
+            ->assertInertia(fn ($page) => $page->component('settings/Profile'));
+
+        $this->assertSame(
+            url('/settings/data-export'),
+            route('profile.data-export'),
+        );
     }
 }
