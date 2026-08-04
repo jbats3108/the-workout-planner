@@ -28,6 +28,8 @@ describe('Home', () => {
         expect(hrefs).toContain('/privacy');
         expect(wrapper.text()).toContain('Beta testers');
         expect(wrapper.text()).toContain('Privacy');
+        expect(wrapper.text()).toContain('OVRLOAD');
+        expect(wrapper.find('.text-primary').text()).toBe('OVR');
         expect(route).toHaveBeenCalledWith('beta-tester-faqs');
         expect(route).toHaveBeenCalledWith('privacy');
     });

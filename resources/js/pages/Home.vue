@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BrandName from '@/components/BrandName.vue';
 import PublicSiteHeader from '@/components/PublicSiteHeader.vue';
 import { Head, Link } from '@inertiajs/vue3';
 </script>
@@ -12,8 +13,8 @@ import { Head, Link } from '@inertiajs/vue3';
         <PublicSiteHeader current="home" />
 
         <main class="relative z-10 flex flex-1 flex-col items-center justify-center px-6 pb-16 text-center sm:px-10">
-            <h1 class="home-brand text-6xl font-bold tracking-wide sm:text-7xl md:text-8xl lg:text-9xl">
-                <span class="text-primary">OVR</span><span>LOAD</span>
+            <h1 class="home-brand">
+                <BrandName class="text-6xl font-bold tracking-wide sm:text-7xl md:text-8xl lg:text-9xl" />
             </h1>
 
             <p class="home-line mt-6 max-w-md text-base text-muted-foreground sm:text-lg">Progressive strength. Planned, logged, overloaded.</p>

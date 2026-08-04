@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BrandCopy from '@/components/BrandCopy.vue';
 import BrandName from '@/components/BrandName.vue';
 import PublicSiteHeader from '@/components/PublicSiteHeader.vue';
 import { Head, Link } from '@inertiajs/vue3';
@@ -166,7 +167,7 @@ const backlogItems = [
                 </article>
             </section>
 
-            <section class="cta-interest mt-12 rounded-md border-2 border-primary bg-primary/15 px-5 py-7 sm:px-7" aria-labelledby="interest-heading">
+            <section class="cta-panel mt-12 rounded-md border-2 border-primary bg-primary/15 px-5 py-7 sm:px-7" aria-labelledby="interest-heading">
                 <h2 id="interest-heading" class="text-2xl font-bold tracking-tight text-primary">I want to try it!</h2>
                 <p class="mt-2 text-sm text-foreground/90 sm:text-base">
                     If you're keen to give <BrandName /> a try, click the button below, fill in the form, and I'll send you an invitation to your
@@ -199,28 +200,28 @@ const backlogItems = [
                 <ol class="mt-6 list-decimal space-y-5 pl-5 text-muted-foreground">
                     <li v-for="item in backlogItems" :key="item.title" class="pl-1">
                         <p class="font-medium text-foreground">{{ item.title }}</p>
-                        <p class="mt-1">{{ item.description }}</p>
+                        <p class="mt-1"><BrandCopy :text="item.description" /></p>
                     </li>
                 </ol>
             </section>
 
-            <section class="mt-12 border-t border-border pt-10" aria-labelledby="feedback-heading">
-                <h2 id="feedback-heading" class="text-2xl font-bold tracking-tight">Feedback</h2>
-                <p class="mt-3 text-muted-foreground">
-                    As above, using <BrandName /> does not come with any obligation to provide any feedback whatsoever. However, should you wish to
-                    provide some, please use the form below to send me your thoughts:
+            <section class="cta-panel mt-12 rounded-md border-2 border-primary bg-primary/15 px-5 py-7 sm:px-7" aria-labelledby="feedback-heading">
+                <h2 id="feedback-heading" class="text-2xl font-bold tracking-tight text-primary">Feedback</h2>
+                <p class="mt-2 text-sm text-foreground/90 sm:text-base">
+                    Using <BrandName /> does not come with any obligation to provide feedback. If you want to share thoughts, what's working, or
+                    what's missing, use the form below.
                 </p>
                 <p class="mt-5">
                     <a
                         v-if="feedbackFormUrl"
                         :href="feedbackFormUrl"
-                        class="inline-flex rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+                        class="inline-flex rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
                         rel="noopener noreferrer"
                         target="_blank"
                     >
                         Submit feedback
                     </a>
-                    <span v-else class="inline-flex rounded-md border border-border px-4 py-2 text-sm text-muted-foreground">
+                    <span v-else class="inline-flex rounded-md border border-primary/50 bg-primary/20 px-4 py-2 text-sm font-medium text-primary">
                         [Feedback form link TBD]
                     </span>
                 </p>
@@ -236,7 +237,7 @@ const backlogItems = [
         radial-gradient(ellipse 40% 30% at 90% 60%, color-mix(in oklab, var(--accent) 10%, transparent), transparent 65%);
 }
 
-.cta-interest {
+.cta-panel {
     box-shadow:
         0 0 0 1px color-mix(in oklab, var(--primary) 35%, transparent),
         0 12px 40px -16px color-mix(in oklab, var(--primary) 45%, transparent);
