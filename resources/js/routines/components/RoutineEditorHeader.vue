@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import InputError from '@/components/InputError.vue';
+import RoutineEditorErrors from '@/routines/components/RoutineEditorErrors.vue';
 import { useRoutineEditor } from '@/routines/composables/useRoutineEditor';
 import { Link } from '@inertiajs/vue3';
 
-const { form, errorList, save, duplicateRoutine, deleteRoutine, mutating } = useRoutineEditor();
+const { form, save, duplicateRoutine, deleteRoutine, mutating } = useRoutineEditor();
 </script>
 
 <template>
@@ -51,10 +52,7 @@ const { form, errorList, save, duplicateRoutine, deleteRoutine, mutating } = use
                 </button>
             </div>
         </div>
-        <InputError class="mt-2" :message="form.errors.blocks" />
-        <div v-if="errorList.length" class="mt-2 space-y-1 text-sm text-destructive">
-            <p v-for="(message, index) in errorList" :key="index">{{ message }}</p>
-        </div>
+        <RoutineEditorErrors class="mt-3" />
         <p v-if="form.recentlySuccessful" class="mt-2 text-sm text-primary">Saved.</p>
     </header>
 </template>
