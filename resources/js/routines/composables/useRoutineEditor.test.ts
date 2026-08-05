@@ -171,6 +171,21 @@ describe('createRoutineEditor', () => {
         expect(payload.blocks[0].warm_up.rest_seconds).toBe(0);
     });
 
+    it('scrolls save errors into view when validation fails', async () => {
+        const scrollIntoView = vi.fn();
+        const target = document.createElement('div');
+        target.scrollIntoView = scrollIntoView;
+        vi.spyOn(document, 'querySelector').mockReturnValue(target);
+
+        const editor = mountEditor();
+        editor.save();
+
+        const options = inertiaMocks().inertiaFormPut.mock.calls[0][1] as { onError?: () => void };
+        expect(options.onError).toEqual(expect.any(Function));
+        options.onError?.();
+        await vi.waitFor(() => expect(scrollIntoView).toHaveBeenCalled());
+    });
+
     it('guards duplicate against double-submit', async () => {
         inertiaMocks().routerMocks.post.mockImplementation((_url, _data, options) => {
             expect(options?.onFinish).toEqual(expect.any(Function));

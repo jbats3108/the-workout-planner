@@ -118,7 +118,7 @@ Public order matches `/beta-tester-faqs`.
 
 ### Bugfixes
 
-- **Save error feedback** — show error when save is a no-op / validation fails instead of silent failure
+- ~~**Save error feedback**~~ — show validation errors near mobile Save + scroll into view on failure
 - ~~**Empty rest as 0**~~ — treat cleared rest inputs as 0 on routine save
 
 ### Code quality & security

@@ -153,6 +153,15 @@ export function createRoutineEditor(props: EditRoutineProps) {
     const normalizeOptionalReps = (value: number | null | undefined): number | null =>
         typeof value === 'number' && Number.isFinite(value) && value >= 1 ? value : null;
 
+    const revealSaveErrors = (): void => {
+        requestAnimationFrame(() => {
+            document.querySelector<HTMLElement>('[data-routine-save-errors]')?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+            });
+        });
+    };
+
     const save = () => {
         syncSetupAfterBlockFlags(form.blocks);
         form.transform((data) => ({
@@ -187,7 +196,9 @@ export function createRoutineEditor(props: EditRoutineProps) {
                     },
                 };
             }),
-        })).put(route('routines.update', props.routine.slug));
+        })).put(route('routines.update', props.routine.slug), {
+            onError: revealSaveErrors,
+        });
     };
 
     const duplicateRoutine = async () => {

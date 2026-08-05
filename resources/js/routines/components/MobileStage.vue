@@ -4,6 +4,7 @@ import DeloadSettings from '@/routines/components/DeloadSettings.vue';
 import DropsetEditor from '@/routines/components/DropsetEditor.vue';
 import EditorDisclosure from '@/routines/components/EditorDisclosure.vue';
 import ExercisePicker from '@/routines/components/ExercisePicker.vue';
+import RoutineEditorErrors from '@/routines/components/RoutineEditorErrors.vue';
 import { useRoutineEditor } from '@/routines/composables/useRoutineEditor';
 import { optionalRepsPlaceholder, parseOptionalReps } from '@/routines/lib/optionalReps';
 import { Link } from '@inertiajs/vue3';
@@ -272,26 +273,29 @@ const {
             </div>
         </div>
 
-        <div class="mx-auto flex w-full max-w-lg justify-center gap-2 px-4 pb-4">
-            <Link :href="route('dashboard')" class="rounded-full border border-border bg-background px-4 py-3 text-sm text-muted-foreground">
-                Cancel
-            </Link>
-            <button
-                type="button"
-                class="rounded-full border border-destructive/50 bg-background px-4 py-3 text-sm text-destructive disabled:opacity-50"
-                :disabled="mutating || form.processing"
-                @click="deleteRoutine"
-            >
-                Delete
-            </button>
-            <button
-                type="button"
-                class="rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground disabled:opacity-50"
-                :disabled="form.processing || mutating"
-                @click="save"
-            >
-                Save
-            </button>
+        <div class="mx-auto flex w-full max-w-lg flex-col gap-3 px-4 pb-4">
+            <RoutineEditorErrors />
+            <div class="flex justify-center gap-2">
+                <Link :href="route('dashboard')" class="rounded-full border border-border bg-background px-4 py-3 text-sm text-muted-foreground">
+                    Cancel
+                </Link>
+                <button
+                    type="button"
+                    class="rounded-full border border-destructive/50 bg-background px-4 py-3 text-sm text-destructive disabled:opacity-50"
+                    :disabled="mutating || form.processing"
+                    @click="deleteRoutine"
+                >
+                    Delete
+                </button>
+                <button
+                    type="button"
+                    class="rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground disabled:opacity-50"
+                    :disabled="form.processing || mutating"
+                    @click="save"
+                >
+                    Save
+                </button>
+            </div>
         </div>
     </div>
 </template>
