@@ -2,6 +2,7 @@
 
 namespace App\Routines\Data\Editor;
 
+use Override;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Attributes\Validation\Max;
@@ -30,4 +31,14 @@ class SyncRoutineBlockData extends Data
 
         public readonly bool $hasSetupAfterWarmUp = false,
     ) {}
+
+    /**
+     * @param  array<string, mixed>  $properties
+     * @return array<string, mixed>
+     */
+    #[Override]
+    public static function prepareForPipeline(array $properties): array
+    {
+        return BlankRestSeconds::inBlock($properties);
+    }
 }

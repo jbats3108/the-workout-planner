@@ -155,6 +155,22 @@ describe('createRoutineEditor', () => {
         expect(inertiaMocks().inertiaFormPut).toHaveBeenCalled();
     });
 
+    it('sends empty rest fields as 0', () => {
+        const editor = mountEditor();
+        editor.addBlock(false);
+        // Cleared number inputs leave '' / NaN from v-model.number
+        (editor.form.blocks[0].working as { rest_seconds: unknown }).rest_seconds = '';
+        (editor.form.blocks[0].warm_up as { rest_seconds: unknown }).rest_seconds = Number.NaN;
+
+        editor.save();
+
+        const payload = inertiaMocks().lastTransformed as {
+            blocks: Array<{ working: { rest_seconds: number }; warm_up: { rest_seconds: number } }>;
+        };
+        expect(payload.blocks[0].working.rest_seconds).toBe(0);
+        expect(payload.blocks[0].warm_up.rest_seconds).toBe(0);
+    });
+
     it('guards duplicate against double-submit', async () => {
         inertiaMocks().routerMocks.post.mockImplementation((_url, _data, options) => {
             expect(options?.onFinish).toEqual(expect.any(Function));

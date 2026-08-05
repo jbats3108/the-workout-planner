@@ -9,7 +9,7 @@ import {
     setSlotKind,
     trimDropsetsToSetCount,
 } from '@/routines/lib/dropsets';
-import { formatRest } from '@/routines/lib/formatRest';
+import { formatRest, normalizeRestSeconds } from '@/routines/lib/formatRest';
 import { deleteRoutine as deleteRoutineMutation, duplicateRoutine as duplicateRoutineMutation } from '@/routines/lib/routineMutations';
 import { addWarmUpStep, clearWarmUp, removeWarmUpStep, sanitizeWarmUpStepsForSave, setWarmUpText, warmUpText } from '@/routines/lib/warmUp';
 import type { Block, ExerciseOption, RoutinePayload, WarmUpStep } from '@/routines/types';
@@ -170,12 +170,12 @@ export function createRoutineEditor(props: EditRoutineProps) {
                     })),
                     warm_up: {
                         set_count: warmUpSteps.length,
-                        rest_seconds: block.warm_up.rest_seconds,
+                        rest_seconds: normalizeRestSeconds(block.warm_up.rest_seconds),
                         steps: warmUpSteps,
                     },
                     working: {
                         set_count: block.working.set_count,
-                        rest_seconds: block.working.rest_seconds,
+                        rest_seconds: normalizeRestSeconds(block.working.rest_seconds),
                         dropsets: block.is_superset
                             ? []
                             : block.working.dropsets

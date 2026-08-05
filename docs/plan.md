@@ -107,14 +107,19 @@ Public order matches `/beta-tester-faqs`.
 - **Transition duration preference** — stored pref for A→B pause in supersets (today client-side)
 - **Dropsets on supersets**
 - **Flaky-network drafts** — best-effort offline/queue for player logging
+- **Benchmark exercises / 1RMs** — track reference lifts / estimated maxes
+- **Bump between sets** — auto / config / ask whether to bump mid-block (not only on finish)
+- **Custom user exercises** — allow personal lifts without proliferating near-duplicates across users
 
 ### Polish & mobile integration
 
-- 
+- **Plate suggestions from prior sets** — prefer order / first plate that builds on the previous load (e.g. don’t restart set 2 with a 25 when prior was under ~70 kg)
+- **Bail on last set** — after penultimate set is complete, option to skip / bail the final set
 
 ### Bugfixes
 
--
+- **Save error feedback** — show error when save is a no-op / validation fails instead of silent failure
+- ~~**Empty rest as 0**~~ — treat cleared rest inputs as 0 on routine save
 
 ### Code quality & security
 
@@ -123,3 +128,4 @@ Public order matches `/beta-tester-faqs`.
 ### Ops (internal)
 
 - **Soft host cap ~100 accounts** — prod: Laravel Cloud Flex **512 MiB** app (~17 concurrent HTTP per replica) + MySQL **512 MiB** / **5 GB**. Pause / slow Admin invites before upgrading or asking for money. Not advertised on public FAQ.
+- **Maintenance handoff plan** — reduce ongoing Cursor dependence so a human can keep the app running without constant AI spend

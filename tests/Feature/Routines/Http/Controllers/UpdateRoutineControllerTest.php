@@ -65,6 +65,32 @@ class UpdateRoutineControllerTest extends TestCase
     }
 
     #[Test]
+    public function owner_update_treats_blank_rest_seconds_as_zero(): void
+    {
+        $routine = Routine::factory()->withUser($this->user)->create();
+        $exercise = Exercise::factory()->create();
+
+        $this->actingAs($this->user)->put(route('routines.update', $routine), [
+            'name' => 'Zero Rest',
+            'deload_weight_factor' => 0.5,
+            'deload_reps_factor' => 2,
+            'blocks' => [
+                RoutineEditorPayload::block($exercise->id, [
+                    'working_weight_kg' => 80,
+                    'working' => ['set_count' => 3, 'rest_seconds' => null],
+                    'warm_up' => ['set_count' => 0, 'rest_seconds' => '', 'steps' => []],
+                ]),
+            ],
+        ])
+            ->assertRedirect(route('dashboard'))
+            ->assertSessionHas('success', 'Routine saved.');
+
+        $block = $routine->fresh()->blocks()->first();
+        $this->assertSame(0, $block->setGroups()->where('type', 'working')->value('rest_seconds'));
+        $this->assertSame(0, $block->setGroups()->where('type', 'warm_up')->value('rest_seconds'));
+    }
+
+    #[Test]
     public function owner_update_rejects_stale_expected_updated_at(): void
     {
         $routine = Routine::factory()->withUser($this->user)->create();
