@@ -5,6 +5,7 @@ namespace App\Routines\Data\Editor;
 use App\Shared\Data\Validation\DeloadEveryN;
 use App\Shared\Data\Validation\DeloadRepsFactor;
 use App\Shared\Data\Validation\DeloadWeightFactor;
+use Override;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Attributes\Validation\Max;
@@ -41,6 +42,7 @@ class SyncRoutineData extends Data
      * @param  array<string, mixed>  $properties
      * @return array<string, mixed>
      */
+    #[Override]
     public static function prepareForPipeline(array $properties): array
     {
         return BlankRestSeconds::inRoutinePayload($properties);
