@@ -22,8 +22,11 @@ const inertia = vi.hoisted(() => {
             errors: {},
             recentlySuccessful: false,
             transform(fn: (data: object) => unknown) {
-                fn(initial);
-                return { put: inertiaFormPut, post: inertiaFormPost };
+                const transformed = fn(initial);
+                return {
+                    put: (url: string, options?: unknown) => inertiaFormPut(url, transformed, options),
+                    post: (url: string, options?: unknown) => inertiaFormPost(url, transformed, options),
+                };
             },
             put: inertiaFormPut,
             post: inertiaFormPost,

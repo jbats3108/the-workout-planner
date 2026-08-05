@@ -36,4 +36,13 @@ class SyncRoutineData extends Data
 
         public readonly ?string $expectedUpdatedAt = null,
     ) {}
+
+    /**
+     * @param  array<string, mixed>  $properties
+     * @return array<string, mixed>
+     */
+    public static function prepareForPipeline(array $properties): array
+    {
+        return BlankRestSeconds::inRoutinePayload($properties);
+    }
 }

@@ -30,4 +30,13 @@ class SyncRoutineBlockData extends Data
 
         public readonly bool $hasSetupAfterWarmUp = false,
     ) {}
+
+    /**
+     * @param  array<string, mixed>  $properties
+     * @return array<string, mixed>
+     */
+    public static function prepareForPipeline(array $properties): array
+    {
+        return BlankRestSeconds::inBlock($properties);
+    }
 }

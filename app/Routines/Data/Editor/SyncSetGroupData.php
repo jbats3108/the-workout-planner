@@ -28,6 +28,15 @@ class SyncSetGroupData extends Data
     ) {}
 
     /**
+     * @param  array<string, mixed>  $properties
+     * @return array<string, mixed>
+     */
+    public static function prepareForPipeline(array $properties): array
+    {
+        return BlankRestSeconds::inGroup($properties);
+    }
+
+    /**
      * @return list<SyncDropsetData>
      */
     public function dropsetList(): array

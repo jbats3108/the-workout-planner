@@ -118,7 +118,8 @@ Public order matches `/beta-tester-faqs`.
 
 ### Bugfixes
 
-- **Empty rest + save feedback** — allow rest `0`; show error when save is a no-op instead of silent failure
+- **Save error feedback** — show error when save is a no-op / validation fails instead of silent failure
+- ~~**Empty rest as 0**~~ — treat cleared rest inputs as 0 on routine save
 
 ### Code quality & security
 
