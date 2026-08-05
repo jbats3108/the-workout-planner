@@ -164,7 +164,7 @@ describe('createRoutineEditor', () => {
 
         editor.save();
 
-        const payload = inertiaMocks().inertiaFormPut.mock.calls[0][1] as {
+        const payload = inertiaMocks().lastTransformed as {
             blocks: Array<{ working: { rest_seconds: number }; warm_up: { rest_seconds: number } }>;
         };
         expect(payload.blocks[0].working.rest_seconds).toBe(0);

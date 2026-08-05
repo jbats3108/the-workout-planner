@@ -14,6 +14,7 @@ const inertia = vi.hoisted(() => {
         visit: vi.fn(),
         on: vi.fn(() => vi.fn()),
     };
+    let lastTransformed: unknown = null;
 
     function createForm(initial: object) {
         return reactive({
@@ -22,11 +23,9 @@ const inertia = vi.hoisted(() => {
             errors: {},
             recentlySuccessful: false,
             transform(fn: (data: object) => unknown) {
-                const transformed = fn(initial);
-                return {
-                    put: (url: string, options?: unknown) => inertiaFormPut(url, transformed, options),
-                    post: (url: string, options?: unknown) => inertiaFormPost(url, transformed, options),
-                };
+                // Keep put/post(url, options) like Inertia; stash payload for assertions.
+                lastTransformed = fn(initial);
+                return { put: inertiaFormPut, post: inertiaFormPost };
             },
             put: inertiaFormPut,
             post: inertiaFormPost,
@@ -40,6 +39,12 @@ const inertia = vi.hoisted(() => {
         pageProps,
         routerMocks,
         createForm,
+        get lastTransformed() {
+            return lastTransformed;
+        },
+        clearLastTransformed() {
+            lastTransformed = null;
+        },
     };
 });
 
