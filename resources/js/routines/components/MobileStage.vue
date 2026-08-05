@@ -54,7 +54,7 @@ const {
             </button>
         </div>
 
-        <main v-if="activeBlock" class="mx-auto flex w-full max-w-lg flex-col gap-4 px-4 pb-28">
+        <main v-if="activeBlock" class="mx-auto flex w-full max-w-lg flex-col gap-4 px-4 pb-4">
             <div class="rounded-2xl border border-border bg-card p-4">
                 <div class="mb-3 flex items-center justify-between">
                     <h2 class="text-base font-semibold">
@@ -252,7 +252,7 @@ const {
             </div>
         </main>
 
-        <div v-else class="px-4 pb-28">
+        <div v-else class="px-4 pb-4">
             <p class="py-8 text-center text-muted-foreground">No exercises yet.</p>
             <div class="flex gap-2">
                 <button
@@ -272,7 +272,7 @@ const {
             </div>
         </div>
 
-        <div class="fixed right-0 bottom-0 left-0 flex justify-center gap-2 px-4 pt-2 pb-[max(1rem,env(safe-area-inset-bottom,0px))]">
+        <div class="mx-auto flex w-full max-w-lg justify-center gap-2 px-4 pb-4">
             <Link :href="route('dashboard')" class="rounded-full border border-border bg-background px-4 py-3 text-sm text-muted-foreground">
                 Cancel
             </Link>
