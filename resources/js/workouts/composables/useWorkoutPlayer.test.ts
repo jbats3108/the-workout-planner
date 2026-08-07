@@ -430,6 +430,93 @@ describe('createWorkoutPlayer', () => {
         expect(player.stageWeightKg.value).toBe(95);
     });
 
+    it('seeds logging from the calculated barbell load', () => {
+        const player = mountPlayer({
+            blocks: [
+                playerBlock({
+                    sets: [playerSet({ equipment: 'barbell', target_weight_kg: 97.5 })],
+                }),
+            ],
+        });
+
+        player.openLogSheet();
+
+        expect(player.setForm.weight_kg).toBe(95);
+        expect(player.plateLoad.value?.total_g).toBe(95_000);
+    });
+
+    it('edits the stage stack and carries its calculated weight into logging', () => {
+        const player = mountPlayer({
+            blocks: [
+                playerBlock({
+                    sets: [playerSet({ equipment: 'barbell', target_weight_kg: 80 })],
+                }),
+            ],
+        });
+
+        player.changeStagePlate(10_000, -1);
+
+        expect(player.stageWeightKg.value).toBe(60);
+        expect(player.stagePlateLoad.value?.per_side).toEqual([{ denomination_g: 20_000, count: 1, colour: null }]);
+
+        player.openLogSheet();
+        expect(player.setForm.weight_kg).toBe(60);
+        expect(player.plateLoad.value?.per_side).toEqual([{ denomination_g: 20_000, count: 1, colour: null }]);
+    });
+
+    it('uses a persisted previous stack for the next working set', () => {
+        const player = mountPlayer({
+            blocks: [
+                playerBlock({
+                    sets: [
+                        playerSet({
+                            id: 1,
+                            completed: true,
+                            logged_weight_kg: 80,
+                            plate_stack: {
+                                bar_g: 20_000,
+                                per_side: [
+                                    { denomination_g: 20_000, count: 1 },
+                                    { denomination_g: 10_000, count: 1 },
+                                ],
+                            },
+                        }),
+                        playerSet({ id: 2, set_index: 1, target_weight_kg: 80 }),
+                    ],
+                }),
+            ],
+        });
+
+        expect(player.stagePlateLoad.value?.per_side).toEqual([
+            { denomination_g: 20_000, count: 1, colour: null },
+            { denomination_g: 10_000, count: 1, colour: null },
+        ]);
+    });
+
+    it('submits the final edited stack with the logged weight', () => {
+        const player = mountPlayer({
+            blocks: [
+                playerBlock({
+                    sets: [playerSet({ equipment: 'barbell', target_weight_kg: 80 })],
+                }),
+            ],
+        });
+
+        player.openLogSheet();
+        player.changeLogPlate(10_000, -1);
+        player.completeSet();
+
+        expect(inertiaMocks().lastTransformed).toEqual(
+            expect.objectContaining({
+                weight_kg: 60,
+                plate_stack: {
+                    bar_g: 20_000,
+                    per_side: [{ denomination_g: 20_000, count: 1 }],
+                },
+            }),
+        );
+    });
+
     it('exposes canPromoteToDropset for working sets', () => {
         const player = mountPlayer();
         expect(player.canPromoteToDropset.value).toBe(true);
