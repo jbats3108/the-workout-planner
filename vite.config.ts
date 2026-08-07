@@ -58,15 +58,43 @@ function cleanPublicPwaArtifacts(): Plugin {
 
 export default defineConfig(({ mode, isSsrBuild }) => {
     const env = loadEnv(mode, process.cwd(), '');
+    const sail = process.env.LARAVEL_SAIL === '1' || env.LARAVEL_SAIL === '1';
     const ddevUrl = env.DDEV_PRIMARY_URL || null;
     const lanDev = env.LAN_DEV === '1' || env.LAN_DEV === 'true';
-    // Phone / LAN: composer run dev:lan auto-detects wifi/ethernet (skips docker).
+    // Phone / LAN: `npm run sail:up` sets VITE_DEV_HOST on the host (containers cannot see Wi‑Fi IPs).
     // Optional override: VITE_DEV_HOST=192.168.x.x when detection is wrong.
-    const lanHost = env.VITE_DEV_HOST || (lanDev ? detectLanIpv4() : null);
+    const lanHost = process.env.VITE_DEV_HOST || env.VITE_DEV_HOST || (lanDev ? detectLanIpv4() : null);
 
     // DDEV: DDEV_PRIMARY_URL is set automatically.
     const publicHost = lanHost || (ddevUrl ? new URL(ddevUrl).hostname : null);
     const shareOnLan = Boolean(publicHost);
+
+    const server = shareOnLan
+        ? {
+              host: '0.0.0.0',
+              port: 5173,
+              strictPort: true,
+              origin: `http://${publicHost}:5173`,
+              hmr: {
+                  host: publicHost,
+              },
+              cors: {
+                  origin: true,
+              },
+          }
+        : sail
+          ? {
+                host: '0.0.0.0',
+                port: 5173,
+                strictPort: true,
+                hmr: {
+                    host: 'localhost',
+                },
+                cors: {
+                    origin: true,
+                },
+            }
+          : undefined;
 
     return {
         plugins: [
@@ -124,19 +152,6 @@ export default defineConfig(({ mode, isSsrBuild }) => {
             }),
             ...(shareOnLan ? [lanSsrDevOrigin(publicHost!)] : []),
         ],
-        server: shareOnLan
-            ? {
-                  host: '0.0.0.0',
-                  port: 5173,
-                  strictPort: true,
-                  origin: `http://${publicHost}:5173`,
-                  hmr: {
-                      host: publicHost,
-                  },
-                  cors: {
-                      origin: true,
-                  },
-              }
-            : undefined,
+        server,
     };
 });

@@ -107,7 +107,21 @@ jobs:
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Copy environment file
-        run: cp .env.example .env
+        run: |
+          cp .env.example .env
+          # .env.example defaults to Sail (DB_HOST=mysql). CI has no Compose network — use SQLite.
+          sed -i \
+            -e 's/^DB_CONNECTION=.*/DB_CONNECTION=sqlite/' \
+            -e 's/^DB_HOST=.*/# DB_HOST=127.0.0.1/' \
+            -e 's/^DB_PORT=.*/# DB_PORT=3306/' \
+            -e 's/^DB_DATABASE=.*/DB_DATABASE=database\/database.sqlite/' \
+            -e 's/^DB_USERNAME=.*/# DB_USERNAME=/' \
+            -e 's/^DB_PASSWORD=.*/# DB_PASSWORD=/' \
+            -e 's/^REDIS_HOST=.*/REDIS_HOST=127.0.0.1/' \
+            -e 's/^MAIL_HOST=.*/MAIL_HOST=127.0.0.1/' \
+            -e 's/^MAIL_PORT=.*/MAIL_PORT=2525/' \
+            .env
+          touch database/database.sqlite
 
       - name: Generate application key
         run: php artisan key:generate

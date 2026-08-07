@@ -3,6 +3,7 @@
 use App\Auth\Http\Middleware\EnsureRegistrationInvite;
 use App\Shared\Http\Middleware\HandleAppearance;
 use App\Shared\Http\Middleware\HandleInertiaRequests;
+use App\Shared\Http\Middleware\UseRequestRootUrl;
 use App\Shared\Http\SoftFail;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -30,6 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 
         $middleware->web(append: [
+            UseRequestRootUrl::class,
             HandleAppearance::class,
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
