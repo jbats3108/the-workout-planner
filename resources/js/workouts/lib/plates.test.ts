@@ -1,5 +1,12 @@
 import { plateProfile } from '@/test/factories';
-import { formatLoadStack, formatPlateStackLabel, resolvePlateLoad } from '@/workouts/lib/plates';
+import {
+    changePlateCount,
+    formatLoadStack,
+    formatPlateStackLabel,
+    resolvePlateLoad,
+    resolvePlateStack,
+    serializePlateStack,
+} from '@/workouts/lib/plates';
 import { describe, expect, it } from 'vitest';
 
 describe('resolvePlateLoad', () => {
@@ -11,6 +18,33 @@ describe('resolvePlateLoad', () => {
         const load = resolvePlateLoad(100, 'barbell', plateProfile());
         expect(load).not.toBeNull();
         expect(load?.bar_g).toBe(20000);
+    });
+
+    it('resolves an edited stack', () => {
+        const load = resolvePlateStack(80, 'barbell', plateProfile(), {
+            bar_g: 20000,
+            per_side: [
+                { denomination_g: 20000, count: 1 },
+                { denomination_g: 10000, count: 1 },
+            ],
+        });
+
+        expect(load?.total_g).toBe(80000);
+        expect(serializePlateStack(load!)).toEqual({
+            bar_g: 20000,
+            per_side: [
+                { denomination_g: 20000, count: 1 },
+                { denomination_g: 10000, count: 1 },
+            ],
+        });
+    });
+
+    it('changes one side plate while preserving the target reference', () => {
+        const load = resolvePlateLoad(80, 'barbell', plateProfile());
+        const edited = changePlateCount(80, load!, 10000, -1, plateProfile());
+
+        expect(edited?.total_g).toBe(60000);
+        expect(edited?.delta_g).toBe(-20000);
     });
 });
 

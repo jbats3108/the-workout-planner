@@ -12,6 +12,7 @@ class PlateCalculatorService
 {
     /**
      * @param  list<array{denomination_g: int, count: int, colour?: ?string}>  $plates
+     * @param  array{per_side: list<array{denomination_g: int, count: int}>}|null  $previousLoad
      * @return array{
      *     exact: bool,
      *     total_g: int,
@@ -20,7 +21,7 @@ class PlateCalculatorService
      *     delta_g: int
      * }|null
      */
-    public function nearest(int $targetG, int $barG, array $plates): ?array
+    public function nearest(int $targetG, int $barG, array $plates, ?array $previousLoad = null): ?array
     {
         if ($barG < 0 || $targetG < 0) {
             return null;
@@ -37,7 +38,7 @@ class PlateCalculatorService
         }
 
         $inventory = $this->normalizeInventory($plates);
-        $achievableSides = $this->achievableSideLoads($inventory);
+        $achievableSides = $this->achievableSideLoads($inventory, $previousLoad);
 
         if ($achievableSides === []) {
             return [
@@ -50,29 +51,39 @@ class PlateCalculatorService
         }
 
         $desiredSide = intdiv($targetG - $barG, 2);
-        // Prefer exact even load; otherwise closest total to target.
         $bestSide = null;
         $bestDelta = null;
+        $bestCombo = null;
+        $denominations = array_keys($inventory);
 
         foreach (array_keys($achievableSides) as $sideG) {
             $totalG = $barG + (2 * $sideG);
             $delta = abs($totalG - $targetG);
+            $sideDistance = abs($sideG - $desiredSide);
+            $bestSideDistance = $bestSide === null ? null : abs($bestSide - $desiredSide);
+            $combo = $achievableSides[$sideG];
+            $comboComparison = $bestCombo === null
+                ? -1
+                : $this->compareSideLoads($combo, $bestCombo, $denominations, $previousLoad);
+
             if ($bestDelta === null
                 || $delta < $bestDelta
-                || ($delta === $bestDelta && abs($sideG - $desiredSide) < abs(($bestSide ?? 0) - $desiredSide))
+                || ($delta === $bestDelta
+                    && ($sideDistance < ($bestSideDistance ?? PHP_INT_MAX)
+                        || ($sideDistance === $bestSideDistance && $comboComparison < 0)))
             ) {
                 $bestDelta = $delta;
                 $bestSide = $sideG;
+                $bestCombo = $combo;
             }
         }
 
-        if ($bestSide === null) {
+        if ($bestSide === null || $bestCombo === null) {
             return null;
         }
 
-        $combo = $achievableSides[$bestSide];
         $perSide = [];
-        foreach ($combo as $denominationG => $count) {
+        foreach ($bestCombo as $denominationG => $count) {
             if ($count <= 0) {
                 continue;
             }
@@ -128,10 +139,11 @@ class PlateCalculatorService
      * @param  array<int, array{count: int, colour: ?string}>  $inventory
      * @return array<int, array<int, int>> map of side grams => denomination => count on that side
      */
-    private function achievableSideLoads(array $inventory): array
+    private function achievableSideLoads(array $inventory, ?array $previousLoad): array
     {
         /** @var array<int, array<int, int>> $reachable */
         $reachable = [0 => []];
+        $denominations = array_keys($inventory);
 
         foreach ($inventory as $denominationG => $meta) {
             $next = $reachable;
@@ -139,18 +151,70 @@ class PlateCalculatorService
                 $add = $n * $denominationG;
                 foreach ($reachable as $sum => $combo) {
                     $newSum = $sum + $add;
-                    if (isset($next[$newSum])) {
+                    $candidate = $combo;
+                    $candidate[$denominationG] = $n;
+                    if (isset($next[$newSum])
+                        && $this->compareSideLoads($candidate, $next[$newSum], $denominations, $previousLoad) >= 0
+                    ) {
                         continue;
                     }
-                    $newCombo = $combo;
-                    $newCombo[$denominationG] = $n;
-                    $next[$newSum] = $newCombo;
+                    $next[$newSum] = $candidate;
                 }
             }
             $reachable = $next;
         }
 
         return $reachable;
+    }
+
+    /**
+     * @param  array<int, int>  $candidate
+     * @param  array<int, int>  $existing
+     * @param  list<int>  $denominations
+     * @param  array{per_side: list<array{denomination_g: int, count: int}>}|null  $previousLoad
+     */
+    private function compareSideLoads(array $candidate, array $existing, array $denominations, ?array $previousLoad): int
+    {
+        if ($previousLoad !== null) {
+            $candidateChanges = $this->plateChangeCount($candidate, $previousLoad);
+            $existingChanges = $this->plateChangeCount($existing, $previousLoad);
+
+            if ($candidateChanges !== $existingChanges) {
+                return $candidateChanges < $existingChanges ? -1 : 1;
+            }
+        }
+
+        foreach ($denominations as $denominationG) {
+            $candidateCount = $candidate[$denominationG] ?? 0;
+            $existingCount = $existing[$denominationG] ?? 0;
+
+            if ($candidateCount !== $existingCount) {
+                return $candidateCount > $existingCount ? -1 : 1;
+            }
+        }
+
+        return 0;
+    }
+
+    /**
+     * @param  array<int, int>  $sideLoad
+     * @param  array{per_side: list<array{denomination_g: int, count: int}>}  $previousLoad
+     */
+    private function plateChangeCount(array $sideLoad, array $previousLoad): int
+    {
+        $previousCounts = [];
+        foreach ($previousLoad['per_side'] as $step) {
+            $previousCounts[$step['denomination_g']] = $step['count'];
+        }
+
+        $denominations = array_unique(array_merge(array_keys($sideLoad), array_keys($previousCounts)));
+
+        return array_sum(array_map(
+            static fn (int $denominationG): int => abs(
+                ($sideLoad[$denominationG] ?? 0) - ($previousCounts[$denominationG] ?? 0)
+            ),
+            $denominations,
+        ));
     }
 
     /**

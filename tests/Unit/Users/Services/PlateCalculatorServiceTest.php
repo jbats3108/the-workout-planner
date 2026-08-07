@@ -57,6 +57,45 @@ class PlateCalculatorServiceTest extends TestCase
     }
 
     #[Test]
+    public function it_prefers_the_heaviest_available_first_plate(): void
+    {
+        $result = $this->calculator->nearest(80000, 20000, [
+            ['denomination_g' => 25000, 'count' => 2],
+            ['denomination_g' => 20000, 'count' => 2],
+            ['denomination_g' => 10000, 'count' => 4],
+            ['denomination_g' => 5000, 'count' => 4],
+        ]);
+
+        $this->assertNotNull($result);
+        $this->assertSame([
+            ['denomination_g' => 25000, 'count' => 1, 'colour' => null],
+            ['denomination_g' => 5000, 'count' => 1, 'colour' => null],
+        ], $result['per_side']);
+    }
+
+    #[Test]
+    public function it_prefers_the_previous_stack_when_the_target_is_loadable(): void
+    {
+        $result = $this->calculator->nearest(80000, 20000, [
+            ['denomination_g' => 25000, 'count' => 2],
+            ['denomination_g' => 20000, 'count' => 2],
+            ['denomination_g' => 10000, 'count' => 4],
+            ['denomination_g' => 5000, 'count' => 4],
+        ], [
+            'per_side' => [
+                ['denomination_g' => 20000, 'count' => 1],
+                ['denomination_g' => 10000, 'count' => 1],
+            ],
+        ]);
+
+        $this->assertNotNull($result);
+        $this->assertSame([
+            ['denomination_g' => 20000, 'count' => 1, 'colour' => null],
+            ['denomination_g' => 10000, 'count' => 1, 'colour' => null],
+        ], $result['per_side']);
+    }
+
+    #[Test]
     public function it_returns_bar_only_when_target_is_at_or_below_bar(): void
     {
         $result = $this->calculator->nearest(15000, 20000, [
