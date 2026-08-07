@@ -129,3 +129,4 @@ Public order matches `/beta-tester-faqs`.
 
 - **Soft host cap ~100 accounts** — prod: Laravel Cloud Flex **512 MiB** app (~17 concurrent HTTP per replica) + MySQL **512 MiB** / **5 GB**. Pause / slow Admin invites before upgrading or asking for money. Not advertised on public FAQ.
 - **Maintenance handoff plan** — reduce ongoing Cursor dependence so a human can keep the app running without constant AI spend
+- **Dockerise?** — pros/cons, deployment options, cost vs current Laravel Cloud setup
