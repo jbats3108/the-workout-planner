@@ -21,6 +21,7 @@ class WorkoutSet extends Model
         'set_index',
         'reps',
         'weight_g',
+        'plate_stack',
         'completed_at',
     ];
 
@@ -32,6 +33,7 @@ class WorkoutSet extends Model
             'set_index' => 'integer',
             'reps' => 'integer',
             'weight_g' => 'integer',
+            'plate_stack' => 'array',
             'completed_at' => 'datetime',
         ];
     }

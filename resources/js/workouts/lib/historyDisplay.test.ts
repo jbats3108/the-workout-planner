@@ -10,6 +10,7 @@ const set = (overrides: Partial<PlayerSet> & Pick<PlayerSet, 'id' | 'group_type'
     target_weight_kg: null,
     target_reps: null,
     logged_weight_kg: null,
+    plate_stack: null,
     logged_reps: null,
     completed: true,
     rest_seconds: 60,

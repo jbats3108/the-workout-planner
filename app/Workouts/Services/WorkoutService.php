@@ -184,6 +184,7 @@ class WorkoutService
 
     /**
      * @param  list<int>|null  $segmentWeightGrams
+     * @param  array{bar_g: int, per_side: list<array{denomination_g: int, count: int}>}|null  $plateStack
      *
      * @throws WorkoutServiceException
      */
@@ -192,6 +193,7 @@ class WorkoutService
         int $reps,
         ?int $weightGrams = null,
         ?array $segmentWeightGrams = null,
+        ?array $plateStack = null,
     ): WorkoutSet {
         $set->loadMissing(['setGroup.block.workout', 'segments']);
         $workout = $set->setGroup->block->workout;
@@ -221,6 +223,7 @@ class WorkoutService
 
         $set->reps = $reps;
         $set->weight_g = $weightGrams;
+        $set->plate_stack = $set->setGroup->type === SetGroupType::Working ? $plateStack : null;
         $set->completed_at = now();
         $set->save();
 
@@ -243,6 +246,7 @@ class WorkoutService
 
             $set->reps = $reps;
             $set->weight_g = null;
+            $set->plate_stack = null;
             $set->completed_at = now();
             $set->save();
 

@@ -79,6 +79,7 @@ class WorkoutHistoryService
 
         $set->reps = $data->reps;
         $set->weight_g = null;
+        $set->plate_stack = null;
     }
 
     /**
@@ -95,5 +96,6 @@ class WorkoutHistoryService
         $set->replaceSegments([]);
         $set->reps = $data->reps;
         $set->weight_g = $weightGrams;
+        $set->plate_stack = null;
     }
 }

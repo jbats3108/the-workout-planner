@@ -20,8 +20,12 @@ const {
     removeWorkingSet,
     applyNearestLoad,
     applyStageNearestLoad,
+    changeLogPlate,
+    changeStagePlate,
     groupLabel,
+    handleLogWeightInput,
     formatPlateStack,
+    plateProfile,
     stageFormatPlateStack,
     plateLoad,
     stagePlateLoad,
@@ -75,6 +79,8 @@ const unlockInput = (event: PointerEvent) => {
                 :plate-load="stagePlateLoad"
                 :format-plate-stack="stageFormatPlateStack"
                 :weight-unit="workout.weight_unit"
+                :plate-profile="plateProfile"
+                @change-plate="changeStagePlate"
                 @apply-nearest="applyStageNearestLoad"
             />
 
@@ -191,6 +197,8 @@ const unlockInput = (event: PointerEvent) => {
                                 :plate-load="plateLoad"
                                 :format-plate-stack="formatPlateStack"
                                 :weight-unit="workout.weight_unit"
+                                :plate-profile="plateProfile"
+                                @change-plate="changeLogPlate"
                                 @apply-nearest="applyNearestLoad"
                             />
                             <div class="flex gap-3">
@@ -206,6 +214,7 @@ const unlockInput = (event: PointerEvent) => {
                                         class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground md:rounded-md md:py-2 md:text-base"
                                         required
                                         @pointerdown="unlockInput"
+                                        @input="handleLogWeightInput"
                                     />
                                 </label>
                                 <div class="flex min-w-0 flex-1 flex-col gap-1">

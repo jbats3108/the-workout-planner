@@ -111,6 +111,44 @@ class PlayWorkoutControllerTest extends TestCase
     }
 
     #[Test]
+    public function it_persists_a_logged_plate_stack_for_resume(): void
+    {
+        $workout = $this->createPlayableWorkout();
+        $set = WorkoutSet::query()
+            ->whereHas('setGroup.block', fn ($q) => $q->where('workout_id', $workout->id))
+            ->firstOrFail();
+
+        $this->actingAs($this->user)
+            ->post(route('workouts.sets.complete', ['workout' => $workout, 'set' => $set]), [
+                'reps' => 5,
+                'weight_kg' => 80,
+                'plate_stack' => [
+                    'bar_g' => 20000,
+                    'per_side' => [
+                        ['denomination_g' => 20000, 'count' => 1],
+                        ['denomination_g' => 10000, 'count' => 1],
+                    ],
+                ],
+            ])
+            ->assertRedirect();
+
+        $this->assertSame([
+            'bar_g' => 20000,
+            'per_side' => [
+                ['denomination_g' => 20000, 'count' => 1],
+                ['denomination_g' => 10000, 'count' => 1],
+            ],
+        ], $set->fresh()->plate_stack);
+
+        $this->actingAs($this->user)
+            ->get(route('workouts.play', $workout))
+            ->assertInertia(fn (Assert $page): Assert => $page
+                ->where('workout.blocks.0.sets.0.plate_stack.bar_g', 20000)
+                ->where('workout.blocks.0.sets.0.plate_stack.per_side.0.denomination_g', 20000)
+            );
+    }
+
+    #[Test]
     public function it_rejects_recompleting_an_already_logged_set(): void
     {
         $workout = $this->createPlayableWorkout();

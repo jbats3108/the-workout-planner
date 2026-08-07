@@ -32,6 +32,9 @@ class CompleteWorkoutSetData extends Data
         #[DataCollectionOf(WeightKgSegmentData::class)]
         #[Min(2), Max(20)]
         public readonly ?DataCollection $segments = null,
+
+        #[Nullable]
+        public readonly ?PlateStackData $plateStack = null,
     ) {}
 
     public function weightGrams(): ?int
