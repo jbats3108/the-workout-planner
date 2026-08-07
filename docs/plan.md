@@ -113,7 +113,7 @@ Public order matches `/beta-tester-faqs`.
 
 ### Polish & mobile integration
 
-- **Plate suggestions from prior sets** — prefer order / first plate that builds on the previous load (e.g. don’t restart set 2 with a 25 when prior was under ~70 kg)
+- ~~**Plate suggestions from prior sets**~~ — heaviest-first default; Edit plates toggle; logged stack resume-safe continuity for next same-exercise working set
 - **Bail on last set** — after penultimate set is complete, option to skip / bail the final set
 
 ### Bugfixes
