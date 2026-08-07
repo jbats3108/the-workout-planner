@@ -1,3 +1,5 @@
+import type { PlateStack } from '@/lib/plateCalculator';
+
 export type { PlateProfile } from '@/settings/types';
 
 export type PlayerSetSegment = {
@@ -15,6 +17,7 @@ export type PlayerSet = {
     target_weight_kg: number | null;
     target_reps: number | null;
     logged_weight_kg: number | null;
+    plate_stack: PlateStack | null;
     logged_reps: number | null;
     completed: boolean;
     rest_seconds: number;

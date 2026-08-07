@@ -51,6 +51,7 @@ class WorkoutSetFactory extends Factory
             'set_index' => 0,
             'reps' => null,
             'weight_g' => null,
+            'plate_stack' => null,
         ];
     }
 }

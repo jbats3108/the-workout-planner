@@ -5,6 +5,7 @@ namespace App\Workouts\Data\Player;
 use App\Exercises\Enums\ExerciseEquipment;
 use App\Shared\Enums\SetGroupType;
 use App\Shared\Support\Weight;
+use App\Workouts\Data\PlateStackData;
 use App\Workouts\Models\WorkoutSet;
 use App\Workouts\Models\WorkoutWarmUpStep;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
@@ -29,6 +30,7 @@ class WorkoutPlayerSetData extends Data
         public readonly ?float $targetWeightKg,
         public readonly ?int $targetReps,
         public readonly ?float $loggedWeightKg,
+        public readonly ?PlateStackData $plateStack,
         public readonly ?int $loggedReps,
         public readonly bool $completed,
         public readonly int $restSeconds,
@@ -78,6 +80,7 @@ class WorkoutPlayerSetData extends Data
                 ? ($warmUpStep !== null ? $warmUpStep->reps : null)
                 : $prescribedReps,
             loggedWeightKg: $set->weight_g !== null ? Weight::gramsToKg($set->weight_g) : null,
+            plateStack: PlateStackData::fromSnapshot($set->plate_stack),
             loggedReps: $set->reps,
             completed: $set->completed_at !== null,
             restSeconds: $restSeconds,

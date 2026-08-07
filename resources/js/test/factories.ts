@@ -37,6 +37,7 @@ export function playerSet(overrides: Partial<PlayerSet> = {}): PlayerSet {
         target_weight_kg: 100,
         target_reps: 5,
         logged_weight_kg: null,
+        plate_stack: null,
         logged_reps: null,
         completed: false,
         rest_seconds: 120,

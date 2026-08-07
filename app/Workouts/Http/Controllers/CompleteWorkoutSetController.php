@@ -27,6 +27,7 @@ class CompleteWorkoutSetController extends Controller
                 $data->reps,
                 $data->weightGrams(),
                 $data->segmentWeightGrams(),
+                $data->plateStack?->snapshot(),
             );
         } catch (WorkoutServiceException $exception) {
             return DomainFail::back($exception, 'set');
