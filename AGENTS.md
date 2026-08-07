@@ -2,15 +2,19 @@
 
 ## Cursor Cloud specific instructions
 
-This is **OVRLOAD** (repo: the-workout-planner): a Laravel 13 (PHP 8.5) backend with an Inertia + Vue 3 + TypeScript frontend bundled by Vite. It is a single application (one service, split into a PHP server and a Vite dev server). Data is stored in a local SQLite file at `database/database.sqlite`.
+This is **OVRLOAD** (repo: the-workout-planner): a Laravel 13 (PHP 8.5) backend with an Inertia + Vue 3 + TypeScript frontend bundled by Vite. Local development runs via **Laravel Sail** (Docker): PHP app, MySQL, Redis, Mailpit, queue worker, and Vite.
 
 ### Running the app (development)
-- Start everything with `composer run dev`. This runs `php artisan serve` (http://localhost:8000), `queue:listen`, `pail` (logs), and `npm run dev` (Vite on http://localhost:5173) concurrently. Run it in a long-lived tmux session, not as a one-shot command.
-- Local mail catcher: included in `composer run dev` / `dev:lan` (Mailpit). SMTP `127.0.0.1:2525`, UI http://127.0.0.1:8026. Standalone: `composer run mailpit`. Set `MAIL_MAILER=smtp` (see `.env.example`).
-- Phone / LAN: run `composer run dev:lan` (auto-detects wifi/ethernet IP for Vite; skips docker bridges). Open the URL printed as `LAN dev: phone → …`. Optional: set `VITE_DEV_HOST` in `.env` only if detection is wrong.
-- The app requires built or dev-served frontend assets. When using `composer run dev`, Vite serves them in dev mode. Without Vite running, the app expects a production build (`npm run build`, output in `public/build/`).
+- Primary: `npm run sail:up` (detects Wi‑Fi/ethernet IP for Vite, then `sail up -d`). App http://localhost:8000 **and** phone `http://<lan-ip>:8000` on the same Wi‑Fi; Vite HMR http://localhost:5173 / `http://<lan-ip>:5173`; Mailpit UI http://localhost:8025 (SMTP `mailpit:1025` inside the network).
+- First-time: copy `.env.example` → `.env` if needed, `php artisan key:generate`, then `./vendor/bin/sail build`, `npm run sail:up`, `./vendor/bin/sail npm install` (if `node_modules` missing), `./vendor/bin/sail artisan migrate --seed`.
+- Artisan / Composer / npm inside Sail: `./vendor/bin/sail artisan …`, `./vendor/bin/sail composer …`, `./vendor/bin/sail npm …`. Optional shell alias: `alias sail='sh $([ -f sail ] && echo sail || echo vendor/bin/sail)'`.
+- Phone / LAN: built into `npm run sail:up` (sets `VITE_DEV_HOST`; Laravel follows the browser Host via `UseRequestRootUrl`). If your IP changes after Sail is already up: `npm run sail:lan`. PC-only Vite HMR: `npm run sail:localhost`. Override: `VITE_DEV_HOST=192.168.x.x npm run sail:up`.
+- Raw `./vendor/bin/sail up -d` skips LAN injection — phone Vite/HMR will break unless `VITE_DEV_HOST` is already in `.env`.
+- Host fallback (no Docker app stack): `composer run dev` / `dev:lan` — prints a Sail preference notice; uses host PHP + Vite. Point `.env` at SQLite / `127.0.0.1` Redis/mail as needed (see comments in `.env.example`).
+- Without Vite running, the app expects a production build (`npm run build` / `sail npm run build`, output in `public/build/`).
+- **Linux Sail gotchas:** (1) Docker Desktop: `docker context use default` if containers fail to start. (2) Permission errors on `storage/` / `bootstrap/cache`: set `SUPERVISOR_PHP_USER=root` in `.env`. (3) Free host ports 8000 / 3306 / 6379 / 5173 / 1025 / 8025; remove old ad-hoc `ovrload-mailpit` container if present. (4) Do not run Compose as root — Sail maps `WWWUSER`/`WWWGROUP` from your UID/GID. (5) Phone access needs host firewall allowing :8000 and :5173 on the LAN.
 - Seeded login (from `database/seeders/UserSeeder.php`): `admin1@test.com` / `password` (admin) and `user1@test.com` / `password` (regular user). Registration is invite-only: leave `REGISTRATION_INVITE` empty locally (no public signup). Admins create one-time links under **Admin → Invites** (email via Resend in prod; Copy / Resend). Optional master secret for bootstrap: `php artisan registration:invite-secret --write` (production only).
-- Demo routines (from `RoutineSeeder`, owned by `user1@test.com`): **Barbell Strength** (plates + WU first block only), **Dumbbell Accessories** (DB + 28.75 dip, WU all blocks), **Superset Pump** (supersets, WU on some), **Dropset Finishers** (mixed dropsets). Re-seed with `php artisan db:seed --class=RoutineSeeder`.
+- Demo routines (from `RoutineSeeder`, owned by `user1@test.com`): **Barbell Strength** (plates + WU first block only), **Dumbbell Accessories** (DB + 28.75 dip, WU all blocks), **Superset Pump** (supersets, WU on some), **Dropset Finishers** (mixed dropsets). Re-seed with `./vendor/bin/sail artisan db:seed --class=RoutineSeeder`.
 - Shared exercise catalog: default `database/data/exercises.json` (174 curated commercial-gym lifts from the original short list + selective free-exercise-db picks). Import with `php artisan exercises:import` (soft-deletes shared lifts missing from the file unless `--no-prune`). Audit orphans / missing equipment with `php artisan exercises:audit` (add `--json` on prod).
 
 ### Testing / linting / building (see `composer.json`, `package.json`, CI in `.github/workflows/`)
@@ -22,7 +26,7 @@ This is **OVRLOAD** (repo: the-workout-planner): a Laravel 13 (PHP 8.5) backend 
 
 ### Non-obvious notes
 - `resources/js/ziggy.js` is generated by `php artisan ziggy:generate` (not committed, git-ignored implicitly by being a build artifact). The frontend imports route helpers from it, so generate it after fresh installs. `composer install` + the dev/build flow work without it, but generating it avoids missing-route errors.
-- `public/build/` and `.env` are git-ignored; the update script recreates `.env`, the app key, and the SQLite DB when missing.
+- `public/build/` and `.env` are git-ignored; the update script recreates `.env` and the app key when missing. Local app DB is MySQL via Sail (see `.env.example`); PHPUnit still uses in-memory SQLite.
 
 ## Agent skills
 
@@ -103,7 +107,7 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 
 ## Frontend Bundling
 
-- If the user doesn't see a frontend change reflected in the UI, it could mean they need to run `npm run build`, `npm run dev`, or `composer run dev`. Ask them.
+- If the user doesn't see a frontend change reflected in the UI, it could mean they need to run `npm run build`, `./vendor/bin/sail up -d` (Vite service), or `composer run dev`. Ask them.
 
 ## Documentation Files
 
@@ -226,7 +230,7 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 
 ## Vite Error
 
-- If you receive an "Illuminate\Foundation\ViteException: Unable to locate file in Vite manifest" error, you can run `npm run build` or ask the user to run `npm run dev` or `composer run dev`.
+- If you receive an "Illuminate\Foundation\ViteException: Unable to locate file in Vite manifest" error, you can run `npm run build` / `./vendor/bin/sail npm run build`, or ask the user to run Sail (`./vendor/bin/sail up -d`) or `composer run dev`.
 
 === pint/core rules ===
 
