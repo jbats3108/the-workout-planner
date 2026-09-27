@@ -36,6 +36,8 @@ Public order matches `/beta-tester-faqs`, including recently added items.
 
 ### Parked (internal — not on public FAQ)
 
+- **Stepper controls for reps and sets** — replace rep/set inputs with steppers; permit clearing values while editing and validate required/valid values on save
+- **Flexible block timing and entries** — allow circuit blocks with a single entry, or support time-based standard blocks instead of rep-based prescriptions; decide whether this needs a new block type
 - **Automatic progression for circuits** — evaluate after user feedback on fixed-load circuit training
 - **Strava integration** — OAuth / export / privacy grill later
 - **Garmin sync** — after Strava
