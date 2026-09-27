@@ -6,6 +6,7 @@ export type CompleteSetPayload =
     | {
           reps?: number | null;
           duration_seconds?: number | null;
+          note?: string | null;
           segments: Array<{ weight_kg: number }>;
           is_skipped?: boolean;
       }
@@ -13,6 +14,7 @@ export type CompleteSetPayload =
           reps?: number | null;
           duration_seconds?: number | null;
           weight_kg?: number | null;
+          note?: string | null;
           plate_stack?: ReturnType<typeof serializePlateStack> | null;
           is_skipped?: boolean;
       };
@@ -30,6 +32,7 @@ export function buildCompleteSetPayload(
     draftSegments: Array<{ weight_kg: number }>,
     plateLoad: PlateLoadResult | null,
     options?: CompleteSetOptions,
+    note: string | null = null,
 ): CompleteSetPayload {
     if (options?.isSkipped) {
         return {
@@ -40,6 +43,7 @@ export function buildCompleteSetPayload(
     if (set.is_dropset) {
         const payload: CompleteSetPayload = {
             reps: reps ?? 0,
+            ...(note === null ? {} : { note }),
             segments: draftSegments.map((segment) => ({ weight_kg: segment.weight_kg })),
         };
         if (options?.isSkipped !== undefined) {
@@ -54,6 +58,7 @@ export function buildCompleteSetPayload(
         const payload: CompleteSetPayload = {
             duration_seconds: options?.durationSeconds ?? set.target_duration_seconds ?? 0,
             weight_kg: weightKg ?? 0,
+            ...(note === null ? {} : { note }),
             plate_stack: finalPlateLoad ? serializePlateStack(finalPlateLoad) : null,
         };
         if (options?.isSkipped !== undefined) {
@@ -65,6 +70,7 @@ export function buildCompleteSetPayload(
     const payload: CompleteSetPayload = {
         reps: reps ?? set.target_reps ?? 0,
         weight_kg: weightKg ?? 0,
+        ...(note === null ? {} : { note }),
         plate_stack: finalPlateLoad ? serializePlateStack(finalPlateLoad) : null,
     };
     if (options?.isSkipped !== undefined) {

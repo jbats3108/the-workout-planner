@@ -26,6 +26,9 @@ class SyncBlockExerciseData extends Data
         #[Min(0)]
         public readonly float $workingWeightKg,
 
+        #[Nullable, Max(64)]
+        public readonly ?string $note = null,
+
         #[Nullable, Min(1), Max(100)]
         public readonly ?int $prescribedReps = null,
 
@@ -53,6 +56,9 @@ class SyncBlockExerciseData extends Data
 
         #[Nullable, Min(0), RequiredWith('deload_exercise_id')]
         public readonly ?float $deloadWorkingWeightKg = null,
+
+        #[Nullable, Max(64)]
+        public readonly ?string $deloadNote = null,
     ) {}
 
     public function workingWeightGrams(): int

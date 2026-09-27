@@ -30,6 +30,7 @@ class CompleteWorkoutSetController extends Controller
                 $data->plateStack?->snapshot(),
                 $data->durationSeconds,
                 $data->isSkipped,
+                $data->note,
             );
         } catch (WorkoutServiceException $exception) {
             return DomainFail::back($exception, 'set');

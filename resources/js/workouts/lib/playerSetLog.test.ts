@@ -14,6 +14,7 @@ function workingSet(overrides: Partial<PlayerSet> = {}): PlayerSet {
         target_reps: 6,
         target_weight_kg: 60,
         completed: false,
+        note: null,
         is_dropset: false,
         has_setup_after: false,
         equipment: 'barbell',
@@ -42,6 +43,16 @@ describe('buildCompleteSetPayload', () => {
                 bar_g: 20000,
                 per_side: [{ denomination_g: 20000, count: 1 }],
             },
+        });
+    });
+
+    it('includes a working-set note when provided', () => {
+        const payload = buildCompleteSetPayload(workingSet(), 6, 60, [], null, undefined, 'Pin 8');
+
+        expect(payload).toMatchObject({
+            reps: 6,
+            weight_kg: 60,
+            note: 'Pin 8',
         });
     });
 

@@ -28,6 +28,7 @@ const form = useForm({
         reps: set.prescription_mode === 'duration' ? null : (set.logged_reps ?? set.target_reps ?? 0),
         duration_seconds: set.prescription_mode === 'duration' ? (set.logged_duration_seconds ?? set.target_duration_seconds ?? 30) : null,
         weight_kg: set.logged_weight_kg ?? set.target_weight_kg ?? 0,
+        note: set.note ?? '',
         is_skipped: Boolean(set.is_skipped),
     })),
 });
@@ -179,6 +180,20 @@ const removeWorkout = () => deleteWorkout(props.history.workout.id, props.histor
                                                 <span>kg</span>
                                             </label>
                                         </template>
+                                        <label
+                                            v-if="!form.sets[setFieldIndex[set.id]].is_skipped"
+                                            class="flex items-center gap-1.5 text-xs text-muted-foreground"
+                                        >
+                                            <span class="sr-only">Note</span>
+                                            <input
+                                                v-model="form.sets[setFieldIndex[set.id]].note"
+                                                type="text"
+                                                maxlength="64"
+                                                placeholder="Note"
+                                                aria-label="Note"
+                                                class="min-w-32 flex-1 rounded border border-border bg-background px-1.5 py-1 text-sm"
+                                            />
+                                        </label>
                                         <span v-else class="font-mono text-xs text-muted-foreground italic">Skipped</span>
                                     </li>
                                 </ul>
@@ -236,6 +251,17 @@ const removeWorkout = () => deleteWorkout(props.history.workout.id, props.histor
                                             </label>
                                         </template>
                                         <span v-else class="font-mono text-xs text-muted-foreground">dropset</span>
+                                        <label class="flex min-w-32 flex-1 items-center gap-1 text-xs text-muted-foreground">
+                                            <span class="sr-only">Note</span>
+                                            <input
+                                                v-model="form.sets[setFieldIndex[set.id]].note"
+                                                type="text"
+                                                maxlength="64"
+                                                placeholder="Note"
+                                                aria-label="Note"
+                                                class="w-full rounded border border-border bg-background px-1.5 py-1 text-sm"
+                                            />
+                                        </label>
                                     </li>
                                 </ul>
                             </template>

@@ -76,6 +76,44 @@ class WorkoutServiceTest extends TestCase
     }
 
     #[Test]
+    public function it_snapshots_notes_and_persists_a_working_set_note(): void
+    {
+        $routine = Routine::factory()->create();
+        [, $routineExercise] = $this->seedPlayableRoutineBlock($routine, setCount: 1);
+        $routineExercise->update(['note' => 'Pin 8; left cable']);
+
+        $workout = $this->workoutService->createWorkout($routine);
+        $snapshotExercise = $workout->blocks->firstOrFail()->blockExercises->firstOrFail();
+        $set = $this->firstWorkingSet($workout->id);
+
+        $this->assertSame('Pin 8; left cable', $snapshotExercise->note);
+
+        $this->workoutService->completeSet($set, reps: 6, weightGrams: 80000, note: 'Pin 9');
+
+        $this->assertSame('Pin 9', $set->fresh()->note);
+    }
+
+    #[Test]
+    public function it_snapshots_the_deload_note_from_an_alternate_exercise(): void
+    {
+        $routine = Routine::factory()->create();
+        [, $routineExercise] = $this->seedPlayableRoutineBlock($routine, setCount: 1);
+        $alternate = Exercise::factory()->create();
+        $routineExercise->update([
+            'note' => 'Primary pin',
+            'deload_exercise_id' => $alternate->id,
+            'deload_working_weight_g' => 40000,
+            'deload_note' => 'Alternate pin',
+        ]);
+
+        $workout = $this->workoutService->createWorkout($routine, WorkoutMode::Deload);
+        $snapshotExercise = $workout->blocks->firstOrFail()->blockExercises->firstOrFail();
+
+        $this->assertSame($alternate->getName(), $snapshotExercise->exercise_name);
+        $this->assertSame('Alternate pin', $snapshotExercise->note);
+    }
+
+    #[Test]
     public function it_creates_workout_blocks_for_each_routine_block(): void
     {
         // Given

@@ -18,6 +18,7 @@ final class RoutineEditorPayload
             'prescribed_reps' => array_key_exists('prescribed_reps', $overrides) ? $overrides['prescribed_reps'] : 6,
             'prescription_mode' => $overrides['prescription_mode'] ?? 'reps',
             'prescribed_duration_seconds' => $overrides['prescribed_duration_seconds'] ?? null,
+            'note' => $overrides['note'] ?? null,
             'achievement_floor' => $overrides['achievement_floor'] ?? null,
             'floor_is_derived' => $overrides['floor_is_derived'] ?? null,
             'progression_target' => $overrides['progression_target'] ?? null,
@@ -25,6 +26,7 @@ final class RoutineEditorPayload
             'exercise_profile_fingerprint' => $overrides['exercise_profile_fingerprint'] ?? null,
             'deload_exercise_id' => $overrides['deload_exercise_id'] ?? null,
             'deload_working_weight_kg' => $overrides['deload_working_weight_kg'] ?? null,
+            'deload_note' => $overrides['deload_note'] ?? null,
         ];
 
         $exercises = $overrides['exercises'] ?? [$exercise];

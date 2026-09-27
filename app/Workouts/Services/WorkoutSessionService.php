@@ -35,6 +35,7 @@ final readonly class WorkoutSessionService
         ?array $plateStack = null,
         ?int $durationSeconds = null,
         bool $isSkipped = false,
+        ?string $note = null,
     ): WorkoutSet {
         $set->loadMissing(['setGroup.block.workout', 'segments']);
         $this->assertInProgress($set->setGroup->block->workout);
@@ -64,12 +65,13 @@ final readonly class WorkoutSessionService
         }
 
         if ($hasSegments) {
-            return DB::transaction(function () use ($set, $reps, $segmentWeightGrams): WorkoutSet {
+            return DB::transaction(function () use ($set, $reps, $segmentWeightGrams, $note): WorkoutSet {
                 $this->setLogger->applyLoggedValues(
                     $set,
                     $reps,
                     segmentWeightGrams: $segmentWeightGrams,
                     completedAt: now(),
+                    note: $note,
                 );
                 $set->save();
 
@@ -77,7 +79,7 @@ final readonly class WorkoutSessionService
             });
         }
 
-        return DB::transaction(function () use ($set, $reps, $weightGrams, $plateStack, $durationSeconds): WorkoutSet {
+        return DB::transaction(function () use ($set, $reps, $weightGrams, $plateStack, $durationSeconds, $note): WorkoutSet {
             $this->setLogger->applyLoggedValues(
                 $set,
                 $reps,
@@ -85,6 +87,7 @@ final readonly class WorkoutSessionService
                 plateStack: $plateStack,
                 completedAt: now(),
                 durationSeconds: $durationSeconds,
+                note: $note,
             );
             $set->save();
 

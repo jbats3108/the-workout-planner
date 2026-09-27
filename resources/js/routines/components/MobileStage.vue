@@ -376,6 +376,16 @@ const onCustomiseSharedRecipe = (block: Block): void => {
                                 </div>
                             </div>
                         </div>
+                        <label class="mt-2 block">
+                            <span class="text-xs text-muted-foreground">Exercise note</span>
+                            <input
+                                v-model="ex.note"
+                                type="text"
+                                maxlength="64"
+                                placeholder="e.g. Pin 8"
+                                class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                            />
+                        </label>
                         <div v-if="ex.prescription_mode === 'duration'" class="mt-2 rounded-xl border border-border/70 bg-background/50 p-2.5">
                             <label class="block">
                                 <span class="text-xs text-muted-foreground">Duration (seconds)</span>
@@ -473,6 +483,16 @@ const onCustomiseSharedRecipe = (block: Block): void => {
                                 @update:model-value="applyProfile(activeBlock, $event, ei)"
                             />
                         </div>
+                        <label class="mt-2 block">
+                            <span class="text-xs text-muted-foreground">Exercise note</span>
+                            <input
+                                v-model="ex.note"
+                                type="text"
+                                maxlength="64"
+                                placeholder="e.g. Pin 8"
+                                class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                            />
+                        </label>
 
                         <template v-if="exerciseRecipeIsCustom(ex)">
                             <div class="mt-2 grid grid-cols-2 gap-2">
@@ -539,10 +559,12 @@ const onCustomiseSharedRecipe = (block: Block): void => {
                         <DeloadAlternateFields
                             :deload-exercise-id="ex.deload_exercise_id"
                             :deload-working-weight-kg="ex.deload_working_weight_kg"
+                            :deload-note="ex.deload_note ?? null"
                             :working-weight-kg="ex.working_weight_kg"
                             variant="mobile"
                             @update:deload-exercise-id="ex.deload_exercise_id = $event"
                             @update:deload-working-weight-kg="ex.deload_working_weight_kg = $event"
+                            @update:deload-note="ex.deload_note = $event"
                         />
                     </div>
                     <p v-if="activeBlock.exercises.some(exerciseRecipeIsCustom)" class="mt-1 text-xs text-muted-foreground">

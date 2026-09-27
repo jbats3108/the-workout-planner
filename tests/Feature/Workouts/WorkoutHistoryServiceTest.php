@@ -158,6 +158,7 @@ class WorkoutHistoryServiceTest extends TestCase
                         'id' => $set->id,
                         'reps' => 4,
                         'weight_kg' => 80,
+                        'note' => 'Pin 7',
                     ],
                 ],
             ]),
@@ -165,6 +166,7 @@ class WorkoutHistoryServiceTest extends TestCase
 
         $this->assertNotNull($set->fresh()->completed_at);
         $this->assertSame(4, $set->fresh()->reps);
+        $this->assertSame('Pin 7', $set->fresh()->note);
     }
 
     /**
