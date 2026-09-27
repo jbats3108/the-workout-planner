@@ -184,13 +184,13 @@ const removeWorkout = () => deleteWorkout(props.history.workout.id, props.histor
                                             v-if="!form.sets[setFieldIndex[set.id]].is_skipped"
                                             class="flex items-center gap-1.5 text-xs text-muted-foreground"
                                         >
-                                            <span class="sr-only">Load note</span>
+                                            <span class="sr-only">Note</span>
                                             <input
                                                 v-model="form.sets[setFieldIndex[set.id]].note"
                                                 type="text"
                                                 maxlength="64"
                                                 placeholder="Note"
-                                                aria-label="Load note"
+                                                aria-label="Note"
                                                 class="min-w-32 flex-1 rounded border border-border bg-background px-1.5 py-1 text-sm"
                                             />
                                         </label>
@@ -252,13 +252,13 @@ const removeWorkout = () => deleteWorkout(props.history.workout.id, props.histor
                                         </template>
                                         <span v-else class="font-mono text-xs text-muted-foreground">dropset</span>
                                         <label class="flex min-w-32 flex-1 items-center gap-1 text-xs text-muted-foreground">
-                                            <span class="sr-only">Load note</span>
+                                            <span class="sr-only">Note</span>
                                             <input
                                                 v-model="form.sets[setFieldIndex[set.id]].note"
                                                 type="text"
                                                 maxlength="64"
                                                 placeholder="Note"
-                                                aria-label="Load note"
+                                                aria-label="Note"
                                                 class="w-full rounded border border-border bg-background px-1.5 py-1 text-sm"
                                             />
                                         </label>

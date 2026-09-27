@@ -451,7 +451,7 @@ const unlockInput = (event: PointerEvent) => {
                         </template>
                     </div>
                     <label v-if="current.set.group_type === 'working'" class="flex flex-col gap-1 text-sm text-muted-foreground">
-                        Load note
+                        Note
                         <input
                             v-model="setForm.note"
                             type="text"

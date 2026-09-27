@@ -46,7 +46,7 @@ describe('buildCompleteSetPayload', () => {
         });
     });
 
-    it('includes a working-set load note when provided', () => {
+    it('includes a working-set note when provided', () => {
         const payload = buildCompleteSetPayload(workingSet(), 6, 60, [], null, undefined, 'Pin 8');
 
         expect(payload).toMatchObject({

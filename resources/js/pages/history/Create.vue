@@ -464,7 +464,7 @@ const submit = () => {
                                         </label>
                                     </div>
                                     <label v-if="!set.is_skipped" class="mt-2 flex max-w-sm flex-col gap-1 text-xs text-muted-foreground">
-                                        Load note
+                                        Note
                                         <input
                                             v-model="set.note"
                                             type="text"

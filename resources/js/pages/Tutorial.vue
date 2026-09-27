@@ -14,7 +14,7 @@ const toc = [
     { href: '#training', label: 'Training preferences' },
     { href: '#profiles', label: 'Exercise profiles' },
     { href: '#editor', label: 'Create a routine' },
-    { href: '#notes', label: 'Load notes' },
+    { href: '#notes', label: 'Notes' },
     { href: '#circuits', label: 'Circuit blocks' },
     { href: '#play', label: 'Play a workout' },
     { href: '#bump', label: 'Bumps' },
@@ -201,7 +201,7 @@ const toc = [
             </section>
 
             <section id="notes" class="mt-12 scroll-mt-20 space-y-3">
-                <h2 class="text-2xl font-bold tracking-tight">Add a load note</h2>
+                <h2 class="text-2xl font-bold tracking-tight">Add a note</h2>
                 <p class="text-muted-foreground">
                     Use <strong class="text-foreground">Exercise note</strong> in the routine editor for a short gym-local label such as “Pin 8”,
                     “left cable”, or “seat 4”. The note is optional and limited to 64 characters. It is free text, so OVRLOAD does not convert pins to
@@ -209,7 +209,7 @@ const toc = [
                 </p>
                 <p class="text-muted-foreground">
                     When you start a workout, the exercise note is copied into the snapshot. In Play, the note appears beside the target load and
-                    opens prefilled in the <strong class="text-foreground">Load note</strong> field when you tap
+                    opens prefilled in the <strong class="text-foreground">Note</strong> field when you tap
                     <strong class="text-foreground">Done</strong>. Edit that field for the current working-set slot only; it does not change the
                     routine. Notes are not collected for warm-up sets. A dropset has one note for the slot, not one per segment.
                 </p>
@@ -256,9 +256,9 @@ const toc = [
                     From a routine card, start a normal session or a Deload. Play walks you through setup, warm-ups, working sets, and rest. The
                     header shows which set you are on. On <strong class="text-foreground">Setup</strong>, you see each upcoming lift (A and B for a
                     superset) with the full plate guide so you can load before tapping Setup done. Done opens the log sheet; Log set writes the weight
-                    and reps; Cancel backs out without saving that set. If the exercise has a load note, it is shown beside the target. Tap the
-                    <strong class="text-foreground">Load note</strong> field in the log sheet to keep the prefilled label or record what you actually
-                    used for this working-set slot.
+                    and reps; Cancel backs out without saving that set. If the exercise has a note, it is shown beside the target. Tap the
+                    <strong class="text-foreground">Note</strong> field in the log sheet to keep the prefilled label or record what you actually used
+                    for this working-set slot.
                 </p>
                 <p class="text-muted-foreground">
                     Rest counts down with ticks near the end. Skip rest if you need to. You can add or remove incomplete working sets mid-session —
@@ -361,8 +361,8 @@ const toc = [
                     Finished sessions land in History. Change working weight or reps, then use one
                     <strong class="text-foreground">Save</strong> for the whole workout. On the latest non-deload finish that can re-run progression —
                     it may offer bumps again, or let you undo a bump you already confirmed. Add a historical workout if you trained without the phone.
-                    Working-set rows show their optional load notes beside the logged load; saving a note does not alter progression. Dashboard shows
-                    a short strip of recent finishes.
+                    Working-set rows show their optional notes beside the logged load; saving a note does not alter progression. Dashboard shows a
+                    short strip of recent finishes.
                 </p>
                 <TutorialShot
                     name="afterward"
