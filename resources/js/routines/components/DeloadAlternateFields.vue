@@ -7,6 +7,7 @@ import { computed, ref, watch } from 'vue';
 const props = defineProps<{
     deloadExerciseId: number | null;
     deloadWorkingWeightKg: number | null;
+    deloadNote: string | null;
     workingWeightKg: number;
     variant: 'desktop' | 'mobile';
 }>();
@@ -14,6 +15,7 @@ const props = defineProps<{
 const emit = defineEmits<{
     'update:deloadExerciseId': [id: number | null];
     'update:deloadWorkingWeightKg': [kg: number | null];
+    'update:deloadNote': [note: string | null];
 }>();
 
 const { exerciseName } = useRoutineEditor();
@@ -44,6 +46,7 @@ const onDeloadExercise = (id: number | null) => {
     emit('update:deloadExerciseId', id);
     if (id === null) {
         emit('update:deloadWorkingWeightKg', null);
+        emit('update:deloadNote', null);
         expanded.value = false;
         return;
     }
@@ -55,6 +58,7 @@ const onDeloadExercise = (id: number | null) => {
 const onClear = () => {
     emit('update:deloadExerciseId', null);
     emit('update:deloadWorkingWeightKg', null);
+    emit('update:deloadNote', null);
     expanded.value = false;
 };
 
@@ -104,6 +108,18 @@ const onWeightInput = (event: Event) => {
                     @input="onWeightInput"
                 />
             </label>
+            <label v-if="variant === 'mobile'" class="block">
+                <span class="text-xs text-muted-foreground">Deload note</span>
+                <input
+                    :value="deloadNote ?? ''"
+                    type="text"
+                    maxlength="64"
+                    placeholder="e.g. Pin 5"
+                    :disabled="deloadExerciseId === null"
+                    class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary disabled:opacity-50"
+                    @input="emit('update:deloadNote', ($event.target as HTMLInputElement).value || null)"
+                />
+            </label>
             <template v-else>
                 <input
                     :value="deloadWorkingWeightKg ?? ''"
@@ -116,6 +132,16 @@ const onWeightInput = (event: Event) => {
                     class="w-16 rounded border border-border bg-card px-1.5 py-1 font-mono text-xs tabular-nums"
                     :disabled="deloadExerciseId === null"
                     @input="onWeightInput"
+                />
+                <input
+                    :value="deloadNote ?? ''"
+                    type="text"
+                    maxlength="64"
+                    placeholder="note"
+                    title="Deload alternate note"
+                    class="w-24 rounded border border-border bg-card px-1.5 py-1 font-mono text-xs"
+                    :disabled="deloadExerciseId === null"
+                    @input="emit('update:deloadNote', ($event.target as HTMLInputElement).value || null)"
                 />
                 <button
                     v-if="deloadExerciseId !== null"

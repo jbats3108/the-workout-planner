@@ -81,6 +81,7 @@ const submitForm = useForm({
             reps?: number | null;
             duration_seconds?: number | null;
             is_skipped?: boolean;
+            note?: string | null;
             weight_kg?: number;
             segments?: { weight_kg: number }[];
         }[];
@@ -173,6 +174,7 @@ const submit = () => {
                         exercise_position: set.exercise_position,
                         set_index: set.set_index,
                         reps: set.reps,
+                        note: set.note,
                         segments: set.segments.map((segment) => ({ weight_kg: segment.weight_kg })),
                     };
                 }
@@ -183,6 +185,7 @@ const submit = () => {
                     reps: set.prescription_mode === 'duration' ? null : (set.reps ?? 0),
                     duration_seconds: set.prescription_mode === 'duration' ? (set.duration_seconds ?? 30) : null,
                     weight_kg: set.weight_kg ?? 0,
+                    note: set.note,
                     is_skipped: false,
                 };
             }),
@@ -460,6 +463,16 @@ const submit = () => {
                                             />
                                         </label>
                                     </div>
+                                    <label v-if="!set.is_skipped" class="mt-2 flex max-w-sm flex-col gap-1 text-xs text-muted-foreground">
+                                        Load note
+                                        <input
+                                            v-model="set.note"
+                                            type="text"
+                                            maxlength="64"
+                                            placeholder="e.g. Pin 8"
+                                            class="rounded border border-border bg-background px-2 py-1.5 text-sm text-foreground"
+                                        />
+                                    </label>
                                 </li>
                             </ul>
                         </div>

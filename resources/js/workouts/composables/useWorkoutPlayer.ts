@@ -726,7 +726,15 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
                     ? normalizePlateLoadForOwnWeight(current.value, draftLoad)
                     : null
                 : null;
-        const payload = buildCompleteSetPayload(set, setForm.reps, setForm.weight_kg, draftSegments.value, finalPlateLoad, options, setForm.note);
+        const payload = buildCompleteSetPayload(
+            set,
+            setForm.reps,
+            setForm.weight_kg,
+            draftSegments.value,
+            finalPlateLoad,
+            options,
+            set.group_type === 'working' ? setForm.note : null,
+        );
         const loggedReps = options?.isSkipped ? null : setForm.reps;
         const loggedWeightKg = options?.isSkipped ? null : setForm.weight_kg;
 

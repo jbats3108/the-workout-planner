@@ -17,7 +17,7 @@ export type PlayerSet = {
     target_weight_kg: number | null;
     target_reps: number | null;
     logged_weight_kg: number | null;
-    note: string | null;
+    note?: string | null;
     plate_stack: PlateStack | null;
     logged_reps: number | null;
     completed: boolean;
@@ -36,7 +36,7 @@ export type PlayerBlockExercise = {
     name: string;
     equipment?: string | null;
     working_weight_kg: number;
-    note: string | null;
+    note?: string | null;
     prescribed_reps: number | null;
     achievement_floor: number | null;
     progression_target: number | null;
@@ -111,7 +111,7 @@ export type HistoricalCreateSet = {
     is_dropset: boolean;
     weight_kg: number | null;
     reps: number | null;
-    note: string | null;
+    note?: string | null;
     segments: HistoricalCreateSegment[];
     prescription_mode?: 'reps' | 'duration';
     duration_seconds?: number | null;

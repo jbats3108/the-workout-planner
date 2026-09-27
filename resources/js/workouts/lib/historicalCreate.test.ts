@@ -26,6 +26,8 @@ const sampleBlocks: HistoricalCreateBlock[] = [
                 deload_name: null,
                 deload_equipment: null,
                 deload_working_weight_kg: null,
+                note: 'Pin 8',
+                deload_note: null,
             },
         ],
         working_set_count: 1,
@@ -37,6 +39,7 @@ const sampleBlocks: HistoricalCreateBlock[] = [
                 is_dropset: false,
                 weight_kg: 100,
                 reps: 5,
+                note: 'Pin 8',
                 segments: [],
             },
         ],
@@ -49,6 +52,7 @@ describe('historicalCreate', () => {
         const draft = buildDraftBlocks(sampleBlocks, true, 0.9, 0.8);
         expect(draft[0]?.sets[0]?.weight_kg).toBe(90);
         expect(draft[0]?.sets[0]?.reps).toBe(4);
+        expect(draft[0]?.sets[0]?.note).toBe('Pin 8');
     });
 
     it('adds and removes working rounds', () => {

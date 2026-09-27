@@ -185,7 +185,7 @@ function scaleSet(set: HistoricalCreateSet, block: HistoricalCreateBlock, deload
         is_dropset: set.is_dropset,
         weight_kg: set.weight_kg === null ? null : scaleWeight(set.weight_kg, weightFactor),
         reps: scaleReps(set.reps, repsFactor),
-        note: set.note,
+        note: set.note ?? null,
         segments: set.segments.map((segment) => ({
             weight_kg: scaleWeight(segment.weight_kg, weightFactor),
         })),

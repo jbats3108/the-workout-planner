@@ -167,11 +167,13 @@ const toggleDropsets = (blockIndex: number): void => {
                                         v-if="block.type !== 'circuit'"
                                         :deload-exercise-id="ex.deload_exercise_id"
                                         :deload-working-weight-kg="ex.deload_working_weight_kg"
+                                        :deload-note="ex.deload_note ?? null"
                                         :working-weight-kg="ex.working_weight_kg"
                                         variant="desktop"
                                         :class="block.is_superset ? 'pl-5' : ''"
                                         @update:deload-exercise-id="ex.deload_exercise_id = $event"
                                         @update:deload-working-weight-kg="ex.deload_working_weight_kg = $event"
+                                        @update:deload-note="ex.deload_note = $event"
                                     />
                                 </div>
                             </td>
@@ -183,6 +185,14 @@ const toggleDropsets = (blockIndex: number): void => {
                                     min="0"
                                     inputmode="decimal"
                                     class="h-8 w-20 rounded border border-border bg-card px-2 font-mono text-sm tabular-nums"
+                                />
+                                <input
+                                    v-model="ex.note"
+                                    type="text"
+                                    maxlength="64"
+                                    placeholder="note"
+                                    title="Exercise note"
+                                    class="mt-1 h-7 w-24 rounded border border-border bg-card px-1.5 font-mono text-xs"
                                 />
                             </td>
                             <td class="px-2 py-2 align-top">

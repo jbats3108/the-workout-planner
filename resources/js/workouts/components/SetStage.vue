@@ -41,6 +41,7 @@ const {
     stagePlateLoad,
     workout,
     current,
+    currentExercise,
     setForm,
     mutating,
     draftSegments,
@@ -130,6 +131,7 @@ const unlockInput = (event: PointerEvent) => {
                         <span v-if="current.set.target_reps != null"> × {{ current.set.target_reps }}</span>
                     </template>
                 </p>
+                <p v-if="currentExercise?.note" class="max-w-sm text-sm text-muted-foreground">Note · {{ currentExercise.note }}</p>
 
                 <!-- Timed Exercise Interactive Countdown -->
                 <div v-if="isTimedSet" class="flex w-full max-w-sm flex-col items-center gap-4 rounded-2xl border border-border bg-card/60 p-6">
@@ -448,6 +450,16 @@ const unlockInput = (event: PointerEvent) => {
                             </div>
                         </template>
                     </div>
+                    <label v-if="current.set.group_type === 'working'" class="flex flex-col gap-1 text-sm text-muted-foreground">
+                        Load note
+                        <input
+                            v-model="setForm.note"
+                            type="text"
+                            maxlength="64"
+                            placeholder="e.g. Pin 8"
+                            class="rounded-xl border border-border bg-card px-4 py-3 text-base text-foreground outline-none focus:border-primary md:rounded-md md:py-2"
+                        />
+                    </label>
                 </div>
 
                 <div class="flex shrink-0 flex-col gap-2 md:flex-row-reverse md:items-center md:justify-start md:gap-3">

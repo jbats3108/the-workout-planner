@@ -14,6 +14,7 @@ const toc = [
     { href: '#training', label: 'Training preferences' },
     { href: '#profiles', label: 'Exercise profiles' },
     { href: '#editor', label: 'Create a routine' },
+    { href: '#notes', label: 'Load notes' },
     { href: '#circuits', label: 'Circuit blocks' },
     { href: '#play', label: 'Play a workout' },
     { href: '#bump', label: 'Bumps' },
@@ -177,8 +178,9 @@ const toc = [
                     Target, Floor, Rest, and warm-ups stay hidden while a profile is selected — choose
                     <strong class="text-foreground">Custom settings</strong> (or Customise) to override them; Cancel restores the prior profile
                     snapshot for that Customise session. Optional dropsets are per exercise. Pick lifts from the catalog, or add a private custom that
-                    only you see. Per-exercise <strong class="text-foreground">Deload Alternate</strong> stays available on every exercise (separate
-                    from Customise) and is covered under Deloads below.
+                    only you see. Use the one-line <strong class="text-foreground">Exercise note</strong> beside working kg for a pin number, stack
+                    label, or gym cue. Per-exercise <strong class="text-foreground">Deload Alternate</strong> stays available on every exercise
+                    (separate from Customise) and is covered under Deloads below.
                 </p>
                 <p class="text-muted-foreground">
                     <strong class="text-foreground">Setup</strong> is a pause so you can load the bar or walk to a machine. You can put setup before
@@ -195,6 +197,26 @@ const toc = [
                 />
                 <p v-if="isSignedIn">
                     <Link :href="route('routines.create')" class="font-medium text-primary underline-offset-2 hover:underline">Create a routine</Link>
+                </p>
+            </section>
+
+            <section id="notes" class="mt-12 scroll-mt-20 space-y-3">
+                <h2 class="text-2xl font-bold tracking-tight">Add a load note</h2>
+                <p class="text-muted-foreground">
+                    Use <strong class="text-foreground">Exercise note</strong> in the routine editor for a short gym-local label such as “Pin 8”,
+                    “left cable”, or “seat 4”. The note is optional and limited to 64 characters. It is free text, so OVRLOAD does not convert pins to
+                    kg or use notes for progression, bumps, carry-forward, or charts.
+                </p>
+                <p class="text-muted-foreground">
+                    When you start a workout, the exercise note is copied into the snapshot. In Play, the note appears beside the target load and
+                    opens prefilled in the <strong class="text-foreground">Load note</strong> field when you tap
+                    <strong class="text-foreground">Done</strong>. Edit that field for the current working-set slot only; it does not change the
+                    routine. Notes are not collected for warm-up sets. A dropset has one note for the slot, not one per segment.
+                </p>
+                <p class="text-muted-foreground">
+                    A Deload Alternate has its own note in the alternate controls. Deload Play snapshots that note instead of the primary note.
+                    Finished History rows and <strong class="text-foreground">Add historical</strong> also let you review or edit working-set notes.
+                    The separate workout memo remains separate.
                 </p>
             </section>
 
@@ -234,7 +256,9 @@ const toc = [
                     From a routine card, start a normal session or a Deload. Play walks you through setup, warm-ups, working sets, and rest. The
                     header shows which set you are on. On <strong class="text-foreground">Setup</strong>, you see each upcoming lift (A and B for a
                     superset) with the full plate guide so you can load before tapping Setup done. Done opens the log sheet; Log set writes the weight
-                    and reps; Cancel backs out without saving that set.
+                    and reps; Cancel backs out without saving that set. If the exercise has a load note, it is shown beside the target. Tap the
+                    <strong class="text-foreground">Load note</strong> field in the log sheet to keep the prefilled label or record what you actually
+                    used for this working-set slot.
                 </p>
                 <p class="text-muted-foreground">
                     Rest counts down with ticks near the end. Skip rest if you need to. You can add or remove incomplete working sets mid-session —
@@ -325,9 +349,9 @@ const toc = [
                 </p>
                 <p class="text-muted-foreground">
                     Optional <strong class="text-foreground">Deload Alternate</strong> on an exercise swaps in a different lift for Deload only, with
-                    its own working weight used as-is (the weight factor does not scale that alternate). Prescribed reps still come from the primary
-                    via the profile settings. If an alternate is set, that lift’s Deload snapshot is singles — no dropsets. Finishing a Deload does
-                    not bump or carry-forward your usual working weights.
+                    its own working weight and optional note used as-is (the weight factor does not scale that alternate). Prescribed reps still come
+                    from the primary via the profile settings. If an alternate is set, that lift’s Deload snapshot is singles — no dropsets. Finishing
+                    a Deload does not bump or carry-forward your usual working weights.
                 </p>
             </section>
 
@@ -337,7 +361,8 @@ const toc = [
                     Finished sessions land in History. Change working weight or reps, then use one
                     <strong class="text-foreground">Save</strong> for the whole workout. On the latest non-deload finish that can re-run progression —
                     it may offer bumps again, or let you undo a bump you already confirmed. Add a historical workout if you trained without the phone.
-                    Dashboard shows a short strip of recent finishes.
+                    Working-set rows show their optional load notes beside the logged load; saving a note does not alter progression. Dashboard shows
+                    a short strip of recent finishes.
                 </p>
                 <TutorialShot
                     name="afterward"

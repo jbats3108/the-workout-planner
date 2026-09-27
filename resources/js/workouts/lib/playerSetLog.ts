@@ -43,7 +43,7 @@ export function buildCompleteSetPayload(
     if (set.is_dropset) {
         const payload: CompleteSetPayload = {
             reps: reps ?? 0,
-            note,
+            ...(note === null ? {} : { note }),
             segments: draftSegments.map((segment) => ({ weight_kg: segment.weight_kg })),
         };
         if (options?.isSkipped !== undefined) {
@@ -58,7 +58,7 @@ export function buildCompleteSetPayload(
         const payload: CompleteSetPayload = {
             duration_seconds: options?.durationSeconds ?? set.target_duration_seconds ?? 0,
             weight_kg: weightKg ?? 0,
-            note,
+            ...(note === null ? {} : { note }),
             plate_stack: finalPlateLoad ? serializePlateStack(finalPlateLoad) : null,
         };
         if (options?.isSkipped !== undefined) {
@@ -70,7 +70,7 @@ export function buildCompleteSetPayload(
     const payload: CompleteSetPayload = {
         reps: reps ?? set.target_reps ?? 0,
         weight_kg: weightKg ?? 0,
-        note,
+        ...(note === null ? {} : { note }),
         plate_stack: finalPlateLoad ? serializePlateStack(finalPlateLoad) : null,
     };
     if (options?.isSkipped !== undefined) {
