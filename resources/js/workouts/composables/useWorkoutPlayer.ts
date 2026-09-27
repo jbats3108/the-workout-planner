@@ -106,6 +106,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
         reps: 0,
         duration_seconds: 0,
         weight_kg: 0,
+        note: '',
         segments: [] as Array<{ weight_kg: number }>,
         is_skipped: false,
     });
@@ -453,6 +454,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
     const syncDraftFromSet = (entry: FlatSetEntry) => {
         setForm.reps = entry.set.logged_reps ?? entry.set.target_reps ?? 0;
         setForm.duration_seconds = entry.set.logged_duration_seconds ?? entry.set.target_duration_seconds ?? 0;
+        setForm.note = entry.set.note ?? entry.block.exercises.find((exercise) => exercise.id === entry.set.workout_block_exercise_id)?.note ?? '';
         setForm.is_skipped = false;
         logPlateLoadDraft.value = null;
         if (entry.set.is_dropset) {
@@ -724,7 +726,7 @@ export function createWorkoutPlayer(props: PlayWorkoutProps) {
                     ? normalizePlateLoadForOwnWeight(current.value, draftLoad)
                     : null
                 : null;
-        const payload = buildCompleteSetPayload(set, setForm.reps, setForm.weight_kg, draftSegments.value, finalPlateLoad, options);
+        const payload = buildCompleteSetPayload(set, setForm.reps, setForm.weight_kg, draftSegments.value, finalPlateLoad, options, setForm.note);
         const loggedReps = options?.isSkipped ? null : setForm.reps;
         const loggedWeightKg = options?.isSkipped ? null : setForm.weight_kg;
 

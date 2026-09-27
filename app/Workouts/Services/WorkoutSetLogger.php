@@ -25,6 +25,7 @@ final readonly class WorkoutSetLogger
         bool $deleteExistingSegments = true,
         ?int $durationSeconds = null,
         bool $isSkipped = false,
+        ?string $note = null,
     ): void {
         if ($isSkipped) {
             $set->replaceSegments([], $deleteExistingSegments);
@@ -32,6 +33,7 @@ final readonly class WorkoutSetLogger
             $set->duration_seconds = null;
             $set->weight_g = null;
             $set->plate_stack = null;
+            $set->note = null;
             $set->is_skipped = true;
             $set->completed_at = Carbon::instance($completedAt ?? now());
 
@@ -39,6 +41,7 @@ final readonly class WorkoutSetLogger
         }
 
         $set->is_skipped = false;
+        $set->note = self::normalizeNote($note);
 
         $hasSegments = $segmentWeightGrams !== null && count($segmentWeightGrams) >= 2;
 
@@ -65,5 +68,12 @@ final readonly class WorkoutSetLogger
         }
 
         $set->completed_at = $completedAt !== null ? Carbon::instance($completedAt) : now();
+    }
+
+    private static function normalizeNote(?string $note): ?string
+    {
+        $normalized = trim((string) $note);
+
+        return $normalized === '' ? null : $normalized;
     }
 }

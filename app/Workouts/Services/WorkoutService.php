@@ -242,6 +242,7 @@ final readonly class WorkoutService
         ?array $plateStack = null,
         ?int $durationSeconds = null,
         bool $isSkipped = false,
+        ?string $note = null,
     ): WorkoutSet {
         return $this->sessions->completeSet(
             $set,
@@ -251,6 +252,7 @@ final readonly class WorkoutService
             $plateStack,
             $durationSeconds,
             $isSkipped,
+            $note,
         );
     }
 

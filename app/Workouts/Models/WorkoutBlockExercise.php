@@ -22,6 +22,7 @@ class WorkoutBlockExercise extends Model
         'prescription_mode',
         'prescribed_duration_seconds',
         'working_weight_g',
+        'note',
         'prescribed_reps',
         'achievement_floor',
         'progression_target',

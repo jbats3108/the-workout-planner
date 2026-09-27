@@ -15,6 +15,7 @@ type CompleteSetForm = InertiaForm<{
     reps?: number | null;
     duration_seconds?: number | null;
     weight_kg?: number | null;
+    note?: string | null;
     segments?: Array<{ weight_kg: number }>;
     is_skipped?: boolean;
 }>;

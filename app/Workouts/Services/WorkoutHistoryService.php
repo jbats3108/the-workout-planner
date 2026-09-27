@@ -88,6 +88,7 @@ final readonly class WorkoutHistoryService
                 reps: null,
                 durationSeconds: null,
                 isSkipped: true,
+                note: null,
             );
         } elseif ($data->segments !== null) {
             $this->setLogger->applyLoggedValues(
@@ -96,11 +97,13 @@ final readonly class WorkoutHistoryService
                 segmentWeightGrams: $data->segmentWeightGrams(),
                 durationSeconds: $data->durationSeconds,
                 isSkipped: false,
+                note: $data->note,
             );
         } elseif ($set->isDropset()) {
             $set->reps = $data->reps;
             $set->duration_seconds = $data->durationSeconds;
             $set->is_skipped = false;
+            $set->note = self::normalizeNote($data->note);
         } else {
             $this->setLogger->applyLoggedValues(
                 $set,
@@ -109,6 +112,7 @@ final readonly class WorkoutHistoryService
                 plateStack: null,
                 durationSeconds: $data->durationSeconds,
                 isSkipped: false,
+                note: $data->note,
             );
         }
 
@@ -117,5 +121,12 @@ final readonly class WorkoutHistoryService
         }
 
         $set->save();
+    }
+
+    private static function normalizeNote(?string $note): ?string
+    {
+        $normalized = trim((string) $note);
+
+        return $normalized === '' ? null : $normalized;
     }
 }

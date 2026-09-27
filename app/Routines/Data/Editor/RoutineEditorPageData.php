@@ -60,6 +60,7 @@ class RoutineEditorPageData extends Data
                     $structure->blockExercises->map(fn (RoutineBlockExercise $row): RoutineEditorBlockExerciseData => new RoutineEditorBlockExerciseData(
                         exerciseId: $row->exercise_id,
                         workingWeightKg: Weight::gramsToKg($row->working_weight_g),
+                        note: $row->note,
                         prescribedReps: $row->prescribed_reps,
                         prescriptionMode: $row->prescription_mode ?? PrescriptionMode::Reps,
                         prescribedDurationSeconds: $row->prescribed_duration_seconds,
@@ -72,6 +73,7 @@ class RoutineEditorPageData extends Data
                         deloadWorkingWeightKg: $row->deload_working_weight_g !== null
                             ? Weight::gramsToKg($row->deload_working_weight_g)
                             : null,
+                        deloadNote: $row->deload_note,
                     )),
                     DataCollection::class,
                 ),

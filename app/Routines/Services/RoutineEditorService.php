@@ -265,8 +265,12 @@ class RoutineEditorService
                 ? $exerciseData->prescribedDurationSeconds
                 : null,
             'working_weight_g' => $exerciseData->workingWeightGrams(),
+            'note' => self::normalizeNote($exerciseData->note),
             'deload_exercise_id' => $isCircuit ? null : $exerciseData->deloadExerciseId,
             'deload_working_weight_g' => $isCircuit ? null : $exerciseData->deloadWorkingWeightGrams(),
+            'deload_note' => $isCircuit || $exerciseData->deloadExerciseId === null
+                ? null
+                : self::normalizeNote($exerciseData->deloadNote),
             'prescribed_reps' => $exerciseData->prescriptionMode === PrescriptionMode::Reps
                 ? $exerciseData->prescribedReps
                 : null,
@@ -278,6 +282,13 @@ class RoutineEditorService
             ),
             'progression_target_override' => $isCircuit ? null : $exerciseData->progressionTarget,
         ]);
+    }
+
+    private static function normalizeNote(?string $note): ?string
+    {
+        $normalized = trim((string) $note);
+
+        return $normalized === '' ? null : $normalized;
     }
 
     private function assertCircuitExerciseConstraints(SyncBlockExerciseData $exerciseData): void

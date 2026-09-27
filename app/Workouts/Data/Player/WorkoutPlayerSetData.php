@@ -33,6 +33,7 @@ class WorkoutPlayerSetData extends Data
         public readonly ?float $targetWeightKg,
         public readonly ?int $targetReps,
         public readonly ?float $loggedWeightKg,
+        public readonly ?string $note,
         public readonly ?PlateStackData $plateStack,
         public readonly ?int $loggedReps,
         public readonly bool $completed,
@@ -100,6 +101,7 @@ class WorkoutPlayerSetData extends Data
                 ? ($warmUpStep !== null ? $warmUpStep->reps : null)
                 : $prescribedReps,
             loggedWeightKg: $set->weight_g !== null ? Weight::gramsToKg($set->weight_g) : null,
+            note: $set->note,
             plateStack: PlateStackData::fromSnapshot($set->plate_stack),
             loggedReps: $set->reps,
             completed: $set->completed_at !== null,

@@ -9,6 +9,7 @@ export type DraftSet = {
     is_dropset: boolean;
     weight_kg: number | null;
     reps: number | null;
+    note: string | null;
     segments: { weight_kg: number }[];
     prescription_mode?: 'reps' | 'duration';
     duration_seconds?: number | null;
@@ -169,6 +170,7 @@ function scaleSet(set: HistoricalCreateSet, block: HistoricalCreateBlock, deload
             is_dropset: false,
             weight_kg: exercise.deload_working_weight_kg,
             reps: scaleReps(set.reps, repsFactor),
+            note: exercise.deload_note ?? null,
             segments: [],
             prescription_mode: set.prescription_mode ?? 'reps',
             duration_seconds: set.duration_seconds ?? null,
@@ -183,6 +185,7 @@ function scaleSet(set: HistoricalCreateSet, block: HistoricalCreateBlock, deload
         is_dropset: set.is_dropset,
         weight_kg: set.weight_kg === null ? null : scaleWeight(set.weight_kg, weightFactor),
         reps: scaleReps(set.reps, repsFactor),
+        note: set.note,
         segments: set.segments.map((segment) => ({
             weight_kg: scaleWeight(segment.weight_kg, weightFactor),
         })),

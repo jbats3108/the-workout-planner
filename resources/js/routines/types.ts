@@ -27,11 +27,13 @@ export type BlockExercise = {
     prescribed_reps: number | null;
     prescription_mode?: 'reps' | 'duration';
     prescribed_duration_seconds?: number | null;
+    note?: string | null;
     achievement_floor: number | null;
     floor_is_derived?: boolean | null;
     progression_target: number | null;
     deload_exercise_id: number | null;
     deload_working_weight_kg: number | null;
+    deload_note?: string | null;
 };
 
 export type DropsetSegment = {

@@ -173,6 +173,9 @@ final readonly class WorkoutSnapshotService
                 'prescription_mode' => $routineBlockExercise->prescription_mode ?? PrescriptionMode::Reps,
                 'prescribed_duration_seconds' => $routineBlockExercise->prescribed_duration_seconds,
                 'working_weight_g' => $workingWeightG,
+                'note' => $useAlternate
+                    ? self::normalizeNote($routineBlockExercise->deload_note)
+                    : self::normalizeNote($routineBlockExercise->note),
                 'prescribed_reps' => $prescribedReps,
                 'achievement_floor' => $achievementFloor,
                 'progression_target' => $progressionTarget,
@@ -184,6 +187,13 @@ final readonly class WorkoutSnapshotService
         }
 
         return $skipDropsetsByWorkoutExerciseId;
+    }
+
+    private static function normalizeNote(?string $note): ?string
+    {
+        $normalized = trim((string) $note);
+
+        return $normalized === '' ? null : $normalized;
     }
 
     /**
@@ -413,6 +423,7 @@ final readonly class WorkoutSnapshotService
                 isSkipped: true,
                 completedAt: $finishedAt,
                 deleteExistingSegments: false,
+                note: null,
             );
             $set->save();
 
@@ -440,6 +451,7 @@ final readonly class WorkoutSnapshotService
                 deleteExistingSegments: false,
                 durationSeconds: $data->durationSeconds,
                 isSkipped: $data->isSkipped,
+                note: $data->note,
             );
             $set->save();
 
@@ -456,6 +468,7 @@ final readonly class WorkoutSnapshotService
             deleteExistingSegments: false,
             durationSeconds: $data->durationSeconds,
             isSkipped: $data->isSkipped,
+            note: $data->note,
         );
         $set->save();
     }

@@ -22,6 +22,7 @@ class WorkoutSet extends Model
         'reps',
         'duration_seconds',
         'weight_g',
+        'note',
         'plate_stack',
         'completed_at',
         'is_skipped',

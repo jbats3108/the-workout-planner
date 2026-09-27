@@ -13,6 +13,7 @@ class RoutineEditorBlockExerciseData extends Data
     public function __construct(
         public readonly int $exerciseId,
         public readonly float $workingWeightKg,
+        public readonly ?string $note = null,
         public readonly ?int $prescribedReps = null,
         public readonly PrescriptionMode $prescriptionMode = PrescriptionMode::Reps,
         public readonly ?int $prescribedDurationSeconds = null,
@@ -23,5 +24,6 @@ class RoutineEditorBlockExerciseData extends Data
         public readonly ?string $exerciseProfileFingerprint = null,
         public readonly ?int $deloadExerciseId = null,
         public readonly ?float $deloadWorkingWeightKg = null,
+        public readonly ?string $deloadNote = null,
     ) {}
 }

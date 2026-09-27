@@ -213,11 +213,13 @@ class PlayWorkoutControllerTest extends TestCase
             ->post(route('workouts.sets.complete', ['workout' => $workout, 'set' => $set]), [
                 'reps' => 5,
                 'weight_kg' => 80,
+                'note' => 'Pin 8',
             ])
             ->assertRedirect();
 
         $set->refresh();
         $this->assertSame(5, $set->reps);
+        $this->assertSame('Pin 8', $set->note);
         $this->assertSame(80000, $set->weight_g);
         $this->assertNotNull($set->completed_at);
 

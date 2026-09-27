@@ -340,6 +340,54 @@ class UpdateRoutineControllerTest extends TestCase
     }
 
     #[Test]
+    public function owner_can_save_routine_and_deload_notes(): void
+    {
+        $routine = Routine::factory()->withUser($this->user)->create();
+        $primary = Exercise::factory()->create();
+        $alternate = Exercise::factory()->create();
+
+        $this->actingAs($this->user)->put(route('routines.update', $routine), [
+            'name' => 'Notes',
+            'blocks' => [
+                RoutineEditorPayload::block($primary->id, [
+                    'note' => 'Pin 8; left cable',
+                    'deload_exercise_id' => $alternate->id,
+                    'deload_working_weight_kg' => 40,
+                    'deload_note' => 'Pin 5',
+                ]),
+            ],
+        ])->assertRedirect();
+
+        $row = $routine->fresh()->blocks()->firstOrFail()->blockExercises()->firstOrFail();
+
+        $this->assertSame('Pin 8; left cable', $row->note);
+        $this->assertSame('Pin 5', $row->deload_note);
+
+        $this->actingAs($this->user)
+            ->get(route('routines.edit', $routine))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->where('routine.blocks.0.exercises.0.note', 'Pin 8; left cable')
+                ->where('routine.blocks.0.exercises.0.deload_note', 'Pin 5'));
+    }
+
+    #[Test]
+    public function routine_notes_are_limited_to_64_characters(): void
+    {
+        $routine = Routine::factory()->withUser($this->user)->create();
+        $exercise = Exercise::factory()->create();
+
+        $this->actingAs($this->user)->put(route('routines.update', $routine), [
+            'name' => 'Long note',
+            'blocks' => [
+                RoutineEditorPayload::block($exercise->id, [
+                    'note' => str_repeat('x', 65),
+                ]),
+            ],
+        ])->assertSessionHasErrors('blocks.0.exercises.0.note');
+    }
+
+    #[Test]
     public function owner_update_rejects_deload_alternate_same_as_primary(): void
     {
         $routine = Routine::factory()->withUser($this->user)->create();

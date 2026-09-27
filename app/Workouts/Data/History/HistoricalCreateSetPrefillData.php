@@ -24,6 +24,7 @@ class HistoricalCreateSetPrefillData extends Data
         public readonly bool $isDropset,
         public readonly ?float $weightKg,
         public readonly ?int $reps,
+        public readonly ?string $note,
         #[DataCollectionOf(HistoricalCreateSegmentPrefillData::class)]
         public readonly DataCollection $segments,
         public readonly string $prescriptionMode = 'reps',
@@ -53,6 +54,7 @@ class HistoricalCreateSetPrefillData extends Data
             isDropset: $isDropset,
             weightKg: $isDropset ? null : Weight::gramsToKg($exercise->working_weight_g),
             reps: $exercise->prescribed_reps,
+            note: $exercise->note,
             segments: HistoricalCreateSegmentPrefillData::collect($segments, DataCollection::class),
             prescriptionMode: $exercise->prescription_mode?->value ?? (string) ($exercise->prescription_mode ?? 'reps'),
             durationSeconds: $exercise->prescribed_duration_seconds,

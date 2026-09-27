@@ -34,6 +34,9 @@ class UpdateHistoryWorkingSetData extends Data
         #[Nullable, Min(0)]
         public readonly ?float $weightKg = null,
 
+        #[Nullable, Max(64)]
+        public readonly ?string $note = null,
+
         #[Nullable]
         #[DataCollectionOf(WeightKgSegmentData::class)]
         #[Min(2), Max(20)]
