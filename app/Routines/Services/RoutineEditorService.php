@@ -19,6 +19,7 @@ use App\Routines\Models\RoutineBlockExercise;
 use App\Routines\Models\RoutineDropsetSegment;
 use App\Routines\Models\RoutineSetGroup;
 use App\Routines\Models\RoutineWarmUpStep;
+use App\Routines\Support\RoutineBlockShape;
 use App\Shared\Data\WeightKgSegmentData;
 use App\Shared\Enums\BlockType;
 use App\Shared\Enums\PrescriptionMode;
@@ -90,7 +91,7 @@ class RoutineEditorService
         $steps = $warmUp->stepList();
         $dropsets = $blockData->working->dropsetList();
 
-        $this->assertBlockShape($blockType, $exercises, $dropsets, $steps, $blockData->sharedProfileId);
+        RoutineBlockShape::assert($blockType, $exercises, $dropsets, $steps, $blockData->sharedProfileId);
 
         $sharedProfile = $this->resolveSharedProfile($routine->user, $blockData, $exercises, $isSuperset, $isCircuit);
         $this->assertSharedProfileNotTampered($sharedProfile, $blockData, $steps);
@@ -140,50 +141,6 @@ class RoutineEditorService
 
     /**
      * @param  list<SyncBlockExerciseData>  $exercises
-     * @param  list<SyncDropsetData>  $dropsets
-     * @param  list<SyncWarmUpStepData>  $steps
-     */
-    private function assertBlockShape(
-        BlockType $blockType,
-        array $exercises,
-        array $dropsets,
-        array $steps,
-        ?int $sharedProfileId,
-    ): void {
-        $isSuperset = $blockType === BlockType::Superset;
-        $isCircuit = $blockType === BlockType::Circuit;
-
-        if ($isSuperset && count($exercises) !== 2) {
-            throw new InvalidArgumentException('A superset must have exactly two exercises.');
-        }
-
-        if ($blockType === BlockType::Single && count($exercises) !== 1) {
-            throw new InvalidArgumentException('A non-superset must have exactly one exercise.');
-        }
-
-        if ($isCircuit && count($exercises) < 3) {
-            throw new InvalidArgumentException('A circuit must have at least three exercises.');
-        }
-
-        if ($isCircuit && $sharedProfileId !== null) {
-            throw new InvalidArgumentException('Shared exercise profiles are not supported on circuits.');
-        }
-
-        if ($isSuperset && $dropsets !== []) {
-            throw new InvalidArgumentException('Dropsets are not supported on supersets.');
-        }
-
-        if ($isCircuit && $dropsets !== []) {
-            throw new InvalidArgumentException('Dropsets are not supported on circuits.');
-        }
-
-        if ($isCircuit && $steps !== []) {
-            throw new InvalidArgumentException('Warm-up steps are not supported on circuits.');
-        }
-    }
-
-    /**
-     * @param  list<SyncBlockExerciseData>  $exercises
      */
     private function resolveSharedProfile(
         User $user,
@@ -221,7 +178,7 @@ class RoutineEditorService
         Exercise::assertAvailableFor($user, $exerciseData->exerciseId);
 
         if ($isCircuit) {
-            $this->assertCircuitExerciseConstraints($exerciseData);
+            RoutineBlockShape::assertCircuitExercise($exerciseData);
         }
 
         if ($exerciseData->prescriptionMode === PrescriptionMode::Duration) {
@@ -317,22 +274,6 @@ class RoutineEditorService
         $normalized = trim((string) $note);
 
         return $normalized === '' ? null : $normalized;
-    }
-
-    private function assertCircuitExerciseConstraints(SyncBlockExerciseData $exerciseData): void
-    {
-        if ($exerciseData->exerciseProfileId !== null) {
-            throw new InvalidArgumentException('Exercise profiles are not supported on circuits.');
-        }
-        if ($exerciseData->deloadExerciseId !== null || $exerciseData->deloadWorkingWeightKg !== null) {
-            throw new InvalidArgumentException('Deload alternate exercises are not supported on circuits.');
-        }
-        if ($exerciseData->progressionTarget !== null) {
-            throw new InvalidArgumentException('Automatic progression targets are not supported on circuits.');
-        }
-        if ($exerciseData->achievementFloor !== null) {
-            throw new InvalidArgumentException('Achievement floor overrides are not supported on circuits.');
-        }
     }
 
     /**
