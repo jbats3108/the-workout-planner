@@ -18,6 +18,8 @@ const strength: ExerciseProfileOption = {
     floor_override: null,
     working_rest_seconds: 180,
     warm_up_steps: [],
+    deload_weight_factor: 0.5,
+    deload_reps_factor: 2,
     recipe_fingerprint: 'recipe-strength',
     exercise_fingerprint: 'exercise-strength',
     shared_fingerprint: 'shared-strength',

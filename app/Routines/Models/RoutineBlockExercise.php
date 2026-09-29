@@ -29,6 +29,14 @@ class RoutineBlockExercise extends Model
         'achievement_floor_override',
         'floor_is_derived',
         'progression_target_override',
+        'deload_weight_factor',
+        'deload_reps_factor',
+    ];
+
+    /** @var array<string, mixed> */
+    protected $attributes = [
+        'deload_weight_factor' => 0.5,
+        'deload_reps_factor' => 0.5,
     ];
 
     /** @return array<string, string> */
@@ -46,6 +54,8 @@ class RoutineBlockExercise extends Model
             'achievement_floor_override' => 'integer',
             'floor_is_derived' => 'boolean',
             'progression_target_override' => 'integer',
+            'deload_weight_factor' => 'decimal:3',
+            'deload_reps_factor' => 'decimal:3',
         ];
     }
 

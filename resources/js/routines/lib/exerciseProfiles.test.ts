@@ -32,6 +32,8 @@ const strength: ExerciseProfileOption = {
         { mode: 'percent', percent: 75, reps: 3 },
         { mode: 'percent', percent: 90, reps: 1 },
     ],
+    deload_weight_factor: 0.5,
+    deload_reps_factor: 2,
     recipe_fingerprint: 'recipe-strength',
     exercise_fingerprint: 'exercise-strength',
     shared_fingerprint: 'shared-strength',

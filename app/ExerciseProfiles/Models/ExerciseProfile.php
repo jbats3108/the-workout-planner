@@ -32,8 +32,16 @@ class ExerciseProfile extends Model
         'floor_override',
         'working_rest_seconds',
         'warm_up_steps',
+        'deload_weight_factor',
+        'deload_reps_factor',
         'recipe_fingerprint',
         'published_at',
+    ];
+
+    /** @var array<string, mixed> */
+    protected $attributes = [
+        'deload_weight_factor' => 0.5,
+        'deload_reps_factor' => 0.5,
     ];
 
     /** @return array<string, string> */
@@ -47,6 +55,8 @@ class ExerciseProfile extends Model
             'floor_override' => 'integer',
             'working_rest_seconds' => 'integer',
             'warm_up_steps' => 'array',
+            'deload_weight_factor' => 'decimal:3',
+            'deload_reps_factor' => 'decimal:3',
             'published_at' => 'datetime',
         ];
     }
