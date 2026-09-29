@@ -86,7 +86,9 @@ Refactoring backlog after the exercise-profiles pivot and related feature growth
 | Seam | Module |
 |------|--------|
 | Facade | `RoutineEditorService::sync` — lock, stale check, header, delete-all blocks, loop writer |
-| Block tree write | `RoutineBlockWriter::create` — exercises, working/dropsets, warm-up, profile resolve/tamper |
+| Block tree orchestrate | `RoutineBlockWriter::create` — shape assert, block row, working/dropsets/warm-up set groups |
+| Exercise persist | `RoutineBlockExerciseWriter::create` — prescription, fingerprints, floor/deload storage |
+| Profile resolve/tamper | `RoutineBlockProfileGuard` — shared/exercise profile load + fingerprint value guards |
 | Shape rules | `RoutineBlockShape::assert` / `assertCircuitExercise` — pure type constraints |
 
 Public API unchanged. E2 still applies (do not merge writers with `RoutineDuplicator` / workout snapshot). Delete-all-blocks-on-save stays intentional.
