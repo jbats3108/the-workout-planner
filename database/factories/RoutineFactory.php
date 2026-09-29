@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Routines\Models\Routine;
+use App\Users\Enums\ProgressionStyle;
+use App\Users\Enums\ProgressiveMidBlock;
 use App\Users\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
@@ -25,6 +27,8 @@ class RoutineFactory extends Factory
             'slug' => Str::slug($name).'-'.$this->faker->unique()->numerify('####'),
             'user_id' => User::factory(),
             'deload_every_n' => 3,
+            'progression_style' => ProgressionStyle::StraightSets,
+            'progressive_mid_block' => ProgressiveMidBlock::Ask,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];

@@ -121,14 +121,14 @@ const savePlates = () => {
                         <div class="space-y-4 border-t border-border pt-6">
                             <HeadingSmall
                                 title="Progression"
-                                description="Defaults for new workouts. Target and Floor now come from exercise profiles."
+                                description="Defaults for new routines. Target and Floor now come from exercise profiles. Editing these does not change existing routines."
                             />
 
                             <fieldset class="space-y-2">
                                 <legend class="text-sm text-muted-foreground">Progression style</legend>
                                 <span class="block text-xs text-muted-foreground/80">
-                                    Controls mid-session ramping and when a finish bump is offered after you hit Target reps. Snapshotted when a
-                                    workout starts.
+                                    Controls mid-session ramping and when a finish bump is offered after you hit Target reps. Copied onto each new
+                                    routine; snapshotted onto the workout when that routine starts.
                                 </span>
                                 <label class="flex items-center gap-2 text-sm">
                                     <input v-model="form.progression_style_default" type="radio" value="straight_sets" />

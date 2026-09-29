@@ -4,6 +4,8 @@ namespace Tests\Unit\Routines\Data;
 
 use App\ExerciseProfiles\Models\ExerciseProfile;
 use App\Routines\Data\StoreRoutineData;
+use App\Users\Enums\ProgressionStyle;
+use App\Users\Enums\ProgressiveMidBlock;
 use Database\Seeders\ExerciseProfileSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
@@ -57,6 +59,22 @@ class StoreRoutineDataTest extends TestCase
 
         // Then
         $this->assertSame(4, $storeRoutineData->deloadEveryN);
+    }
+
+    #[Test]
+    public function it_accepts_optional_progression_style(): void
+    {
+        $this->be($this->user);
+
+        $storeRoutineData = StoreRoutineData::from([
+            'name' => 'Test Routine',
+            'default_exercise_profile_id' => $this->profileId(),
+            'progression_style' => 'progressive_overload',
+            'progressive_mid_block' => 'auto',
+        ]);
+
+        $this->assertSame(ProgressionStyle::ProgressiveOverload, $storeRoutineData->progressionStyle);
+        $this->assertSame(ProgressiveMidBlock::Auto, $storeRoutineData->progressiveMidBlock);
     }
 
     private function profileId(): int

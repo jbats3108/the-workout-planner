@@ -66,6 +66,8 @@ export type RoutinePayload = {
     name: string;
     default_exercise_profile_id?: number | null;
     deload_every_n: number;
+    progression_style: 'straight_sets' | 'progressive_overload';
+    progressive_mid_block: 'ask' | 'auto';
     updated_at: string;
     blocks: Block[];
 };

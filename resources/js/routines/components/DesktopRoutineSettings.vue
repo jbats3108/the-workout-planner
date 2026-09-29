@@ -3,8 +3,10 @@ import InputError from '@/components/InputError.vue';
 import DeloadSettings from '@/routines/components/DeloadSettings.vue';
 import EditorDisclosure from '@/routines/components/EditorDisclosure.vue';
 import ExerciseProfilePicker from '@/routines/components/ExerciseProfilePicker.vue';
+import ProgressionSettings from '@/routines/components/ProgressionSettings.vue';
 import { useRoutineEditor } from '@/routines/composables/useRoutineEditor';
 import { formatDeloadSummary } from '@/routines/lib/deload';
+import { formatProgressionSummary } from '@/routines/lib/progression';
 import { computed, ref } from 'vue';
 
 const { form, profileOptions, setRoutineProfile } = useRoutineEditor();
@@ -21,9 +23,10 @@ const routineProfileModel = computed({
 const summary = computed(() => {
     const profile = profileOptions.value.find((option) => option.id === form.default_exercise_profile_id);
     const profileLabel = profile?.display_name ?? 'No routine profile';
+    const progression = formatProgressionSummary(form.progression_style, form.progressive_mid_block);
     const deload = formatDeloadSummary(form.deload_every_n);
 
-    return `${profileLabel} · ${deload}`;
+    return `${profileLabel} · ${progression} · ${deload}`;
 });
 </script>
 
@@ -35,6 +38,9 @@ const summary = computed(() => {
                     <ExerciseProfilePicker v-model="routineProfileModel" :profiles="profileOptions" label="Routine profile" />
                     <p class="mt-1 text-xs text-muted-foreground">Used for new blocks; existing blocks stay unchanged.</p>
                     <InputError :message="form.errors.default_exercise_profile_id" />
+                </div>
+                <div class="rounded-xl border border-border bg-background/50 p-3">
+                    <ProgressionSettings variant="mobile" flush />
                 </div>
                 <div class="rounded-xl border border-border bg-background/50 p-3">
                     <DeloadSettings variant="mobile" flush />

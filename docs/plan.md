@@ -47,7 +47,7 @@ Public order matches `/beta-tester-faqs`, including recently added items.
 - **In-app product tour** — after the public `/tutorial` page; own grill
 - **PT mode** — new user type; client roster; personal + client routines; PT→client share (includes client switching / former account switcher) — grill: [PT mode](#grill-pt-mode) (parked until after solo-lifter queue)
 - **Exercise videos (PT)** — park until PT mode exists — grill: [Exercise videos](#grill-exercise-videos-pt)
-- **Routine Progression Style** — per-routine style + mid-block; Training seeds new routines only — grill: [Routine Progression Style](#grill-routine-progression-style)
+- ~~**Routine Progression Style**~~ — shipped (per-routine style + mid-block; Training seeds new routines only)
 - ~~**Per-profile Deload factors**~~ — shipped (weight/reps on Exercise Profile with auto-push; velocity on routine)
 
 **Solo-lifter queue (updated 2026-09-07):** shipped Swap A↔B, Do groups later (covers skip-block-and-come-back), Circuits. Next: Better History Edits → lbs → rack inventory → dropsets on supersets. Then Viewable Progression Data. PT / videos stay parked.
@@ -126,7 +126,4 @@ Triaged 2026-08-28. Source: Notion [121 Feedback](https://app.notion.com/p/3cae5
 - Domain name stays **Progression Style** (not “progression type”).
 - Not a per-start chooser and not an edit of an already-snapshotted workout.
 
-**Open (implementation):**
-
-- Routine settings UI; migrate existing routines from each user’s Training defaults
-- `CONTEXT.md` / ADR only if the ownership shift needs a durable “why”
+**Shipped:** columns on `routines`, backfill from user Training defaults, editor UI, create/duplicate/sync, WorkoutService reads from routine.

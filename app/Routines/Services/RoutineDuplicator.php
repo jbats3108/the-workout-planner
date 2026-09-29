@@ -34,6 +34,8 @@ class RoutineDuplicator
                 'user_id' => $owner->id,
                 'name' => $this->copyName($source->name),
                 'deload_every_n' => $source->deload_every_n,
+                'progression_style' => $source->progression_style,
+                'progressive_mid_block' => $source->progressive_mid_block,
                 'default_exercise_profile_id' => $source->default_exercise_profile_id,
             ]);
 

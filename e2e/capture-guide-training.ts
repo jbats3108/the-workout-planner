@@ -15,16 +15,14 @@ test('capture training guide screenshots', async ({ page }) => {
     await expect(page).toHaveURL(/\/dashboard/);
 
     await page.goto('/settings/training');
-    await expect(page.getByRole('heading', { name: 'Exercise profiles' })).toBeVisible();
-
-    // Expand first Profile Details so deload factors are visible in the shot.
-    await page.locator('details').filter({ hasText: 'Profile Details' }).first().locator('summary').click();
-    await expect(page.getByText(/Deload:.*× weight/i).first()).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Progression' })).toBeVisible();
+    await expect(page.getByText(/Defaults for new routines/i).first()).toBeVisible();
 
     await page.setViewportSize({ width: 1280, height: 900 });
+    await page.getByRole('heading', { name: 'Progression' }).scrollIntoViewIfNeeded();
     await page.screenshot({ path: path.join(guideDir, 'training-desktop.png'), fullPage: false });
 
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.getByRole('heading', { name: 'Exercise profiles' }).scrollIntoViewIfNeeded();
+    await page.getByRole('heading', { name: 'Progression' }).scrollIntoViewIfNeeded();
     await page.screenshot({ path: path.join(guideDir, 'training-mobile.png'), fullPage: false });
 });

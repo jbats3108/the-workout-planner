@@ -112,12 +112,14 @@ const toc = [
                     seeds every new exercise or only the first one.
                 </p>
                 <p class="text-muted-foreground">
-                    <strong class="text-foreground">Progression style</strong> controls mid-session ramping and finish bumps:
+                    <strong class="text-foreground">Progression style</strong> defaults here seed each
+                    <strong class="text-foreground">new routine</strong> (edits do not rewrite existing ones):
                     <strong class="text-foreground">Straight Sets</strong> keeps the same weight for every working set and offers a finish bump if any
                     set hit Target; <strong class="text-foreground">Progressive Overload</strong> can raise the next set by 2.5 kg when Target is hit
                     (ask on rest or auto) and offers a finish bump only when the final working set was at your session top weight and hit Target.
-                    Deload Velocity (how often Dashboard soft-hints a Deload) and your bar/plate inventory live here too; the plate guide in Play uses
-                    that inventory. Weight and reps deload factors live on each Exercise Profile, not in Training defaults.
+                    Change a routine’s style in the editor. Deload Velocity (how often Dashboard soft-hints a Deload) and your bar/plate inventory
+                    live here too; the plate guide in Play uses that inventory. Weight and reps deload factors live on each Exercise Profile, not in
+                    Training defaults.
                 </p>
                 <p v-if="isSignedIn">
                     <Link :href="route('training.edit')" class="font-medium text-primary underline-offset-2 hover:underline">Open Preferences</Link>
@@ -170,7 +172,7 @@ const toc = [
                 </p>
                 <TutorialShot
                     name="training"
-                    alt="Preferences showing exercise profiles and training settings"
+                    alt="Preferences showing Progression defaults for new routines"
                     caption="Preferences: choose a default, manage custom profiles, and review OVRLOAD preset Profile Details."
                 />
                 <p v-if="isSignedIn">
@@ -185,9 +187,10 @@ const toc = [
                 <p class="text-muted-foreground">
                     Choose a profile before naming the routine. A routine is a list of exercises (internally, blocks). Each exercise has working sets
                     and a profile. On mobile, the first tab is a
-                    <strong class="text-foreground">Routine</strong> sheet (name, routine profile, Deload); exercise tabs come after. On desktop, the
-                    same routine-level controls live in a collapsed <strong class="text-foreground">Routine settings</strong> strip under the title.
-                    Target, Floor, Rest, and warm-ups stay hidden while a profile is selected — choose
+                    <strong class="text-foreground">Routine</strong> sheet (name, routine profile, Progression, Deload); exercise tabs come after. On
+                    desktop, the same routine-level controls live in a collapsed <strong class="text-foreground">Routine settings</strong> strip under
+                    the title. Set <strong class="text-foreground">Progression style</strong> (and Progressive Overload mid-block) per routine — it is
+                    snapshotted when a workout starts. Target, Floor, Rest, and warm-ups stay hidden while a profile is selected — choose
                     <strong class="text-foreground">Custom settings</strong> (or Customise) to override them; Cancel restores the prior profile
                     snapshot for that Customise session. Optional dropsets are per exercise. Pick lifts from the catalog, or add a private custom that
                     only you see. Use the one-line <strong class="text-foreground">Exercise note</strong> beside working kg for a pin number, stack
@@ -204,8 +207,8 @@ const toc = [
                 </p>
                 <TutorialShot
                     name="editor"
-                    alt="Routine editor showing a superset with Swap A↔B, profile selectors, and setup options"
-                    caption="Editor: supersets show A/B with Swap A↔B; each exercise has a profile selector; Target and Floor appear when you choose Customise."
+                    alt="Routine editor with Progression in Routine settings, and a superset with Swap A↔B"
+                    caption="Editor: Routine settings holds Progression style and Deload; supersets show A/B with Swap A↔B; Target and Floor appear when you choose Customise."
                 />
                 <p v-if="isSignedIn">
                     <Link :href="route('routines.create')" class="font-medium text-primary underline-offset-2 hover:underline">Create a routine</Link>
@@ -319,7 +322,7 @@ const toc = [
                 <p class="text-muted-foreground">
                     You earn a <strong class="text-foreground">finish bump</strong> when you hit the exercise’s prescribed
                     <strong class="text-foreground">Target</strong> reps at (or above) the snapshotted working weight. Which set counts depends on
-                    your <strong class="text-foreground">Progression style</strong> in Preferences (snapshotted when the workout starts):
+                    your <strong class="text-foreground">Progression style</strong> on the routine (snapshotted when the workout starts):
                 </p>
                 <ul class="list-disc space-y-2 pl-6 text-muted-foreground">
                     <li>

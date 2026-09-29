@@ -4,6 +4,8 @@ namespace Tests\Feature\Routines\Http\Controllers;
 
 use App\ExerciseProfiles\Models\ExerciseProfile;
 use App\Routines\Models\Routine;
+use App\Users\Enums\ProgressionStyle;
+use App\Users\Enums\ProgressiveMidBlock;
 use Database\Seeders\ExerciseProfileSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
@@ -73,6 +75,25 @@ class StoreRoutineControllerTest extends TestCase
         $routine = Routine::query()->where('name', 'From Defaults')->first();
         $this->assertNotNull($routine);
         $this->assertSame(4, $routine->deload_every_n);
+    }
+
+    #[Test]
+    public function it_seeds_progression_style_from_user_training_defaults(): void
+    {
+        $this->user->update([
+            'progression_style_default' => ProgressionStyle::ProgressiveOverload,
+            'progressive_mid_block_default' => ProgressiveMidBlock::Auto,
+        ]);
+
+        $this->actingAs($this->user)->post(route('routines.store'), [
+            'name' => 'Progressive Routine',
+            'default_exercise_profile_id' => $this->strengthProfile()->id,
+        ])->assertRedirect();
+
+        $routine = Routine::query()->where('name', 'Progressive Routine')->first();
+        $this->assertNotNull($routine);
+        $this->assertSame(ProgressionStyle::ProgressiveOverload, $routine->progression_style);
+        $this->assertSame(ProgressiveMidBlock::Auto, $routine->progressive_mid_block);
     }
 
     #[Test]

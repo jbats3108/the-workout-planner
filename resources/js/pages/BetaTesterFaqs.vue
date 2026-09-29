@@ -46,6 +46,12 @@ const backlogItems = [
             "OVRLOAD currently only supports KG as the unit to measure how heavy you're lifting. This will allow you to choose to use LBs instead.",
     },
     {
+        title: 'Routine Progression Style',
+        description:
+            'Set Straight Sets or Progressive Overload (and Ask/Auto mid-block) on each routine. Training Preferences only seed new routines; the style is snapshotted when a workout starts.',
+        recentlyAdded: true,
+    },
+    {
         title: 'Choose an alternate exercise for Deload sessions',
         description:
             'Pick an optional Deload Alternate (different exercise + its own working weight) on each routine exercise. It only appears on Deload starts; dropsets become singles for that exercise when an alternate is set.',

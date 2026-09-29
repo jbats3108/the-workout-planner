@@ -7,6 +7,7 @@ import DropsetEditor from '@/routines/components/DropsetEditor.vue';
 import EditorDisclosure from '@/routines/components/EditorDisclosure.vue';
 import ExercisePicker from '@/routines/components/ExercisePicker.vue';
 import ExerciseProfilePicker from '@/routines/components/ExerciseProfilePicker.vue';
+import ProgressionSettings from '@/routines/components/ProgressionSettings.vue';
 import RoutineEditorErrors from '@/routines/components/RoutineEditorErrors.vue';
 import SaveExerciseProfileDialog from '@/routines/components/SaveExerciseProfileDialog.vue';
 import { useRoutineEditor } from '@/routines/composables/useRoutineEditor';
@@ -157,7 +158,7 @@ const onCustomiseSharedRecipe = (block: Block): void => {
         <main v-if="mobilePane === 'routine'" class="mx-auto flex w-full max-w-lg flex-col gap-4 px-4 pb-4" data-routine-pane>
             <div class="rounded-2xl border border-border bg-card p-4">
                 <h2 class="text-base font-semibold">Routine</h2>
-                <p class="mt-1 text-xs text-muted-foreground">Name, default profile for new exercises, and Deload for this routine.</p>
+                <p class="mt-1 text-xs text-muted-foreground">Name, default profile for new exercises, Progression, and Deload for this routine.</p>
 
                 <label class="mt-4 block">
                     <span class="text-xs text-muted-foreground">Name</span>
@@ -173,6 +174,10 @@ const onCustomiseSharedRecipe = (block: Block): void => {
                     <ExerciseProfilePicker v-model="routineProfileModel" :profiles="profileOptions" label="Routine profile" />
                     <p class="mt-1 text-xs text-muted-foreground">Used for new exercises; existing ones stay unchanged.</p>
                     <InputError :message="form.errors.default_exercise_profile_id" />
+                </div>
+
+                <div class="mt-4 rounded-xl border border-border bg-background/50 p-3">
+                    <ProgressionSettings variant="mobile" flush />
                 </div>
 
                 <div class="mt-4 rounded-xl border border-border bg-background/50 p-3">

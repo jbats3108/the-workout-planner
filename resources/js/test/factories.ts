@@ -20,6 +20,8 @@ export function routinePayload(overrides: Partial<RoutinePayload> = {}): Routine
         name: 'Test Routine',
         default_exercise_profile_id: null,
         deload_every_n: 3,
+        progression_style: 'straight_sets',
+        progressive_mid_block: 'ask',
         updated_at: '2026-01-01T00:00:00+00:00',
         blocks: [emptyBlock()],
         ...overrides,
