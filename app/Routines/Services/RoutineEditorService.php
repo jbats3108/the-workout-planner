@@ -281,7 +281,35 @@ class RoutineEditorService
                 $exerciseAssignmentIsCurrent,
             ),
             'progression_target_override' => $isCircuit ? null : $exerciseData->progressionTarget,
+            'deload_weight_factor' => $this->deloadWeightFactorForStorage($exerciseProfile, $exerciseData),
+            'deload_reps_factor' => $this->deloadRepsFactorForStorage($exerciseProfile, $exerciseData),
         ]);
+    }
+
+    private function deloadWeightFactorForStorage(?ExerciseProfile $exerciseProfile, SyncBlockExerciseData $exerciseData): float
+    {
+        if ($exerciseData->deloadWeightFactor !== null) {
+            return $exerciseData->deloadWeightFactor;
+        }
+
+        if ($exerciseProfile !== null) {
+            return (float) $exerciseProfile->deload_weight_factor;
+        }
+
+        return 0.5;
+    }
+
+    private function deloadRepsFactorForStorage(?ExerciseProfile $exerciseProfile, SyncBlockExerciseData $exerciseData): float
+    {
+        if ($exerciseData->deloadRepsFactor !== null) {
+            return $exerciseData->deloadRepsFactor;
+        }
+
+        if ($exerciseProfile !== null) {
+            return (float) $exerciseProfile->deload_reps_factor;
+        }
+
+        return 0.5;
     }
 
     private static function normalizeNote(?string $note): ?string

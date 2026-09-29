@@ -69,6 +69,8 @@ class RoutineEditorPageData extends Data
                         floorIsDerived: $row->floor_is_derived,
                         exerciseProfileId: $row->exercise_profile_id,
                         exerciseProfileFingerprint: $row->exercise_profile_fingerprint,
+                        deloadWeightFactor: (float) $row->deload_weight_factor,
+                        deloadRepsFactor: (float) $row->deload_reps_factor,
                         deloadExerciseId: $row->deload_exercise_id,
                         deloadWorkingWeightKg: $row->deload_working_weight_g !== null
                             ? Weight::gramsToKg($row->deload_working_weight_g)

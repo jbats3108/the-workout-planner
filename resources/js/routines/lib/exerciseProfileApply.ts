@@ -31,6 +31,8 @@ export function applyProfileToExercise(exercise: BlockExercise, profile: Exercis
     exercise.floor_is_derived = profile.floor_override === null;
     exercise.exercise_profile_id = profile.id;
     exercise.exercise_profile_fingerprint = isSuperset ? profile.exercise_fingerprint : profile.recipe_fingerprint;
+    exercise.deload_weight_factor = profile.deload_weight_factor;
+    exercise.deload_reps_factor = profile.deload_reps_factor;
 }
 
 export function applyProfileToBlock(block: Block, profile: ExerciseProfileOption, includeWarmUp = true): void {

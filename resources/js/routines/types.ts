@@ -31,6 +31,8 @@ export type BlockExercise = {
     achievement_floor: number | null;
     floor_is_derived?: boolean | null;
     progression_target: number | null;
+    deload_weight_factor?: number;
+    deload_reps_factor?: number;
     deload_exercise_id: number | null;
     deload_working_weight_kg: number | null;
     deload_note?: string | null;

@@ -99,6 +99,8 @@ class RoutineDuplicator
                 'achievement_floor_override' => $blockExercise->achievement_floor_override,
                 'floor_is_derived' => $blockExercise->floor_is_derived,
                 'progression_target_override' => $blockExercise->progression_target_override,
+                'deload_weight_factor' => $blockExercise->deload_weight_factor,
+                'deload_reps_factor' => $blockExercise->deload_reps_factor,
             ]);
         }
 

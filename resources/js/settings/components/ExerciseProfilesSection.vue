@@ -17,6 +17,8 @@ type ProfileFormData = {
     target_reps: number;
     floor_override: number | null;
     working_rest_seconds: number;
+    deload_weight_factor: number;
+    deload_reps_factor: number;
     warm_up_steps: ExerciseProfileWarmUpStep[];
 };
 
@@ -41,6 +43,8 @@ const form = useForm<ProfileFormData>({
     target_reps: 6,
     floor_override: null,
     working_rest_seconds: 120,
+    deload_weight_factor: 0.5,
+    deload_reps_factor: 0.5,
     warm_up_steps: [],
 });
 const actionForm = useForm<{ profile?: string }>({ profile: undefined });
@@ -56,7 +60,8 @@ const editingProfile = computed(() => {
 const derivedFloor = computed(() => Math.max(1, Number(form.target_reps) - 2));
 const displayedFloor = computed(() => form.floor_override ?? derivedFloor.value);
 
-const profileSummary = (profile: ExerciseProfileOption): string => `Target ${profile.target_reps} · Floor ${profile.floor}`;
+const profileSummary = (profile: ExerciseProfileOption): string =>
+    `Target ${profile.target_reps} · Floor ${profile.floor} · Deload ${profile.deload_weight_factor}w / ${profile.deload_reps_factor}r`;
 
 const copyIntoForm = (profile?: ExerciseProfileOption) => {
     editingId.value = null;
@@ -65,6 +70,8 @@ const copyIntoForm = (profile?: ExerciseProfileOption) => {
     form.target_reps = profile?.target_reps ?? 6;
     form.floor_override = profile?.floor_override ?? null;
     form.working_rest_seconds = profile?.working_rest_seconds ?? 120;
+    form.deload_weight_factor = profile?.deload_weight_factor ?? 0.5;
+    form.deload_reps_factor = profile?.deload_reps_factor ?? 0.5;
     form.warm_up_steps = profile?.warm_up_steps.map((step) => ({ ...step })) ?? [];
     dialogOpen.value = true;
 };
@@ -76,6 +83,8 @@ const editProfile = (profile: ExerciseProfileOption) => {
     form.target_reps = profile.target_reps;
     form.floor_override = profile.floor_override;
     form.working_rest_seconds = profile.working_rest_seconds;
+    form.deload_weight_factor = profile.deload_weight_factor;
+    form.deload_reps_factor = profile.deload_reps_factor;
     form.warm_up_steps = profile.warm_up_steps.map((step) => ({ ...step }));
     dialogOpen.value = true;
 };
@@ -201,11 +210,14 @@ watch(profileSyncId, (profileId) => {
 
 <template>
     <section class="space-y-6 border-t border-border pt-10">
-        <HeadingSmall title="Exercise profiles" description="Choose a reusable profile for target reps, floor, working rest, and warm-up steps." />
+        <HeadingSmall
+            title="Exercise profiles"
+            description="Choose a reusable profile for target reps, floor, deload factors, working rest, and warm-up steps."
+        />
 
         <p class="text-sm text-muted-foreground">
-            Your default is preselected when you create a routine. Profiles are copied into routines, so changing one does not rewrite existing
-            workouts.
+            Your default is preselected when you create a routine. Target, floor, rest, and warm-ups are copied into routines and need an Update
+            routines push when you change them. Deload weight and reps factors auto-update on assigned exercises when you save the profile.
         </p>
 
         <div class="space-y-3">
@@ -243,6 +255,7 @@ watch(profileSyncId, (profileId) => {
                     <summary class="cursor-pointer text-muted-foreground hover:text-foreground">Profile Details</summary>
                     <div class="mt-3 space-y-1 text-muted-foreground">
                         <p>Working rest: {{ formatRest(profile.working_rest_seconds) }}</p>
+                        <p>Deload: {{ profile.deload_weight_factor }}× weight · {{ profile.deload_reps_factor }}× reps</p>
                         <p>
                             Warm-up:
                             {{ profile.warm_up_steps.length ? formatProfileWarmUpSteps(profile.warm_up_steps) : 'None' }}
@@ -366,6 +379,35 @@ watch(profileSyncId, (profileId) => {
                     />
                     <InputError :message="form.errors.working_rest_seconds" />
                 </label>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="flex flex-col gap-1 text-sm text-muted-foreground">
+                        Deload weight factor
+                        <input
+                            v-model.number="form.deload_weight_factor"
+                            type="number"
+                            min="0"
+                            max="5"
+                            step="0.05"
+                            class="rounded border border-border bg-background px-3 py-2 font-mono text-foreground"
+                            required
+                        />
+                        <InputError :message="form.errors.deload_weight_factor" />
+                    </label>
+                    <label class="flex flex-col gap-1 text-sm text-muted-foreground">
+                        Deload reps factor
+                        <input
+                            v-model.number="form.deload_reps_factor"
+                            type="number"
+                            min="0"
+                            max="10"
+                            step="0.05"
+                            class="rounded border border-border bg-background px-3 py-2 font-mono text-foreground"
+                            required
+                        />
+                        <InputError :message="form.errors.deload_reps_factor" />
+                    </label>
+                </div>
 
                 <div class="space-y-3">
                     <div class="flex items-center justify-between">

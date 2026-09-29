@@ -22,6 +22,8 @@ class RoutineEditorBlockExerciseData extends Data
         public readonly ?bool $floorIsDerived = null,
         public readonly ?int $exerciseProfileId = null,
         public readonly ?string $exerciseProfileFingerprint = null,
+        public readonly ?float $deloadWeightFactor = null,
+        public readonly ?float $deloadRepsFactor = null,
         public readonly ?int $deloadExerciseId = null,
         public readonly ?float $deloadWorkingWeightKg = null,
         public readonly ?string $deloadNote = null,

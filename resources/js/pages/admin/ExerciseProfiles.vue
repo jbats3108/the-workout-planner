@@ -19,6 +19,8 @@ type PresetFormData = {
     target_reps: number;
     floor_override: number | null;
     working_rest_seconds: number;
+    deload_weight_factor: number;
+    deload_reps_factor: number;
     warm_up_steps: ExerciseProfileWarmUpStep[];
 };
 
@@ -34,6 +36,8 @@ const form = useForm<PresetFormData>({
     target_reps: 6,
     floor_override: null,
     working_rest_seconds: 120,
+    deload_weight_factor: 0.5,
+    deload_reps_factor: 0.5,
     warm_up_steps: [],
 });
 const actionForm = useForm<{ profile?: string }>({ profile: undefined });
@@ -49,6 +53,8 @@ const openCreate = () => {
     form.target_reps = 6;
     form.floor_override = null;
     form.working_rest_seconds = 120;
+    form.deload_weight_factor = 0.5;
+    form.deload_reps_factor = 0.5;
     form.warm_up_steps = [];
     dialogOpen.value = true;
 };
@@ -60,6 +66,8 @@ const openEdit = (profile: AdminExerciseProfile) => {
     form.target_reps = profile.target_reps;
     form.floor_override = profile.floor_override;
     form.working_rest_seconds = profile.working_rest_seconds;
+    form.deload_weight_factor = profile.deload_weight_factor;
+    form.deload_reps_factor = profile.deload_reps_factor;
     form.warm_up_steps = profile.warm_up_steps.map((step) => ({ ...step }));
     dialogOpen.value = true;
 };
@@ -170,7 +178,10 @@ const remove = async (profile: AdminExerciseProfile) => {
                         <div class="flex flex-wrap items-start justify-between gap-3">
                             <div>
                                 <h3 class="font-semibold text-foreground">{{ profile.name }}</h3>
-                                <p class="mt-1 text-sm text-muted-foreground">Target {{ profile.target_reps }} · Floor {{ profile.floor }}</p>
+                                <p class="mt-1 text-sm text-muted-foreground">
+                                    Target {{ profile.target_reps }} · Floor {{ profile.floor }} · Deload {{ profile.deload_weight_factor }}w /
+                                    {{ profile.deload_reps_factor }}r
+                                </p>
                             </div>
                             <div class="flex flex-wrap gap-2">
                                 <Button type="button" variant="outline" size="sm" @click="openEdit(profile)">Edit</Button>
@@ -199,7 +210,10 @@ const remove = async (profile: AdminExerciseProfile) => {
                         <div class="flex flex-wrap items-start justify-between gap-3">
                             <div>
                                 <h3 class="font-semibold text-foreground"><BrandName class="mr-1" />{{ profile.name }}</h3>
-                                <p class="mt-1 text-sm text-muted-foreground">Target {{ profile.target_reps }} · Floor {{ profile.floor }}</p>
+                                <p class="mt-1 text-sm text-muted-foreground">
+                                    Target {{ profile.target_reps }} · Floor {{ profile.floor }} · Deload {{ profile.deload_weight_factor }}w /
+                                    {{ profile.deload_reps_factor }}r
+                                </p>
                             </div>
                             <span class="rounded-full bg-primary/15 px-2 py-0.5 text-xs text-primary">Can't be edited</span>
                         </div>
@@ -278,6 +292,35 @@ const remove = async (profile: AdminExerciseProfile) => {
                             />
                             <InputError :message="form.errors.working_rest_seconds" />
                         </label>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="flex flex-col gap-1 text-sm text-muted-foreground">
+                                Deload weight factor
+                                <input
+                                    v-model.number="form.deload_weight_factor"
+                                    type="number"
+                                    min="0"
+                                    max="5"
+                                    step="0.05"
+                                    class="rounded border border-border bg-background px-3 py-2 font-mono text-foreground"
+                                    required
+                                />
+                                <InputError :message="form.errors.deload_weight_factor" />
+                            </label>
+                            <label class="flex flex-col gap-1 text-sm text-muted-foreground">
+                                Deload reps factor
+                                <input
+                                    v-model.number="form.deload_reps_factor"
+                                    type="number"
+                                    min="0"
+                                    max="10"
+                                    step="0.05"
+                                    class="rounded border border-border bg-background px-3 py-2 font-mono text-foreground"
+                                    required
+                                />
+                                <InputError :message="form.errors.deload_reps_factor" />
+                            </label>
+                        </div>
 
                         <div class="space-y-3">
                             <div class="flex items-center justify-between">

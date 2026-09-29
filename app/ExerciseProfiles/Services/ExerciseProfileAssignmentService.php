@@ -69,6 +69,20 @@ final readonly class ExerciseProfileAssignmentService
         });
     }
 
+    /**
+     * Push deload weight/reps factors to every routine exercise using this profile.
+     * Does not touch Target/Floor/rest/warm-ups (opt-in sync owns those).
+     */
+    public function pushDeloadFactors(ExerciseProfile $profile): int
+    {
+        return RoutineBlockExercise::query()
+            ->where('exercise_profile_id', $profile->id)
+            ->update([
+                'deload_weight_factor' => $profile->deload_weight_factor,
+                'deload_reps_factor' => $profile->deload_reps_factor,
+            ]);
+    }
+
     public function liveRoutineCountFor(User $user, ExerciseProfile $profile): int
     {
         return count($this->assignedRoutinesByProfileId($user, new Collection([$profile]))[$profile->id] ?? []);

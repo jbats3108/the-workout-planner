@@ -103,6 +103,40 @@ class ExerciseProfileServiceTest extends TestCase
     }
 
     #[Test]
+    public function update_custom_auto_pushes_deload_factors_without_touching_target(): void
+    {
+        $user = User::factory()->create();
+        $profile = ExerciseProfile::factory()->forUser($user)->create([
+            'target_reps' => 6,
+            'deload_weight_factor' => 0.5,
+            'deload_reps_factor' => 0.5,
+        ]);
+        $routine = Routine::factory()->withUser($user)->create();
+        $block = $this->createAssignedBlock($routine, $profile);
+        $exercise = $block->blockExercises->firstOrFail();
+        $exercise->forceFill([
+            'prescribed_reps' => 6,
+            'deload_weight_factor' => 0.5,
+            'deload_reps_factor' => 0.5,
+        ])->save();
+
+        $this->profiles->updateCustom($user, $profile, SaveExerciseProfileData::from([
+            'name' => $profile->name,
+            'target_reps' => 10,
+            'working_rest_seconds' => $profile->working_rest_seconds,
+            'deload_weight_factor' => 0.6,
+            'deload_reps_factor' => 1.5,
+            'warm_up_steps' => $profile->warmUpStepList(),
+        ]));
+
+        $exercise->refresh();
+        $this->assertSame(6, $exercise->prescribed_reps);
+        $this->assertEqualsWithDelta(0.6, (float) $exercise->deload_weight_factor, 0.0001);
+        $this->assertEqualsWithDelta(1.5, (float) $exercise->deload_reps_factor, 0.0001);
+        $this->assertEqualsWithDelta(0.6, (float) $profile->fresh()->deload_weight_factor, 0.0001);
+    }
+
+    #[Test]
     public function sync_uses_the_exercise_fingerprint_for_superset_assignments(): void
     {
         $user = User::factory()->create();

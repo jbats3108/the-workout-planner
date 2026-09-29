@@ -19,6 +19,10 @@ use Spatie\LaravelData\DataCollection;
 
 final readonly class ExerciseProfilePresetService
 {
+    public function __construct(
+        private ExerciseProfileAssignmentService $assignments,
+    ) {}
+
     public function adminPageData(): AdminExerciseProfilePageData
     {
         $profiles = ExerciseProfile::query()
@@ -86,7 +90,10 @@ final readonly class ExerciseProfilePresetService
             'recipe_fingerprint' => $recipe->fingerprint(),
         ]);
 
-        return $profile->fresh() ?? $profile;
+        $fresh = $profile->fresh() ?? $profile;
+        $this->assignments->pushDeloadFactors($fresh);
+
+        return $fresh;
     }
 
     public function deletePresetDraft(User $admin, ExerciseProfile $profile): void
