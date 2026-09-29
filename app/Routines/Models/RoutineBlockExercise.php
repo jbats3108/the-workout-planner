@@ -34,6 +34,7 @@ class RoutineBlockExercise extends Model
     ];
 
     /** @var array<string, mixed> */
+    #[Override]
     protected $attributes = [
         'deload_weight_factor' => 0.5,
         'deload_reps_factor' => 0.5,
