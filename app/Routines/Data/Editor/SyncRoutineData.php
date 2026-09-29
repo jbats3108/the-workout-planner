@@ -4,8 +4,6 @@ namespace App\Routines\Data\Editor;
 
 use App\ExerciseProfiles\Models\ExerciseProfile;
 use App\Shared\Data\Validation\DeloadEveryN;
-use App\Shared\Data\Validation\DeloadRepsFactor;
-use App\Shared\Data\Validation\DeloadWeightFactor;
 use Override;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Attributes\MapName;
@@ -24,12 +22,6 @@ class SyncRoutineData extends Data
     public function __construct(
         #[Max(255)]
         public readonly string $name,
-
-        #[DeloadWeightFactor]
-        public readonly ?float $deloadWeightFactor = null,
-
-        #[DeloadRepsFactor]
-        public readonly ?float $deloadRepsFactor = null,
 
         #[DeloadEveryN]
         public readonly ?int $deloadEveryN = null,

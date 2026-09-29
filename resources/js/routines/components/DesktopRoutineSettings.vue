@@ -21,7 +21,7 @@ const routineProfileModel = computed({
 const summary = computed(() => {
     const profile = profileOptions.value.find((option) => option.id === form.default_exercise_profile_id);
     const profileLabel = profile?.display_name ?? 'No routine profile';
-    const deload = formatDeloadSummary(form.deload_weight_factor, form.deload_reps_factor, form.deload_every_n);
+    const deload = formatDeloadSummary(form.deload_every_n);
 
     return `${profileLabel} · ${deload}`;
 });

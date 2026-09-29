@@ -214,8 +214,6 @@ final class RoutineSeeder extends Seeder
             'user_id' => $user->id,
             'name' => $name,
             'default_exercise_profile_id' => $this->profile($defaultProfileSlug)?->id,
-            'deload_weight_factor' => 0.5,
-            'deload_reps_factor' => 0.5,
             'deload_every_n' => 3,
         ]);
     }

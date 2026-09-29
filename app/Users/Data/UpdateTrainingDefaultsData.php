@@ -4,8 +4,6 @@ namespace App\Users\Data;
 
 use App\Routines\Data\Editor\SyncWarmUpStepData;
 use App\Shared\Data\Validation\DeloadEveryN;
-use App\Shared\Data\Validation\DeloadRepsFactor;
-use App\Shared\Data\Validation\DeloadWeightFactor;
 use App\Users\Enums\ProgressionStyle;
 use App\Users\Enums\ProgressiveMidBlock;
 use App\Users\Enums\WarmUpDefaultsScope;
@@ -44,12 +42,6 @@ class UpdateTrainingDefaultsData extends Data
 
         #[Enum(ProgressiveMidBlock::class)]
         public readonly ProgressiveMidBlock $progressiveMidBlockDefault = ProgressiveMidBlock::Ask,
-
-        #[DeloadWeightFactor]
-        public readonly float $deloadWeightFactorDefault = 0.5,
-
-        #[DeloadRepsFactor]
-        public readonly float $deloadRepsFactorDefault = 2.0,
 
         #[DeloadEveryN]
         public readonly int $deloadEveryNDefault = 3,

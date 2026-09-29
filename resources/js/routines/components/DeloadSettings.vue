@@ -13,13 +13,15 @@ const { variant = 'desktop', flush = false } = defineProps<{
 
 const { form, deloadExpanded, toggleDeloadExpanded } = useRoutineEditor();
 
-const summary = computed(() => formatDeloadSummary(form.deload_weight_factor, form.deload_reps_factor, form.deload_every_n));
+const summary = computed(() => formatDeloadSummary(form.deload_every_n));
 </script>
 
 <template>
     <section v-if="variant === 'desktop'" data-routine-deload class="border-b border-border bg-card/40 px-4 py-3">
         <h3 class="text-sm font-medium">Deload</h3>
-        <p class="mt-1 max-w-3xl text-xs text-muted-foreground">Custom values for this routine. Defaults are in Preferences.</p>
+        <p class="mt-1 max-w-3xl text-xs text-muted-foreground">
+            Deload weight and reps multipliers live on Exercise Profiles. This panel controls when the dashboard suggests a deload.
+        </p>
         <DeloadMultiplierFields variant="desktop" />
     </section>
 
@@ -33,7 +35,9 @@ const summary = computed(() => formatDeloadSummary(form.deload_weight_factor, fo
         @toggle="toggleDeloadExpanded"
     >
         <template #label> Deload <span class="text-muted-foreground/80">(this routine)</span> </template>
-        <p class="text-xs text-muted-foreground">Custom values for this routine. Defaults are in Preferences.</p>
+        <p class="text-xs text-muted-foreground">
+            Deload weight and reps multipliers live on Exercise Profiles. This panel controls when the dashboard suggests a deload.
+        </p>
         <DeloadMultiplierFields variant="mobile" />
     </EditorDisclosure>
 </template>

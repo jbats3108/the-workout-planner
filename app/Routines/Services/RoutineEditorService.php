@@ -54,8 +54,6 @@ class RoutineEditorService
 
             $locked->update([
                 'name' => $data->name,
-                'deload_weight_factor' => $data->deloadWeightFactor ?? $locked->deload_weight_factor,
-                'deload_reps_factor' => $data->deloadRepsFactor ?? $locked->deload_reps_factor,
                 'deload_every_n' => $data->deloadEveryN ?? $locked->deload_every_n,
                 'default_exercise_profile_id' => $defaultProfile === null
                     ? $locked->default_exercise_profile_id

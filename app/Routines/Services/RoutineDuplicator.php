@@ -33,8 +33,6 @@ class RoutineDuplicator
             $copy = Routine::create([
                 'user_id' => $owner->id,
                 'name' => $this->copyName($source->name),
-                'deload_weight_factor' => $source->deload_weight_factor,
-                'deload_reps_factor' => $source->deload_reps_factor,
                 'deload_every_n' => $source->deload_every_n,
                 'default_exercise_profile_id' => $source->default_exercise_profile_id,
             ]);

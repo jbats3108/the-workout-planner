@@ -36,8 +36,6 @@ class TrainingDefaultsTest extends TestCase
             ->where('progression_target_default', 6)
             ->where('progression_style_default', 'straight_sets')
             ->where('progressive_mid_block_default', 'ask')
-            ->where('deload_weight_factor_default', 0.5)
-            ->where('deload_reps_factor_default', 2)
             ->where('deload_every_n_default', 3)
             ->has('warm_up_steps_default', 3)
             ->has('plate_profile'));
@@ -207,16 +205,12 @@ class TrainingDefaultsTest extends TestCase
             'warm_up_defaults_scope' => 'all_blocks',
             'progression_style_default' => 'straight_sets',
             'progressive_mid_block_default' => 'ask',
-            'deload_weight_factor_default' => 0.7,
-            'deload_reps_factor_default' => 1.5,
             'deload_every_n_default' => 4,
         ]);
 
         $response->assertRedirect(route('training.edit'));
 
         $this->user->refresh();
-        $this->assertSame('0.700', (string) $this->user->deload_weight_factor_default);
-        $this->assertSame('1.500', (string) $this->user->deload_reps_factor_default);
         $this->assertSame(4, $this->user->deload_every_n_default);
     }
 
@@ -230,20 +224,6 @@ class TrainingDefaultsTest extends TestCase
             'warm_up_defaults_scope' => 'all_blocks',
             'progression_style_default' => 'straight_sets',
             'progressive_mid_block_default' => 'ask',
-            'deload_weight_factor_default' => 5.1,
-            'deload_reps_factor_default' => 1,
-            'deload_every_n_default' => 3,
-        ])->assertSessionHasErrors('deload_weight_factor_default');
-
-        $this->actingAs($this->user)->put(route('training.update'), [
-            'warm_up_steps_default' => [
-                ['percent' => 40, 'reps' => 5],
-            ],
-            'warm_up_defaults_scope' => 'all_blocks',
-            'progression_style_default' => 'straight_sets',
-            'progressive_mid_block_default' => 'ask',
-            'deload_weight_factor_default' => 0.5,
-            'deload_reps_factor_default' => 1,
             'deload_every_n_default' => 100,
         ])->assertSessionHasErrors('deload_every_n_default');
     }

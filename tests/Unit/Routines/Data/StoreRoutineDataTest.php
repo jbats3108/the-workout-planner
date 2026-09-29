@@ -41,14 +41,12 @@ class StoreRoutineDataTest extends TestCase
     }
 
     #[Test]
-    public function it_accepts_optional_deload_factors(): void
+    public function it_accepts_optional_deload_every_n(): void
     {
         // Given
         $createRoutineData = [
             'name' => 'Test Routine',
             'default_exercise_profile_id' => $this->profileId(),
-            'deload_weight_factor' => 0.75,
-            'deload_reps_factor' => 1.5,
             'deload_every_n' => 4,
         ];
 
@@ -58,8 +56,6 @@ class StoreRoutineDataTest extends TestCase
         $storeRoutineData = StoreRoutineData::from($createRoutineData);
 
         // Then
-        $this->assertSame(0.75, $storeRoutineData->deloadWeightFactor);
-        $this->assertSame(1.5, $storeRoutineData->deloadRepsFactor);
         $this->assertSame(4, $storeRoutineData->deloadEveryN);
     }
 

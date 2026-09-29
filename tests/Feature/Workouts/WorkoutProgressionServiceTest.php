@@ -211,7 +211,6 @@ class WorkoutProgressionServiceTest extends TestCase
     public function deload_finish_skips_carry_forward_and_bumps(): void
     {
         [$routine, $routineExercise] = $this->seedRoutine(workingWeightG: 80000, prescribedReps: 3, achievementFloor: 1);
-        $routine->update(['deload_weight_factor' => 0.5, 'deload_reps_factor' => 1]);
         $workout = $this->workoutService->createWorkout($routine, WorkoutMode::Deload);
         $set = $this->firstSet($workout->id);
 

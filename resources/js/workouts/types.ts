@@ -158,8 +158,6 @@ export type HistoricalCreateBlock = {
 export type HistoricalCreateForm = {
     routine_slug: string;
     routine_name: string;
-    deload_weight_factor?: number;
-    deload_reps_factor?: number;
     blocks: HistoricalCreateBlock[];
 };
 

@@ -99,8 +99,6 @@ class DuplicateRoutineControllerTest extends TestCase
 
         app(RoutineEditorService::class)->sync($routine, SyncRoutineData::from([
             'name' => 'Clone Me',
-            'deload_weight_factor' => 0.5,
-            'deload_reps_factor' => 2,
             'blocks' => [
                 RoutineEditorPayload::block($exercise->id, [
                     'working_weight_kg' => 50,

@@ -55,8 +55,6 @@ class Routine extends Model
         'user_id',
         'name',
         'slug',
-        'deload_weight_factor',
-        'deload_reps_factor',
         'deload_every_n',
         'default_exercise_profile_id',
     ];
@@ -89,8 +87,6 @@ class Routine extends Model
     protected function casts(): array
     {
         return [
-            'deload_weight_factor' => 'decimal:3',
-            'deload_reps_factor' => 'decimal:3',
             'deload_every_n' => 'integer',
             'default_exercise_profile_id' => 'integer',
         ];

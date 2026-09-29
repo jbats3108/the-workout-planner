@@ -44,8 +44,6 @@ class RoutineEditorServiceTest extends TestCase
 
         $result = $this->service->sync($routine, SyncRoutineData::from([
             'name' => 'New Name',
-            'deload_weight_factor' => 0.5,
-            'deload_reps_factor' => 2,
             'deload_every_n' => 4,
             'blocks' => [
                 RoutineEditorPayload::block($exercise->id, [
@@ -91,8 +89,6 @@ class RoutineEditorServiceTest extends TestCase
 
         $result = $this->service->sync($routine, SyncRoutineData::from([
             'name' => 'Warm-up setup',
-            'deload_weight_factor' => 0.8,
-            'deload_reps_factor' => 0.8,
             'blocks' => [
                 RoutineEditorPayload::block($exercise->id, [
                     'warm_up' => [
@@ -120,8 +116,6 @@ class RoutineEditorServiceTest extends TestCase
 
         $result = $this->service->sync($routine, SyncRoutineData::from([
             'name' => 'Final block setup',
-            'deload_weight_factor' => 0.8,
-            'deload_reps_factor' => 0.8,
             'blocks' => [
                 RoutineEditorPayload::block($exercise->id, ['has_setup_after' => false]),
                 RoutineEditorPayload::block($exercise->id, ['has_setup_after' => true]),
@@ -533,8 +527,6 @@ class RoutineEditorServiceTest extends TestCase
 
         $result = $this->service->sync($routine, SyncRoutineData::from([
             'name' => 'Custom exercise leftover shared',
-            'deload_weight_factor' => 0.5,
-            'deload_reps_factor' => 2,
             'blocks' => [
                 RoutineEditorPayload::block($exercise->id, [
                     'shared_profile_id' => $profile->id,
@@ -575,8 +567,6 @@ class RoutineEditorServiceTest extends TestCase
 
         $result = $this->service->sync($routine, SyncRoutineData::from([
             'name' => 'Matching shared fixed warm-up',
-            'deload_weight_factor' => 0.5,
-            'deload_reps_factor' => 2,
             'blocks' => [
                 RoutineEditorPayload::block($exercise->id, [
                     'shared_profile_id' => $profile->id,
@@ -618,8 +608,6 @@ class RoutineEditorServiceTest extends TestCase
 
         $this->service->sync($routine, SyncRoutineData::from([
             'name' => 'Tampered shared profile values',
-            'deload_weight_factor' => 0.5,
-            'deload_reps_factor' => 2,
             'blocks' => [
                 RoutineEditorPayload::block($exercise->id, [
                     'shared_profile_id' => $profile->id,
@@ -655,8 +643,6 @@ class RoutineEditorServiceTest extends TestCase
 
         $this->service->sync($routine, SyncRoutineData::from([
             'name' => 'Tampered warm-up mode',
-            'deload_weight_factor' => 0.5,
-            'deload_reps_factor' => 2,
             'blocks' => [
                 RoutineEditorPayload::block($exercise->id, [
                     'shared_profile_id' => $profile->id,
@@ -692,8 +678,6 @@ class RoutineEditorServiceTest extends TestCase
 
         $this->service->sync($routine, SyncRoutineData::from([
             'name' => 'Tampered profile values',
-            'deload_weight_factor' => 0.5,
-            'deload_reps_factor' => 2,
             'blocks' => [
                 RoutineEditorPayload::block($exercise->id, [
                     'exercise_profile_id' => $profile->id,
@@ -734,8 +718,6 @@ class RoutineEditorServiceTest extends TestCase
 
         $result = $this->service->sync($routine, SyncRoutineData::from([
             'name' => 'Outdated copy',
-            'deload_weight_factor' => 0.5,
-            'deload_reps_factor' => 2,
             'blocks' => [
                 RoutineEditorPayload::block($exercise->id, [
                     'exercise_profile_id' => $profile->id,
@@ -1079,24 +1061,20 @@ class RoutineEditorServiceTest extends TestCase
     }
 
     #[Test]
-    public function sync_keeps_existing_deload_factors_when_omitted(): void
+    public function sync_keeps_existing_deload_every_n_when_omitted(): void
     {
         $routine = Routine::factory()->create([
-            'deload_weight_factor' => 0.7,
-            'deload_reps_factor' => 0.6,
             'deload_every_n' => 5,
         ]);
         $exercise = Exercise::factory()->create();
 
         $result = $this->service->sync($routine, SyncRoutineData::from([
-            'name' => 'Keep Deload Factors',
+            'name' => 'Keep Deload Every N',
             'blocks' => [
                 RoutineEditorPayload::block($exercise->id),
             ],
         ]));
 
-        $this->assertEqualsWithDelta(0.7, (float) $result->deload_weight_factor, 0.0001);
-        $this->assertEqualsWithDelta(0.6, (float) $result->deload_reps_factor, 0.0001);
         $this->assertSame(5, $result->deload_every_n);
     }
 

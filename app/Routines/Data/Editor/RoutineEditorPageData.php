@@ -27,8 +27,6 @@ class RoutineEditorPageData extends Data
         public readonly string $slug,
         public readonly string $name,
         public readonly ?int $defaultExerciseProfileId,
-        public readonly float $deloadWeightFactor,
-        public readonly float $deloadRepsFactor,
         public readonly int $deloadEveryN,
         public readonly string $updatedAt,
         #[DataCollectionOf(RoutineEditorBlockData::class)]
@@ -110,8 +108,6 @@ class RoutineEditorPageData extends Data
             slug: $routine->getSlug(),
             name: $routine->getName(),
             defaultExerciseProfileId: $routine->default_exercise_profile_id,
-            deloadWeightFactor: (float) $routine->deload_weight_factor,
-            deloadRepsFactor: (float) $routine->deload_reps_factor,
             deloadEveryN: (int) $routine->deload_every_n,
             updatedAt: $routine->updated_at?->toIso8601String() ?? now()->toIso8601String(),
             blocks: RoutineEditorBlockData::collect($blocks, DataCollection::class),

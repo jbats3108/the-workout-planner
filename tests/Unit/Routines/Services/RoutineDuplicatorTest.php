@@ -39,8 +39,6 @@ class RoutineDuplicatorTest extends TestCase
         $owner = User::factory()->create();
         $source = Routine::factory()->withUser($owner)->create([
             'name' => 'Barbell Strength',
-            'deload_weight_factor' => 0.7,
-            'deload_reps_factor' => 1.5,
             'deload_every_n' => 4,
         ]);
         $squat = Exercise::factory()->create();
@@ -50,8 +48,6 @@ class RoutineDuplicatorTest extends TestCase
 
         $this->editor->sync($source, SyncRoutineData::from([
             'name' => 'Barbell Strength',
-            'deload_weight_factor' => 0.7,
-            'deload_reps_factor' => 1.5,
             'deload_every_n' => 4,
             'blocks' => [
                 [
@@ -120,8 +116,6 @@ class RoutineDuplicatorTest extends TestCase
         $this->assertSame($owner->id, $copy->user_id);
         $this->assertSame('Barbell Strength (copy)', $copy->name);
         $this->assertNotSame($source->slug, $copy->slug);
-        $this->assertSame('0.700', (string) $copy->deload_weight_factor);
-        $this->assertSame('1.500', (string) $copy->deload_reps_factor);
         $this->assertSame(4, $copy->deload_every_n);
         $this->assertCount(2, $copy->blocks);
 

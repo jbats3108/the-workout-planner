@@ -4,8 +4,6 @@ namespace App\Routines\Data;
 
 use App\ExerciseProfiles\Models\ExerciseProfile;
 use App\Shared\Data\Validation\DeloadEveryN;
-use App\Shared\Data\Validation\DeloadRepsFactor;
-use App\Shared\Data\Validation\DeloadWeightFactor;
 use App\Users\Models\User;
 use Spatie\LaravelData\Attributes\FromAuthenticatedUser;
 use Spatie\LaravelData\Attributes\MapName;
@@ -26,12 +24,6 @@ class StoreRoutineData extends Data
 
         #[FromAuthenticatedUser]
         public readonly User $user,
-
-        #[DeloadWeightFactor]
-        public readonly ?float $deloadWeightFactor = null,
-
-        #[DeloadRepsFactor]
-        public readonly ?float $deloadRepsFactor = null,
 
         #[DeloadEveryN]
         public readonly ?int $deloadEveryN = null,

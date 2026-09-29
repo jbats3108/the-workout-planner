@@ -17,8 +17,6 @@ const props = defineProps<{
     progression_target_default: number;
     progression_style_default: 'straight_sets' | 'progressive_overload';
     progressive_mid_block_default: 'ask' | 'auto';
-    deload_weight_factor_default: number;
-    deload_reps_factor_default: number;
     deload_every_n_default: number;
     plate_profile: PlateProfile;
     exercise_profiles: ExerciseProfilePage;
@@ -38,8 +36,6 @@ const form = useForm({
     progression_target_default: props.progression_target_default,
     progression_style_default: props.progression_style_default,
     progressive_mid_block_default: props.progressive_mid_block_default,
-    deload_weight_factor_default: props.deload_weight_factor_default,
-    deload_reps_factor_default: props.deload_reps_factor_default,
     deload_every_n_default: props.deload_every_n_default,
 });
 
@@ -166,44 +162,8 @@ const savePlates = () => {
                         <div class="space-y-4 border-t border-border pt-6">
                             <HeadingSmall
                                 title="Deload"
-                                description="Defaults for new routines. A deload workout scales every exercise on that routine for one session; your usual working weights stay unchanged. Each routine can set its own values in the editor."
+                                description="Defaults for new routines. Weight and reps multipliers live on Exercise Profiles; this setting controls when the dashboard suggests a deload."
                             />
-
-                            <label class="flex flex-col gap-1 text-sm text-muted-foreground">
-                                Weight multiplier
-                                <span class="text-xs text-muted-foreground/80">
-                                    Applied to working weight when you start a deload (e.g. 0.5 → half the usual load). Same factor for every exercise
-                                    on the routine.
-                                </span>
-                                <input
-                                    v-model.number="form.deload_weight_factor_default"
-                                    type="number"
-                                    step="0.05"
-                                    min="0"
-                                    max="5"
-                                    class="mt-1 w-28 rounded border border-border bg-card px-3 py-2 font-mono text-foreground"
-                                    required
-                                />
-                                <InputError :message="form.errors.deload_weight_factor_default" />
-                            </label>
-
-                            <label class="flex flex-col gap-1 text-sm text-muted-foreground">
-                                Reps multiplier
-                                <span class="text-xs text-muted-foreground/80">
-                                    Applied to prescribed (Target) reps on a deload start (e.g. 0.5 → half the usual reps, rounded down). Same factor
-                                    for every exercise.
-                                </span>
-                                <input
-                                    v-model.number="form.deload_reps_factor_default"
-                                    type="number"
-                                    step="0.05"
-                                    min="0"
-                                    max="10"
-                                    class="mt-1 w-28 rounded border border-border bg-card px-3 py-2 font-mono text-foreground"
-                                    required
-                                />
-                                <InputError :message="form.errors.deload_reps_factor_default" />
-                            </label>
 
                             <label class="flex flex-col gap-1 text-sm text-muted-foreground">
                                 Every N standards

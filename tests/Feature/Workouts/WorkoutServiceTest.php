@@ -148,10 +148,7 @@ class WorkoutServiceTest extends TestCase
     #[Test]
     public function it_applies_deload_factors_when_starting_in_deload_mode(): void
     {
-        $routine = Routine::factory()->create([
-            'deload_weight_factor' => 0.5,
-            'deload_reps_factor' => 0.5,
-        ]);
+        $routine = Routine::factory()->create();
         $this->seedPlayableRoutineBlock($routine, setCount: 1);
 
         $workout = $this->workoutService->createWorkout($routine, WorkoutMode::Deload);
@@ -166,10 +163,7 @@ class WorkoutServiceTest extends TestCase
     #[Test]
     public function it_applies_per_exercise_deload_factors_on_the_same_routine(): void
     {
-        $routine = Routine::factory()->create([
-            'deload_weight_factor' => 0.5,
-            'deload_reps_factor' => 0.5,
-        ]);
+        $routine = Routine::factory()->create();
         $block = RoutineBlock::create([
             'routine_id' => $routine->id,
             'position' => 1,
@@ -212,10 +206,7 @@ class WorkoutServiceTest extends TestCase
     #[Test]
     public function it_omits_warm_ups_when_starting_in_deload_mode(): void
     {
-        $routine = Routine::factory()->create([
-            'deload_weight_factor' => 0.5,
-            'deload_reps_factor' => 1,
-        ]);
+        $routine = Routine::factory()->create();
         $block = RoutineBlock::create([
             'routine_id' => $routine->id,
             'position' => 1,
@@ -227,6 +218,8 @@ class WorkoutServiceTest extends TestCase
             'position' => 1,
             'working_weight_g' => 80000,
             'prescribed_reps' => 6,
+            'deload_weight_factor' => 0.5,
+            'deload_reps_factor' => 1.0,
         ]);
         $warmUp = RoutineSetGroup::create([
             'routine_block_id' => $block->id,
@@ -740,10 +733,7 @@ class WorkoutServiceTest extends TestCase
     #[Test]
     public function it_snapshots_dropset_segments_and_scales_them_on_deload(): void
     {
-        $routine = Routine::factory()->create([
-            'deload_weight_factor' => 0.5,
-            'deload_reps_factor' => 1,
-        ]);
+        $routine = Routine::factory()->create();
         [$working] = $this->seedPlayableRoutineBlock($routine, setCount: 1, restSeconds: null);
         RoutineDropsetSegment::create([
             'routine_set_group_id' => $working->id,
@@ -777,10 +767,7 @@ class WorkoutServiceTest extends TestCase
     #[Test]
     public function it_uses_deload_alternate_exercise_and_weight_on_deload_start(): void
     {
-        $routine = Routine::factory()->create([
-            'deload_weight_factor' => 0.5,
-            'deload_reps_factor' => 0.5,
-        ]);
+        $routine = Routine::factory()->create();
         [, $routineExercise] = $this->seedPlayableRoutineBlock($routine, setCount: 1, restSeconds: null);
         $alternate = Exercise::factory()->create(['name' => 'Goblet Squat']);
         $routineExercise->update([
@@ -819,10 +806,7 @@ class WorkoutServiceTest extends TestCase
     #[Test]
     public function it_skips_dropset_segments_on_deload_when_alternate_is_set(): void
     {
-        $routine = Routine::factory()->create([
-            'deload_weight_factor' => 0.5,
-            'deload_reps_factor' => 1,
-        ]);
+        $routine = Routine::factory()->create();
         [$working, $routineExercise] = $this->seedPlayableRoutineBlock($routine, setCount: 1, restSeconds: null);
         $routineExercise->update([
             'deload_exercise_id' => Exercise::factory()->create()->id,
@@ -1027,10 +1011,7 @@ class WorkoutServiceTest extends TestCase
     #[Test]
     public function it_snapshots_a_circuit_block_in_deload_mode_preserving_duration_and_scaling_load(): void
     {
-        $routine = Routine::factory()->create([
-            'deload_weight_factor' => 0.5,
-            'deload_reps_factor' => 0.5,
-        ]);
+        $routine = Routine::factory()->create();
         $block = RoutineBlock::create([
             'routine_id' => $routine->id,
             'position' => 1,

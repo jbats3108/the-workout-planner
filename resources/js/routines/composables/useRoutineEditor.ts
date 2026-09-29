@@ -101,8 +101,6 @@ export function createRoutineEditor(props: EditRoutineProps) {
 
     const form = useForm({
         name: props.routine.name,
-        deload_weight_factor: props.routine.deload_weight_factor,
-        deload_reps_factor: props.routine.deload_reps_factor,
         deload_every_n: props.routine.deload_every_n,
         default_exercise_profile_id: coerceProfileId(props.routine.default_exercise_profile_id),
         expected_updated_at: props.routine.updated_at,

@@ -65,8 +65,6 @@ export type RoutinePayload = {
     slug: string;
     name: string;
     default_exercise_profile_id?: number | null;
-    deload_weight_factor: number;
-    deload_reps_factor: number;
     deload_every_n: number;
     updated_at: string;
     blocks: Block[];
@@ -77,8 +75,6 @@ export type Routine = {
     id: number;
     slug: string;
     name: string;
-    deload_weight_factor?: number | null;
-    deload_reps_factor?: number | null;
     deload_every_n?: number;
     can_start?: boolean;
     /** Finished standard workouts since this routine's last finished deload (all standards if never deloaded). */

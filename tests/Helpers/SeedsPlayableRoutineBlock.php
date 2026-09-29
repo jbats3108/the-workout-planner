@@ -25,6 +25,8 @@ trait SeedsPlayableRoutineBlock
         int $prescribedReps = 6,
         ?int $progressionTarget = null,
         ?int $achievementFloor = null,
+        float $deloadWeightFactor = 0.5,
+        float $deloadRepsFactor = 0.5,
     ): array {
         $block = RoutineBlock::create([
             'routine_id' => $routine->id,
@@ -37,8 +39,8 @@ trait SeedsPlayableRoutineBlock
             'position' => 1,
             'working_weight_g' => $workingWeightG,
             'prescribed_reps' => $prescribedReps,
-            'deload_weight_factor' => $routine->deload_weight_factor,
-            'deload_reps_factor' => $routine->deload_reps_factor,
+            'deload_weight_factor' => $deloadWeightFactor,
+            'deload_reps_factor' => $deloadRepsFactor,
         ];
 
         if ($progressionTarget !== null) {
