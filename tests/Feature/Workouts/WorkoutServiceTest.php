@@ -12,6 +12,9 @@ use App\Routines\Models\RoutineWarmUpStep;
 use App\Shared\Enums\BlockType;
 use App\Shared\Enums\PrescriptionMode;
 use App\Shared\Enums\SetGroupType;
+use App\Users\Enums\ProgressionStyle;
+use App\Users\Enums\ProgressiveMidBlock;
+use App\Users\Models\User;
 use App\Workouts\Data\History\StoreHistoricalWorkoutData;
 use App\Workouts\Enums\WorkoutMode;
 use App\Workouts\Enums\WorkoutStatus;
@@ -73,6 +76,26 @@ class WorkoutServiceTest extends TestCase
         $this->assertTrue($workout->routine->is($routine));
         $this->assertSame('in_progress', $workout->status->value);
         $this->assertSame('standard', $workout->mode->value);
+    }
+
+    #[Test]
+    public function it_snapshots_progression_style_from_the_routine_not_the_user(): void
+    {
+        $user = User::factory()->create([
+            'progression_style_default' => ProgressionStyle::StraightSets,
+            'progressive_mid_block_default' => ProgressiveMidBlock::Ask,
+        ]);
+        $routine = Routine::factory()->create([
+            'user_id' => $user->id,
+            'progression_style' => ProgressionStyle::ProgressiveOverload,
+            'progressive_mid_block' => ProgressiveMidBlock::Auto,
+        ]);
+        $this->seedPlayableRoutineBlock($routine, restSeconds: null);
+
+        $workout = $this->workoutService->createWorkout($routine);
+
+        $this->assertSame(ProgressionStyle::ProgressiveOverload, $workout->progression_style);
+        $this->assertSame(ProgressiveMidBlock::Auto, $workout->progressive_mid_block);
     }
 
     #[Test]

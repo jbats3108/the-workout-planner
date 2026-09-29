@@ -102,6 +102,8 @@ export function createRoutineEditor(props: EditRoutineProps) {
     const form = useForm({
         name: props.routine.name,
         deload_every_n: props.routine.deload_every_n,
+        progression_style: props.routine.progression_style,
+        progressive_mid_block: props.routine.progressive_mid_block,
         default_exercise_profile_id: coerceProfileId(props.routine.default_exercise_profile_id),
         expected_updated_at: props.routine.updated_at,
         // Inertia props are nested reactive proxies — structuredClone cannot clone them
@@ -120,6 +122,7 @@ export function createRoutineEditor(props: EditRoutineProps) {
     const warmUpExpanded = ref(false);
     const dropsetsExpanded = ref(false);
     const deloadExpanded = ref(false);
+    const progressionExpanded = ref(false);
     const mutating = ref(false);
 
     const toggleWarmUpExpanded = () => {
@@ -132,6 +135,10 @@ export function createRoutineEditor(props: EditRoutineProps) {
 
     const toggleDeloadExpanded = () => {
         deloadExpanded.value = !deloadExpanded.value;
+    };
+
+    const toggleProgressionExpanded = () => {
+        progressionExpanded.value = !progressionExpanded.value;
     };
 
     watch(
@@ -648,6 +655,8 @@ export function createRoutineEditor(props: EditRoutineProps) {
         toggleDropsetsExpanded,
         deloadExpanded,
         toggleDeloadExpanded,
+        progressionExpanded,
+        toggleProgressionExpanded,
         achievementFloorDefault: computed(() => props.achievement_floor_default ?? null),
         progressionTargetDefault: computed(() => defaultTargetReps()),
         profileOptions,

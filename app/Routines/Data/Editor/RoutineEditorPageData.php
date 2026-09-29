@@ -9,6 +9,8 @@ use App\Routines\Models\RoutineBlockExercise;
 use App\Shared\Enums\PrescriptionMode;
 use App\Shared\Enums\WarmUpWeightMode;
 use App\Shared\Support\Weight;
+use App\Users\Enums\ProgressionStyle;
+use App\Users\Enums\ProgressiveMidBlock;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Data;
@@ -28,6 +30,8 @@ class RoutineEditorPageData extends Data
         public readonly string $name,
         public readonly ?int $defaultExerciseProfileId,
         public readonly int $deloadEveryN,
+        public readonly string $progressionStyle,
+        public readonly string $progressiveMidBlock,
         public readonly string $updatedAt,
         #[DataCollectionOf(RoutineEditorBlockData::class)]
         public readonly DataCollection $blocks,
@@ -109,6 +113,8 @@ class RoutineEditorPageData extends Data
             name: $routine->getName(),
             defaultExerciseProfileId: $routine->default_exercise_profile_id,
             deloadEveryN: (int) $routine->deload_every_n,
+            progressionStyle: ($routine->progression_style ?? ProgressionStyle::StraightSets)->value,
+            progressiveMidBlock: ($routine->progressive_mid_block ?? ProgressiveMidBlock::Ask)->value,
             updatedAt: $routine->updated_at?->toIso8601String() ?? now()->toIso8601String(),
             blocks: RoutineEditorBlockData::collect($blocks, DataCollection::class),
             exercises: $exercises,

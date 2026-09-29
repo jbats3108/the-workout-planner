@@ -6,6 +6,8 @@ use App\ExerciseProfiles\Models\ExerciseProfile;
 use App\Routines\Services\RoutineSlugGenerator;
 use App\Shared\Traits\HasName;
 use App\Shared\Traits\HasSlug;
+use App\Users\Enums\ProgressionStyle;
+use App\Users\Enums\ProgressiveMidBlock;
 use App\Users\Models\User;
 use App\Workouts\Models\Workout;
 use Database\Factories\RoutineFactory;
@@ -56,6 +58,8 @@ class Routine extends Model
         'name',
         'slug',
         'deload_every_n',
+        'progression_style',
+        'progressive_mid_block',
         'default_exercise_profile_id',
     ];
 
@@ -88,6 +92,8 @@ class Routine extends Model
     {
         return [
             'deload_every_n' => 'integer',
+            'progression_style' => ProgressionStyle::class,
+            'progressive_mid_block' => ProgressiveMidBlock::class,
             'default_exercise_profile_id' => 'integer',
         ];
     }

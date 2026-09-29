@@ -11,6 +11,8 @@ use App\Shared\Enums\BlockType;
 use App\Shared\Enums\PrescriptionMode;
 use App\Shared\Enums\SetGroupType;
 use App\Shared\Enums\WarmUpWeightMode;
+use App\Users\Enums\ProgressionStyle;
+use App\Users\Enums\ProgressiveMidBlock;
 use App\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use InvalidArgumentException;
@@ -40,6 +42,8 @@ class RoutineDuplicatorTest extends TestCase
         $source = Routine::factory()->withUser($owner)->create([
             'name' => 'Barbell Strength',
             'deload_every_n' => 4,
+            'progression_style' => ProgressionStyle::ProgressiveOverload,
+            'progressive_mid_block' => ProgressiveMidBlock::Auto,
         ]);
         $squat = Exercise::factory()->create();
         $squatDeload = Exercise::factory()->create();
@@ -117,6 +121,8 @@ class RoutineDuplicatorTest extends TestCase
         $this->assertSame('Barbell Strength (copy)', $copy->name);
         $this->assertNotSame($source->slug, $copy->slug);
         $this->assertSame(4, $copy->deload_every_n);
+        $this->assertSame(ProgressionStyle::ProgressiveOverload, $copy->progression_style);
+        $this->assertSame(ProgressiveMidBlock::Auto, $copy->progressive_mid_block);
         $this->assertCount(2, $copy->blocks);
 
         $first = $copy->blocks->sortBy('position')->values()[0];

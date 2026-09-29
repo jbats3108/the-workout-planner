@@ -55,6 +55,8 @@ class RoutineEditorService
             $locked->update([
                 'name' => $data->name,
                 'deload_every_n' => $data->deloadEveryN ?? $locked->deload_every_n,
+                'progression_style' => $data->progressionStyle ?? $locked->progression_style,
+                'progressive_mid_block' => $data->progressiveMidBlock ?? $locked->progressive_mid_block,
                 'default_exercise_profile_id' => $defaultProfile === null
                     ? $locked->default_exercise_profile_id
                     : $defaultProfile->id,

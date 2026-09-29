@@ -80,8 +80,8 @@ The exercise’s prescribed reps (**Target** in Play). Hitting this many reps at
 _Avoid_: Bump reps, increase-at, progression threshold
 
 **Progression Style**:
-User default for how overload ramps within and after a workout; snapshotted onto the Workout at start. **Straight Sets**: same weight for every working set in a block; finish bump if any set hit Target. **Progressive Overload**: when a working set hits Target, raise the next working set by 2.5 kg (Ask on rest or Auto); finish bump only if the **final** working set in the block was at the session’s top weight and hit Target.
-_Avoid_: Bump mode, bump when, progression preset
+Per-routine setting for how overload ramps within and after a workout; snapshotted onto the Workout at start. **Straight Sets**: same weight for every working set in a block; finish bump if any set hit Target. **Progressive Overload**: when a working set hits Target, raise the next working set by 2.5 kg (Ask on rest or Auto); finish bump only if the **final** working set in the block was at the session’s top weight and hit Target. Training keeps style + mid-block defaults that seed **new routines only** (edits do not rewrite existing routines).
+_Avoid_: Bump mode, bump when, progression preset, progression type
 
 **Mid-block bump**:
 Within **Progressive Overload**, the +2.5 kg step applied to the **next** working set after Target is hit on the current set. Prefill only — logged weight always wins. Does not update the routine until finish carry-forward / confirmed finish bump.

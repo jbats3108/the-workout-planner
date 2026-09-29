@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Settings;
 
+use App\Routines\Models\Routine;
 use App\Users\Enums\ProgressionStyle;
 use App\Users\Enums\ProgressiveMidBlock;
 use App\Users\Enums\WarmUpDefaultsScope;
@@ -193,6 +194,29 @@ class TrainingDefaultsTest extends TestCase
         $this->user->refresh();
         $this->assertSame(ProgressionStyle::ProgressiveOverload, $this->user->progression_style_default);
         $this->assertSame(ProgressiveMidBlock::Auto, $this->user->progressive_mid_block_default);
+    }
+
+    #[Test]
+    public function it_does_not_rewrite_existing_routines_when_saving_progression_defaults(): void
+    {
+        $routine = Routine::factory()->create([
+            'user_id' => $this->user->id,
+            'progression_style' => ProgressionStyle::StraightSets,
+            'progressive_mid_block' => ProgressiveMidBlock::Ask,
+        ]);
+
+        $this->actingAs($this->user)->put(route('training.update'), [
+            'warm_up_steps_default' => [
+                ['percent' => 40, 'reps' => 5],
+            ],
+            'warm_up_defaults_scope' => 'all_blocks',
+            'progression_style_default' => 'progressive_overload',
+            'progressive_mid_block_default' => 'auto',
+        ])->assertRedirect(route('training.edit'));
+
+        $routine->refresh();
+        $this->assertSame(ProgressionStyle::StraightSets, $routine->progression_style);
+        $this->assertSame(ProgressiveMidBlock::Ask, $routine->progressive_mid_block);
     }
 
     #[Test]

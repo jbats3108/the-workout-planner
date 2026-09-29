@@ -368,9 +368,11 @@ class WorkoutProgressionServiceTest extends TestCase
     ): array {
         $user = User::factory()->create([
             'achievement_floor_default' => $achievementFloor,
-            'progression_style_default' => $progressionStyle,
         ]);
-        $routine = Routine::factory()->create(['user_id' => $user->id]);
+        $routine = Routine::factory()->create([
+            'user_id' => $user->id,
+            'progression_style' => $progressionStyle,
+        ]);
         $block = RoutineBlock::create([
             'routine_id' => $routine->id,
             'position' => 1,

@@ -16,6 +16,8 @@ use App\Routines\Services\RoutineEditorService;
 use App\Shared\Enums\BlockType;
 use App\Shared\Enums\PrescriptionMode;
 use App\Shared\Enums\WarmUpWeightMode;
+use App\Users\Enums\ProgressionStyle;
+use App\Users\Enums\ProgressiveMidBlock;
 use App\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use InvalidArgumentException;
@@ -1076,6 +1078,48 @@ class RoutineEditorServiceTest extends TestCase
         ]));
 
         $this->assertSame(5, $result->deload_every_n);
+    }
+
+    #[Test]
+    public function sync_persists_progression_style_and_mid_block(): void
+    {
+        $routine = Routine::factory()->create([
+            'progression_style' => ProgressionStyle::StraightSets,
+            'progressive_mid_block' => ProgressiveMidBlock::Ask,
+        ]);
+        $exercise = Exercise::factory()->create();
+
+        $result = $this->service->sync($routine, SyncRoutineData::from([
+            'name' => 'Progressive',
+            'progression_style' => ProgressionStyle::ProgressiveOverload->value,
+            'progressive_mid_block' => ProgressiveMidBlock::Auto->value,
+            'blocks' => [
+                RoutineEditorPayload::block($exercise->id),
+            ],
+        ]));
+
+        $this->assertSame(ProgressionStyle::ProgressiveOverload, $result->progression_style);
+        $this->assertSame(ProgressiveMidBlock::Auto, $result->progressive_mid_block);
+    }
+
+    #[Test]
+    public function sync_keeps_existing_progression_style_when_omitted(): void
+    {
+        $routine = Routine::factory()->create([
+            'progression_style' => ProgressionStyle::ProgressiveOverload,
+            'progressive_mid_block' => ProgressiveMidBlock::Auto,
+        ]);
+        $exercise = Exercise::factory()->create();
+
+        $result = $this->service->sync($routine, SyncRoutineData::from([
+            'name' => 'Keep Progression',
+            'blocks' => [
+                RoutineEditorPayload::block($exercise->id),
+            ],
+        ]));
+
+        $this->assertSame(ProgressionStyle::ProgressiveOverload, $result->progression_style);
+        $this->assertSame(ProgressiveMidBlock::Auto, $result->progressive_mid_block);
     }
 
     #[Test]
