@@ -108,15 +108,16 @@ const toc = [
                 <p class="text-muted-foreground">
                     Open <strong class="text-foreground">Preferences</strong> before you build a lot of routines. The
                     <strong class="text-foreground">Exercise profiles</strong> section manages reusable Profile Details: Target, Floor, working Rest,
-                    and warm-up steps. The separate warm-up placement setting controls whether a selected profile’s ladder seeds every new exercise or
-                    only the first one.
+                    warm-up steps, and deload weight/reps factors. The separate warm-up placement setting controls whether a selected profile’s ladder
+                    seeds every new exercise or only the first one.
                 </p>
                 <p class="text-muted-foreground">
                     <strong class="text-foreground">Progression style</strong> controls mid-session ramping and finish bumps:
                     <strong class="text-foreground">Straight Sets</strong> keeps the same weight for every working set and offers a finish bump if any
                     set hit Target; <strong class="text-foreground">Progressive Overload</strong> can raise the next set by 2.5 kg when Target is hit
                     (ask on rest or auto) and offers a finish bump only when the final working set was at your session top weight and hit Target.
-                    Deload defaults and your bar/plate inventory live here too; the plate guide in Play uses that inventory.
+                    Deload Velocity (how often Dashboard soft-hints a Deload) and your bar/plate inventory live here too; the plate guide in Play uses
+                    that inventory. Weight and reps deload factors live on each Exercise Profile, not in Training defaults.
                 </p>
                 <p v-if="isSignedIn">
                     <Link :href="route('training.edit')" class="font-medium text-primary underline-offset-2 hover:underline">Open Preferences</Link>
@@ -133,13 +134,23 @@ const toc = [
                 <p class="text-muted-foreground">
                     A profile gives each exercise an exact <strong class="text-foreground">Target</strong>. Its
                     <strong class="text-foreground">Floor</strong> starts two reps lower, creating an effective Floor-to-Target range; you can
-                    explicitly override Floor when needed. Profiles also carry working Rest and a complete warm-up ladder. Warm-up steps can be a
-                    percent of working weight, your empty bar, or a fixed kg — useful when a 20&nbsp;kg bar does not suit a lift like deadlift.
+                    explicitly override Floor when needed. Profiles also carry working Rest, a complete warm-up ladder, and deload weight/reps
+                    factors. Warm-up steps can be a percent of working weight, your empty bar, or a fixed kg — useful when a 20&nbsp;kg bar does not
+                    suit a lift like deadlift.
                 </p>
                 <ul class="list-disc space-y-2 pl-6 text-muted-foreground">
-                    <li><BrandName class="mr-1" />Strength — Target 6, Floor 4, 3-minute working Rest; Warm-up bar×10, 50%×5, 75%×3, 90%×1.</li>
-                    <li><BrandName class="mr-1" />Hypertrophy — Target 10, Floor 8, 90-second working Rest; Warm-up 50%×10, 80%×5.</li>
-                    <li><BrandName class="mr-1" />Endurance — Target 17, Floor 15, 1-minute working Rest; Warm-up 50%×10, 75%×5.</li>
+                    <li>
+                        <BrandName class="mr-1" />Strength — Target 6, Floor 4, 3-minute working Rest; Deload 0.5× weight / 2× reps; Warm-up bar×10,
+                        50%×5, 75%×3, 90%×1.
+                    </li>
+                    <li>
+                        <BrandName class="mr-1" />Hypertrophy — Target 10, Floor 8, 90-second working Rest; Deload 0.5× weight / 1.5× reps; Warm-up
+                        50%×10, 80%×5.
+                    </li>
+                    <li>
+                        <BrandName class="mr-1" />Endurance — Target 17, Floor 15, 1-minute working Rest; Deload 0.5× weight / 1× reps; Warm-up
+                        50%×10, 75%×5.
+                    </li>
                 </ul>
                 <p class="text-muted-foreground">
                     In the routine editor, each exercise has a profile selector. Selecting a different profile copies its Profile Details into that
@@ -147,7 +158,8 @@ const toc = [
                     value makes that block or exercise
                     <strong class="text-foreground">Custom</strong>; saving those Profile Details as a profile is explicit. Use
                     <strong class="text-foreground">Cancel</strong> to discard in-session Customise edits and restore the previous profile values
-                    (nothing is written until you Save the routine).
+                    (nothing is written until you Save the routine). Deload weight/reps factors always follow the profile: changing them on the
+                    profile auto-updates every assigned exercise (no “Update routines” step for those fields).
                 </p>
                 <p class="text-muted-foreground">
                     Supersets can use a different profile for A and B. Their Target/Floor values are separate, but warm-ups and working Rest are
@@ -337,21 +349,23 @@ const toc = [
                 <h2 class="text-2xl font-bold tracking-tight">What a deload is</h2>
                 <p class="text-muted-foreground">
                     A <strong class="text-foreground">Deload</strong> is the same routine, started lighter — not a second programme. From the routine
-                    card you start <strong class="text-foreground">standard</strong> or Deload. Deload applies that routine’s
-                    <strong class="text-foreground">settings</strong> (a weight factor and a reps factor, the same for every lift) to the snapshot.
-                    Warm-ups are omitted; the working weights are already light.
+                    card you start <strong class="text-foreground">standard</strong> or Deload. Deload applies each exercise’s
+                    <strong class="text-foreground">profile deload factors</strong> (weight and reps multipliers from its Exercise Profile) to the
+                    snapshot, so Strength and Hypertrophy on the same routine can deload differently. Warm-ups are omitted; the working weights are
+                    already light.
                 </p>
                 <p class="text-muted-foreground">
-                    Preferences holds the defaults new routines copy. In the editor, above the exercise list, each routine can set its own factors and
+                    Edit those factors on the profile in Preferences (new Custom profiles start at 0.5× weight / 0.5× reps). Saving a profile
+                    auto-updates the factors on every assigned exercise. In the editor, above the exercise list, each routine can set
                     <strong class="text-foreground">Deload Velocity</strong> — how many finished standard sessions on that routine before Dashboard
-                    softly hints at a Deload. Set velocity to 0 to never hint (handy for rare or one-off routines). The hint is not a calendar and it
-                    does not start the session for you.
+                    softly hints at a Deload. Set velocity to 0 to never hint (handy for rare or one-off routines). Training keeps a velocity default
+                    for new routines. The hint is not a calendar and it does not start the session for you.
                 </p>
                 <p class="text-muted-foreground">
                     Optional <strong class="text-foreground">Deload Alternate</strong> on an exercise swaps in a different lift for Deload only, with
                     its own working weight and optional note used as-is (the weight factor does not scale that alternate). Prescribed reps still come
-                    from the primary via the profile settings. If an alternate is set, that lift’s Deload snapshot is singles — no dropsets. Finishing
-                    a Deload does not bump or carry-forward your usual working weights.
+                    from the primary via that exercise’s reps factor. If an alternate is set, that lift’s Deload snapshot is singles — no dropsets.
+                    Finishing a Deload does not bump or carry-forward your usual working weights.
                 </p>
             </section>
 
@@ -406,8 +420,9 @@ const toc = [
                     <li>
                         <p class="font-medium text-foreground">Deload start</p>
                         <p class="mt-1">
-                            Same routine, started lighter from the card. Deload settings scale weight and reps; optional alternate lift; no bump or
-                            carry-forward. See <a href="#deload" class="font-medium text-primary underline-offset-2 hover:underline">Deloads</a>.
+                            Same routine, started lighter from the card. Each exercise’s profile factors scale weight and reps; optional alternate
+                            lift; no bump or carry-forward. See
+                            <a href="#deload" class="font-medium text-primary underline-offset-2 hover:underline">Deloads</a>.
                         </p>
                     </li>
                     <li>
