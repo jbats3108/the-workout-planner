@@ -47,8 +47,8 @@ Public order matches `/beta-tester-faqs`, including recently added items.
 - **In-app product tour** — after the public `/tutorial` page; own grill
 - **PT mode** — new user type; client roster; personal + client routines; PT→client share (includes client switching / former account switcher) — grill: [PT mode](#grill-pt-mode) (parked until after solo-lifter queue)
 - **Exercise videos (PT)** — park until PT mode exists — grill: [Exercise videos](#grill-exercise-videos-pt)
-- **Progression type override per workout** — from Notion inbox
-- **Per profile deload recipe** — from Notion inbox
+- **Routine Progression Style** — per-routine style + mid-block; Training seeds new routines only — grill: [Routine Progression Style](#grill-routine-progression-style)
+- **Per-profile Deload factors** — weight/reps on Exercise Profile (auto-push); velocity stays on routine — grill: [Per-profile Deload factors](#grill-per-profile-deload-factors)
 
 **Solo-lifter queue (updated 2026-09-07):** shipped Swap A↔B, Do groups later (covers skip-block-and-come-back), Circuits. Next: Better History Edits → lbs → rack inventory → dropsets on supersets. Then Viewable Progression Data. PT / videos stay parked.
 
@@ -114,3 +114,41 @@ Triaged 2026-08-28. Source: Notion [121 Feedback](https://app.notion.com/p/3cae5
 - Attach to shared catalog exercise vs custom exercise vs routine block
 - Privacy, retention, delete on client unlink
 - MVP: embed external URL (YouTube/Vimeo) vs hosted upload
+
+## Grill: Routine Progression Style
+
+**Motivation:** Notion inbox “Progression type override per workout” — one Training default is too coarse; programmes differ (e.g. strength vs accessories).
+
+**Decided (2026-09-29):**
+
+- Own **Progression Style** + Progressive Overload **mid-block** (Ask/Auto) on the **Routine**; snapshot onto the Workout at start (same as today, but source is the routine).
+- Training keeps those two knobs as **seeds for new routines only** (edits do not rewrite existing routines).
+- Domain name stays **Progression Style** (not “progression type”).
+- Not a per-start chooser and not an edit of an already-snapshotted workout.
+
+**Open (implementation):**
+
+- Routine settings UI; migrate existing routines from each user’s Training defaults
+- `CONTEXT.md` / ADR only if the ownership shift needs a durable “why”
+
+## Grill: Per-profile Deload factors
+
+**Motivation:** Notion inbox “Per profile deload recipe” — Strength vs Hypertrophy should deload differently; today’s uniform per-routine factors cannot.
+
+**Decided (2026-09-29):**
+
+- **Weight + reps factors** live on the **Exercise Profile** and are **copied** onto each routine exercise (like Target/Floor). No hand-edit of those copies in the routine editor — profile is always authoritative for deload factors.
+- When a profile’s deload factors change, **auto-push** those fields to every routine exercise assigned that profile (leave Target/Floor/rest/warm-ups alone).
+- **Deload Velocity** stays **per-routine** (dashboard soft-suggest cadence).
+- Remove routine-level weight/reps factor editors and Training deload weight/reps defaults (Training keeps velocity + progression seeds).
+- New **Custom** profiles seed `0.5` weight / `0.5` reps.
+- **Presets:** weight `0.5` all; reps **Strength ×2**, **Hypertrophy ×1.5**, **Endurance ×1**.
+- Circuit / timed: apply weight factor; apply reps factor only when prescribed reps exist.
+- **Deload Alternate** unchanged (alternate weight as-is; recipe weight factor does not apply).
+- **Migration:** exercises on OVRLOAD **Presets** get that preset’s factors; all other exercises get a one-time copy of the old routine factors; then drop routine factor columns/UI.
+- Revises glossary “same factors for every exercise on the routine” when this ships.
+
+**Open (implementation):**
+
+- Profile + routine-exercise schema; snapshot reads per-exercise factors; outdated-copy UI ignores deload (auto-push path)
+- Tutorial / FAQ only if user-visible deload UX changes beyond internal factor source
