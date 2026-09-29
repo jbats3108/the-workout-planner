@@ -37,16 +37,12 @@ const step = ref<Step>('when');
 const isDeload = ref(false);
 const finishedAtLocal = ref('');
 const whenError = ref('');
-const blocks = ref<DraftBlock[]>(
-    buildDraftBlocks(props.form.blocks, false, props.form.deload_weight_factor, props.form.deload_reps_factor, props.plate_profile),
-);
+const blocks = ref<DraftBlock[]>(buildDraftBlocks(props.form.blocks, false, props.plate_profile));
 
 watch(isDeload, (deload) => {
     blocks.value = buildDraftBlocks(
         props.form.blocks.filter((block) => blocks.value.some((kept) => kept.position === block.position)),
         deload,
-        props.form.deload_weight_factor,
-        props.form.deload_reps_factor,
         props.plate_profile,
     ).map((fresh) => {
         const existing = blocks.value.find((block) => block.position === fresh.position);

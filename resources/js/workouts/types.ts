@@ -141,6 +141,8 @@ export type HistoricalCreateExercise = {
     deload_note?: string | null;
     prescription_mode?: 'reps' | 'duration';
     prescribed_duration_seconds?: number | null;
+    deload_weight_factor: number;
+    deload_reps_factor: number;
 };
 
 export type HistoricalCreateBlock = {
@@ -156,8 +158,8 @@ export type HistoricalCreateBlock = {
 export type HistoricalCreateForm = {
     routine_slug: string;
     routine_name: string;
-    deload_weight_factor: number;
-    deload_reps_factor: number;
+    deload_weight_factor?: number;
+    deload_reps_factor?: number;
     blocks: HistoricalCreateBlock[];
 };
 

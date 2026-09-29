@@ -28,6 +28,8 @@ const sampleBlocks: HistoricalCreateBlock[] = [
                 deload_working_weight_kg: null,
                 note: 'Pin 8',
                 deload_note: null,
+                deload_weight_factor: 0.9,
+                deload_reps_factor: 0.8,
             },
         ],
         working_set_count: 1,
@@ -49,14 +51,14 @@ const sampleBlocks: HistoricalCreateBlock[] = [
 
 describe('historicalCreate', () => {
     it('scales weights and reps for deload', () => {
-        const draft = buildDraftBlocks(sampleBlocks, true, 0.9, 0.8);
+        const draft = buildDraftBlocks(sampleBlocks, true);
         expect(draft[0]?.sets[0]?.weight_kg).toBe(90);
         expect(draft[0]?.sets[0]?.reps).toBe(4);
         expect(draft[0]?.sets[0]?.note).toBe('Pin 8');
     });
 
     it('adds and removes working rounds', () => {
-        const [block] = buildDraftBlocks(sampleBlocks, false, 1, 1);
+        const [block] = buildDraftBlocks(sampleBlocks, false);
         expect(block).toBeDefined();
         addWorkingRound(block!);
         expect(block!.working_set_count).toBe(2);
@@ -71,7 +73,7 @@ describe('historicalCreate', () => {
     });
 
     it('groups draft sets into rounds by set_index', () => {
-        const [block] = buildDraftBlocks(sampleBlocks, false, 1, 1);
+        const [block] = buildDraftBlocks(sampleBlocks, false);
         addWorkingRound(block!);
         const rounds = roundsForBlock(block!);
         expect(rounds).toHaveLength(2);
@@ -97,7 +99,7 @@ describe('historicalCreate', () => {
                 ],
             },
         ];
-        const [block] = buildDraftBlocks(withWarmUps, false, 1, 1);
+        const [block] = buildDraftBlocks(withWarmUps, false);
         expect(block!.warm_ups[0]?.weight_kg).toBe(40);
         block!.sets[0]!.weight_kg = 120;
         syncWarmUpWeights(block!);
@@ -121,7 +123,7 @@ describe('historicalCreate', () => {
                 ],
             },
         ];
-        const [block] = buildDraftBlocks(withBarWarmUp, false, 1, 1, plateProfile());
+        const [block] = buildDraftBlocks(withBarWarmUp, false, plateProfile());
         expect(block!.warm_ups[0]?.weight_kg).toBe(20);
     });
 
@@ -142,7 +144,7 @@ describe('historicalCreate', () => {
                 ],
             },
         ];
-        const [block] = buildDraftBlocks(withFixedWarmUp, false, 1, 1);
+        const [block] = buildDraftBlocks(withFixedWarmUp, false);
         expect(block!.warm_ups[0]?.weight_kg).toBe(60);
         block!.sets[0]!.weight_kg = 180;
         syncWarmUpWeights(block!);
@@ -166,9 +168,9 @@ describe('historicalCreate', () => {
                 ],
             },
         ];
-        const [block] = buildDraftBlocks(withWarmUps, true, 0.5, 1);
+        const [block] = buildDraftBlocks(withWarmUps, true);
         expect(block!.warm_ups).toEqual([]);
-        expect(block!.sets[0]?.weight_kg).toBe(50);
+        expect(block!.sets[0]?.weight_kg).toBe(90);
     });
 
     it('uses deload alternate name and weight as singles on deload drafts', () => {
@@ -186,6 +188,8 @@ describe('historicalCreate', () => {
                         deload_name: 'Goblet Squat',
                         deload_equipment: 'dumbbell',
                         deload_working_weight_kg: 40,
+                        deload_weight_factor: 0.5,
+                        deload_reps_factor: 0.5,
                     },
                 ],
                 working_set_count: 1,
@@ -203,7 +207,7 @@ describe('historicalCreate', () => {
                 warm_ups: [],
             },
         ];
-        const [block] = buildDraftBlocks(withAlternate, true, 0.5, 0.5);
+        const [block] = buildDraftBlocks(withAlternate, true);
         expect(block!.exercise_names).toEqual(['Goblet Squat']);
         expect(block!.sets[0]?.exercise_name).toBe('Goblet Squat');
         expect(block!.sets[0]?.is_dropset).toBe(false);
@@ -235,6 +239,8 @@ describe('historicalCreate', () => {
                         deload_equipment: null,
                         deload_working_weight_kg: null,
                         prescription_mode: 'reps',
+                        deload_weight_factor: 0.5,
+                        deload_reps_factor: 0.5,
                     },
                     {
                         position: 2,
@@ -247,6 +253,8 @@ describe('historicalCreate', () => {
                         deload_working_weight_kg: null,
                         prescription_mode: 'duration',
                         prescribed_duration_seconds: 45,
+                        deload_weight_factor: 0.5,
+                        deload_reps_factor: 0.5,
                     },
                     {
                         position: 3,
@@ -258,6 +266,8 @@ describe('historicalCreate', () => {
                         deload_equipment: null,
                         deload_working_weight_kg: null,
                         prescription_mode: 'reps',
+                        deload_weight_factor: 0.5,
+                        deload_reps_factor: 0.5,
                     },
                 ],
                 working_set_count: 1,
@@ -299,7 +309,7 @@ describe('historicalCreate', () => {
             },
         ];
 
-        const [draft] = buildDraftBlocks(circuitBlocks, false, 1, 1);
+        const [draft] = buildDraftBlocks(circuitBlocks, false);
         expect(draft).toBeDefined();
         expect(draft!.type).toBe('circuit');
         expect(blockTitle(draft!)).toBe('Push-up · Plank · Squat');

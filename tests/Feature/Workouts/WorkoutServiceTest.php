@@ -164,6 +164,52 @@ class WorkoutServiceTest extends TestCase
     }
 
     #[Test]
+    public function it_applies_per_exercise_deload_factors_on_the_same_routine(): void
+    {
+        $routine = Routine::factory()->create([
+            'deload_weight_factor' => 0.5,
+            'deload_reps_factor' => 0.5,
+        ]);
+        $block = RoutineBlock::create([
+            'routine_id' => $routine->id,
+            'position' => 1,
+            'is_superset' => true,
+        ]);
+        RoutineBlockExercise::create([
+            'routine_block_id' => $block->id,
+            'exercise_id' => Exercise::factory()->create()->id,
+            'position' => 1,
+            'working_weight_g' => 100_000,
+            'prescribed_reps' => 5,
+            'deload_weight_factor' => 0.5,
+            'deload_reps_factor' => 2.0,
+        ]);
+        RoutineBlockExercise::create([
+            'routine_block_id' => $block->id,
+            'exercise_id' => Exercise::factory()->create()->id,
+            'position' => 2,
+            'working_weight_g' => 80_000,
+            'prescribed_reps' => 10,
+            'deload_weight_factor' => 0.5,
+            'deload_reps_factor' => 1.5,
+        ]);
+        RoutineSetGroup::create([
+            'routine_block_id' => $block->id,
+            'type' => SetGroupType::Working,
+            'set_count' => 1,
+            'rest_seconds' => 90,
+        ]);
+
+        $workout = $this->workoutService->createWorkout($routine, WorkoutMode::Deload);
+        $exercises = $workout->blocks->first()->blockExercises->sortBy('position')->values();
+
+        $this->assertSame(50_000, $exercises[0]->working_weight_g);
+        $this->assertSame(10, $exercises[0]->prescribed_reps);
+        $this->assertSame(40_000, $exercises[1]->working_weight_g);
+        $this->assertSame(15, $exercises[1]->prescribed_reps);
+    }
+
+    #[Test]
     public function it_omits_warm_ups_when_starting_in_deload_mode(): void
     {
         $routine = Routine::factory()->create([
@@ -1003,6 +1049,8 @@ class WorkoutServiceTest extends TestCase
             'prescription_mode' => PrescriptionMode::Reps,
             'prescribed_reps' => 10,
             'working_weight_g' => 40000,
+            'deload_weight_factor' => 0.5,
+            'deload_reps_factor' => 0.5,
         ]);
         RoutineBlockExercise::create([
             'routine_block_id' => $block->id,
@@ -1011,6 +1059,8 @@ class WorkoutServiceTest extends TestCase
             'prescription_mode' => PrescriptionMode::Duration,
             'prescribed_duration_seconds' => 40,
             'working_weight_g' => 20000,
+            'deload_weight_factor' => 0.5,
+            'deload_reps_factor' => 0.5,
         ]);
         RoutineBlockExercise::create([
             'routine_block_id' => $block->id,
@@ -1019,6 +1069,8 @@ class WorkoutServiceTest extends TestCase
             'prescription_mode' => PrescriptionMode::Reps,
             'prescribed_reps' => 6,
             'working_weight_g' => 0,
+            'deload_weight_factor' => 0.5,
+            'deload_reps_factor' => 0.5,
         ]);
 
         RoutineSetGroup::create([

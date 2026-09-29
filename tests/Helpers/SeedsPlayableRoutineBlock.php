@@ -37,6 +37,8 @@ trait SeedsPlayableRoutineBlock
             'position' => 1,
             'working_weight_g' => $workingWeightG,
             'prescribed_reps' => $prescribedReps,
+            'deload_weight_factor' => $routine->deload_weight_factor,
+            'deload_reps_factor' => $routine->deload_reps_factor,
         ];
 
         if ($progressionTarget !== null) {

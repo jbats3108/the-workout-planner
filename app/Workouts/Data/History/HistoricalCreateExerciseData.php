@@ -24,6 +24,8 @@ class HistoricalCreateExerciseData extends Data
         public readonly ?string $deloadNote = null,
         public readonly string $prescriptionMode = 'reps',
         public readonly ?int $prescribedDurationSeconds = null,
+        public readonly float $deloadWeightFactor = 0.5,
+        public readonly float $deloadRepsFactor = 0.5,
     ) {}
 
     public static function fromRoutineBlockExercise(RoutineBlockExercise $exercise): self
@@ -45,6 +47,8 @@ class HistoricalCreateExerciseData extends Data
             deloadNote: $hasAlternate ? $exercise->deload_note : null,
             prescriptionMode: $exercise->prescription_mode?->value ?? (string) ($exercise->prescription_mode ?? 'reps'),
             prescribedDurationSeconds: $exercise->prescribed_duration_seconds,
+            deloadWeightFactor: (float) $exercise->deload_weight_factor,
+            deloadRepsFactor: (float) $exercise->deload_reps_factor,
         );
     }
 }
