@@ -34,6 +34,8 @@ export type ExerciseProfileOption = {
     floor_override: number | null;
     working_rest_seconds: number;
     warm_up_steps: ExerciseProfileWarmUpStep[];
+    deload_weight_factor: number;
+    deload_reps_factor: number;
     recipe_fingerprint: string;
     exercise_fingerprint: string;
     shared_fingerprint: string;

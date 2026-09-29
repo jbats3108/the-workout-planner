@@ -48,7 +48,7 @@ Public order matches `/beta-tester-faqs`, including recently added items.
 - **PT mode** — new user type; client roster; personal + client routines; PT→client share (includes client switching / former account switcher) — grill: [PT mode](#grill-pt-mode) (parked until after solo-lifter queue)
 - **Exercise videos (PT)** — park until PT mode exists — grill: [Exercise videos](#grill-exercise-videos-pt)
 - **Routine Progression Style** — per-routine style + mid-block; Training seeds new routines only — grill: [Routine Progression Style](#grill-routine-progression-style)
-- **Per-profile Deload factors** — weight/reps on Exercise Profile (auto-push); velocity stays on routine — grill: [Per-profile Deload factors](#grill-per-profile-deload-factors)
+- ~~**Per-profile Deload factors**~~ — shipped (weight/reps on Exercise Profile with auto-push; velocity on routine)
 
 **Solo-lifter queue (updated 2026-09-07):** shipped Swap A↔B, Do groups later (covers skip-block-and-come-back), Circuits. Next: Better History Edits → lbs → rack inventory → dropsets on supersets. Then Viewable Progression Data. PT / videos stay parked.
 
@@ -130,25 +130,3 @@ Triaged 2026-08-28. Source: Notion [121 Feedback](https://app.notion.com/p/3cae5
 
 - Routine settings UI; migrate existing routines from each user’s Training defaults
 - `CONTEXT.md` / ADR only if the ownership shift needs a durable “why”
-
-## Grill: Per-profile Deload factors
-
-**Motivation:** Notion inbox “Per profile deload recipe” — Strength vs Hypertrophy should deload differently; today’s uniform per-routine factors cannot.
-
-**Decided (2026-09-29):**
-
-- **Weight + reps factors** live on the **Exercise Profile** and are **copied** onto each routine exercise (like Target/Floor). No hand-edit of those copies in the routine editor — profile is always authoritative for deload factors.
-- When a profile’s deload factors change, **auto-push** those fields to every routine exercise assigned that profile (leave Target/Floor/rest/warm-ups alone).
-- **Deload Velocity** stays **per-routine** (dashboard soft-suggest cadence).
-- Remove routine-level weight/reps factor editors and Training deload weight/reps defaults (Training keeps velocity + progression seeds).
-- New **Custom** profiles seed `0.5` weight / `0.5` reps.
-- **Presets:** weight `0.5` all; reps **Strength ×2**, **Hypertrophy ×1.5**, **Endurance ×1**.
-- Circuit / timed: apply weight factor; apply reps factor only when prescribed reps exist.
-- **Deload Alternate** unchanged (alternate weight as-is; recipe weight factor does not apply).
-- **Migration:** exercises on OVRLOAD **Presets** get that preset’s factors; all other exercises get a one-time copy of the old routine factors; then drop routine factor columns/UI.
-- Revises glossary “same factors for every exercise on the routine” when this ships.
-
-**Open (implementation):**
-
-- Profile + routine-exercise schema; snapshot reads per-exercise factors; outdated-copy UI ignores deload (auto-push path)
-- Tutorial / FAQ only if user-visible deload UX changes beyond internal factor source

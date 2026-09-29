@@ -23,6 +23,8 @@ class AdminExerciseProfileData extends Data
         public readonly ?int $floorOverride,
         public readonly int $workingRestSeconds,
         public readonly array $warmUpSteps,
+        public readonly float $deloadWeightFactor,
+        public readonly float $deloadRepsFactor,
         public readonly string $displayName,
     ) {}
 
@@ -38,6 +40,8 @@ class AdminExerciseProfileData extends Data
             floorOverride: $profile->floor_override,
             workingRestSeconds: $profile->working_rest_seconds,
             warmUpSteps: $profile->warmUpStepList(),
+            deloadWeightFactor: (float) $profile->deload_weight_factor,
+            deloadRepsFactor: (float) $profile->deload_reps_factor,
             displayName: $profile->displayName(),
         );
     }

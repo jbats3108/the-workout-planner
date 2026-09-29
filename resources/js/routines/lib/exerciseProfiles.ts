@@ -28,6 +28,8 @@ export function normalizeExerciseForEditor(exercise: BlockExercise): BlockExerci
         exercise_profile_id: exercise.exercise_profile_id ?? null,
         exercise_profile_fingerprint: exercise.exercise_profile_fingerprint ?? null,
         floor_is_derived: exercise.floor_is_derived ?? null,
+        deload_weight_factor: exercise.deload_weight_factor ?? 0.5,
+        deload_reps_factor: exercise.deload_reps_factor ?? 0.5,
     };
 
     if (normalized.floor_is_derived === true) {

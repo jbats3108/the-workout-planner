@@ -146,6 +146,8 @@ class ExerciseProfileService
                 'floor_override' => $recipe->floorOverride,
                 'working_rest_seconds' => $recipe->workingRestSeconds,
                 'warm_up_steps' => $recipe->warmUpSteps,
+                'deload_weight_factor' => $data->deloadWeightFactor,
+                'deload_reps_factor' => $data->deloadRepsFactor,
                 'recipe_fingerprint' => $recipe->fingerprint(),
                 'published_at' => now(),
             ]);
@@ -167,10 +169,15 @@ class ExerciseProfileService
                 'floor_override' => $recipe->floorOverride,
                 'working_rest_seconds' => $recipe->workingRestSeconds,
                 'warm_up_steps' => $recipe->warmUpSteps,
+                'deload_weight_factor' => $data->deloadWeightFactor,
+                'deload_reps_factor' => $data->deloadRepsFactor,
                 'recipe_fingerprint' => $recipe->fingerprint(),
             ]);
 
-            return $profile->fresh() ?? $profile;
+            $fresh = $profile->fresh() ?? $profile;
+            $this->assignments->pushDeloadFactors($fresh);
+
+            return $fresh;
         });
     }
 

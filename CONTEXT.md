@@ -42,7 +42,7 @@ A named movement in the library. Either shared (master catalog) or owned by a us
 _Avoid_: Movement, lift, catalog exercise (as a separate type)
 
 **Exercise Profile**:
-A reusable training recipe for an exercise or block: an exact Target, an effective Floor, working Rest, and an ordered warm-up ladder. Applying one copies its values into the routine; it is not part of Workout history.
+A reusable training recipe for an exercise or block: an exact Target, an effective Floor, working Rest, an ordered warm-up ladder, and deload weight/reps factors. Applying one copies its values into the routine; Target/Floor/rest/warm-ups are not part of Workout history. Deload factors are also copied onto each routine exercise and **auto-pushed** when the profile’s factors change.
 _Avoid_: Scheme, programming style
 
 **Preset**:
@@ -62,7 +62,7 @@ The Exercise Profile selected for a Routine and used to seed new blocks. Existin
 _Avoid_: Live profile link
 
 **Outdated Profile Copy**:
-A routine exercise or block that still contains values copied from an earlier version of its Exercise Profile. It can be explicitly updated; a Custom override is not updated automatically.
+A routine exercise or block that still contains Target/Floor/rest/warm-up values copied from an earlier version of its Exercise Profile. It can be explicitly updated; a Custom override is not updated automatically. Deload weight/reps factors are **not** part of outdated detection — they auto-push on profile save.
 _Avoid_: Stale workout, old session
 
 **Workout**:
@@ -100,19 +100,19 @@ A durable record that a confirmed **Bump** was applied from a specific finished 
 _Avoid_: Bump event, progression audit, PR log
 
 **Deload Recipe**:
-Per-routine uniform factors (weight and reps) plus **Deload Velocity**, applied when starting in deload mode / deciding when to soft-suggest Deload. Same factors for every exercise on the routine. New routines seed from the user’s Training deload defaults.
+Per-exercise weight and reps factors (copied from the **Exercise Profile**, auto-pushed when that profile’s factors change) plus per-routine **Deload Velocity**. Factors apply when starting in deload mode; velocity decides when to soft-suggest Deload. Different exercises on the same routine can deload differently via their profiles.
 _Avoid_: Recovery recipe, easy recipe
 
 **Deload Velocity**:
-How many finished standard workouts on this routine before the dashboard soft-suggests Deload. Part of the **Deload Recipe**. `0` means never suggest. Independent per routine so rares/one-offs can opt out.
+How many finished standard workouts on this routine before the dashboard soft-suggests Deload. Part of the **Deload Recipe**, owned by the routine (not the profile). `0` means never suggest. Independent per routine so rares/one-offs can opt out. Training keeps a velocity default for new routines.
 _Avoid_: Deload schedule, deload cadence (as a calendar), deload frequency (as weeks)
 
 **Deload Mode**:
-A way to start a workout that applies the routine’s deload recipe to the snapshot. Omits warm-up Set Groups (and warm-up setup) from the snapshot — deload working weights are already light. Deload workouts do not carry-forward or bump the routine’s usual working weights.
+A way to start a workout that applies each exercise’s copied deload factors (and the routine’s velocity context) to the snapshot. Omits warm-up Set Groups (and warm-up setup) from the snapshot — deload working weights are already light. Deload workouts do not carry-forward or bump the routine’s usual working weights.
 _Avoid_: Easy mode, recovery mode, normal mode (use **standard**)
 
 **Deload Alternate**:
-Optional replacement **Exercise** plus its own **Working Weight** on a routine block exercise, used only when starting (or historically logging) in **Deload Mode**. That working weight is used as-is (the **Deload Recipe** weight factor does not apply). Prescribed reps still come from the primary via the recipe’s reps factor. When set, that exercise’s Deload snapshot is **Singles** only (no **Dropset** segments).
+Optional replacement **Exercise** plus its own **Working Weight** on a routine block exercise, used only when starting (or historically logging) in **Deload Mode**. That working weight is used as-is (the exercise’s deload weight factor does not apply). Prescribed reps still come from the primary via that exercise’s reps factor. When set, that exercise’s Deload snapshot is **Singles** only (no **Dropset** segments).
 _Avoid_: Swap exercise, deload substitute, recovery lift
 
 ## Pauses

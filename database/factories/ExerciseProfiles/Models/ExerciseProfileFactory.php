@@ -44,6 +44,8 @@ class ExerciseProfileFactory extends Factory
             'floor_override' => $recipe->floorOverride,
             'working_rest_seconds' => $recipe->workingRestSeconds,
             'warm_up_steps' => $recipe->warmUpSteps,
+            'deload_weight_factor' => 0.5,
+            'deload_reps_factor' => 0.5,
             'recipe_fingerprint' => $recipe->fingerprint(),
             'published_at' => now(),
         ];

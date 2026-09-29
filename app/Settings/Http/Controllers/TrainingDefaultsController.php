@@ -32,8 +32,6 @@ class TrainingDefaultsController extends Controller
             'progression_target_default' => $user->resolvedDefaultTargetReps(),
             'progression_style_default' => ($user->progression_style_default ?? ProgressionStyle::StraightSets)->value,
             'progressive_mid_block_default' => ($user->progressive_mid_block_default ?? ProgressiveMidBlock::Ask)->value,
-            'deload_weight_factor_default' => (float) $user->deload_weight_factor_default,
-            'deload_reps_factor_default' => (float) $user->deload_reps_factor_default,
             'deload_every_n_default' => (int) $user->deload_every_n_default,
             'plate_profile' => $profiles->profilePayloadFor($user),
             'exercise_profiles' => $exerciseProfiles->pageDataFor($user)->toArray(),
@@ -70,8 +68,6 @@ class TrainingDefaultsController extends Controller
         $user->progression_target_default = $data->progressionTargetDefault;
         $user->progression_style_default = $data->progressionStyleDefault;
         $user->progressive_mid_block_default = $data->progressiveMidBlockDefault;
-        $user->deload_weight_factor_default = $data->deloadWeightFactorDefault;
-        $user->deload_reps_factor_default = $data->deloadRepsFactorDefault;
         $user->deload_every_n_default = $data->deloadEveryNDefault;
         $user->save();
 

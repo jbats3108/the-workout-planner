@@ -124,19 +124,11 @@ function warmUpFromRecipe(
     };
 }
 
-export function buildDraftBlocks(
-    blocks: HistoricalCreateBlock[],
-    deload: boolean,
-    weightFactor: number,
-    repsFactor: number,
-    plateProfile?: PlateProfile | null,
-): DraftBlock[] {
-    const w = deload ? weightFactor : 1;
-    const r = deload ? repsFactor : 1;
+export function buildDraftBlocks(blocks: HistoricalCreateBlock[], deload: boolean, plateProfile?: PlateProfile | null): DraftBlock[] {
     const barKg = defaultBarKg(plateProfile);
 
     return blocks.map((block) => {
-        const sets = block.working_sets.map((set) => scaleSet(set, block, deload, w, r));
+        const sets = block.working_sets.map((set) => scaleSet(set, block, deload));
         const draft: DraftBlock = {
             position: block.position,
             is_superset: block.is_superset,
@@ -159,8 +151,10 @@ export function buildDraftBlocks(
     });
 }
 
-function scaleSet(set: HistoricalCreateSet, block: HistoricalCreateBlock, deload: boolean, weightFactor: number, repsFactor: number): DraftSet {
+function scaleSet(set: HistoricalCreateSet, block: HistoricalCreateBlock, deload: boolean): DraftSet {
     const exercise = block.exercises.find((row) => row.position === set.exercise_position);
+    const weightFactor = deload ? (exercise?.deload_weight_factor ?? 0.5) : 1;
+    const repsFactor = deload ? (exercise?.deload_reps_factor ?? 0.5) : 1;
 
     if (deload && exercise != null && exercise.deload_name != null && exercise.deload_working_weight_kg != null) {
         return {

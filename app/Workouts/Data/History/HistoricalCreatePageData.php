@@ -19,8 +19,6 @@ class HistoricalCreatePageData extends Data
     public function __construct(
         public readonly string $routineSlug,
         public readonly string $routineName,
-        public readonly float $deloadWeightFactor,
-        public readonly float $deloadRepsFactor,
         #[DataCollectionOf(HistoricalCreateBlockData::class)]
         public readonly DataCollection $blocks,
     ) {}
@@ -37,8 +35,6 @@ class HistoricalCreatePageData extends Data
         return new self(
             routineSlug: $routine->slug,
             routineName: $routine->name,
-            deloadWeightFactor: (float) $routine->deload_weight_factor,
-            deloadRepsFactor: (float) $routine->deload_reps_factor,
             blocks: HistoricalCreateBlockData::collect($blocks, DataCollection::class),
         );
     }

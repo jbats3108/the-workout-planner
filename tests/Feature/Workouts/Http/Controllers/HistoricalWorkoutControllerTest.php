@@ -282,11 +282,14 @@ class HistoricalWorkoutControllerTest extends TestCase
             'achievement_floor_default' => 4,
         ]);
 
-        $routine = Routine::factory()->withUser($this->user)->create([
-            'deload_weight_factor' => 0.9,
-            'deload_reps_factor' => 1.0,
-        ]);
-        $this->seedPlayableRoutineBlock($routine, workingWeightG: 80000, prescribedReps: 6);
+        $routine = Routine::factory()->withUser($this->user)->create();
+        $this->seedPlayableRoutineBlock(
+            $routine,
+            workingWeightG: 80000,
+            prescribedReps: 6,
+            deloadWeightFactor: 0.9,
+            deloadRepsFactor: 1.0,
+        );
 
         $response = $this->actingAs($this->user)
             ->post(route('history.store', $routine), [

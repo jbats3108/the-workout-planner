@@ -61,8 +61,6 @@ class UpdateRoutineControllerTest extends TestCase
 
         $this->actingAs($this->user)->put(route('routines.update', $routine), [
             'name' => 'New Name',
-            'deload_weight_factor' => 0.5,
-            'deload_reps_factor' => 2,
             'blocks' => [
                 RoutineEditorPayload::block($exercise->id, [
                     'working_weight_kg' => 80,
@@ -251,8 +249,6 @@ class UpdateRoutineControllerTest extends TestCase
 
         $this->actingAs($this->user)->put(route('routines.update', $routine), [
             'name' => 'Zero Rest',
-            'deload_weight_factor' => 0.5,
-            'deload_reps_factor' => 2,
             'blocks' => [
                 RoutineEditorPayload::block($exercise->id, [
                     'working_weight_kg' => 80,
@@ -295,8 +291,6 @@ class UpdateRoutineControllerTest extends TestCase
 
         $this->actingAs($this->user)->put(route('routines.update', $routine), [
             'name' => 'Progression Overrides',
-            'deload_weight_factor' => 0.9,
-            'deload_reps_factor' => 1,
             'blocks' => [
                 RoutineEditorPayload::block($exercise->id, [
                     'working_weight_kg' => 80,
@@ -322,8 +316,6 @@ class UpdateRoutineControllerTest extends TestCase
 
         $this->actingAs($this->user)->put(route('routines.update', $routine), [
             'name' => 'With Deload Alternate',
-            'deload_weight_factor' => 0.5,
-            'deload_reps_factor' => 2,
             'blocks' => [
                 RoutineEditorPayload::block($primary->id, [
                     'working_weight_kg' => 100,
@@ -713,8 +705,6 @@ class UpdateRoutineControllerTest extends TestCase
 
         $this->actingAs($this->user)->put(route('routines.update', $routine), [
             'name' => 'Circuit Test Routine',
-            'deload_weight_factor' => 0.7,
-            'deload_reps_factor' => 1.5,
             'blocks' => [
                 RoutineEditorPayload::circuitBlock([
                     ['exercise_id' => $exA->id, 'working_weight_kg' => 20, 'prescription_mode' => 'reps', 'prescribed_reps' => 12],

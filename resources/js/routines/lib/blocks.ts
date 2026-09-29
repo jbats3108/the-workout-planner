@@ -18,6 +18,8 @@ export function emptyExercise(
         prescribed_duration_seconds: prescriptionMode === 'duration' ? (prescribedDurationSeconds ?? 30) : null,
         achievement_floor: null,
         progression_target: null,
+        deload_weight_factor: 0.5,
+        deload_reps_factor: 0.5,
         deload_exercise_id: null,
         deload_working_weight_kg: null,
     };

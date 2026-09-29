@@ -26,8 +26,6 @@ class StoreRoutineController extends Controller
             'user_id' => $request->user->id,
             'name' => $request->name,
             'default_exercise_profile_id' => $profile->id,
-            'deload_weight_factor' => $request->deloadWeightFactor ?? (float) $request->user->deload_weight_factor_default,
-            'deload_reps_factor' => $request->deloadRepsFactor ?? (float) $request->user->deload_reps_factor_default,
             'deload_every_n' => $request->deloadEveryN ?? (int) $request->user->deload_every_n_default,
         ]);
 

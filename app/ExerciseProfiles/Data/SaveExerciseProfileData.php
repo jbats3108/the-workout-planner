@@ -2,6 +2,8 @@
 
 namespace App\ExerciseProfiles\Data;
 
+use App\Shared\Data\Validation\DeloadRepsFactor;
+use App\Shared\Data\Validation\DeloadWeightFactor;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Attributes\Validation\Max;
@@ -29,6 +31,12 @@ class SaveExerciseProfileData extends Data
 
         #[Min(0), Max(3600)]
         public readonly int $workingRestSeconds = 120,
+
+        #[DeloadWeightFactor]
+        public readonly float $deloadWeightFactor = 0.5,
+
+        #[DeloadRepsFactor]
+        public readonly float $deloadRepsFactor = 0.5,
 
         #[DataCollectionOf(ExerciseProfileWarmUpStepData::class)]
         public readonly ?DataCollection $warmUpSteps = null,

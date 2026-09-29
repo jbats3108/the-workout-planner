@@ -32,6 +32,8 @@ const strength: ExerciseProfileOption = {
         { mode: 'percent', percent: 75, reps: 3 },
         { mode: 'percent', percent: 90, reps: 1 },
     ],
+    deload_weight_factor: 0.5,
+    deload_reps_factor: 2,
     recipe_fingerprint: 'recipe-strength',
     exercise_fingerprint: 'exercise-strength',
     shared_fingerprint: 'shared-strength',
@@ -53,6 +55,8 @@ const hypertrophy: ExerciseProfileOption = {
         { percent: 50, reps: 10 },
         { percent: 80, reps: 5 },
     ],
+    deload_weight_factor: 0.5,
+    deload_reps_factor: 1.5,
     recipe_fingerprint: 'recipe-hypertrophy',
     exercise_fingerprint: 'exercise-hypertrophy',
     shared_fingerprint: 'shared-hypertrophy',
@@ -76,6 +80,8 @@ describe('exercise profile helpers', () => {
             achievement_floor: null,
             exercise_profile_id: 1,
             exercise_profile_fingerprint: 'recipe-strength',
+            deload_weight_factor: 0.5,
+            deload_reps_factor: 2,
         });
         expect(current.working.rest_seconds).toBe(180);
         expect(current.shared_profile_id).toBe(1);
@@ -136,6 +142,8 @@ describe('exercise profile helpers', () => {
             achievement_floor: null,
             exercise_profile_id: 2,
             exercise_profile_fingerprint: 'exercise-hypertrophy',
+            deload_weight_factor: 0.5,
+            deload_reps_factor: 1.5,
         });
         expect(current.shared_profile_id).toBe(1);
         expect(current.working.rest_seconds).toBe(120);

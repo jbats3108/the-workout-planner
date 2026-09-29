@@ -51,8 +51,6 @@ final readonly class WorkoutSnapshotService
         ]);
 
         $isDeload = $mode === WorkoutMode::Deload;
-        $weightFactor = $isDeload ? (float) $routine->deload_weight_factor : 1.0;
-        $repsFactor = $isDeload ? (float) $routine->deload_reps_factor : 1.0;
 
         $blocks = $routine->blocks;
         if ($routineBlockPositions !== null) {
@@ -68,8 +66,6 @@ final readonly class WorkoutSnapshotService
                 $routine,
                 $routineBlock,
                 $isDeload,
-                $weightFactor,
-                $repsFactor,
                 $workingSetCountByPosition,
             );
         }
@@ -83,8 +79,6 @@ final readonly class WorkoutSnapshotService
         Routine $routine,
         RoutineBlock $routineBlock,
         bool $isDeload,
-        float $weightFactor,
-        float $repsFactor,
         array $workingSetCountByPosition,
     ): void {
         $isCircuit = $routineBlock->isCircuit();
@@ -100,14 +94,12 @@ final readonly class WorkoutSnapshotService
             'has_setup_after_warm_up' => $isDeload ? false : $routineBlock->has_setup_after_warm_up,
         ]);
 
-        $skipDropsetsByWorkoutExerciseId = $this->snapshotBlockExercises(
+        [$skipDropsetsByWorkoutExerciseId, $weightFactorByWorkoutExerciseId] = $this->snapshotBlockExercises(
             $workoutBlock,
             $routine,
             $routineBlock,
             $isDeload,
             $isCircuit,
-            $weightFactor,
-            $repsFactor,
         );
 
         $workoutBlock->load('blockExercises');
@@ -116,14 +108,14 @@ final readonly class WorkoutSnapshotService
             $workoutBlock,
             $routineBlock,
             $isDeload,
-            $weightFactor,
+            $weightFactorByWorkoutExerciseId,
             $workingSetCountByPosition,
             $skipDropsetsByWorkoutExerciseId,
         );
     }
 
     /**
-     * @return array<int, true>
+     * @return array{0: array<int, true>, 1: array<int, float>}
      */
     private function snapshotBlockExercises(
         WorkoutBlock $workoutBlock,
@@ -131,13 +123,16 @@ final readonly class WorkoutSnapshotService
         RoutineBlock $routineBlock,
         bool $isDeload,
         bool $isCircuit,
-        float $weightFactor,
-        float $repsFactor,
     ): array {
         /** @var array<int, true> $skipDropsetsByWorkoutExerciseId */
         $skipDropsetsByWorkoutExerciseId = [];
+        /** @var array<int, float> $weightFactorByWorkoutExerciseId */
+        $weightFactorByWorkoutExerciseId = [];
 
         foreach ($routineBlock->blockExercises as $routineBlockExercise) {
+            $weightFactor = $isDeload ? (float) $routineBlockExercise->deload_weight_factor : 1.0;
+            $repsFactor = $isDeload ? (float) $routineBlockExercise->deload_reps_factor : 1.0;
+
             $useAlternate = $isDeload && $routineBlockExercise->hasDeloadAlternate();
             $sourceExercise = $useAlternate
                 ? $routineBlockExercise->deloadExercise
@@ -160,7 +155,7 @@ final readonly class WorkoutSnapshotService
                 ? null
                 : $routineBlockExercise->prescribed_reps;
 
-            $prescribedReps = $isTimed
+            $prescribedReps = $isTimed || $routineBlockExercise->prescribed_reps === null
                 ? null
                 : max(1, (int) round($routineBlockExercise->prescribed_reps * $repsFactor));
 
@@ -181,12 +176,14 @@ final readonly class WorkoutSnapshotService
                 'progression_target' => $progressionTarget,
             ]);
 
+            $weightFactorByWorkoutExerciseId[$workoutBlockExercise->id] = $weightFactor;
+
             if ($useAlternate) {
                 $skipDropsetsByWorkoutExerciseId[$workoutBlockExercise->id] = true;
             }
         }
 
-        return $skipDropsetsByWorkoutExerciseId;
+        return [$skipDropsetsByWorkoutExerciseId, $weightFactorByWorkoutExerciseId];
     }
 
     private static function normalizeNote(?string $note): ?string
@@ -199,12 +196,13 @@ final readonly class WorkoutSnapshotService
     /**
      * @param  array<int, int>  $workingSetCountByPosition
      * @param  array<int, true>  $skipDropsetsByWorkoutExerciseId
+     * @param  array<int, float>  $weightFactorByWorkoutExerciseId
      */
     private function snapshotBlockSetGroups(
         WorkoutBlock $workoutBlock,
         RoutineBlock $routineBlock,
         bool $isDeload,
-        float $weightFactor,
+        array $weightFactorByWorkoutExerciseId,
         array $workingSetCountByPosition,
         array $skipDropsetsByWorkoutExerciseId,
     ): void {
@@ -245,7 +243,7 @@ final readonly class WorkoutSnapshotService
                 $workoutSetGroup,
                 $routineSetGroup,
                 $setCount,
-                $weightFactor,
+                $weightFactorByWorkoutExerciseId,
                 $skipDropsetsByWorkoutExerciseId,
             );
         }
@@ -253,13 +251,14 @@ final readonly class WorkoutSnapshotService
 
     /**
      * @param  array<int, true>  $skipDropsetsByWorkoutExerciseId
+     * @param  array<int, float>  $weightFactorByWorkoutExerciseId
      */
     private function snapshotSetGroupSets(
         WorkoutBlock $workoutBlock,
         WorkoutSetGroup $workoutSetGroup,
         RoutineSetGroup $routineSetGroup,
         int $setCount,
-        float $weightFactor,
+        array $weightFactorByWorkoutExerciseId,
         array $skipDropsetsByWorkoutExerciseId,
     ): void {
         $segmentsByIndex = $routineSetGroup->dropsetSegments
@@ -283,6 +282,8 @@ final readonly class WorkoutSnapshotService
                 ) {
                     continue;
                 }
+
+                $weightFactor = $weightFactorByWorkoutExerciseId[$workoutBlockExercise->id] ?? 1.0;
 
                 foreach ($recipeSegments as $segmentIndex => $recipeSegment) {
                     WorkoutSetSegment::create([

@@ -60,5 +60,7 @@ export type AdminExerciseProfile = {
     floor_override: number | null;
     working_rest_seconds: number;
     warm_up_steps: ExerciseProfileWarmUpStep[];
+    deload_weight_factor: number;
+    deload_reps_factor: number;
     display_name: string;
 };

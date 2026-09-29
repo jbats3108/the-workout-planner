@@ -59,11 +59,9 @@ class StoreRoutineControllerTest extends TestCase
     }
 
     #[Test]
-    public function it_seeds_deload_settings_from_user_training_defaults(): void
+    public function it_seeds_deload_every_n_from_user_training_defaults(): void
     {
         $this->user->update([
-            'deload_weight_factor_default' => 0.7,
-            'deload_reps_factor_default' => 1.25,
             'deload_every_n_default' => 4,
         ]);
 
@@ -74,8 +72,6 @@ class StoreRoutineControllerTest extends TestCase
 
         $routine = Routine::query()->where('name', 'From Defaults')->first();
         $this->assertNotNull($routine);
-        $this->assertSame('0.700', (string) $routine->deload_weight_factor);
-        $this->assertSame('1.250', (string) $routine->deload_reps_factor);
         $this->assertSame(4, $routine->deload_every_n);
     }
 
@@ -93,19 +89,9 @@ class StoreRoutineControllerTest extends TestCase
     }
 
     #[Test]
-    public function it_rejects_out_of_range_deload_factors(): void
+    public function it_rejects_out_of_range_deload_every_n(): void
     {
         $before = Routine::query()->count();
-
-        $this->actingAs($this->user)->post(route('routines.store'), [
-            'name' => 'Test Routine',
-            'deload_weight_factor' => 5.1,
-        ])->assertSessionHasErrors('deload_weight_factor');
-
-        $this->actingAs($this->user)->post(route('routines.store'), [
-            'name' => 'Test Routine',
-            'deload_reps_factor' => 10.1,
-        ])->assertSessionHasErrors('deload_reps_factor');
 
         $this->actingAs($this->user)->post(route('routines.store'), [
             'name' => 'Test Routine',

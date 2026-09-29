@@ -24,8 +24,6 @@ class RoutineFactory extends Factory
             'name' => $name,
             'slug' => Str::slug($name).'-'.$this->faker->unique()->numerify('####'),
             'user_id' => User::factory(),
-            'deload_weight_factor' => 0.5,
-            'deload_reps_factor' => 2,
             'deload_every_n' => 3,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),

@@ -55,8 +55,6 @@ class UserDataExporterTest extends TestCase
             'progression_target_default',
             'progression_style_default',
             'progressive_mid_block_default',
-            'deload_weight_factor_default',
-            'deload_reps_factor_default',
             'deload_every_n_default',
             'default_exercise_profile_id',
             'warm_up_steps_default',

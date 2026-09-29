@@ -4,6 +4,8 @@ namespace App\Routines\Data\Editor;
 
 use App\ExerciseProfiles\Models\ExerciseProfile;
 use App\Exercises\Models\Exercise;
+use App\Shared\Data\Validation\DeloadRepsFactor;
+use App\Shared\Data\Validation\DeloadWeightFactor;
 use App\Shared\Enums\PrescriptionMode;
 use App\Shared\Support\Weight;
 use Spatie\LaravelData\Attributes\MapName;
@@ -50,6 +52,12 @@ class SyncBlockExerciseData extends Data
         public readonly ?int $exerciseProfileId = null,
 
         public readonly ?string $exerciseProfileFingerprint = null,
+
+        #[Nullable, DeloadWeightFactor]
+        public readonly ?float $deloadWeightFactor = null,
+
+        #[Nullable, DeloadRepsFactor]
+        public readonly ?float $deloadRepsFactor = null,
 
         #[Nullable, Exists(Exercise::class, 'id'), Different('exercise_id'), RequiredWith('deload_working_weight_kg')]
         public readonly ?int $deloadExerciseId = null,

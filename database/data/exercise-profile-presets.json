@@ -5,6 +5,8 @@
     "target_reps": 6,
     "floor_override": null,
     "working_rest_seconds": 180,
+    "deload_weight_factor": 0.5,
+    "deload_reps_factor": 2,
     "warm_up_steps": [
       { "mode": "bar", "reps": 10 },
       { "mode": "percent", "percent": 50, "reps": 5 },
@@ -18,6 +20,8 @@
     "target_reps": 10,
     "floor_override": null,
     "working_rest_seconds": 90,
+    "deload_weight_factor": 0.5,
+    "deload_reps_factor": 1.5,
     "warm_up_steps": [
       { "percent": 50, "reps": 10 },
       { "percent": 80, "reps": 5 }
@@ -29,6 +33,8 @@
     "target_reps": 17,
     "floor_override": null,
     "working_rest_seconds": 60,
+    "deload_weight_factor": 0.5,
+    "deload_reps_factor": 1,
     "warm_up_steps": [
       { "percent": 50, "reps": 10 },
       { "percent": 75, "reps": 5 }

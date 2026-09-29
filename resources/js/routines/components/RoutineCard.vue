@@ -36,7 +36,7 @@ const startTitle = (mode: 'standard' | 'deload') => {
         <div>
             <h3 class="text-lg font-semibold">{{ routine.name }}</h3>
             <p class="mt-1 font-mono text-xs text-muted-foreground">
-                Deload {{ routine.deload_weight_factor }}w / {{ routine.deload_reps_factor }}r
+                Deload {{ deloadEveryN > 0 ? `every ${deloadEveryN}` : 'no suggest' }}
                 <template v-if="hasFinishedDeload">
                     <span class="text-border">·</span>
                     <span :class="suggestDeload ? 'text-primary' : undefined">{{ standardsSinceDeload }} since deload</span>

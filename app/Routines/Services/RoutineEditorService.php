@@ -54,8 +54,6 @@ class RoutineEditorService
 
             $locked->update([
                 'name' => $data->name,
-                'deload_weight_factor' => $data->deloadWeightFactor ?? $locked->deload_weight_factor,
-                'deload_reps_factor' => $data->deloadRepsFactor ?? $locked->deload_reps_factor,
                 'deload_every_n' => $data->deloadEveryN ?? $locked->deload_every_n,
                 'default_exercise_profile_id' => $defaultProfile === null
                     ? $locked->default_exercise_profile_id
@@ -281,7 +279,35 @@ class RoutineEditorService
                 $exerciseAssignmentIsCurrent,
             ),
             'progression_target_override' => $isCircuit ? null : $exerciseData->progressionTarget,
+            'deload_weight_factor' => $this->deloadWeightFactorForStorage($exerciseProfile, $exerciseData),
+            'deload_reps_factor' => $this->deloadRepsFactorForStorage($exerciseProfile, $exerciseData),
         ]);
+    }
+
+    private function deloadWeightFactorForStorage(?ExerciseProfile $exerciseProfile, SyncBlockExerciseData $exerciseData): float
+    {
+        if ($exerciseData->deloadWeightFactor !== null) {
+            return $exerciseData->deloadWeightFactor;
+        }
+
+        if ($exerciseProfile !== null) {
+            return (float) $exerciseProfile->deload_weight_factor;
+        }
+
+        return 0.5;
+    }
+
+    private function deloadRepsFactorForStorage(?ExerciseProfile $exerciseProfile, SyncBlockExerciseData $exerciseData): float
+    {
+        if ($exerciseData->deloadRepsFactor !== null) {
+            return $exerciseData->deloadRepsFactor;
+        }
+
+        if ($exerciseProfile !== null) {
+            return (float) $exerciseProfile->deload_reps_factor;
+        }
+
+        return 0.5;
     }
 
     private static function normalizeNote(?string $note): ?string

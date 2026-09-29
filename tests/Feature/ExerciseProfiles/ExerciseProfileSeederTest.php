@@ -33,15 +33,35 @@ class ExerciseProfileSeederTest extends TestCase
         );
         $this->assertSame(
             [
-                ['target_reps' => 6, 'floor_override' => null, 'working_rest_seconds' => 180],
-                ['target_reps' => 10, 'floor_override' => null, 'working_rest_seconds' => 90],
-                ['target_reps' => 17, 'floor_override' => null, 'working_rest_seconds' => 60],
+                [
+                    'target_reps' => 6,
+                    'floor_override' => null,
+                    'working_rest_seconds' => 180,
+                    'deload_weight_factor' => 0.5,
+                    'deload_reps_factor' => 2,
+                ],
+                [
+                    'target_reps' => 10,
+                    'floor_override' => null,
+                    'working_rest_seconds' => 90,
+                    'deload_weight_factor' => 0.5,
+                    'deload_reps_factor' => 1.5,
+                ],
+                [
+                    'target_reps' => 17,
+                    'floor_override' => null,
+                    'working_rest_seconds' => 60,
+                    'deload_weight_factor' => 0.5,
+                    'deload_reps_factor' => 1,
+                ],
             ],
             array_map(
                 static fn (array $definition): array => [
                     'target_reps' => $definition['target_reps'],
                     'floor_override' => $definition['floor_override'],
                     'working_rest_seconds' => $definition['working_rest_seconds'],
+                    'deload_weight_factor' => $definition['deload_weight_factor'],
+                    'deload_reps_factor' => $definition['deload_reps_factor'],
                 ],
                 $definitions,
             ),

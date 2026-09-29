@@ -101,8 +101,6 @@ export function createRoutineEditor(props: EditRoutineProps) {
 
     const form = useForm({
         name: props.routine.name,
-        deload_weight_factor: props.routine.deload_weight_factor,
-        deload_reps_factor: props.routine.deload_reps_factor,
         deload_every_n: props.routine.deload_every_n,
         default_exercise_profile_id: coerceProfileId(props.routine.default_exercise_profile_id),
         expected_updated_at: props.routine.updated_at,
@@ -576,6 +574,8 @@ export function createRoutineEditor(props: EditRoutineProps) {
                             floor_is_derived: isCircuit || isTimed ? null : (exercise.floor_is_derived ?? null),
                             achievement_floor: isCircuit || isTimed ? null : achievementFloorForSave(exercise),
                             progression_target: null,
+                            deload_weight_factor: exercise.deload_weight_factor ?? 0.5,
+                            deload_reps_factor: exercise.deload_reps_factor ?? 0.5,
                             deload_exercise_id: isCircuit ? null : exercise.deload_exercise_id,
                             deload_working_weight_kg: isCircuit || exercise.deload_exercise_id == null ? null : exercise.deload_working_weight_kg,
                         };
