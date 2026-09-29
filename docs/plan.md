@@ -47,6 +47,8 @@ Public order matches `/beta-tester-faqs`, including recently added items.
 - **In-app product tour** — after the public `/tutorial` page; own grill
 - **PT mode** — new user type; client roster; personal + client routines; PT→client share (includes client switching / former account switcher) — grill: [PT mode](#grill-pt-mode) (parked until after solo-lifter queue)
 - **Exercise videos (PT)** — park until PT mode exists — grill: [Exercise videos](#grill-exercise-videos-pt)
+- **Progression type override per workout** — from Notion inbox
+- **Per profile deload recipe** — from Notion inbox
 
 **Solo-lifter queue (updated 2026-09-07):** shipped Swap A↔B, Do groups later (covers skip-block-and-come-back), Circuits. Next: Better History Edits → lbs → rack inventory → dropsets on supersets. Then Viewable Progression Data. PT / videos stay parked.
 
