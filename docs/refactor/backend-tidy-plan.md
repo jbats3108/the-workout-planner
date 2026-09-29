@@ -81,6 +81,16 @@ Refactoring backlog after the exercise-profiles pivot and related feature growth
 | User customs | `createCustom`, `archive`, `delete`, `restore`, … |
 | Assignment | `syncProfile`, `staleAssignmentCountsForUser`, `assignedRoutinesByProfileId` |
 
+### D3. `RoutineEditorService` — **done**
+
+| Seam | Module |
+|------|--------|
+| Facade | `RoutineEditorService::sync` — lock, stale check, header, delete-all blocks, loop writer |
+| Block tree write | `RoutineBlockWriter::create` — exercises, working/dropsets, warm-up, profile resolve/tamper |
+| Shape rules | `RoutineBlockShape::assert` / `assertCircuitExercise` — pure type constraints |
+
+Public API unchanged. E2 still applies (do not merge writers with `RoutineDuplicator` / workout snapshot). Delete-all-blocks-on-save stays intentional.
+
 ---
 
 ## Slice E — Read path unification
