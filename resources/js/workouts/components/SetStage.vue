@@ -333,7 +333,7 @@ const setLoggedReps = (value: number | null): void => {
 
                     <div class="space-y-4 pt-10 md:pt-0">
                         <template v-if="current.set.is_dropset">
-                            <label class="flex flex-col gap-2 text-sm text-muted-foreground">
+                            <label class="flex flex-col gap-1 text-sm text-muted-foreground">
                                 Reps (shared)
                                 <NumberStepper
                                     :model-value="setForm.reps"
@@ -434,7 +434,7 @@ const setLoggedReps = (value: number | null): void => {
                                     />
                                 </label>
                                 <div class="flex min-w-0 flex-1 flex-col gap-1">
-                                    <label class="flex flex-col gap-2 text-sm text-muted-foreground">
+                                    <label class="flex flex-col gap-1 text-sm text-muted-foreground">
                                         Reps
                                         <NumberStepper
                                             :model-value="setForm.reps"

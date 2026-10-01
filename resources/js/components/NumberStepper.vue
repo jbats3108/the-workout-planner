@@ -52,7 +52,7 @@ const atMax = computed(() => modelValue !== null && !Number.isNaN(modelValue) &&
 const shellClass = computed(() =>
     cn(
         'inline-flex max-w-full items-stretch overflow-hidden rounded-md border border-border bg-background',
-        size === 'mobile' && 'w-full rounded-xl',
+        size === 'mobile' && 'w-full rounded-xl md:rounded-md',
         size === 'compact' && 'rounded',
         className,
     ),
@@ -61,7 +61,7 @@ const shellClass = computed(() =>
 const fieldClass = computed(() =>
     cn(
         'min-w-0 flex-1 border-0 bg-transparent text-center font-mono tabular-nums outline-none focus-visible:ring-0',
-        size === 'mobile' && 'px-2 py-2.5 text-lg',
+        size === 'mobile' && 'px-4 py-3 text-lg md:px-3 md:py-2 md:text-base',
         size === 'default' && 'h-8 w-10 px-1 text-sm',
         size === 'compact' && 'h-7 w-8 px-0.5 text-xs',
         inputClass,
@@ -71,11 +71,23 @@ const fieldClass = computed(() =>
 const buttonSizeClass = computed(() =>
     cn(
         'shrink-0 rounded-none border-0 shadow-none',
-        size === 'mobile' && 'h-auto px-3',
+        size === 'mobile' && 'h-auto w-auto px-3',
         size === 'default' && 'size-8',
         size === 'compact' && 'size-7',
     ),
 );
+
+const buttonSize = computed(() => {
+    if (size === 'compact') {
+        return 'icon-sm' as const;
+    }
+
+    if (size === 'mobile') {
+        return 'sm' as const;
+    }
+
+    return 'icon' as const;
+});
 
 const parseRaw = (raw: string): number | null => {
     const trimmed = raw.trim();
@@ -119,7 +131,7 @@ const decrement = (): void => {
         <Button
             type="button"
             variant="ghost"
-            :size="size === 'compact' ? 'icon-sm' : 'icon'"
+            :size="buttonSize"
             :class="buttonSizeClass"
             :disabled="disabled || atMin"
             :aria-label="`Decrease ${ariaLabel}`"
@@ -143,7 +155,7 @@ const decrement = (): void => {
         <Button
             type="button"
             variant="ghost"
-            :size="size === 'compact' ? 'icon-sm' : 'icon'"
+            :size="buttonSize"
             :class="buttonSizeClass"
             :disabled="disabled || atMax"
             :aria-label="`Increase ${ariaLabel}`"
