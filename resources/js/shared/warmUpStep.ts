@@ -23,7 +23,7 @@ export function formatProfileWarmUpSteps(steps: ExerciseProfileWarmUpStep[]): st
 }
 
 export function isValidWarmUpStep(step: Pick<WarmUpStep, 'mode' | 'percent' | 'weight_kg' | 'reps'>): boolean {
-    if (step.reps < 1) {
+    if (step.reps == null || !Number.isInteger(step.reps) || step.reps < 1) {
         return false;
     }
 

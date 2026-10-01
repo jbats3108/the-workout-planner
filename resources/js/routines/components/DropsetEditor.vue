@@ -16,7 +16,7 @@ const { isDropsetSlot, setSlotKind, dropsetForIndex, removeDropsetSegment, addDr
 </script>
 
 <template>
-    <div v-for="setIndex in block.working.set_count" :key="setIndex" :class="d.card">
+    <div v-for="setIndex in Math.max(0, block.working.set_count ?? 0)" :key="setIndex" :class="d.card">
         <div class="mb-2 flex items-center justify-between gap-2">
             <span :class="d.setLabel">Set {{ setIndex }}</span>
             <select

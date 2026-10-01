@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import NumberStepper from '@/components/NumberStepper.vue';
 import LogSetSheet from '@/workouts/components/LogSetSheet.vue';
 import PlateGuideCard from '@/workouts/components/PlateGuideCard.vue';
 import { useWorkoutPlayer } from '@/workouts/composables/useWorkoutPlayer';
@@ -95,6 +96,10 @@ const unlockInput = (event: PointerEvent) => {
 
     input.readOnly = false;
     input.focus();
+};
+
+const setLoggedReps = (value: number | null): void => {
+    setForm.reps = value ?? 0;
 };
 </script>
 
@@ -330,15 +335,14 @@ const unlockInput = (event: PointerEvent) => {
                         <template v-if="current.set.is_dropset">
                             <label class="flex flex-col gap-1 text-sm text-muted-foreground">
                                 Reps (shared)
-                                <input
-                                    v-model.number="setForm.reps"
-                                    type="number"
-                                    min="0"
-                                    max="100"
-                                    readonly
-                                    class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground md:rounded-md md:py-2 md:text-base"
-                                    required
-                                    @pointerdown="unlockInput"
+                                <NumberStepper
+                                    :model-value="setForm.reps"
+                                    :min="0"
+                                    :max="100"
+                                    size="mobile"
+                                    aria-label="Reps"
+                                    class="w-full bg-card"
+                                    @update:model-value="setLoggedReps"
                                 />
                             </label>
                             <div class="space-y-2">
@@ -432,15 +436,14 @@ const unlockInput = (event: PointerEvent) => {
                                 <div class="flex min-w-0 flex-1 flex-col gap-1">
                                     <label class="flex flex-col gap-1 text-sm text-muted-foreground">
                                         Reps
-                                        <input
-                                            v-model.number="setForm.reps"
-                                            type="number"
-                                            min="0"
-                                            max="100"
-                                            readonly
-                                            class="rounded-xl border border-border bg-card px-4 py-3 text-lg text-foreground md:rounded-md md:py-2 md:text-base"
-                                            required
-                                            @pointerdown="unlockInput"
+                                        <NumberStepper
+                                            :model-value="setForm.reps"
+                                            :min="0"
+                                            :max="100"
+                                            size="mobile"
+                                            aria-label="Reps"
+                                            class="w-full bg-card"
+                                            @update:model-value="setLoggedReps"
                                         />
                                     </label>
                                     <p v-if="logProgressionHints" class="font-mono text-sm text-foreground/70">

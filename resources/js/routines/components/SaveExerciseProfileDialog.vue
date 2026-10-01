@@ -31,12 +31,14 @@ const form = useHttp({
 const exercise = computed(() => props.block.exercises[props.exerciseIndex] ?? props.block.exercises[0]);
 const floorOverride = computed(() => (exercise.value?.floor_is_derived === true ? null : (exercise.value?.achievement_floor ?? null)));
 const warmUpSteps = computed((): ExerciseProfileWarmUpStep[] =>
-    props.block.warm_up.steps.map((step) => ({
-        mode: step.mode ?? 'percent',
-        percent: step.mode === 'percent' ? step.percent : undefined,
-        weight_kg: step.mode === 'fixed' ? step.weight_kg : undefined,
-        reps: step.reps,
-    })),
+    props.block.warm_up.steps
+        .filter((step): step is typeof step & { reps: number } => step.reps != null && Number.isInteger(step.reps) && step.reps >= 1)
+        .map((step) => ({
+            mode: step.mode ?? 'percent',
+            percent: step.mode === 'percent' ? step.percent : undefined,
+            weight_kg: step.mode === 'fixed' ? step.weight_kg : undefined,
+            reps: step.reps,
+        })),
 );
 const previewTarget = computed(() => exercise.value?.prescribed_reps ?? 0);
 const previewFloor = computed(() => Math.max(1, previewTarget.value - 2));

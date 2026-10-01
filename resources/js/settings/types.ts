@@ -4,7 +4,7 @@ export type WarmUpStep = {
     mode?: WarmUpWeightMode;
     percent?: number;
     weight_kg?: number;
-    reps: number;
+    reps: number | null;
     has_setup_after?: boolean;
 };
 

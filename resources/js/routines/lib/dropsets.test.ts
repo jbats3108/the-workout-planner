@@ -45,6 +45,19 @@ describe('dropsets', () => {
         expect(b.working.dropsets).toHaveLength(1);
     });
 
+    it('does not coerce a cleared set count back to 1', () => {
+        const b = block({
+            working: {
+                set_count: null,
+                rest_seconds: 120,
+                dropsets: [{ set_index: 0, segments: [{ weight_kg: 60 }, { weight_kg: 50 }] }],
+            },
+        });
+        trimDropsetsToSetCount(b);
+        expect(b.working.set_count).toBeNull();
+        expect(b.working.dropsets).toHaveLength(1);
+    });
+
     it('summarizes dropset recipes', () => {
         const b = block({
             working: {

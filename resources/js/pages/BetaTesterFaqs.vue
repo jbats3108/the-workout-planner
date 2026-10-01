@@ -36,16 +36,6 @@ const backlogItems = [
         recentlyAdded: true,
     },
     {
-        title: 'Better History Edits',
-        description:
-            'Allow editing more details of past workouts, such as warmup weights, and see discarded workouts in history. Bigger structure rewrites on old sessions may come later.',
-    },
-    {
-        title: 'Support for lbs as your preferred unit of weight',
-        description:
-            "OVRLOAD currently only supports KG as the unit to measure how heavy you're lifting. This will allow you to choose to use LBs instead.",
-    },
-    {
         title: 'Routine Progression Style',
         description:
             'Set Straight Sets or Progressive Overload (and Ask/Auto mid-block) on each routine. Training Preferences only seed new routines; the style is snapshotted when a workout starts.',
