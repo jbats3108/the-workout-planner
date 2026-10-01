@@ -584,7 +584,7 @@ const onCustomiseSharedRecipe = (block: Block): void => {
                         reps.
                     </p>
 
-                    <div class="grid grid-cols-2 gap-x-4 gap-y-3 border-t border-border pt-4">
+                    <div class="grid grid-cols-2 items-start gap-x-4 gap-y-3 border-t border-border pt-4">
                         <label class="flex flex-col gap-2">
                             <span class="text-xs text-muted-foreground">Working sets</span>
                             <NumberStepper
@@ -605,9 +605,13 @@ const onCustomiseSharedRecipe = (block: Block): void => {
                             <label class="flex flex-col gap-2">
                                 <span class="text-xs text-muted-foreground">Rest</span>
                                 <details>
-                                    <summary class="cursor-pointer rounded-xl border border-border bg-background px-3 py-2.5 font-mono text-lg">
+                                    <summary
+                                        class="flex min-h-[2.75rem] cursor-pointer items-center justify-center rounded-xl border border-border bg-background px-3 font-mono text-2xl font-semibold tabular-nums"
+                                    >
                                         {{ formatRest(activeBlock.working.rest_seconds) }}
-                                        <span v-if="sharedProfileIsOutdated(activeBlock)" class="text-sm text-amber-400">· Update available</span>
+                                        <span v-if="sharedProfileIsOutdated(activeBlock)" class="ml-2 text-sm font-normal text-amber-400"
+                                            >· Update available</span
+                                        >
                                     </summary>
                                     <input
                                         v-model.number="activeBlock.working.rest_seconds"
@@ -632,8 +636,10 @@ const onCustomiseSharedRecipe = (block: Block): void => {
                         </div>
                         <div v-else class="flex flex-col gap-2">
                             <span class="text-xs text-muted-foreground">Rest</span>
-                            <p class="font-mono text-lg leading-none text-foreground">{{ formatRest(activeBlock.working.rest_seconds) }}</p>
-                            <p v-if="sharedProfileIsOutdated(activeBlock)" class="text-xs text-amber-400">Update available</p>
+                            <p class="flex min-h-[2.75rem] items-center justify-center font-mono text-2xl font-semibold text-foreground tabular-nums">
+                                {{ formatRest(activeBlock.working.rest_seconds) }}
+                            </p>
+                            <p v-if="sharedProfileIsOutdated(activeBlock)" class="text-center text-xs text-amber-400">Update available</p>
                         </div>
                     </div>
 
