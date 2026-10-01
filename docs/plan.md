@@ -8,7 +8,7 @@ Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domai
 
 ## Now
 
-- **Better History Edits** — warm-up edits; discarded in History (low prio); post-hoc structure edits deferred
+- **Stepper controls for reps and sets** — replace rep/set inputs with steppers; permit clearing values while editing and validate required/valid values on save
 
 ## Backlog
 
@@ -25,24 +25,20 @@ Public order matches `/beta-tester-faqs`, including recently added items.
 3. ~~**Custom user exercises**~~ — recently added
 4. ~~**Add exercise in Play**~~ — recently added
 5. ~~**Do groups later**~~ — recently added
-6. **Better History Edits** — warm-up edits; discarded in History (low prio); post-hoc structure edits deferred (prefer Play add first; re-grill later)
-7. **Support for lbs as your preferred unit of weight** — end-to-end preferred unit (API still kg-centric today)
-8. ~~**Choose an alternate exercise for Deload sessions**~~ — recently added
-9. **Gym dumbbell / rack inventory** — full rack range for run-the-rack / planning
-10. **Viewable Progression Data** — charts/tables/export; large feature, own grill later
-11. ~~**Circuit workouts**~~ — recently added
-12. ~~**Skip a block and come back later in Play**~~ — shipped as **Do groups later**; kept on public FAQ as recently added
-13. **Dropsets on supersets** — multi-segment dropsets inside a two-exercise superset round
+6. ~~**Choose an alternate exercise for Deload sessions**~~ — recently added
+7. **Gym dumbbell / rack inventory** — full rack range for run-the-rack / planning
+8. **Viewable Progression Data** — charts/tables/export; large feature, own grill later
+9. ~~**Circuit workouts**~~ — recently added
+10. ~~**Skip a block and come back later in Play**~~ — shipped as **Do groups later**; kept on public FAQ as recently added
+11. **Dropsets on supersets** — multi-segment dropsets inside a two-exercise superset round
+12. ~~**Routine Progression Style**~~ — recently added
 
 ### Parked (internal — not on public FAQ)
 
-- **Stepper controls for reps and sets** — replace rep/set inputs with steppers; permit clearing values while editing and validate required/valid values on save
 - **Flexible block timing and entries** — allow circuit blocks with a single entry, or support time-based standard blocks instead of rep-based prescriptions; decide whether this needs a new block type
-- **Automatic progression for circuits** — evaluate after user feedback on fixed-load circuit training
 - **Strava integration** — OAuth / export / privacy grill later
 - **Garmin sync** — after Strava
 - **Ad-hoc / off-routine historical log (C2)** — log a lift not on a routine session; own grill (maybe after Play ad-hoc)
-- **Flaky-network drafts** — best-effort offline/queue for player logging
 - **Benchmark exercises / 1RMs** — track reference lifts / estimated maxes
 - **In-app product tour** — after the public `/tutorial` page; own grill
 - **PT mode** — new user type; client roster; personal + client routines; PT→client share (includes client switching / former account switcher) — grill: [PT mode](#grill-pt-mode) (parked until after solo-lifter queue)
@@ -50,7 +46,7 @@ Public order matches `/beta-tester-faqs`, including recently added items.
 - ~~**Routine Progression Style**~~ — shipped (per-routine style + mid-block; Training seeds new routines only)
 - ~~**Per-profile Deload factors**~~ — shipped (weight/reps on Exercise Profile with auto-push; velocity on routine)
 
-**Solo-lifter queue (updated 2026-09-07):** shipped Swap A↔B, Do groups later (covers skip-block-and-come-back), Circuits. Next: Better History Edits → lbs → rack inventory → dropsets on supersets. Then Viewable Progression Data. PT / videos stay parked.
+**Solo-lifter queue (updated 2026-10-01):** shipped Swap A↔B, Do groups later, Circuits, Progression Style. Dropped: Better History Edits, lbs, automatic circuit progression, flaky-network drafts. Next: Stepper controls (Now) → rack inventory → dropsets on supersets. Then Viewable Progression Data. PT / videos stay parked.
 
 ### Code quality & security
 
