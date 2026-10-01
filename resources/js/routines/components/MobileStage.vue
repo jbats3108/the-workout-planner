@@ -584,46 +584,42 @@ const onCustomiseSharedRecipe = (block: Block): void => {
                         reps.
                     </p>
 
-                    <div class="grid grid-cols-2 items-start gap-x-4 gap-y-3 border-t border-border pt-4">
-                        <label class="flex flex-col gap-2">
-                            <span class="text-xs text-muted-foreground">Working sets</span>
-                            <NumberStepper
-                                :model-value="activeBlock.working.set_count"
-                                :min="1"
-                                :max="20"
-                                size="mobile"
-                                aria-label="Working sets"
-                                @update:model-value="
-                                    (value) => {
-                                        activeBlock.working.set_count = value;
-                                        trimDropsetsToSetCount(activeBlock);
-                                    }
-                                "
-                            />
-                        </label>
-                        <div v-if="blockSharedRecipeIsCustom(activeBlock)" class="flex flex-col gap-2">
-                            <label class="flex flex-col gap-2">
-                                <span class="text-xs text-muted-foreground">Rest</span>
-                                <details>
-                                    <summary
-                                        class="flex min-h-[2.75rem] cursor-pointer items-center justify-center rounded-xl border border-border bg-background px-3 font-mono text-2xl font-semibold tabular-nums"
+                    <div class="grid grid-cols-2 items-stretch gap-x-4 gap-y-2 border-t border-border pt-4">
+                        <span class="text-xs text-muted-foreground">Working sets</span>
+                        <span class="text-xs text-muted-foreground">Rest</span>
+                        <NumberStepper
+                            :model-value="activeBlock.working.set_count"
+                            :min="1"
+                            :max="20"
+                            size="mobile"
+                            aria-label="Working sets"
+                            @update:model-value="
+                                (value) => {
+                                    activeBlock.working.set_count = value;
+                                    trimDropsetsToSetCount(activeBlock);
+                                }
+                            "
+                        />
+                        <div v-if="blockSharedRecipeIsCustom(activeBlock)" class="flex min-h-0 flex-col gap-2">
+                            <details class="flex min-h-0 flex-1 flex-col">
+                                <summary
+                                    class="flex h-full min-h-[3.25rem] cursor-pointer items-center justify-center rounded-xl border border-border bg-background px-3 font-mono text-2xl font-semibold tabular-nums"
+                                >
+                                    {{ formatRest(activeBlock.working.rest_seconds) }}
+                                    <span v-if="sharedProfileIsOutdated(activeBlock)" class="ml-2 text-sm font-normal text-amber-400"
+                                        >· Update available</span
                                     >
-                                        {{ formatRest(activeBlock.working.rest_seconds) }}
-                                        <span v-if="sharedProfileIsOutdated(activeBlock)" class="ml-2 text-sm font-normal text-amber-400"
-                                            >· Update available</span
-                                        >
-                                    </summary>
-                                    <input
-                                        v-model.number="activeBlock.working.rest_seconds"
-                                        type="number"
-                                        min="0"
-                                        max="3600"
-                                        step="15"
-                                        class="mt-2 w-full rounded-xl border border-border bg-background px-3 py-2.5 font-mono text-lg"
-                                        @input="markSharedCustom(activeBlock)"
-                                    />
-                                </details>
-                            </label>
+                                </summary>
+                                <input
+                                    v-model.number="activeBlock.working.rest_seconds"
+                                    type="number"
+                                    min="0"
+                                    max="3600"
+                                    step="15"
+                                    class="mt-2 w-full rounded-xl border border-border bg-background px-3 py-2.5 font-mono text-lg"
+                                    @input="markSharedCustom(activeBlock)"
+                                />
+                            </details>
                             <button
                                 v-if="hasSharedCustomiseSnapshot(activeBlock)"
                                 type="button"
@@ -634,9 +630,8 @@ const onCustomiseSharedRecipe = (block: Block): void => {
                                 Cancel
                             </button>
                         </div>
-                        <div v-else class="flex flex-col gap-2">
-                            <span class="text-xs text-muted-foreground">Rest</span>
-                            <p class="flex min-h-[2.75rem] items-center justify-center font-mono text-2xl font-semibold text-foreground tabular-nums">
+                        <div v-else class="flex min-h-[3.25rem] flex-col justify-center">
+                            <p class="text-center font-mono text-2xl font-semibold text-foreground tabular-nums">
                                 {{ formatRest(activeBlock.working.rest_seconds) }}
                             </p>
                             <p v-if="sharedProfileIsOutdated(activeBlock)" class="text-center text-xs text-amber-400">Update available</p>
