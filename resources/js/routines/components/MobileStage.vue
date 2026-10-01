@@ -584,8 +584,8 @@ const onCustomiseSharedRecipe = (block: Block): void => {
                         reps.
                     </p>
 
-                    <div class="grid grid-cols-2 gap-2 border-t border-border pt-3">
-                        <label>
+                    <div class="grid grid-cols-2 gap-x-4 gap-y-3 border-t border-border pt-4">
+                        <label class="flex flex-col gap-2">
                             <span class="text-xs text-muted-foreground">Working sets</span>
                             <NumberStepper
                                 :model-value="activeBlock.working.set_count"
@@ -593,7 +593,6 @@ const onCustomiseSharedRecipe = (block: Block): void => {
                                 :max="20"
                                 size="mobile"
                                 aria-label="Working sets"
-                                class="mt-1"
                                 @update:model-value="
                                     (value) => {
                                         activeBlock.working.set_count = value;
@@ -602,11 +601,11 @@ const onCustomiseSharedRecipe = (block: Block): void => {
                                 "
                             />
                         </label>
-                        <div v-if="blockSharedRecipeIsCustom(activeBlock)">
-                            <label>
+                        <div v-if="blockSharedRecipeIsCustom(activeBlock)" class="flex flex-col gap-2">
+                            <label class="flex flex-col gap-2">
                                 <span class="text-xs text-muted-foreground">Rest</span>
-                                <details class="mt-1">
-                                    <summary class="cursor-pointer rounded-xl border border-border bg-background px-3 py-2 font-mono text-lg">
+                                <details>
+                                    <summary class="cursor-pointer rounded-xl border border-border bg-background px-3 py-2.5 font-mono text-lg">
                                         {{ formatRest(activeBlock.working.rest_seconds) }}
                                         <span v-if="sharedProfileIsOutdated(activeBlock)" class="text-sm text-amber-400">· Update available</span>
                                     </summary>
@@ -616,7 +615,7 @@ const onCustomiseSharedRecipe = (block: Block): void => {
                                         min="0"
                                         max="3600"
                                         step="15"
-                                        class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-lg"
+                                        class="mt-2 w-full rounded-xl border border-border bg-background px-3 py-2.5 font-mono text-lg"
                                         @input="markSharedCustom(activeBlock)"
                                     />
                                 </details>
@@ -624,16 +623,16 @@ const onCustomiseSharedRecipe = (block: Block): void => {
                             <button
                                 v-if="hasSharedCustomiseSnapshot(activeBlock)"
                                 type="button"
-                                class="mt-1 text-xs text-muted-foreground underline-offset-2 hover:underline"
+                                class="text-xs text-muted-foreground underline-offset-2 hover:underline"
                                 data-cancel-customise-shared
                                 @click="cancelSharedCustomise(activeBlock)"
                             >
                                 Cancel
                             </button>
                         </div>
-                        <div v-else class="flex flex-col justify-center">
+                        <div v-else class="flex flex-col gap-2">
                             <span class="text-xs text-muted-foreground">Rest</span>
-                            <p class="mt-1 font-mono text-lg text-foreground">{{ formatRest(activeBlock.working.rest_seconds) }}</p>
+                            <p class="font-mono text-lg leading-none text-foreground">{{ formatRest(activeBlock.working.rest_seconds) }}</p>
                             <p v-if="sharedProfileIsOutdated(activeBlock)" class="text-xs text-amber-400">Update available</p>
                         </div>
                     </div>
