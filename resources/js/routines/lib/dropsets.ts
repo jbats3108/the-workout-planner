@@ -73,9 +73,13 @@ export function applyRunTheRack(block: Block, setIndex: number, rack: { start: n
 }
 
 export function trimDropsetsToSetCount(block: Block): void {
-    const count = Math.max(1, Number(block.working.set_count) || 1);
-    block.working.set_count = count;
-    block.working.dropsets = block.working.dropsets.filter((d) => d.set_index < count);
+    const count = block.working.set_count;
+    if (count == null || !Number.isFinite(count) || count < 1) {
+        return;
+    }
+
+    const capped = Math.min(20, Math.floor(count));
+    block.working.dropsets = block.working.dropsets.filter((d) => d.set_index < capped);
 }
 
 export function dropsetSummary(block: Block): string {

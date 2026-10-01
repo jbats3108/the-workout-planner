@@ -8,7 +8,7 @@ Working backlog for OVRLOAD v2. Update this as items ship or get deferred. Domai
 
 ## Now
 
-- **Stepper controls for reps and sets** — replace rep/set inputs with steppers; permit clearing values while editing and validate required/valid values on save
+-
 
 ## Backlog
 
@@ -35,6 +35,7 @@ Public order matches `/beta-tester-faqs`, including recently added items.
 
 ### Parked (internal — not on public FAQ)
 
+- ~~**Stepper controls for reps and sets**~~ — shipped (clearable +/− on sets/reps/floor; validate on save)
 - **Flexible block timing and entries** — allow circuit blocks with a single entry, or support time-based standard blocks instead of rep-based prescriptions; decide whether this needs a new block type
 - **Strava integration** — OAuth / export / privacy grill later
 - **Garmin sync** — after Strava
@@ -46,7 +47,7 @@ Public order matches `/beta-tester-faqs`, including recently added items.
 - ~~**Routine Progression Style**~~ — shipped (per-routine style + mid-block; Training seeds new routines only)
 - ~~**Per-profile Deload factors**~~ — shipped (weight/reps on Exercise Profile with auto-push; velocity on routine)
 
-**Solo-lifter queue (updated 2026-10-01):** shipped Swap A↔B, Do groups later, Circuits, Progression Style. Dropped: Better History Edits, lbs, automatic circuit progression, flaky-network drafts. Next: Stepper controls (Now) → rack inventory → dropsets on supersets. Then Viewable Progression Data. PT / videos stay parked.
+**Solo-lifter queue (updated 2026-10-01):** shipped Swap A↔B, Do groups later, Circuits, Progression Style, Stepper controls. Dropped: Better History Edits, lbs, automatic circuit progression, flaky-network drafts. Next: rack inventory → dropsets on supersets. Then Viewable Progression Data. PT / videos stay parked.
 
 ### Code quality & security
 

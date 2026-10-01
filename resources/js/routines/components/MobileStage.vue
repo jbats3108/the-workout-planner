@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import InputError from '@/components/InputError.vue';
+import NumberStepper from '@/components/NumberStepper.vue';
 import BlockSetupOptions from '@/routines/components/BlockSetupOptions.vue';
 import DeloadAlternateFields from '@/routines/components/DeloadAlternateFields.vue';
 import DeloadSettings from '@/routines/components/DeloadSettings.vue';
@@ -233,11 +234,14 @@ const onCustomiseSharedRecipe = (block: Block): void => {
                         <div class="grid grid-cols-2 gap-2">
                             <label class="block">
                                 <span class="text-xs text-muted-foreground">Rounds</span>
-                                <input
-                                    v-model.number="activeBlock.working.set_count"
-                                    type="number"
-                                    min="1"
-                                    class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-lg"
+                                <NumberStepper
+                                    :model-value="activeBlock.working.set_count"
+                                    :min="1"
+                                    :max="20"
+                                    size="mobile"
+                                    aria-label="Rounds"
+                                    class="mt-1"
+                                    @update:model-value="(value) => (activeBlock.working.set_count = value)"
                                 />
                             </label>
                             <label class="block">
@@ -419,14 +423,15 @@ const onCustomiseSharedRecipe = (block: Block): void => {
                         <div v-else class="mt-2">
                             <label class="block">
                                 <span class="text-xs text-muted-foreground">Target reps</span>
-                                <input
-                                    :value="ex.prescribed_reps ?? 10"
-                                    type="number"
-                                    min="1"
-                                    max="100"
+                                <NumberStepper
+                                    :model-value="ex.prescribed_reps"
+                                    :min="1"
+                                    :max="100"
+                                    size="mobile"
+                                    aria-label="Target reps"
                                     data-exercise-target-mobile
-                                    class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-lg"
-                                    @input="setExerciseTarget(ex, ($event.target as HTMLInputElement).value)"
+                                    class="mt-1"
+                                    @update:model-value="(value) => setExerciseTarget(ex, value == null ? '' : String(value))"
                                 />
                             </label>
                         </div>
@@ -503,27 +508,29 @@ const onCustomiseSharedRecipe = (block: Block): void => {
                             <div class="mt-2 grid grid-cols-2 gap-2">
                                 <label class="block">
                                     <span class="text-xs text-muted-foreground">Target reps</span>
-                                    <input
-                                        :value="ex.prescribed_reps"
-                                        type="number"
-                                        min="1"
-                                        max="100"
+                                    <NumberStepper
+                                        :model-value="ex.prescribed_reps"
+                                        :min="1"
+                                        :max="100"
+                                        size="mobile"
+                                        aria-label="Target reps"
                                         data-exercise-target
-                                        class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-lg"
-                                        @input="setExerciseTarget(ex, ($event.target as HTMLInputElement).value)"
+                                        class="mt-1"
+                                        @update:model-value="(value) => setExerciseTarget(ex, value == null ? '' : String(value))"
                                     />
                                 </label>
                                 <label class="block">
                                     <span class="text-xs text-muted-foreground">Floor</span>
-                                    <input
-                                        :value="ex.achievement_floor ?? ''"
-                                        type="number"
-                                        min="1"
-                                        max="100"
+                                    <NumberStepper
+                                        :model-value="ex.achievement_floor"
+                                        :min="1"
+                                        :max="100"
+                                        size="mobile"
+                                        aria-label="Floor"
                                         data-exercise-floor
                                         :placeholder="exerciseFloorPlaceholder(activeBlock, ei)"
-                                        class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-lg"
-                                        @input="setExerciseFloor(ex, ($event.target as HTMLInputElement).value)"
+                                        class="mt-1"
+                                        @update:model-value="(value) => setExerciseFloor(ex, value == null ? '' : String(value))"
                                     />
                                 </label>
                             </div>
@@ -580,12 +587,19 @@ const onCustomiseSharedRecipe = (block: Block): void => {
                     <div class="grid grid-cols-2 gap-2 border-t border-border pt-3">
                         <label>
                             <span class="text-xs text-muted-foreground">Working sets</span>
-                            <input
-                                v-model.number="activeBlock.working.set_count"
-                                type="number"
-                                min="1"
-                                class="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-lg"
-                                @change="trimDropsetsToSetCount(activeBlock)"
+                            <NumberStepper
+                                :model-value="activeBlock.working.set_count"
+                                :min="1"
+                                :max="20"
+                                size="mobile"
+                                aria-label="Working sets"
+                                class="mt-1"
+                                @update:model-value="
+                                    (value) => {
+                                        activeBlock.working.set_count = value;
+                                        trimDropsetsToSetCount(activeBlock);
+                                    }
+                                "
                             />
                         </label>
                         <div v-if="blockSharedRecipeIsCustom(activeBlock)">
@@ -707,14 +721,18 @@ const onCustomiseSharedRecipe = (block: Block): void => {
                                     @input="markSharedCustom(activeBlock)"
                                 />
                                 <span class="text-xs text-muted-foreground">×</span>
-                                <input
-                                    v-model.number="step.reps"
-                                    type="number"
-                                    min="1"
-                                    max="100"
-                                    class="w-14 rounded-lg border border-border bg-background px-2 py-1.5 font-mono text-sm"
+                                <NumberStepper
+                                    :model-value="step.reps"
+                                    :min="1"
+                                    :max="100"
+                                    size="compact"
                                     aria-label="Warm-up reps"
-                                    @input="markSharedCustom(activeBlock)"
+                                    @update:model-value="
+                                        (value) => {
+                                            step.reps = value;
+                                            markSharedCustom(activeBlock);
+                                        }
+                                    "
                                 />
                                 <label
                                     v-if="si < activeBlock.warm_up.steps.length - 1"

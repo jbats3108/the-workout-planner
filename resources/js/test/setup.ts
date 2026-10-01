@@ -20,9 +20,18 @@ const inertia = vi.hoisted(() => {
         return reactive({
             ...initial,
             processing: false,
-            errors: {},
+            errors: {} as Record<string, string>,
             recentlySuccessful: false,
-            clearErrors: vi.fn(),
+            clearErrors: vi.fn(function (this: { errors: Record<string, string> }) {
+                this.errors = {};
+            }),
+            setError: vi.fn(function (this: { errors: Record<string, string> }, fieldOrBag: string | Record<string, string>, message?: string) {
+                if (typeof fieldOrBag === 'string') {
+                    this.errors = { ...this.errors, [fieldOrBag]: message ?? '' };
+                    return;
+                }
+                this.errors = { ...this.errors, ...fieldOrBag };
+            }),
             transform(fn: (data: object) => unknown) {
                 // Keep put/post(url, options) like Inertia; stash payload for assertions.
                 lastTransformed = fn({ ...(this as object) });

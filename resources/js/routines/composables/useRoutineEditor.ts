@@ -29,6 +29,7 @@ import {
     type ExerciseCustomiseSnapshot,
     type SharedCustomiseSnapshot,
 } from '@/routines/lib/editorCustomiseSnapshot';
+import { collectRoutineEditorFieldErrors } from '@/routines/lib/editorFieldValidation';
 import {
     achievementFloorForSave,
     applyProfileToBlock,
@@ -441,7 +442,7 @@ export function createRoutineEditor(props: EditRoutineProps) {
 
     const setExerciseTarget = (exercise: Block['exercises'][number], raw: string): void => {
         const wasDerived = exercise.floor_is_derived === true || (exercise.exercise_profile_id != null && exercise.achievement_floor === null);
-        exercise.prescribed_reps = Number(raw);
+        exercise.prescribed_reps = raw.trim() === '' ? null : Number(raw);
         if (wasDerived) {
             exercise.achievement_floor = null;
             exercise.floor_is_derived = true;
@@ -554,6 +555,14 @@ export function createRoutineEditor(props: EditRoutineProps) {
     };
 
     const save = () => {
+        form.clearErrors();
+        const clientErrors = collectRoutineEditorFieldErrors(form.blocks);
+        if (Object.keys(clientErrors).length > 0) {
+            form.setError(clientErrors);
+            revealSaveErrors();
+            return;
+        }
+
         syncSetupAfterBlockFlags(form.blocks);
         form.transform((data) => ({
             ...data,
@@ -574,8 +583,8 @@ export function createRoutineEditor(props: EditRoutineProps) {
                         return {
                             ...exercise,
                             prescription_mode: exercise.prescription_mode ?? 'reps',
-                            prescribed_reps: isTimed ? null : (exercise.prescribed_reps ?? 6),
-                            prescribed_duration_seconds: isTimed ? (exercise.prescribed_duration_seconds ?? 30) : null,
+                            prescribed_reps: isTimed ? null : exercise.prescribed_reps,
+                            prescribed_duration_seconds: isTimed ? exercise.prescribed_duration_seconds : null,
                             exercise_profile_id: isCircuit ? null : (exercise.exercise_profile_id ?? null),
                             exercise_profile_fingerprint: isCircuit ? null : (exercise.exercise_profile_fingerprint ?? null),
                             floor_is_derived: isCircuit || isTimed ? null : (exercise.floor_is_derived ?? null),
@@ -599,7 +608,7 @@ export function createRoutineEditor(props: EditRoutineProps) {
                             isCircuit || block.is_superset
                                 ? []
                                 : block.working.dropsets
-                                      .filter((d) => d.set_index < block.working.set_count && d.segments.length >= 2)
+                                      .filter((d) => d.set_index < (block.working.set_count ?? 0) && d.segments.length >= 2)
                                       .map((d) => ({
                                           set_index: d.set_index,
                                           segments: d.segments.map((s) => ({ weight_kg: s.weight_kg })),

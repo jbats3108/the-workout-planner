@@ -186,11 +186,13 @@ const toc = [
                 <h2 class="text-2xl font-bold tracking-tight">Create and edit a routine</h2>
                 <p class="text-muted-foreground">
                     Choose a profile before naming the routine. A routine is a list of exercises (internally, blocks). Each exercise has working sets
-                    and a profile. On mobile, the first tab is a
-                    <strong class="text-foreground">Routine</strong> sheet (name, routine profile, Progression, Deload); exercise tabs come after. On
-                    desktop, the same routine-level controls live in a collapsed <strong class="text-foreground">Routine settings</strong> strip under
-                    the title. Set <strong class="text-foreground">Progression style</strong> (and Progressive Overload mid-block) per routine — it is
-                    snapshotted when a workout starts. Target, Floor, Rest, and warm-ups stay hidden while a profile is selected — choose
+                    and a profile. Working sets, Target, Floor, and warm-up reps use
+                    <strong class="text-foreground">steppers</strong> (+/−) — you can clear a field while editing; Save requires a valid whole number
+                    in range. On mobile, the first tab is a <strong class="text-foreground">Routine</strong> sheet (name, routine profile,
+                    Progression, Deload); exercise tabs come after. On desktop, the same routine-level controls live in a collapsed
+                    <strong class="text-foreground">Routine settings</strong> strip under the title. Set
+                    <strong class="text-foreground">Progression style</strong> (and Progressive Overload mid-block) per routine — it is snapshotted
+                    when a workout starts. Target, Floor, Rest, and warm-ups stay hidden while a profile is selected — choose
                     <strong class="text-foreground">Custom settings</strong> (or Customise) to override them; Cancel restores the prior profile
                     snapshot for that Customise session. Optional dropsets are per exercise. Pick lifts from the catalog, or add a private custom that
                     only you see. Use the one-line <strong class="text-foreground">Exercise note</strong> beside working kg for a pin number, stack

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import NumberStepper from '@/components/NumberStepper.vue';
 import BlockSetupOptions from '@/routines/components/BlockSetupOptions.vue';
 import DeloadAlternateFields from '@/routines/components/DeloadAlternateFields.vue';
 import DesktopRoutineSettings from '@/routines/components/DesktopRoutineSettings.vue';
@@ -251,14 +252,13 @@ const toggleDropsets = (blockIndex: number): void => {
                                     <div v-else class="rounded border border-border/70 bg-card/50 px-2 py-1.5">
                                         <label class="flex flex-col gap-0.5 text-[11px] text-muted-foreground">
                                             Target reps
-                                            <input
-                                                :value="ex.prescribed_reps ?? 10"
-                                                type="number"
-                                                min="1"
-                                                max="100"
+                                            <NumberStepper
+                                                :model-value="ex.prescribed_reps"
+                                                :min="1"
+                                                :max="100"
+                                                aria-label="Target reps"
                                                 data-exercise-target
-                                                class="h-8 w-20 rounded border border-border bg-card px-1.5 font-mono text-sm"
-                                                @input="setExerciseTarget(ex, ($event.target as HTMLInputElement).value)"
+                                                @update:model-value="(value) => setExerciseTarget(ex, value == null ? '' : String(value))"
                                             />
                                         </label>
                                     </div>
@@ -278,27 +278,25 @@ const toggleDropsets = (blockIndex: number): void => {
                                         <div class="flex flex-wrap gap-2">
                                             <label class="flex flex-col gap-0.5 text-[11px] text-muted-foreground">
                                                 Target
-                                                <input
-                                                    :value="ex.prescribed_reps"
-                                                    type="number"
-                                                    min="1"
-                                                    max="100"
+                                                <NumberStepper
+                                                    :model-value="ex.prescribed_reps"
+                                                    :min="1"
+                                                    :max="100"
+                                                    aria-label="Target reps"
                                                     data-exercise-target
-                                                    class="h-8 w-16 rounded border border-border bg-card px-1.5 font-mono text-sm"
-                                                    @input="setExerciseTarget(ex, ($event.target as HTMLInputElement).value)"
+                                                    @update:model-value="(value) => setExerciseTarget(ex, value == null ? '' : String(value))"
                                                 />
                                             </label>
                                             <label class="flex flex-col gap-0.5 text-[11px] text-muted-foreground">
                                                 Floor
-                                                <input
-                                                    :value="ex.achievement_floor ?? ''"
-                                                    type="number"
-                                                    min="1"
-                                                    max="100"
+                                                <NumberStepper
+                                                    :model-value="ex.achievement_floor"
+                                                    :min="1"
+                                                    :max="100"
+                                                    aria-label="Floor"
                                                     data-exercise-floor
                                                     :placeholder="exerciseFloorPlaceholder(block, ei)"
-                                                    class="h-8 w-16 rounded border border-border bg-card px-1.5 font-mono text-sm"
-                                                    @input="setExerciseFloor(ex, ($event.target as HTMLInputElement).value)"
+                                                    @update:model-value="(value) => setExerciseFloor(ex, value == null ? '' : String(value))"
                                                 />
                                             </label>
                                         </div>
@@ -338,12 +336,17 @@ const toggleDropsets = (blockIndex: number): void => {
                             </td>
                             <td class="px-2 py-2 align-top">
                                 <div v-if="ei === 0" class="flex flex-col gap-0.5">
-                                    <input
-                                        v-model.number="block.working.set_count"
-                                        type="number"
-                                        min="1"
-                                        class="h-8 w-14 rounded border border-border bg-card px-2 font-mono text-sm"
-                                        @change="trimDropsetsToSetCount(block)"
+                                    <NumberStepper
+                                        :model-value="block.working.set_count"
+                                        :min="1"
+                                        :max="20"
+                                        :aria-label="block.type === 'circuit' ? 'Rounds' : 'Working sets'"
+                                        @update:model-value="
+                                            (value) => {
+                                                block.working.set_count = value;
+                                                trimDropsetsToSetCount(block);
+                                            }
+                                        "
                                     />
                                     <span v-if="block.type === 'circuit'" class="font-mono text-[10px] text-muted-foreground">rounds</span>
                                 </div>
@@ -546,14 +549,18 @@ const toggleDropsets = (blockIndex: number): void => {
                                                         @input="markSharedCustom(block)"
                                                     />
                                                     <span class="text-[11px] text-muted-foreground">×</span>
-                                                    <input
-                                                        v-model.number="step.reps"
-                                                        type="number"
-                                                        min="1"
-                                                        max="100"
-                                                        class="w-12 rounded border border-border bg-card px-1 py-0.5 font-mono text-xs"
+                                                    <NumberStepper
+                                                        :model-value="step.reps"
+                                                        :min="1"
+                                                        :max="100"
+                                                        size="compact"
                                                         aria-label="Warm-up reps"
-                                                        @input="markSharedCustom(block)"
+                                                        @update:model-value="
+                                                            (value) => {
+                                                                step.reps = value;
+                                                                markSharedCustom(block);
+                                                            }
+                                                        "
                                                     />
                                                     <label
                                                         v-if="si < block.warm_up.steps.length - 1"

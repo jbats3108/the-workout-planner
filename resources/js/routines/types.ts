@@ -56,7 +56,7 @@ export type Block = {
     shared_profile_id?: number | null;
     shared_profile_fingerprint?: string | null;
     exercises: BlockExercise[];
-    working: { set_count: number; rest_seconds: number; dropsets: DropsetRecipe[] };
+    working: { set_count: number | null; rest_seconds: number; dropsets: DropsetRecipe[] };
     warm_up: { set_count: number; rest_seconds: number; steps: WarmUpStep[] };
 };
 

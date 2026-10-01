@@ -568,6 +568,25 @@ describe('createRoutineEditor', () => {
         expect(payload.blocks[0].warm_up.rest_seconds).toBe(0);
     });
 
+    it('blocks save when sets or target reps are cleared', async () => {
+        const scrollIntoView = vi.fn();
+        const target = document.createElement('div');
+        target.scrollIntoView = scrollIntoView;
+        vi.spyOn(document, 'querySelector').mockReturnValue(target);
+
+        const editor = mountEditor();
+        editor.addBlock(false);
+        editor.form.blocks[0].working.set_count = null;
+        editor.form.blocks[0].exercises[0].prescribed_reps = null;
+
+        editor.save();
+
+        expect(inertiaMocks().inertiaFormPut).not.toHaveBeenCalled();
+        expect(editor.form.errors['blocks.0.working.set_count']).toContain('Working sets');
+        expect(editor.form.errors['blocks.0.exercises.0.prescribed_reps']).toContain('Target reps');
+        await vi.waitFor(() => expect(scrollIntoView).toHaveBeenCalled());
+    });
+
     it('scrolls save errors into view when validation fails', async () => {
         const scrollIntoView = vi.fn();
         const target = document.createElement('div');
