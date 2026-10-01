@@ -12,6 +12,7 @@ const {
     max = 100,
     step = 1,
     disabled = false,
+    readonly = false,
     placeholder = '',
     size = 'default',
     class: className,
@@ -23,6 +24,7 @@ const {
     max?: number;
     step?: number;
     disabled?: boolean;
+    readonly?: boolean;
     placeholder?: string;
     size?: 'default' | 'compact' | 'mobile';
     class?: string;
@@ -131,6 +133,7 @@ const decrement = (): void => {
             type="text"
             inputmode="numeric"
             :disabled="disabled"
+            :readonly="readonly"
             :placeholder="placeholder"
             :aria-label="ariaLabel"
             :class="fieldClass"
