@@ -49,7 +49,7 @@ const atMax = computed(() => modelValue !== null && !Number.isNaN(modelValue) &&
 
 const shellClass = computed(() =>
     cn(
-        'inline-flex items-stretch overflow-hidden rounded-md border border-border bg-background',
+        'inline-flex max-w-full items-stretch overflow-hidden rounded-md border border-border bg-background',
         size === 'mobile' && 'w-full rounded-xl',
         size === 'compact' && 'rounded',
         className,
@@ -60,8 +60,8 @@ const fieldClass = computed(() =>
     cn(
         'min-w-0 flex-1 border-0 bg-transparent text-center font-mono tabular-nums outline-none focus-visible:ring-0',
         size === 'mobile' && 'px-2 py-2 text-lg',
-        size === 'default' && 'h-8 w-14 px-1 text-sm',
-        size === 'compact' && 'h-7 w-12 px-1 text-xs',
+        size === 'default' && 'h-8 w-10 px-1 text-sm',
+        size === 'compact' && 'h-7 w-8 px-0.5 text-xs',
         inputClass,
     ),
 );

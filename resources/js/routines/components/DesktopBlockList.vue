@@ -95,7 +95,7 @@ const toggleDropsets = (blockIndex: number): void => {
                         <th class="w-[28%] min-w-[14rem] px-2 py-2">Exercise</th>
                         <th class="w-24 px-2 py-2">kg</th>
                         <th class="w-[16%] px-2 py-2">Profile</th>
-                        <th class="w-16 px-2 py-2">Sets</th>
+                        <th class="w-28 px-2 py-2">Sets</th>
                         <th class="w-28 px-2 py-2">Rest</th>
                         <th class="w-[16%] px-2 py-2">Warm-up</th>
                         <th class="w-40 px-2 py-2">Options</th>
@@ -256,6 +256,7 @@ const toggleDropsets = (blockIndex: number): void => {
                                                 :model-value="ex.prescribed_reps"
                                                 :min="1"
                                                 :max="100"
+                                                size="compact"
                                                 aria-label="Target reps"
                                                 data-exercise-target
                                                 @update:model-value="(value) => setExerciseTarget(ex, value == null ? '' : String(value))"
@@ -282,6 +283,7 @@ const toggleDropsets = (blockIndex: number): void => {
                                                     :model-value="ex.prescribed_reps"
                                                     :min="1"
                                                     :max="100"
+                                                    size="compact"
                                                     aria-label="Target reps"
                                                     data-exercise-target
                                                     @update:model-value="(value) => setExerciseTarget(ex, value == null ? '' : String(value))"
@@ -293,6 +295,7 @@ const toggleDropsets = (blockIndex: number): void => {
                                                     :model-value="ex.achievement_floor"
                                                     :min="1"
                                                     :max="100"
+                                                    size="compact"
                                                     aria-label="Floor"
                                                     data-exercise-floor
                                                     :placeholder="exerciseFloorPlaceholder(block, ei)"
@@ -340,6 +343,7 @@ const toggleDropsets = (blockIndex: number): void => {
                                         :model-value="block.working.set_count"
                                         :min="1"
                                         :max="20"
+                                        size="compact"
                                         :aria-label="block.type === 'circuit' ? 'Rounds' : 'Working sets'"
                                         @update:model-value="
                                             (value) => {
